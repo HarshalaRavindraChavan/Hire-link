@@ -1,0 +1,93 @@
+/* FULL SCREEN BACKDROP */
+.popup-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.popup-backdrop.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* TOP POSITION + DROP EFFECT */
+.popup-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  transform: translateY(-200px); /* start above screen */
+  opacity: 0;
+  margin-top: 15px;
+  transition: all 0.45s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+.popup-container.drop {
+  transform: translateY(0px);
+  opacity: 1;
+}
+
+/* CARD DESIGN */
+.popup-card {
+  width: 420px;
+  padding: 22px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0px 10px 28px rgba(0, 0, 0, 0.45);
+  text-align: center;
+  color: #fff;
+}
+
+/* TEXT */
+.popup-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.popup-text {
+  font-size: 16px;
+  opacity: 0.9;
+  margin-bottom: 18px;
+}
+
+/* BUTTON GROUP */
+.popup-btn-group {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.btn-cancel {
+  padding: 8px 22px;
+  background: #6c757d;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-cancel:hover {
+  background: #5a6268;
+}
+
+.btn-delete {
+  padding: 8px 22px;
+  background: #e63946;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-delete:hover {
+  background: #c62835;
+}

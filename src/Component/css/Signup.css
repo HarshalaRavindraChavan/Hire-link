@@ -1,0 +1,176 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background: #eef2f7;
+}
+
+.signup-container {
+  display: flex;
+  height: 100vh;
+}
+
+/* LEFT SECTION */
+.signup-left-section {
+  width: 50%;
+  background: #ffffff;
+  padding: 90px 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.signup-sign-logo {
+  width: 28%;
+  margin: 30px auto 0 auto;
+  display: block;
+}
+
+/* 2 Inputs Row */
+.signup-row-input {
+  display: flex;
+  gap: 15px;
+  width: 100%;
+  margin-bottom: -1px;
+}
+.signup-row-input > div {
+  width: 50%;
+}
+
+label {
+  font-size: 15px;
+  margin: 12px 0 5px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Input Box */
+.signup-input-box {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccd3df;
+  background: #fafafa;
+  padding: 5px;
+  border-radius: 8px;
+  margin-bottom: 2px;
+  transition: 0.3s;
+}
+
+.signup-input-box:hover {
+  border-color: #4a6cf7;
+  box-shadow: 0 0 6px rgba(74, 108, 247, 0.3);
+}
+
+.signup-input-box input,
+.signup-input-box select {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  background: transparent;
+}
+
+.signup-input-box select {
+  padding: 5px;
+}
+
+/* Button */
+.signup-login-btn {
+  width: 100%;
+  background: #4a6cf7;
+  padding: 12px;
+  text-align: center;
+  border-radius: 8px;
+  color: white;
+  font-size: 17px;
+  font-weight: 600;
+  transition: 0.3s;
+  border: none;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.signup-login-btn:hover {
+  background: #3c57c4;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* Signup bottom text */
+.signup-signup-text {
+  text-align: center;
+  font-size: 15px;
+  margin-top: 10px;
+}
+
+.signup-signup-text a {
+  text-decoration: none;
+  color: #c725f9;
+}
+
+/* RIGHT SECTION */
+.signup-right-section {
+  width: 50%;
+  overflow: hidden;
+}
+
+.signup-swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.signup-swiper-slide img {
+  width: 100%;
+  height: 100vh;
+  object-fit: cover;
+}
+
+/* ===============================
+   RESPONSIVE DESIGN
+   =============================== */
+@media (max-width: 900px) {
+  .signup-container {
+    flex-direction: column;
+    height: auto;
+    overflow: hidden;
+  }
+
+  .signup-left-section {
+    width: 100%;
+    padding: 50px 25px 30px;
+    height: 100vh; /* change */
+    overflow-y: hidden; /* added */
+    display: block;
+  }
+  .signup-input-box {
+    margin-bottom: 12px;
+  }
+
+  .signup-row-input {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+  }
+
+  .signup-row-input > div {
+    width: 100%;
+  }
+
+  .signup-right-section {
+    display: none;
+  }
+
+  .signup-sign-logo {
+    width: 45%;
+    margin: -15px auto 25px auto;
+  }
+
+  .signup-signup-text {
+    margin-top: 1px;
+  }
+}

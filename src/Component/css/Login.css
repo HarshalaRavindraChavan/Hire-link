@@ -137,9 +137,9 @@ label {
   height: 100%;
 }
 
-.login-swiper-slide img {
+.login-swiper img {
   width: 100%;
-  height: 100%;
+  height: 100vh;
   object-fit: cover;
 }
 

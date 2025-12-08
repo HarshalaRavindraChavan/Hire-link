@@ -74,7 +74,7 @@ function Signup() {
           autoplay={{ delay: 2500, disableOnInteraction: false }}
           effect="fade"
           speed={1000}
-          className="signup-mySwiper"
+          className="signup-swiper"
         >
           <SwiperSlide>
             <img src="https://images.unsplash.com/photo-1482192596544-9eb780fc7f66?q=80&w=1600" />

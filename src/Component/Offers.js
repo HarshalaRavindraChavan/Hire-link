@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
-import Pagination from "./commenuse/Pagination";
+// import Pagination from "./commenuse/Pagination";
 
 function Offer() {
   const [users, setUsers] = useState([
@@ -84,6 +84,8 @@ function Offer() {
 
   // Delete modal End
 
+  
+
   return (
     <>
       <div className="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
@@ -160,11 +162,11 @@ function Offer() {
               )}
             </tbody>
           </table>
-          <Pagination
+          {/* <Pagination
             currentPage={currentPage}
             totalPages={nPages}
             onPageChange={(page) => setCurrentPage(page)}
-          />
+          /> */}
         </div>
       </div>
 
@@ -174,6 +176,11 @@ function Offer() {
           <div className="modal-content rounded-4">
             <div className="modal-header bg-primary text-white rounded-top-4">
               <h5 className="modal-title fw-bold">Add Offer</h5>
+              <i
+                className="fa-regular fa-circle-xmark"
+                data-bs-dismiss="modal"
+                style={{ cursor: "pointer", color: "white", fontSize: "25px" }}
+              ></i>
             </div>
 
             <form onSubmit={handleAddOffer}>
@@ -289,18 +296,13 @@ function Offer() {
               </div>
 
               <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-outline-secondary"
-                  data-bs-dismiss="modal"
-                >
-                  Close
-                </button>
                 <button type="submit" className="btn btn-primary">
                   Save Offer
                 </button>
               </div>
             </form>
+
+
           </div>
         </div>
       </div>

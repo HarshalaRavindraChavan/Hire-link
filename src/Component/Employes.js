@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
-import Pagination from "./commenuse/Pagination";
+// import Pagination from "./commenuse/Pagination";
 
 function Employes() {
   const [users, setUsers] = useState([
@@ -43,7 +43,7 @@ function Employes() {
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleAddUser = (e) => {
+  const handleAddUserr = (e) => {
     e.preventDefault();
 
     const newUser = { id: Date.now(), ...formData };
@@ -92,6 +92,95 @@ function Employes() {
     const filtered = users.filter((u) => u.id !== deleteId);
     setUsers(filtered);
     setShowDeleteModal(false);
+  };
+
+  const [formDataa, setFormDataa] = useState({
+    fullname: "",
+    email: "",
+    mobile: "",
+    companyname: "",
+    Category: "",
+    password: "",
+    location: "",
+    city: "",
+    state: "",
+    website: "",
+    linkedin: "",
+    facebook: "",
+    instagram: "",
+    youtube: "",
+  });
+
+  const [errors, setErrors] = useState({});
+
+  // Handle Input Change
+  const handleChangee = (e) => {
+    setFormData({ ...formDataa, [e.target.name]: e.target.value });
+  };
+
+  // URL Validator
+  const isValidUrl = (url) => {
+    if (!url) return true; // optional fields
+    const pattern = /^(https?:\/\/)?([\w\d\-]+\.)+[\w]{2,}(\/.*)?$/;
+    return pattern.test(url);
+  };
+
+  // Form Validation
+  const validateForm = () => {
+    let newErrors = {};
+
+    if (!formDataa.fullname.trim())
+      newErrors.fullname = "Full Name is required";
+
+    if (!formDataa.email.trim()) newErrors.email = "Email is required";
+    else if (!/^\S+@\S+\.\S+$/.test(formDataa.email))
+      newErrors.email = "Enter a valid email";
+
+    if (!formDataa.mobile.trim())
+      newErrors.mobile = "Mobile number is required";
+    else if (!/^[0-9]{10}$/.test(formDataa.mobile))
+      newErrors.mobile = "Enter a valid 10-digit mobile number";
+
+    if (!formDataa.companyname.trim())
+      newErrors.companyname = "Company Name is required";
+
+    if (!formDataa.Category.trim()) newErrors.Category = "Category is required";
+
+    if (!formDataa.password.trim()) newErrors.password = "Password is required";
+    else if (formDataa.password.length < 6)
+      newErrors.password = "Password must be at least 6 characters";
+
+    if (!formDataa.location.trim()) newErrors.location = "Location is required";
+
+    if (!formDataa.city.trim()) newErrors.city = "City is required";
+
+    if (!formDataa.state.trim()) newErrors.state = "State is required";
+
+    if (!isValidUrl(formDataa.website))
+      newErrors.website = "Enter a valid Website URL";
+
+    if (!isValidUrl(formDataa.linkedin))
+      newErrors.linkedin = "Enter a valid Linkedin link";
+
+    if (!isValidUrl(formDataa.facebook))
+      newErrors.facebook = "Enter a valid Facebook link";
+
+    if (!isValidUrl(formDataa.instagram))
+      newErrors.instagram = "Enter a valid Instagram link";
+
+    if (!isValidUrl(formDataa.youtube))
+      newErrors.youtube = "Enter a valid YouTube link";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // Submit Handler
+  const handleAddUser = (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    alert("Employer Added Successfully ✔");
   };
 
   return (
@@ -174,11 +263,11 @@ function Employes() {
             </tbody>
           </table>
 
-          <Pagination
+          {/* <Pagination
             currentPage={currentPage}
             totalPages={nPages}
             onPageChange={(page) => setCurrentPage(page)}
-          />
+          /> */}
         </div>
       </div>
 
@@ -195,10 +284,16 @@ function Employes() {
           <div className="modal-content rounded-4">
             <div className="modal-header bg-primary text-white">
               <h5 className="modal-title fw-bold">Add Employer</h5>
+              <i
+                className="fa-regular fa-circle-xmark"
+                data-bs-dismiss="modal"
+                style={{ cursor: "pointer", color: "white", fontSize: "25px" }}
+              ></i>
             </div>
 
             <form onSubmit={handleAddUser}>
               <div className="modal-body row">
+                {/* Full Name */}
                 <div className="col-md-4 mb-2">
                   <label className="fw-semibold">Full Name</label>
                   <input
@@ -209,8 +304,12 @@ function Employes() {
                     className="form-control"
                     placeholder="Enter Full Name"
                   />
+                  {errors.fullname && (
+                    <span className="text-danger">{errors.fullname}</span>
+                  )}
                 </div>
 
+                {/* Email */}
                 <div className="col-md-4 mb-2">
                   <label className="fw-semibold">Email</label>
                   <input
@@ -221,8 +320,12 @@ function Employes() {
                     className="form-control"
                     placeholder="Enter Email"
                   />
+                  {errors.email && (
+                    <span className="text-danger">{errors.email}</span>
+                  )}
                 </div>
 
+                {/* Mobile */}
                 <div className="col-md-4 mb-2">
                   <label className="fw-semibold">Mobile</label>
                   <input
@@ -233,8 +336,12 @@ function Employes() {
                     className="form-control"
                     placeholder="Enter Mobile Number"
                   />
+                  {errors.mobile && (
+                    <span className="text-danger">{errors.mobile}</span>
+                  )}
                 </div>
 
+                {/* Company Name */}
                 <div className="col-md-4 mb-2">
                   <label className="fw-semibold">Company Name</label>
                   <input
@@ -245,8 +352,12 @@ function Employes() {
                     className="form-control"
                     placeholder="Enter Company Name"
                   />
+                  {errors.companyname && (
+                    <span className="text-danger">{errors.companyname}</span>
+                  )}
                 </div>
 
+                {/* Category */}
                 <div className="col-md-4 mb-2">
                   <label className="fw-semibold">Category</label>
                   <select
@@ -259,8 +370,12 @@ function Employes() {
                     <option>Percentage</option>
                     <option>Flat Amount</option>
                   </select>
+                  {errors.Category && (
+                    <span className="text-danger">{errors.Category}</span>
+                  )}
                 </div>
 
+                {/* Password */}
                 <div className="col-md-4 mb-2">
                   <label className="fw-semibold">Password</label>
                   <input
@@ -271,8 +386,12 @@ function Employes() {
                     className="form-control"
                     placeholder="Enter Password"
                   />
+                  {errors.password && (
+                    <span className="text-danger">{errors.password}</span>
+                  )}
                 </div>
 
+                {/* Location */}
                 <div className="col-md-4 mb-2">
                   <label className="fw-semibold">Location</label>
                   <input
@@ -283,8 +402,12 @@ function Employes() {
                     className="form-control"
                     placeholder="Enter Location"
                   />
+                  {errors.location && (
+                    <span className="text-danger">{errors.location}</span>
+                  )}
                 </div>
 
+                {/* City */}
                 <div className="col-md-4 mb-2">
                   <label className="fw-semibold">City</label>
                   <input
@@ -295,8 +418,12 @@ function Employes() {
                     className="form-control"
                     placeholder="Enter City"
                   />
+                  {errors.city && (
+                    <span className="text-danger">{errors.city}</span>
+                  )}
                 </div>
 
+                {/* State */}
                 <div className="col-md-4 mb-2">
                   <label className="fw-semibold">State</label>
                   <input
@@ -307,8 +434,12 @@ function Employes() {
                     className="form-control"
                     placeholder="Enter State"
                   />
+                  {errors.state && (
+                    <span className="text-danger">{errors.state}</span>
+                  )}
                 </div>
 
+                {/* Website */}
                 <div className="col-md-4 mb-2">
                   <label className="fw-semibold">Website</label>
                   <input
@@ -319,10 +450,14 @@ function Employes() {
                     className="form-control"
                     placeholder="Enter Website Link"
                   />
+                  {errors.website && (
+                    <span className="text-danger">{errors.website}</span>
+                  )}
                 </div>
 
+                {/* Linkedin */}
                 <div className="col-md-4 mb-2">
-                  <label className="fw-semibold">linkedin</label>
+                  <label className="fw-semibold">Linkedin</label>
                   <input
                     type="text"
                     name="linkedin"
@@ -331,8 +466,12 @@ function Employes() {
                     className="form-control"
                     placeholder="Enter Linkedin Link"
                   />
+                  {errors.linkedin && (
+                    <span className="text-danger">{errors.linkedin}</span>
+                  )}
                 </div>
 
+                {/* Facebook */}
                 <div className="col-md-4 mb-2">
                   <label className="fw-semibold">Facebook</label>
                   <input
@@ -343,8 +482,12 @@ function Employes() {
                     className="form-control"
                     placeholder="Enter Facebook Link"
                   />
+                  {errors.facebook && (
+                    <span className="text-danger">{errors.facebook}</span>
+                  )}
                 </div>
 
+                {/* Instagram */}
                 <div className="col-md-4 mb-2">
                   <label className="fw-semibold">Instagram</label>
                   <input
@@ -355,29 +498,30 @@ function Employes() {
                     className="form-control"
                     placeholder="Enter Instagram Link"
                   />
+                  {errors.instagram && (
+                    <span className="text-danger">{errors.instagram}</span>
+                  )}
                 </div>
 
+                {/* YouTube */}
                 <div className="col-md-4 mb-2">
-                  <label className="fw-semibold">You Tube</label>
+                  <label className="fw-semibold">YouTube</label>
                   <input
                     type="text"
                     name="youtube"
                     value={formData.youtube}
                     onChange={handleChange}
                     className="form-control"
-                    placeholder="Enter Youtube Link"
+                    placeholder="Enter YouTube Link"
                   />
+                  {errors.youtube && (
+                    <span className="text-danger">{errors.youtube}</span>
+                  )}
                 </div>
               </div>
 
+              {/* Submit */}
               <div className="modal-footer bg-light rounded-bottom-4">
-                <button
-                  className="btn btn-outline-secondary px-4 rounded-3"
-                  data-bs-dismiss="modal"
-                  type="button"
-                >
-                  Close
-                </button>
                 <button type="submit" className="btn btn-primary px-4">
                   Save Employer
                 </button>

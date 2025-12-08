@@ -14,6 +14,7 @@ import Users from "./Component/Users";
 import Login from "./Component/Login";
 import Signup from "./Component/Signup";
 import Verify from "./Component/Verify";
+import Interview from "./Component/Interview";
 
 // Layout Component for all inner pages
 const Layout = () => {
@@ -28,6 +29,7 @@ const Layout = () => {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/jobs" element={<Jobs />} />
               <Route path="/condidate" element={<Condidates />} />
+              <Route path="/interview" element={< Interview/>}/>
               <Route path="/employe" element={<Employes />} />
               <Route path="/package" element={<Packages />} />
               <Route path="/offer" element={<Offer />} />

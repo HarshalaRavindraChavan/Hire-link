@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
 
-function Jobs() {
+function Interview() {
   const [users, setUsers] = useState([
     {
       id: 1,
@@ -47,62 +47,88 @@ function Jobs() {
   };
 
   const [formData, setFormData] = useState({
+    candidateName: "",
     jobTitle: "",
     companyName: "",
-    jobCategory: "",
-    applicationsCount: "",
-    location: "",
-    salaryRange: "",
-    experienceRequired: "",
-    postedDate: "",
-    jobType: "",
+    interviewType: "",
+    interviewDate: "",
+    interviewTime: "",
+    interviewer: "",
+    meetingLink: "",
     status: "",
+    phone: "",
+    createdDate: "",
   });
 
   const [errors, setErrors] = useState({});
 
-  // Handle input change
+  // ---------------- HANDLE CHANGE ----------------
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    // Restrict phone input to numbers only
+    if (name === "phone") {
+      if (!/^\d*$/.test(value)) return; // block characters
+    }
+
     setFormData({ ...formData, [name]: value });
   };
 
-  // Validate form
-  const validate = () => {
-    let tempErrors = {};
+  // ---------------- VALIDATION ----------------
+  const validateForm = () => {
+    let newErrors = {};
 
-    if (!formData.jobTitle) tempErrors.jobTitle = "Job Title is required";
-    if (!formData.companyName)
-      tempErrors.companyName = "Company Name is required";
-    if (!formData.jobCategory)
-      tempErrors.jobCategory = "Job Category is required";
-    if (!formData.applicationsCount)
-      tempErrors.applicationsCount = "Applications Count is required";
-    else if (isNaN(formData.applicationsCount))
-      tempErrors.applicationsCount = "Must be a number";
-    if (!formData.location) tempErrors.location = "Location is required";
-    if (!formData.salaryRange)
-      tempErrors.salaryRange = "Salary Range is required";
-    if (!formData.experienceRequired)
-      tempErrors.experienceRequired = "Experience Required is required";
-    if (!formData.postedDate) tempErrors.postedDate = "Posted Date is required";
-    if (!formData.jobType) tempErrors.jobType = "Job Type is required";
-    if (!formData.status) tempErrors.status = "Status is required";
+    if (!formData.candidateName.trim())
+      newErrors.candidateName = "Candidate Name is required";
 
-    setErrors(tempErrors);
+    if (!formData.jobTitle.trim()) newErrors.jobTitle = "Job Title is required";
 
-    return Object.keys(tempErrors).length === 0;
+    if (!formData.companyName.trim())
+      newErrors.companyName = "Company Name is required";
+
+    if (!formData.interviewType)
+      newErrors.interviewType = "Interview Type is required";
+
+    if (!formData.interviewDate)
+      newErrors.interviewDate = "Interview Date is required";
+
+    if (!formData.interviewTime)
+      newErrors.interviewTime = "Interview Time is required";
+
+    if (!formData.interviewer.trim())
+      newErrors.interviewer = "Interviewer Name is required";
+
+    if (!formData.meetingLink.trim())
+      newErrors.meetingLink = "Meeting Link / Address is required";
+
+    if (!formData.status) newErrors.status = "Status is required";
+
+    // Phone Validation
+    if (!formData.phone.trim()) newErrors.phone = "Phone Number is required";
+    else if (!/^\d{10}$/.test(formData.phone))
+      newErrors.phone = "Phone number must be exactly 10 digits";
+
+    if (!formData.createdDate)
+      newErrors.createdDate = "Created Date is required";
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
   };
 
-  // Handle form submit
+  // ---------------- SUBMIT ----------------
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (validate()) {
-      console.log("Form Data:", formData);
+
+    if (validateForm()) {
       alert("Form submitted successfully!");
-      // Reset form if needed
-      // setFormData({...initial state});
+      console.log("SUBMITTED DATA:", formData);
     }
+  };
+
+  const generateMeetingLink = () => {
+    const uniqueId = Math.random().toString(36).substring(2, 10);
+    return `https://meet.yourcompany.com/${uniqueId}`;
   };
 
   return (
@@ -261,7 +287,7 @@ function Jobs() {
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content shadow-lg border-0 rounded-4">
             <div className="modal-header bg-primary text-white rounded-top-4">
-              <h5 className="modal-title fw-bold">Job Details</h5>
+              <h5 className="modal-title fw-bold">Interview Details</h5>
               <i
                 className="fa-regular fa-circle-xmark"
                 data-bs-dismiss="modal"
@@ -271,6 +297,24 @@ function Jobs() {
 
             <form onSubmit={handleSubmit}>
               <div className="modal-body row">
+                {/* Candidate Name */}
+                <div className="col-md-6 mb-2">
+                  <label className="form-label fw-semibold">
+                    Candidate Name
+                  </label>
+                  <input
+                    type="text"
+                    name="candidateName"
+                    value={formData.candidateName}
+                    onChange={handleChange}
+                    className="form-control form-control-md rounded-3"
+                    placeholder="Enter Candidate Name"
+                  />
+                  {errors.candidateName && (
+                    <span className="text-danger">{errors.candidateName}</span>
+                  )}
+                </div>
+
                 {/* Job Title */}
                 <div className="col-md-6 mb-2">
                   <label className="form-label fw-semibold">Job Title</label>
@@ -303,85 +347,145 @@ function Jobs() {
                   )}
                 </div>
 
-                {/* Job Category */}
-                <div className="col-md-6 mb-2">
-                  <label className="form-label fw-semibold">Job Category</label>
-                  <input
-                    type="text"
-                    name="jobCategory"
-                    value={formData.jobCategory}
-                    onChange={handleChange}
-                    className="form-control form-control-md rounded-3"
-                    placeholder="Enter Job Category"
-                  />
-                  {errors.jobCategory && (
-                    <span className="text-danger">{errors.jobCategory}</span>
-                  )}
-                </div>
-
-                {/* Applications Count */}
-                <div className="col-md-6 mb-2">
-                  <label className="form-label fw-semibold">
-                    Applications Count
-                  </label>
-                  <input
-                    type="number"
-                    name="applicationsCount"
-                    value={formData.applicationsCount}
-                    onChange={handleChange}
-                    className="form-control form-control-md rounded-3"
-                    placeholder="Enter Applications Count"
-                  />
-                  {errors.applicationsCount && (
-                    <span className="text-danger">
-                      {errors.applicationsCount}
-                    </span>
-                  )}
-                </div>
-
+                {/* Interview Type */}
                 <div className="col-md-6 mb-2 position-relative">
-                  <label className="form-label fw-semibold">Job Type</label>
+                  <label className="form-label fw-semibold">
+                    Interview Type
+                  </label>
                   <select
-                    name="jobType"
-                    value={formData.jobType}
+                    name="interviewType"
+                    value={formData.interviewType}
                     onChange={handleChange}
                     className="form-control form-control-md rounded-3"
                     style={{
                       appearance: "none",
-                      WebkitAppearance: "none",
-                      MozAppearance: "none",
-                      backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-chevron-down' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E")`,
+                      backgroundImage:
+                        "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-chevron-down' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E\")",
                       backgroundRepeat: "no-repeat",
                       backgroundPosition: "right 10px center",
                       backgroundSize: "16px",
                       paddingRight: "35px",
                     }}
                   >
-                    <option value="">Select Job Type</option>
-                    <option value="Full-time">Full-time</option>
-                    <option value="Part-time">Part-time</option>
-                    <option value="Internship">Internship</option>
-                    <option value="Remote">Remote</option>
-                    <option value="Contract">Contract</option>
+                    <option value="">Select Interview Type</option>
+                    <option>Online</option>
+                    <option>Offline</option>
+                    <option>Telephonic</option>
+                    <option>HR Round</option>
+                    <option>Technical Round</option>
                   </select>
-                  {errors.jobType && (
-                    <span className="text-danger">{errors.jobType}</span>
+                  {errors.interviewType && (
+                    <span className="text-danger">{errors.interviewType}</span>
                   )}
                 </div>
 
-                {/* Salary Range */}
+                {/* Interview Date */}
                 <div className="col-md-6 mb-2">
-                  <label className="form-label fw-semibold">Salary Range</label>
+                  <label className="form-label fw-semibold">
+                    Interview Date
+                  </label>
                   <input
-                    type="text"
-                    name="salaryRange"
-                    value={formData.salaryRange}
+                    type="date"
+                    name="interviewDate"
+                    value={formData.interviewDate}
                     onChange={handleChange}
                     className="form-control form-control-md rounded-3"
-                    placeholder="Enter Salary Range"
                   />
-                  {errors.salaryRange && (
-                    <span className="text-danger">{errors.salaryRange}</span>
+                  {errors.interviewDate && (
+                    <span className="text-danger">{errors.interviewDate}</span>
+                  )}
+                </div>
+
+                {/* Interview Time */}
+                <div className="col-md-6 mb-2 position-relative">
+                  <label className="form-label fw-semibold">
+                    Interview Time
+                  </label>
+                  <select
+                    name="interviewTime"
+                    value={formData.interviewTime}
+                    onChange={handleChange}
+                    className="form-control form-control-md rounded-3"
+                  >
+                    <option value="">Select Interview Time</option>
+                    <option>10:00 AM</option>
+                    <option>11:00 AM</option>
+                    <option>12:00 PM</option>
+                    <option>02:00 PM</option>
+                    <option>03:00 PM</option>
+                  </select>
+                  {errors.interviewTime && (
+                    <span className="text-danger">{errors.interviewTime}</span>
+                  )}
+                </div>
+
+                {/* Interviewer */}
+                <div className="col-md-6 mb-2">
+                  <label className="form-label fw-semibold">
+                    Assigned Interviewer
+                  </label>
+                  <input
+                    type="text"
+                    name="interviewer"
+                    value={formData.interviewer}
+                    onChange={handleChange}
+                    className="form-control form-control-md rounded-3"
+                    placeholder="Enter Interviewer Name"
+                  />
+                  {errors.interviewer && (
+                    <span className="text-danger">{errors.interviewer}</span>
+                  )}
+                </div>
+
+                {/* Meeting Address */}
+                <div className="col-md-6 mb-2">
+                  <label className="form-label fw-semibold">
+                    Meeting Link / Address
+                  </label>
+
+                  <div className="input-group">
+                    <input
+                      type="text"
+                      name="meetingLink"
+                      value={formData.meetingLink}
+                      onChange={handleChange}
+                      className="form-control form-control-md rounded-3"
+                      placeholder="Enter Meeting Link / Address"
+                    />
+
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={() =>
+                        setFormData({
+                          ...formData,
+                          meetingLink: generateMeetingLink(),
+                        })
+                      }
+                    >
+                      Generate
+                    </button>
+                  </div>
+
+                  {errors.meetingLink && (
+                    <span className="text-danger">{errors.meetingLink}</span>
+                  )}
+                </div>
+
+                {/* Phone Number */}
+                <div className="col-md-6 mb-2">
+                  <label className="form-label fw-semibold">Phone Number</label>
+                  <input
+                    type="text"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    maxLength={10}
+                    className="form-control form-control-md rounded-3"
+                    placeholder="Enter Phone Number"
+                  />
+                  {errors.phone && (
+                    <span className="text-danger">{errors.phone}</span>
                   )}
                 </div>
 
@@ -393,76 +497,29 @@ function Jobs() {
                     value={formData.status}
                     onChange={handleChange}
                     className="form-control form-control-md rounded-3"
-                    style={{
-                      appearance: "none",
-                      WebkitAppearance: "none",
-                      MozAppearance: "none",
-                      backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-chevron-down' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E")`,
-                      backgroundRepeat: "no-repeat",
-                      backgroundPosition: "right 10px center",
-                      backgroundSize: "16px",
-                      paddingRight: "35px",
-                      cursor: "pointer",
-                    }}
                   >
                     <option value="">Select Status</option>
-                    <option value="Active">Active</option>
-                    <option value="Pending">Pending</option>
-                    <option value="Closed">Closed</option>
+                    <option>Active</option>
+                    <option>Pending</option>
+                    <option>Closed</option>
                   </select>
                   {errors.status && (
                     <span className="text-danger">{errors.status}</span>
                   )}
                 </div>
 
-                {/* Posted Date */}
+                {/* Created Date */}
                 <div className="col-md-6 mb-2">
-                  <label className="form-label fw-semibold">Posted Date</label>
+                  <label className="form-label fw-semibold">Created Date</label>
                   <input
                     type="date"
-                    name="postedDate"
-                    value={formData.postedDate}
+                    name="createdDate"
+                    value={formData.createdDate}
                     onChange={handleChange}
                     className="form-control form-control-md rounded-3"
                   />
-                  {errors.postedDate && (
-                    <span className="text-danger">{errors.postedDate}</span>
-                  )}
-                </div>
-
-                {/* Location */}
-                <div className="col-md-6 mb-2">
-                  <label className="form-label fw-semibold">Location</label>
-                  <input
-                    type="text"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleChange}
-                    className="form-control form-control-md rounded-3"
-                    placeholder="Enter Location"
-                  />
-                  {errors.location && (
-                    <span className="text-danger">{errors.location}</span>
-                  )}
-                </div>
-
-                {/* Experience Required */}
-                <div className="col-md-6 mb-2">
-                  <label className="form-label fw-semibold">
-                    Experience Required
-                  </label>
-                  <input
-                    type="text"
-                    name="experienceRequired"
-                    value={formData.experienceRequired}
-                    onChange={handleChange}
-                    className="form-control form-control-md rounded-3"
-                    placeholder="Enter Experience Required"
-                  />
-                  {errors.experienceRequired && (
-                    <span className="text-danger">
-                      {errors.experienceRequired}
-                    </span>
+                  {errors.createdDate && (
+                    <span className="text-danger">{errors.createdDate}</span>
                   )}
                 </div>
               </div>
@@ -474,19 +531,9 @@ function Jobs() {
                   className="btn btn-primary rounded-3 px-4 py-2 shadow-sm"
                   style={{
                     backgroundColor: "#007bff",
-                    borderColor: "#007bff",
                     fontWeight: "600",
-                    transition: "all 0.3s ease",
                     marginRight: "20px",
                     marginBottom: "20px",
-                  }}
-                  onMouseOver={(e) => {
-                    e.target.style.backgroundColor = "#0056b3";
-                    e.target.style.borderColor = "#0056b3";
-                  }}
-                  onMouseOut={(e) => {
-                    e.target.style.backgroundColor = "#007bff";
-                    e.target.style.borderColor = "#007bff";
                   }}
                 >
                   Save Changes
@@ -507,4 +554,4 @@ function Jobs() {
   );
 }
 
-export default Jobs;
+export default Interview;

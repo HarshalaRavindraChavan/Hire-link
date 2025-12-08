@@ -23,7 +23,7 @@ function Dashboard() {
                 </div>
                 <div className="col col-stats ms-3 ms-sm-0">
                   <div className="numbers">
-                    <p className="card-category">Visitors</p>
+                    <p className="card-category">Total Users</p>
                     <h4 className="card-title">1,294</h4>
                   </div>
                 </div>

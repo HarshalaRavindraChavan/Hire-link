@@ -186,7 +186,7 @@ function Users() {
           <div className="modal-content rounded-4">
             <div className="modal-header bg-primary text-white">
               <h5 className="modal-title fw-bold">Add User</h5>
-                <i
+              <i
                 className="fa-regular fa-circle-xmark"
                 data-bs-dismiss="modal"
                 style={{ cursor: "pointer", color: "white", fontSize: "25px" }}
@@ -339,8 +339,15 @@ function Users() {
                 </div>
               </div>
 
-              <div className="modal-footer bg-light rounded-bottom-4">
-                <button type="submit" className="btn btn-primary px-4">
+              <div className="modal-footer bg-light rounded-bottom-4 d-flex">
+                <button
+                  className="btn btn-outline-secondary rounded-3"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+
+                <button type="submit" className="btn btn-primary px-4 ms-auto">
                   Save User
                 </button>
               </div>

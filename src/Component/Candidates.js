@@ -70,12 +70,12 @@ function Candidates() {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
     if (name === "phone") {
-    // allow only numbers
-    const onlyNums = value.replace(/\D/g, "");
-    setFormData((prev) => ({ ...prev, [name]: onlyNums }));
-  } else {
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  }
+      // allow only numbers
+      const onlyNums = value.replace(/\D/g, "");
+      setFormData((prev) => ({ ...prev, [name]: onlyNums }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const validate = () => {
@@ -141,9 +141,9 @@ function Candidates() {
           <a
             data-bs-toggle="modal"
             data-bs-target="#exampleModal"
-            className="btn btn-primary btn-round"
+            className="btn btn-primary"
           >
-            <i className="fa fa-plus"></i> Add
+            <i className="fa fa-plus"></i> Add Candidate
           </a>
         </div>
       </div>
@@ -448,12 +448,16 @@ function Candidates() {
                 </div>
               </div>
 
-              <div className="modal-footer bg-light rounded-bottom-4">
+              <div className="modal-footer bg-light rounded-bottom-4 d-flex">
                 <button
-                  type="submit"
-                  className="btn btn-primary px-4 rounded-3"
+                  className="btn btn-outline-secondary rounded-3"
+                  data-bs-dismiss="modal"
                 >
-                  Save Changes
+                  Close
+                </button>
+
+                <button type="submit" className="btn btn-primary px-4 ms-auto">
+                  Save User
                 </button>
               </div>
             </form>

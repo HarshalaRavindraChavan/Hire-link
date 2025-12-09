@@ -521,9 +521,16 @@ function Employes() {
               </div>
 
               {/* Submit */}
-              <div className="modal-footer bg-light rounded-bottom-4">
-                <button type="submit" className="btn btn-primary px-4">
-                  Save Employer
+              <div className="modal-footer bg-light rounded-bottom-4 d-flex">
+                <button
+                  className="btn btn-outline-secondary rounded-3"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+
+                <button type="submit" className="btn btn-primary px-4 ms-auto">
+                  Save User
                 </button>
               </div>
             </form>

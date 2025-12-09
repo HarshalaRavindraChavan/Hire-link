@@ -144,9 +144,9 @@ function Interview() {
           <a
             data-bs-toggle="modal"
             data-bs-target="#exampleModal"
-            className="btn btn-primary btn-round"
+            className="btn btn-primary"
           >
-            <i className="fa fa-plus"> </i> Add
+            <i className="fa fa-plus"> </i> Add Interview
           </a>
         </div>
       </div>
@@ -525,18 +525,16 @@ function Interview() {
               </div>
 
               {/* Submit Button */}
-              <div className="mt-3 text-end">
+              <div className="modal-footer bg-light rounded-bottom-4 d-flex">
                 <button
-                  type="submit"
-                  className="btn btn-primary rounded-3 px-4 py-2 shadow-sm"
-                  style={{
-                    backgroundColor: "#007bff",
-                    fontWeight: "600",
-                    marginRight: "20px",
-                    marginBottom: "20px",
-                  }}
+                  className="btn btn-outline-secondary rounded-3"
+                  data-bs-dismiss="modal"
                 >
-                  Save Changes
+                  Close
+                </button>
+
+                <button type="submit" className="btn btn-primary px-4 ms-auto">
+                  Save User
                 </button>
               </div>
             </form>

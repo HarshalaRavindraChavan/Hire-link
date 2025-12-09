@@ -191,7 +191,7 @@ function Packages() {
           <div className="modal-content rounded-4">
             <div className="modal-header bg-primary text-white">
               <h5 className="modal-title fw-bold">Add Package</h5>
-                <i
+              <i
                 className="fa-regular fa-circle-xmark"
                 data-bs-dismiss="modal"
                 style={{ cursor: "pointer", color: "white", fontSize: "25px" }}
@@ -298,7 +298,6 @@ function Packages() {
                       className="form-control"
                       placeholder="Enter benefit"
                       value={benefit}
-                      onChange={(e) => setBenefit(e.target.value)}
                     />
                     <button
                       type="button"
@@ -309,28 +308,18 @@ function Packages() {
                     </button>
                   </div>
                 </div>
-
-                <div className="col-md-5 mb-2 border">
-                  <ul className="mt-2" style={{ paddingLeft: "18px" }}>
-                    {benefits.map((b, i) => (
-                      <li key={i} className="d-flex justify-content-between">
-                        {b}
-                        <button
-                          type="button"
-                          className="btn btn-sm text-danger"
-                          onClick={() => removeBenefit(i)}
-                        >
-                          <i className="fas fa-times"></i>
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
               </div>
 
-              <div className="modal-footer">
-                <button type="submit" className="btn btn-primary px-4">
-                  Save Package
+              <div className="modal-footer bg-light rounded-bottom-4 d-flex">
+                <button
+                  className="btn btn-outline-secondary rounded-3"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+
+                <button type="submit" className="btn btn-primary px-4 ms-auto">
+                  Save User
                 </button>
               </div>
             </form>

@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
+import { useForm, useFieldArray } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
 
 function Packages() {
   const [packages, setPackages] = useState([
@@ -87,6 +90,60 @@ function Packages() {
     const filtered = packages.filter((p) => p.id !== deleteId);
     setPackages(filtered);
     setShowDeleteModal(false);
+  };
+
+  // validation code
+
+  // 🟦 VALIDATION SCHEMA
+  const validationSchema = Yup.object().shape({
+    packageName: Yup.string().required("Package name is required"),
+    price: Yup.number()
+      .typeError("Price must be a number")
+      .required("Price is required"),
+    duration: Yup.string().required("Duration is required"),
+    jobLimit: Yup.number()
+      .typeError("Job limit must be a number")
+      .required("Job post limit is required"),
+    resumeLimit: Yup.number()
+      .typeError("Resume limit must be a number")
+      .required("Resume view limit is required"),
+    support: Yup.string().required("Support type is required"),
+    description: Yup.string().required("Description is required"),
+    benefits: Yup.array()
+      .of(Yup.string().required("Benefit is required"))
+      .min(1, "At least one benefit is required"),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+    defaultValues: {
+      packageName: "",
+      price: "",
+      duration: "",
+      jobLimit: "",
+      resumeLimit: "",
+      support: "",
+      description: "",
+      benefits: [""],
+    },
+  });
+
+  // Dynamic benefits array
+  const { fields, append } = useFieldArray({
+    control,
+    name: "benefits",
+  });
+
+  // Submit function
+  const onSubmit = (data) => {
+    console.log("VALIDATED DATA:", data);
+    alert("Package saved successfully!");
   };
 
   return (
@@ -239,125 +296,128 @@ function Packages() {
               ></i>
             </div>
 
-            <form onSubmit={handleAddPackage}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <div className="modal-body row">
+                {/* Package Name */}
                 <div className="col-md-4 mb-2">
                   <label>Package Name</label>
                   <input
-                    type="text"
-                    name="packageName"
-                    value={formData.packageName}
-                    onChange={handleChange}
                     className="form-control"
+                    {...register("packageName")}
                     placeholder="Enter Package Name"
                   />
+                  <span className="text-danger">
+                    {errors.packageName?.message}
+                  </span>
                 </div>
 
+                {/* Price */}
                 <div className="col-md-4 mb-2">
                   <label>Price</label>
                   <input
-                    type="number"
-                    name="price"
-                    value={formData.price}
-                    onChange={handleChange}
                     className="form-control"
+                    type="number"
+                    {...register("price")}
                     placeholder="Enter Price"
                   />
+                  <span className="text-danger">{errors.price?.message}</span>
                 </div>
 
+                {/* Duration */}
                 <div className="col-md-4 mb-2">
                   <label>Duration</label>
-                  <select
-                    name="duration"
-                    value={formData.duration}
-                    onChange={handleChange}
-                    className="form-select form-control"
-                  >
+                  <select className="form-select" {...register("duration")}>
                     <option value="">Select</option>
                     <option>30 Days</option>
                     <option>60 Days</option>
                     <option>90 Days</option>
                     <option>1 Year</option>
                   </select>
+                  <span className="text-danger">
+                    {errors.duration?.message}
+                  </span>
                 </div>
 
+                {/* Job limit */}
                 <div className="col-md-4 mb-2">
                   <label>Job Post Limit</label>
                   <input
-                    type="number"
-                    name="jobLimit"
-                    value={formData.jobLimit}
-                    onChange={handleChange}
                     className="form-control"
-                    placeholder="Number Of Limit"
+                    type="number"
+                    {...register("jobLimit")}
+                    placeholder="Job Limit"
                   />
+                  <span className="text-danger">
+                    {errors.jobLimit?.message}
+                  </span>
                 </div>
 
+                {/* Resume limit */}
                 <div className="col-md-4 mb-2">
                   <label>Resume View Limit</label>
                   <input
-                    type="number"
-                    name="resumeLimit"
-                    value={formData.resumeLimit}
-                    onChange={handleChange}
                     className="form-control"
-                    placeholder="Number Of Limit"
+                    type="number"
+                    {...register("resumeLimit")}
+                    placeholder="Resume Limit"
                   />
+                  <span className="text-danger">
+                    {errors.resumeLimit?.message}
+                  </span>
                 </div>
 
+                {/* Support */}
                 <div className="col-md-4 mb-2">
                   <label>Support</label>
-                  <select
-                    name="support"
-                    value={formData.support}
-                    onChange={handleChange}
-                    className="form-select form-control"
-                  >
+                  <select className="form-select" {...register("support")}>
                     <option>Email</option>
                     <option>Chat</option>
                     <option>Phone</option>
                   </select>
+                  <span className="text-danger">{errors.support?.message}</span>
                 </div>
 
+                {/* Description */}
                 <div className="col-md-12 mb-2">
                   <label>Description</label>
                   <textarea
-                    name="description"
-                    value={formData.description}
-                    onChange={handleChange}
                     className="form-control"
                     rows={4}
-                    placeholder="Description of Package"
+                    {...register("description")}
+                    placeholder="Description"
                   ></textarea>
+                  <span className="text-danger">
+                    {errors.description?.message}
+                  </span>
                 </div>
 
-                {/* BENEFITS DYNAMIC INPUT */}
+                {/* Benefits */}
                 <div className="col-md-12 mb-2">
                   <label>Benefits / Features</label>
 
-                  {benefits.map((benefit, index) => (
-                    <div className="d-flex gap-2 mb-2" key={index}>
+                  {fields.map((field, index) => (
+                    <div className="d-flex gap-2 mb-2" key={field.id}>
                       <input
-                        type="text"
                         className="form-control"
+                        {...register(`benefits.${index}`)}
                         placeholder="Enter benefit"
-                        value={benefit}
-                        onChange={(e) =>
-                          handleBenefitChange(index, e.target.value)
-                        }
                       />
 
-                      {index === benefits.length - 1 && (
+                      {index === fields.length - 1 && (
                         <button
                           type="button"
                           className="btn btn-success"
-                          onClick={addBenefit}
+                          onClick={() => append("")}
                         >
                           Add
                         </button>
                       )}
                     </div>
                   ))}
+
+                  <span className="text-danger">
+                    {errors.benefits?.[0]?.message}
+                  </span>
                 </div>
               </div>
 

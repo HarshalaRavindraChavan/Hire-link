@@ -1,8 +1,19 @@
 import React, { useState } from "react";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 // import Pagination from "./commenuse/Pagination";
 
 function Users() {
+  // Example data: States and their cities
+  const stateCityData = {
+    Maharashtra: ["Mumbai", "Pune", "Nagpur", "Nashik"],
+    Karnataka: ["Bengaluru", "Mysore", "Mangalore"],
+    Gujarat: ["Ahmedabad", "Surat", "Vadodara"],
+    TamilNadu: ["Chennai", "Coimbatore", "Madurai"],
+  };
+
   const [users, setUsers] = useState([
     {
       id: 1,
@@ -11,8 +22,8 @@ function Users() {
       mobile: "9876543201",
       location: "Main Road",
       address: "Main Road",
-      city: "Mumbai",
-      state: "Maharashtra",
+      state: "",
+      city: "",
       joindate: "2024-01-05",
       adhar: "1111 2222 3333",
       pan: "ABCDE1234F",
@@ -36,8 +47,16 @@ function Users() {
     experience: "",
   });
 
-  const handleChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    // If state changes, reset city
+    if (name === "state") {
+      setFormData((prev) => ({ ...prev, state: value, city: "" }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+  };
 
   const handleAddUser = (e) => {
     e.preventDefault();
@@ -87,6 +106,49 @@ function Users() {
     const filtered = users.filter((u) => u.id !== deleteId);
     setUsers(filtered);
     setShowDeleteModal(false);
+  };
+
+  // Validation schema using Yup
+  const schema = yup.object().shape({
+    fullname: yup.string().required("Full name is required"),
+    email: yup.string().email("Invalid email").required("Email is required"),
+    mobile: yup
+      .string()
+      .matches(/^\d{10}$/, "Mobile number must be 10 digits")
+      .required("Mobile is required"),
+    location: yup.string().required("Location is required"),
+    address: yup.string().required("Address is required"),
+    state: yup.string().required("State is required"),
+    city: yup.string().required("City is required"),
+    joindate: yup.date().required("Join Date is required"),
+    adhar: yup
+      .string()
+      .matches(/^\d{12}$/, "Adhar number must be 12 digits")
+      .required("Adhar number is required"),
+    pan: yup
+      .string()
+      .matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN number")
+      .required("PAN number is required"),
+    bankpassbook: yup.string().required("Bank passbook details are required"),
+    experience: yup.string().required("Experience is required"),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const watchState = watch("state"); // watch state for city dropdown
+
+  const onSubmit = (data) => {
+    console.log("Form Data:", data);
+    // call your API here
+    reset(); // reset form after submission
   };
 
   return (
@@ -193,149 +255,161 @@ function Users() {
               ></i>
             </div>
 
-            <form onSubmit={handleAddUser}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <div className="modal-body row">
+                {/* Full Name */}
                 <div className="col-md-4 mb-2">
                   <label className="fw-semibold">Full Name</label>
                   <input
                     type="text"
-                    name="fullname"
-                    value={formData.fullname}
-                    onChange={handleChange}
+                    {...register("fullname")}
                     className="form-control"
                     placeholder="Enter Full Name"
                   />
+                  <p className="text-danger">{errors.fullname?.message}</p>
                 </div>
 
+                {/* Email */}
                 <div className="col-md-4 mb-2">
                   <label className="fw-semibold">Email</label>
                   <input
                     type="text"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
+                    {...register("email")}
                     className="form-control"
                     placeholder="Enter Email"
                   />
+                  <p className="text-danger">{errors.email?.message}</p>
                 </div>
 
+                {/* Mobile */}
                 <div className="col-md-4 mb-2">
                   <label className="fw-semibold">Mobile</label>
                   <input
                     type="text"
-                    name="mobile"
-                    value={formData.mobile}
-                    onChange={handleChange}
+                    {...register("mobile")}
                     className="form-control"
                     placeholder="Enter Mobile Number"
                   />
+                  <p className="text-danger">{errors.mobile?.message}</p>
                 </div>
 
+                {/* Location */}
                 <div className="col-md-4 mb-2">
                   <label className="fw-semibold">Location</label>
                   <input
                     type="text"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleChange}
+                    {...register("location")}
                     className="form-control"
                     placeholder="Enter Location"
                   />
+                  <p className="text-danger">{errors.location?.message}</p>
                 </div>
 
+                {/* Address */}
                 <div className="col-md-4 mb-2">
                   <label className="fw-semibold">Address</label>
                   <input
                     type="text"
-                    name="address"
-                    value={formData.address}
-                    onChange={handleChange}
+                    {...register("address")}
                     className="form-control"
                     placeholder="Enter Address"
                   />
+                  <p className="text-danger">{errors.address?.message}</p>
                 </div>
 
-                <div className="col-md-4 mb-2">
-                  <label className="fw-semibold">City</label>
-                  <input
-                    type="text"
-                    name="city"
-                    value={formData.city}
-                    onChange={handleChange}
-                    className="form-control"
-                    placeholder="Enter City"
-                  />
-                </div>
-
+                {/* State */}
                 <div className="col-md-4 mb-2">
                   <label className="fw-semibold">State</label>
-                  <input
-                    type="text"
-                    name="state"
-                    value={formData.state}
-                    onChange={handleChange}
-                    className="form-control"
-                    placeholder="Enter State"
-                  />
+                  <select
+                    {...register("state")}
+                    className="form-select form-control"
+                  >
+                    <option value="">Select State</option>
+                    {Object.keys(stateCityData).map((state) => (
+                      <option key={state} value={state}>
+                        {state}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-danger">{errors.state?.message}</p>
                 </div>
 
+                {/* City */}
+                <div className="col-md-4 mb-2">
+                  <label className="fw-semibold">City</label>
+                  <select
+                    {...register("city")}
+                    className="form-select form-control"
+                    disabled={!watchState}
+                  >
+                    <option value="">Select City</option>
+                    {watchState &&
+                      stateCityData[watchState].map((city) => (
+                        <option key={city} value={city}>
+                          {city}
+                        </option>
+                      ))}
+                  </select>
+                  <p className="text-danger">{errors.city?.message}</p>
+                </div>
+
+                {/* Join Date */}
                 <div className="col-md-4 mb-2">
                   <label className="fw-semibold">Join Date</label>
                   <input
                     type="date"
-                    name="joindate"
-                    value={formData.joindate}
-                    onChange={handleChange}
+                    {...register("joindate")}
                     className="form-control"
                   />
+                  <p className="text-danger">{errors.joindate?.message}</p>
                 </div>
 
+                {/* Adhar */}
                 <div className="col-md-4 mb-2">
                   <label className="fw-semibold">Adhar Number</label>
                   <input
                     type="text"
-                    name="adhar"
-                    value={formData.adhar}
-                    onChange={handleChange}
+                    {...register("adhar")}
                     className="form-control"
                     placeholder="Enter Adhar Number"
                   />
+                  <p className="text-danger">{errors.adhar?.message}</p>
                 </div>
 
+                {/* PAN */}
                 <div className="col-md-4 mb-2">
                   <label className="fw-semibold">PAN Number</label>
                   <input
                     type="text"
-                    name="pan"
-                    value={formData.pan}
-                    onChange={handleChange}
+                    {...register("pan")}
                     className="form-control"
                     placeholder="Enter PAN Number"
                   />
+                  <p className="text-danger">{errors.pan?.message}</p>
                 </div>
 
+                {/* Bank Passbook */}
                 <div className="col-md-4 mb-2">
                   <label className="fw-semibold">Bank Passbook</label>
                   <input
                     type="text"
-                    name="bankpassbook"
-                    value={formData.bankpassbook}
-                    onChange={handleChange}
+                    {...register("bankpassbook")}
                     className="form-control"
                     placeholder="Enter Bank Details"
                   />
+                  <p className="text-danger">{errors.bankpassbook?.message}</p>
                 </div>
 
+                {/* Experience */}
                 <div className="col-md-4 mb-2">
                   <label className="fw-semibold">Experience</label>
                   <input
                     type="text"
-                    name="experience"
-                    value={formData.experience}
-                    onChange={handleChange}
+                    {...register("experience")}
                     className="form-control"
                     placeholder="Enter Experience"
                   />
+                  <p className="text-danger">{errors.experience?.message}</p>
                 </div>
               </div>
 

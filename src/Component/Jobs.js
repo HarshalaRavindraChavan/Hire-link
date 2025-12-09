@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
 
 function Jobs() {
   const [users, setUsers] = useState([
@@ -46,63 +49,33 @@ function Jobs() {
     setShowDeleteModal(false);
   };
 
-  const [formData, setFormData] = useState({
-    jobTitle: "",
-    companyName: "",
-    jobCategory: "",
-    applicationsCount: "",
-    location: "",
-    salaryRange: "",
-    experienceRequired: "",
-    postedDate: "",
-    jobType: "",
-    status: "",
+  // Validation Schema (NO if/else)
+  const validationSchema = Yup.object({
+    jobTitle: Yup.string().required("Job Title is required"),
+    companyName: Yup.string().required("Company Name is required"),
+    jobCategory: Yup.string().required("Job Category is required"),
+    applicationsCount: Yup.number()
+      .typeError("Applications Count must be a number")
+      .required("Applications Count is required"),
+    jobType: Yup.string().required("Job Type is required"),
+    salaryRange: Yup.string().required("Salary Range is required"),
+    status: Yup.string().required("Status is required"),
+    postedDate: Yup.string().required("Posted Date is required"),
+    location: Yup.string().required("Location is required"),
+    experienceRequired: Yup.string().required("Experience is required"),
   });
 
-  const [errors, setErrors] = useState({});
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
 
-  // Handle input change
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  // Validate form
-  const validate = () => {
-    let tempErrors = {};
-
-    if (!formData.jobTitle) tempErrors.jobTitle = "Job Title is required";
-    if (!formData.companyName)
-      tempErrors.companyName = "Company Name is required";
-    if (!formData.jobCategory)
-      tempErrors.jobCategory = "Job Category is required";
-    if (!formData.applicationsCount)
-      tempErrors.applicationsCount = "Applications Count is required";
-    else if (isNaN(formData.applicationsCount))
-      tempErrors.applicationsCount = "Must be a number";
-    if (!formData.location) tempErrors.location = "Location is required";
-    if (!formData.salaryRange)
-      tempErrors.salaryRange = "Salary Range is required";
-    if (!formData.experienceRequired)
-      tempErrors.experienceRequired = "Experience Required is required";
-    if (!formData.postedDate) tempErrors.postedDate = "Posted Date is required";
-    if (!formData.jobType) tempErrors.jobType = "Job Type is required";
-    if (!formData.status) tempErrors.status = "Status is required";
-
-    setErrors(tempErrors);
-
-    return Object.keys(tempErrors).length === 0;
-  };
-
-  // Handle form submit
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (validate()) {
-      console.log("Form Data:", formData);
-      alert("Form submitted successfully!");
-      // Reset form if needed
-      // setFormData({...initial state});
-    }
+  const onSubmit = (data) => {
+    console.log("Form Data:", data);
+    alert("Form Submitted Successfully!");
   };
 
   return (
@@ -128,83 +101,60 @@ function Jobs() {
       <div className="card">
         <div className="card-body">
           <div className="table-responsive">
-            <table className="table table-bordered">
-              <thead>
-                <tr className="text-center">
-                  <th className="fw-bold fs-6">Detail</th>
-                  <th className="fw-bold fs-6">Contact</th>
-                  <th className="fw-bold fs-6">Address</th>
-                  <th className="fw-bold fs-6">Other Detail</th>
+            <table className="table table-bordered table-hover table-responsive">
+              <thead className="text-center align-middle">
+                <tr>
+                  <th>sr_no</th>
+                  <th className="fw-bold fs-10">job_title</th>
+                  <th className="fw-bold fs-10">company_name</th>
+                  <th className="fw-bold fs-10">job_category</th>
+                  <th className="fw-bold fs-10">job_type</th>
+                  <th className="fw-bold fs-10">location</th>
+                  <th className="fw-bold fs-10">salary_range</th>
+                  <th className="fw-bold fs-10">experience_required</th>
+                  <th className="fw-bold fs-10">posted_date</th>
+                  <th className="fw-bold fs-10">applications_count</th>
+                  <th className="fw-bold fs-10">status</th>
                 </tr>
               </thead>
 
-              <tbody>
-                {records.length > 0 ? (
-                  records.map((item) => (
-                    <tr key={item.id} className="align-middle">
-                      <td>
-                        <div className="dropdown d-inline-block ms-1">
-                          <span
-                            className="fw-bold text-primary"
-                            role="button"
-                            data-bs-toggle="dropdown"
-                            style={{ cursor: "pointer" }}
-                          >
-                            {item.name}
-                          </span>
+              <tbody className="text-center align-middle">
+                <tr>
+                  <td>1</td>
+                  <td>Capgemini</td>
+                  <td>Google</td>
+                  <td>IT & Software</td>
+                  <td>Full-Time</td>
+                  <td>Pune</td>
+                  <td>50,000 - 80,000</td>
+                  <td>2 Years</td>
+                  <td>12 Dec 2025</td>
+                  <td>25</td>
+                  <td>
+                    <span className="badge bg-success">active</span>
+                  </td>
+                </tr>
 
-                          <ul className="dropdown-menu shadow">
-                            <li>
-                              <button className="dropdown-item">
-                                <i className="fas fa-edit me-2"> </i> Edit
-                              </button>
-                            </li>
-                            <li>
-                              <button
-                                className="dropdown-item text-danger"
-                                onClick={() => handleDeleteClick(item.id)}
-                              >
-                                <i className="fas fa-trash me-2"> </i> Delete
-                              </button>
-                            </li>
-                          </ul>
-                        </div>
-                        <br />
-                        <b>Business:</b> {item.business} <br />
-                        <b>Category:</b> {item.category}
-                      </td>
-
-                      <td>
-                        <b>Email:</b> {item.email} <br />
-                        <b>Mobile:</b> {item.mobile}
-                      </td>
-
-                      <td>
-                        <b>Location:</b> {item.location} <br />
-                        <b>City:</b> {item.city} <br />
-                        <b>State:</b> {item.state}
-                      </td>
-
-                      <td>
-                        <b>Website:</b> {item.website} <br />
-                        <b>Facebook:</b> {item.facebook} <br />
-                        <b>Linkedin:</b> {item.linkedin} <br />
-                        <b>Instagram:</b> {item.instagram}
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="6" className="text-center text-muted py-3">
-                      No data available in table
-                    </td>
-                  </tr>
-                )}
+                <tr>
+                  <td>2</td>
+                  <td>Wipro</td>
+                  <td>Human Resources</td>
+                  <td>IT & Software</td>
+                  <td>Full-Time</td>
+                  <td>Mumbai</td>
+                  <td>30,000 - 80,000</td>
+                  <td>3 Years</td>
+                  <td>10 Dec 2025</td>
+                  <td>30</td>
+                  <td>
+                    <span className="badge bg-warning">pending</span>
+                  </td>
+                </tr>
               </tbody>
             </table>
 
             {/* PAGINATION */}
-            <nav className="d-flex justify-content-end mt-3">
+            {/* <nav className="d-flex justify-content-end mt-3">
               <ul className="pagination">
                 <li
                   className={`page-item ${currentPage === 1 ? "disabled" : ""}`}
@@ -246,7 +196,7 @@ function Jobs() {
                   </button>
                 </li>
               </ul>
-            </nav>
+            </nav> */}
           </div>
         </div>
       </div>
@@ -269,22 +219,20 @@ function Jobs() {
               ></i>
             </div>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <div className="modal-body row">
                 {/* Job Title */}
                 <div className="col-md-6 mb-2">
                   <label className="form-label fw-semibold">Job Title</label>
                   <input
                     type="text"
-                    name="jobTitle"
-                    value={formData.jobTitle}
-                    onChange={handleChange}
+                    {...register("jobTitle")}
                     className="form-control form-control-md rounded-3"
                     placeholder="Enter Job Title"
                   />
-                  {errors.jobTitle && (
-                    <span className="text-danger">{errors.jobTitle}</span>
-                  )}
+                  <span className="text-danger">
+                    {errors.jobTitle?.message}
+                  </span>
                 </div>
 
                 {/* Company Name */}
@@ -292,15 +240,13 @@ function Jobs() {
                   <label className="form-label fw-semibold">Company Name</label>
                   <input
                     type="text"
-                    name="companyName"
-                    value={formData.companyName}
-                    onChange={handleChange}
+                    {...register("companyName")}
                     className="form-control form-control-md rounded-3"
                     placeholder="Enter Company Name"
                   />
-                  {errors.companyName && (
-                    <span className="text-danger">{errors.companyName}</span>
-                  )}
+                  <span className="text-danger">
+                    {errors.companyName?.message}
+                  </span>
                 </div>
 
                 {/* Job Category */}
@@ -308,15 +254,13 @@ function Jobs() {
                   <label className="form-label fw-semibold">Job Category</label>
                   <input
                     type="text"
-                    name="jobCategory"
-                    value={formData.jobCategory}
-                    onChange={handleChange}
+                    {...register("jobCategory")}
                     className="form-control form-control-md rounded-3"
                     placeholder="Enter Job Category"
                   />
-                  {errors.jobCategory && (
-                    <span className="text-danger">{errors.jobCategory}</span>
-                  )}
+                  <span className="text-danger">
+                    {errors.jobCategory?.message}
+                  </span>
                 </div>
 
                 {/* Applications Count */}
@@ -326,36 +270,21 @@ function Jobs() {
                   </label>
                   <input
                     type="number"
-                    name="applicationsCount"
-                    value={formData.applicationsCount}
-                    onChange={handleChange}
+                    {...register("applicationsCount")}
                     className="form-control form-control-md rounded-3"
                     placeholder="Enter Applications Count"
                   />
-                  {errors.applicationsCount && (
-                    <span className="text-danger">
-                      {errors.applicationsCount}
-                    </span>
-                  )}
+                  <span className="text-danger">
+                    {errors.applicationsCount?.message}
+                  </span>
                 </div>
 
+                {/* Job Type */}
                 <div className="col-md-6 mb-2 position-relative">
                   <label className="form-label fw-semibold">Job Type</label>
                   <select
-                    name="jobType"
-                    value={formData.jobType}
-                    onChange={handleChange}
+                    {...register("jobType")}
                     className="form-control form-control-md rounded-3"
-                    style={{
-                      appearance: "none",
-                      WebkitAppearance: "none",
-                      MozAppearance: "none",
-                      backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-chevron-down' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E")`,
-                      backgroundRepeat: "no-repeat",
-                      backgroundPosition: "right 10px center",
-                      backgroundSize: "16px",
-                      paddingRight: "35px",
-                    }}
                   >
                     <option value="">Select Job Type</option>
                     <option value="Full-time">Full-time</option>
@@ -364,9 +293,7 @@ function Jobs() {
                     <option value="Remote">Remote</option>
                     <option value="Contract">Contract</option>
                   </select>
-                  {errors.jobType && (
-                    <span className="text-danger">{errors.jobType}</span>
-                  )}
+                  <span className="text-danger">{errors.jobType?.message}</span>
                 </div>
 
                 {/* Salary Range */}
@@ -374,45 +301,28 @@ function Jobs() {
                   <label className="form-label fw-semibold">Salary Range</label>
                   <input
                     type="text"
-                    name="salaryRange"
-                    value={formData.salaryRange}
-                    onChange={handleChange}
+                    {...register("salaryRange")}
                     className="form-control form-control-md rounded-3"
                     placeholder="Enter Salary Range"
                   />
-                  {errors.salaryRange && (
-                    <span className="text-danger">{errors.salaryRange}</span>
-                  )}
+                  <span className="text-danger">
+                    {errors.salaryRange?.message}
+                  </span>
                 </div>
 
                 {/* Status */}
                 <div className="col-md-6 mb-2 position-relative">
                   <label className="form-label fw-semibold">Status</label>
                   <select
-                    name="status"
-                    value={formData.status}
-                    onChange={handleChange}
+                    {...register("status")}
                     className="form-control form-control-md rounded-3"
-                    style={{
-                      appearance: "none",
-                      WebkitAppearance: "none",
-                      MozAppearance: "none",
-                      backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-chevron-down' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E")`,
-                      backgroundRepeat: "no-repeat",
-                      backgroundPosition: "right 10px center",
-                      backgroundSize: "16px",
-                      paddingRight: "35px",
-                      cursor: "pointer",
-                    }}
                   >
                     <option value="">Select Status</option>
                     <option value="Active">Active</option>
                     <option value="Pending">Pending</option>
                     <option value="Closed">Closed</option>
                   </select>
-                  {errors.status && (
-                    <span className="text-danger">{errors.status}</span>
-                  )}
+                  <span className="text-danger">{errors.status?.message}</span>
                 </div>
 
                 {/* Posted Date */}
@@ -420,14 +330,12 @@ function Jobs() {
                   <label className="form-label fw-semibold">Posted Date</label>
                   <input
                     type="date"
-                    name="postedDate"
-                    value={formData.postedDate}
-                    onChange={handleChange}
+                    {...register("postedDate")}
                     className="form-control form-control-md rounded-3"
                   />
-                  {errors.postedDate && (
-                    <span className="text-danger">{errors.postedDate}</span>
-                  )}
+                  <span className="text-danger">
+                    {errors.postedDate?.message}
+                  </span>
                 </div>
 
                 {/* Location */}
@@ -435,15 +343,13 @@ function Jobs() {
                   <label className="form-label fw-semibold">Location</label>
                   <input
                     type="text"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleChange}
+                    {...register("location")}
                     className="form-control form-control-md rounded-3"
                     placeholder="Enter Location"
                   />
-                  {errors.location && (
-                    <span className="text-danger">{errors.location}</span>
-                  )}
+                  <span className="text-danger">
+                    {errors.location?.message}
+                  </span>
                 </div>
 
                 {/* Experience Required */}
@@ -453,17 +359,13 @@ function Jobs() {
                   </label>
                   <input
                     type="text"
-                    name="experienceRequired"
-                    value={formData.experienceRequired}
-                    onChange={handleChange}
+                    {...register("experienceRequired")}
                     className="form-control form-control-md rounded-3"
                     placeholder="Enter Experience Required"
                   />
-                  {errors.experienceRequired && (
-                    <span className="text-danger">
-                      {errors.experienceRequired}
-                    </span>
-                  )}
+                  <span className="text-danger">
+                    {errors.experienceRequired?.message}
+                  </span>
                 </div>
               </div>
 

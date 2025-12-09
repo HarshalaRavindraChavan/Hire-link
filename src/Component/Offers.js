@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
 // import Pagination from "./commenuse/Pagination";
 
 function Offer() {
@@ -85,6 +89,40 @@ function Offer() {
   };
 
   // Delete modal End
+
+  // Define validation schema using Yup
+  const schema = yup.object().shape({
+    title: yup.string().required("Offer title is required"),
+    code: yup.string().required("Coupon code is required"),
+    offerin: yup.string().required("Please select offer type"),
+    startDate: yup.date().required("Start date is required"),
+    endDate: yup
+      .date()
+      .required("End date is required"),
+    usageLimit: yup
+      .number()
+      .typeError("Usage limit must be a number")
+      .required("Usage limit is required")
+      .positive("Usage limit must be positive")
+      .integer("Usage limit must be an integer"),
+    status: yup.string().required("Status is required"),
+    description: yup.string().required("Description is required"),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const onSubmit = (data) => {
+    console.log("Form Data:", data);
+    // call your handleAddOffer API here
+    reset(); // reset form after submission
+  };
 
   return (
     <>
@@ -245,103 +283,96 @@ function Offer() {
               ></i>
             </div>
 
-            <form onSubmit={handleAddOffer}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <div className="modal-body row">
                 <div className="col-md-4 mb-2">
                   <label>Offer Title</label>
                   <input
                     type="text"
-                    name="title"
-                    value={formData.title}
-                    onChange={handleChange}
+                    {...register("title")}
                     className="form-control"
                     placeholder="Enter Offer Name"
                   />
+                  <p className="text-danger">{errors.title?.message}</p>
                 </div>
 
                 <div className="col-md-4 mb-2">
                   <label>Coupon Code</label>
                   <input
                     type="text"
-                    name="code"
-                    value={formData.code}
-                    onChange={handleChange}
+                    {...register("code")}
                     className="form-control"
                     placeholder="Enter Coupon Code"
                   />
+                  <p className="text-danger">{errors.code?.message}</p>
                 </div>
 
                 <div className="col-md-4 mb-2">
                   <label>Offer In</label>
                   <select
-                    name="discountType"
-                    value={formData.offerin}
-                    onChange={handleChange}
+                    {...register("offerin")}
                     className="form-select form-control"
                   >
                     <option value="">Select</option>
-                    <option>Percentage</option>
-                    <option>Flat Amount</option>
+                    <option value="Percentage">Percentage</option>
+                    <option value="Flat Amount">Flat Amount</option>
                   </select>
+                  <p className="text-danger">{errors.offerin?.message}</p>
                 </div>
 
                 <div className="col-md-4 mb-2">
                   <label>Start Date</label>
                   <input
                     type="date"
-                    name="startDate"
-                    value={formData.startDate}
-                    onChange={handleChange}
+                    {...register("startDate")}
                     className="form-control"
                   />
+                  <p className="text-danger">{errors.startDate?.message}</p>
                 </div>
 
                 <div className="col-md-4 mb-2">
                   <label>End Date</label>
                   <input
                     type="date"
-                    name="endDate"
-                    value={formData.endDate}
-                    onChange={handleChange}
+                    {...register("endDate")}
                     className="form-control"
                   />
+                  <p className="text-danger">{errors.endDate?.message}</p>
                 </div>
 
                 <div className="col-md-4 mb-2">
                   <label>Usage Limit</label>
                   <input
                     type="number"
-                    name="usageLimit"
-                    value={formData.usageLimit}
-                    onChange={handleChange}
+                    {...register("usageLimit")}
                     className="form-control"
                     placeholder="Number of User Limit"
                   />
+                  <p className="text-danger">{errors.usageLimit?.message}</p>
                 </div>
 
                 <div className="col-md-4 mb-2">
                   <label>Status</label>
                   <select
-                    name="status"
-                    value={formData.status}
-                    onChange={handleChange}
+                    {...register("status")}
                     className="form-select form-control"
                   >
-                    <option>Active</option>
-                    <option>Inactive</option>
+                    <option value="">Select Status</option>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
                   </select>
+                  <p className="text-danger">{errors.status?.message}</p>
                 </div>
 
                 <div className="col-12 mb-2">
                   <label>Description</label>
                   <textarea
-                    name="description"
-                    value={formData.description}
-                    onChange={handleChange}
+                    {...register("description")}
                     className="form-control"
                     rows={4}
                     placeholder="Details about offer"
                   ></textarea>
+                  <p className="text-danger">{errors.description?.message}</p>
                 </div>
               </div>
 

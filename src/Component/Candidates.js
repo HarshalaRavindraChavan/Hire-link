@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
 
 function Candidates() {
+  const [search, setSearch] = useState("");
   const [users, setUsers] = useState([
     {
       id: 1,
@@ -143,117 +144,125 @@ function Candidates() {
             data-bs-target="#exampleModal"
             className="btn btn-primary"
           >
-            <i className="fa fa-plus"></i> Add Candidate
+            <i className="fa fa-plus"></i> Add Candidates
           </a>
         </div>
       </div>
+      <div className="card shadow-sm p-3">
+        {/* 🔍 FILTER ROW */}
+        <div className="row g-2 align-items-center mb-3">
+          <div className="col-md-2">
+            <select className="form-select">
+              <option value="">Select Experience</option>
+              <option>0–1 Years</option>
+              <option>1–3 Years</option>
+              <option>3–5 Years</option>
+              <option>5+ Years</option>
+            </select>
+          </div>
 
-      <div className="card">
-        <div className="card-body">
-          <div className="table-responsive">
-            <table className="table table-bordered">
-              <thead>
-                <tr className="text-center">
-                  <th className="fw-bold fs-6">Detail</th>
-                  <th className="fw-bold fs-6">Contact</th>
-                  <th className="fw-bold fs-6">Address</th>
-                  <th className="fw-bold fs-6">Other Detail</th>
-                </tr>
-              </thead>
+          <div className="col-md-2">
+            <input type="date" className="form-control" />
+          </div>
 
-              <tbody>
-                {records.length > 0 ? (
-                  records.map((item) => (
-                    <tr key={item.id}>
-                      <td>
-                        <b>Name:</b> {item.name} <br />
-                        <b>Business:</b> {item.business} <br />
-                        <b>Category:</b> {item.category}
-                      </td>
+          <div className="col-md-2">
+            <input type="date" className="form-control" />
+          </div>
 
-                      <td>
-                        <b>Email:</b> {item.email} <br />
-                        <b>Mobile:</b> {item.mobile}
-                      </td>
+          <div className="col-md-3 d-flex">
+            <button className="btn btn-primary px-4 me-2">Submit</button>
 
-                      <td>
-                        <b>Location:</b> {item.location} <br />
-                        <b>City:</b> {item.city} <br />
-                        <b>State:</b> {item.state}
-                      </td>
+            {/* Reset Icon */}
+            <button className="btn btn-light border px-3">
+              <i className="fa fa-refresh"></i>
+            </button>
+          </div>
 
-                      <td>
-                        <b>Website:</b> {item.website} <br />
-                        <b>Facebook:</b> {item.facebook} <br />
-                        <b>Linkedin:</b> {item.linkedin} <br />
-                        <b>Instagram:</b> {item.instagram}
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="6" className="text-center text-muted py-3">
-                      No data available in table
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-
-            {/* PAGINATION */}
-            <nav className="d-flex justify-content-end mt-3">
-              <ul className="pagination">
-                <li
-                  className={`page-item ${currentPage === 1 ? "disabled" : ""}`}
-                >
-                  <button
-                    className="page-link"
-                    onClick={() => setCurrentPage(currentPage - 1)}
-                  >
-                    Previous
-                  </button>
-                </li>
-
-                {[...Array(nPages).keys()].map((num) => (
-                  <li
-                    key={num}
-                    className={`page-item ${
-                      currentPage === num + 1 ? "active" : ""
-                    }`}
-                  >
-                    <button
-                      className="page-link"
-                      onClick={() => setCurrentPage(num + 1)}
-                    >
-                      {num + 1}
-                    </button>
-                  </li>
-                ))}
-
-                <li
-                  className={`page-item ${
-                    currentPage === nPages ? "disabled" : ""
-                  }`}
-                >
-                  <button
-                    className="page-link"
-                    onClick={() => setCurrentPage(currentPage + 1)}
-                  >
-                    Next
-                  </button>
-                </li>
-              </ul>
-            </nav>
+          <div className="col-md-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Search..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
           </div>
         </div>
-      </div>
 
+        {/* TABLE */}
+        <div className="table-responsive">
+          <table className="table table-bordered align-middle">
+            <thead className="table-light text-center">
+              <tr>
+                <th>Candidate ID</th>
+                <th>Candidate Details</th>
+                <th>Profile Photo</th>
+                <th>Experience</th>
+                <th>Skills</th>
+                <th>Applied Jobs</th>
+                <th>Registration Date</th>
+                <th>Resume</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {/* Example Row (same style as your screenshot) */}
+              <tr>
+                <td className="text-center fw-bold">1</td>
+
+                {/* Candidate Info */}
+                <td style={{ width: "30%" }}>
+                  <b>Full Name:</b> Harshala Chavan <br />
+                  <b>Email:</b> harshala@example.com <br />
+                  <b>Phone:</b> 9876543210 <br />
+                  <b>Location:</b> Pune, MH
+                </td>
+
+                {/* Profile Image */}
+                <td className="text-center">
+                  <img
+                    src="https://via.placeholder.com/60"
+                    alt="profile"
+                    style={{
+                      width: "60px",
+                      height: "60px",
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                      border: "2px solid #ddd",
+                    }}
+                  />
+                </td>
+
+                {/* Experience */}
+                <td className="text-center">3 Years</td>
+
+                {/* Skills */}
+                <td className="text-center">React, Node.js, SQL</td>
+
+                {/* Applied Jobs */}
+                <td className="text-center fw-bold">5</td>
+
+                {/* Registration Date */}
+                <td className="text-center">2025-12-09</td>
+
+                {/* Resume Button */}
+                <td className="text-center">
+                  <a className="btn btn-sm btn-primary px-3 w-100" href="#">
+                    View / Download
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
       {/* DELETE CONFIRM MODAL */}
       <ConfirmDelete
         show={showDeleteModal}
         onConfirm={confirmDelete}
         onCancel={() => setShowDeleteModal(false)}
       />
+
       {/* ADD FORM MODAL */}
       <div
         className="modal fade"

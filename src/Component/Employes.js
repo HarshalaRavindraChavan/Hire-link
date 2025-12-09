@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
-// import Pagination from "./commenuse/Pagination";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
+import * as yup from "yup"; 
 
 function Employes() {
   const [users, setUsers] = useState([
@@ -94,94 +97,79 @@ function Employes() {
     setShowDeleteModal(false);
   };
 
-  const [formDataa, setFormDataa] = useState({
-    fullname: "",
-    email: "",
-    mobile: "",
-    companyname: "",
-    Category: "",
-    password: "",
-    location: "",
-    city: "",
-    state: "",
-    website: "",
-    linkedin: "",
-    facebook: "",
-    instagram: "",
-    youtube: "",
+  const validationSchema = Yup.object().shape({
+    fullname: Yup.string().required("Full name is required"),
+    email: Yup.string().email("Invalid email").required("Email is required"),
+    mobile: Yup.string()
+      .matches(/^[0-9]{10}$/, "Enter valid 10-digit mobile number")
+      .required("Mobile number is required"),
+    companyname: Yup.string().required("Company name is required"),
+    Category: Yup.string().required("Please select a category"),
+    password: Yup.string()
+      .min(6, "Password must be at least 6 characters")
+      .required("Password is required"),
+    location: Yup.string().required("Location is required"),
+    city: Yup.string().required("City is required"),
+    state: Yup.string().required("State is required"),
+    
+    website: yup
+      .string()
+      .url("Please enter a valid website link (https://...)")
+      .required("Website is required"),
+
+    linkedin: yup
+      .string()
+      .url("Enter a valid LinkedIn link")
+      .matches(/linkedin\.com/, "Link must be a LinkedIn profile URL")
+      .required("LinkedIn link is required"),
+
+    facebook: yup
+      .string()
+      .url("Enter a valid Facebook link")
+      .matches(/facebook\.com/, "Link must be a Facebook profile URL")
+      .required("Facebook link is required"),
+
+    instagram: yup
+      .string()
+      .url("Enter a valid Instagram link")
+      .matches(/instagram\.com/, "Link must be an Instagram profile URL")
+      .required("Instagram link is required"),
+
+    youtube: yup
+      .string()
+      .url("Enter a valid YouTube link")
+      .matches(
+        /(youtube\.com|youtu\.be)/,
+        "Link must be a YouTube channel/video URL"
+      )
+      .required("YouTube link is required"),
   });
 
-  const [errors, setErrors] = useState({});
+  // ---------------------------
+  // 2. React Hook Form
+  // ---------------------------
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
 
-  // Handle Input Change
-  const handleChangee = (e) => {
-    setFormData({ ...formDataa, [e.target.name]: e.target.value });
+  // ---------------------------
+  // 3. Submit Handler
+  // ---------------------------
+  const onSubmit = (data) => {
+    console.log("User Saved:", data);
+    alert("User Saved Successfully!");
   };
+  // // Submit Handler
+  // const handleAddUser = (e) => {
+  //   e.preventDefault();
+  //   if (!validateForm()) return;
 
-  // URL Validator
-  const isValidUrl = (url) => {
-    if (!url) return true; // optional fields
-    const pattern = /^(https?:\/\/)?([\w\d\-]+\.)+[\w]{2,}(\/.*)?$/;
-    return pattern.test(url);
-  };
-
-  // Form Validation
-  const validateForm = () => {
-    let newErrors = {};
-
-    if (!formDataa.fullname.trim())
-      newErrors.fullname = "Full Name is required";
-
-    if (!formDataa.email.trim()) newErrors.email = "Email is required";
-    else if (!/^\S+@\S+\.\S+$/.test(formDataa.email))
-      newErrors.email = "Enter a valid email";
-
-    if (!formDataa.mobile.trim())
-      newErrors.mobile = "Mobile number is required";
-    else if (!/^[0-9]{10}$/.test(formDataa.mobile))
-      newErrors.mobile = "Enter a valid 10-digit mobile number";
-
-    if (!formDataa.companyname.trim())
-      newErrors.companyname = "Company Name is required";
-
-    if (!formDataa.Category.trim()) newErrors.Category = "Category is required";
-
-    if (!formDataa.password.trim()) newErrors.password = "Password is required";
-    else if (formDataa.password.length < 6)
-      newErrors.password = "Password must be at least 6 characters";
-
-    if (!formDataa.location.trim()) newErrors.location = "Location is required";
-
-    if (!formDataa.city.trim()) newErrors.city = "City is required";
-
-    if (!formDataa.state.trim()) newErrors.state = "State is required";
-
-    if (!isValidUrl(formDataa.website))
-      newErrors.website = "Enter a valid Website URL";
-
-    if (!isValidUrl(formDataa.linkedin))
-      newErrors.linkedin = "Enter a valid Linkedin link";
-
-    if (!isValidUrl(formDataa.facebook))
-      newErrors.facebook = "Enter a valid Facebook link";
-
-    if (!isValidUrl(formDataa.instagram))
-      newErrors.instagram = "Enter a valid Instagram link";
-
-    if (!isValidUrl(formDataa.youtube))
-      newErrors.youtube = "Enter a valid YouTube link";
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  // Submit Handler
-  const handleAddUser = (e) => {
-    e.preventDefault();
-    if (!validateForm()) return;
-
-    alert("Employer Added Successfully ✔");
-  };
+  //   alert("Employer Added Successfully ✔");
+  // };
 
   return (
     <>
@@ -291,22 +279,20 @@ function Employes() {
               ></i>
             </div>
 
-            <form onSubmit={handleAddUser}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <div className="modal-body row">
                 {/* Full Name */}
                 <div className="col-md-4 mb-2">
                   <label className="fw-semibold">Full Name</label>
                   <input
                     type="text"
-                    name="fullname"
-                    value={formData.fullname}
-                    onChange={handleChange}
                     className="form-control"
                     placeholder="Enter Full Name"
+                    {...register("fullname")}
                   />
-                  {errors.fullname && (
-                    <span className="text-danger">{errors.fullname}</span>
-                  )}
+                  <span className="text-danger">
+                    {errors.fullname?.message}
+                  </span>
                 </div>
 
                 {/* Email */}
@@ -314,15 +300,11 @@ function Employes() {
                   <label className="fw-semibold">Email</label>
                   <input
                     type="text"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
                     className="form-control"
                     placeholder="Enter Email"
+                    {...register("email")}
                   />
-                  {errors.email && (
-                    <span className="text-danger">{errors.email}</span>
-                  )}
+                  <span className="text-danger">{errors.email?.message}</span>
                 </div>
 
                 {/* Mobile */}
@@ -330,15 +312,11 @@ function Employes() {
                   <label className="fw-semibold">Mobile</label>
                   <input
                     type="text"
-                    name="mobile"
-                    value={formData.mobile}
-                    onChange={handleChange}
                     className="form-control"
                     placeholder="Enter Mobile Number"
+                    {...register("mobile")}
                   />
-                  {errors.mobile && (
-                    <span className="text-danger">{errors.mobile}</span>
-                  )}
+                  <span className="text-danger">{errors.mobile?.message}</span>
                 </div>
 
                 {/* Company Name */}
@@ -346,33 +324,26 @@ function Employes() {
                   <label className="fw-semibold">Company Name</label>
                   <input
                     type="text"
-                    name="companyname"
-                    value={formData.companyname}
-                    onChange={handleChange}
                     className="form-control"
                     placeholder="Enter Company Name"
+                    {...register("companyname")}
                   />
-                  {errors.companyname && (
-                    <span className="text-danger">{errors.companyname}</span>
-                  )}
+                  <span className="text-danger">
+                    {errors.companyname?.message}
+                  </span>
                 </div>
 
                 {/* Category */}
                 <div className="col-md-4 mb-2">
                   <label className="fw-semibold">Category</label>
-                  <select
-                    name="Category"
-                    value={formData.Category}
-                    onChange={handleChange}
-                    className="form-select form-control"
-                  >
+                  <select className="form-select" {...register("Category")}>
                     <option value="">Select Category</option>
-                    <option>Percentage</option>
-                    <option>Flat Amount</option>
+                    <option value="Percentage">Percentage</option>
+                    <option value="Flat Amount">Flat Amount</option>
                   </select>
-                  {errors.Category && (
-                    <span className="text-danger">{errors.Category}</span>
-                  )}
+                  <span className="text-danger">
+                    {errors.Category?.message}
+                  </span>
                 </div>
 
                 {/* Password */}
@@ -380,15 +351,13 @@ function Employes() {
                   <label className="fw-semibold">Password</label>
                   <input
                     type="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
                     className="form-control"
                     placeholder="Enter Password"
+                    {...register("password")}
                   />
-                  {errors.password && (
-                    <span className="text-danger">{errors.password}</span>
-                  )}
+                  <span className="text-danger">
+                    {errors.password?.message}
+                  </span>
                 </div>
 
                 {/* Location */}
@@ -396,15 +365,13 @@ function Employes() {
                   <label className="fw-semibold">Location</label>
                   <input
                     type="text"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleChange}
                     className="form-control"
                     placeholder="Enter Location"
+                    {...register("location")}
                   />
-                  {errors.location && (
-                    <span className="text-danger">{errors.location}</span>
-                  )}
+                  <span className="text-danger">
+                    {errors.location?.message}
+                  </span>
                 </div>
 
                 {/* City */}
@@ -412,15 +379,11 @@ function Employes() {
                   <label className="fw-semibold">City</label>
                   <input
                     type="text"
-                    name="city"
-                    value={formData.city}
-                    onChange={handleChange}
                     className="form-control"
                     placeholder="Enter City"
+                    {...register("city")}
                   />
-                  {errors.city && (
-                    <span className="text-danger">{errors.city}</span>
-                  )}
+                  <span className="text-danger">{errors.city?.message}</span>
                 </div>
 
                 {/* State */}
@@ -428,15 +391,11 @@ function Employes() {
                   <label className="fw-semibold">State</label>
                   <input
                     type="text"
-                    name="state"
-                    value={formData.state}
-                    onChange={handleChange}
                     className="form-control"
                     placeholder="Enter State"
+                    {...register("state")}
                   />
-                  {errors.state && (
-                    <span className="text-danger">{errors.state}</span>
-                  )}
+                  <span className="text-danger">{errors.state?.message}</span>
                 </div>
 
                 {/* Website */}
@@ -444,79 +403,61 @@ function Employes() {
                   <label className="fw-semibold">Website</label>
                   <input
                     type="text"
-                    name="website"
-                    value={formData.website}
-                    onChange={handleChange}
                     className="form-control"
                     placeholder="Enter Website Link"
+                    {...register("website")}
                   />
-                  {errors.website && (
-                    <span className="text-danger">{errors.website}</span>
-                  )}
+                  <span className="text-danger">{errors.website?.message}</span>
                 </div>
 
-                {/* Linkedin */}
                 <div className="col-md-4 mb-2">
-                  <label className="fw-semibold">Linkedin</label>
+                  <label className="fw-semibold">LinkedIn</label>
                   <input
                     type="text"
-                    name="linkedin"
-                    value={formData.linkedin}
-                    onChange={handleChange}
                     className="form-control"
-                    placeholder="Enter Linkedin Link"
+                    placeholder="Enter LinkedIn Link"
+                    {...register("linkedin")}
                   />
-                  {errors.linkedin && (
-                    <span className="text-danger">{errors.linkedin}</span>
-                  )}
+                  <span className="text-danger">
+                    {errors.linkedin?.message}
+                  </span>
                 </div>
 
-                {/* Facebook */}
                 <div className="col-md-4 mb-2">
                   <label className="fw-semibold">Facebook</label>
                   <input
                     type="text"
-                    name="facebook"
-                    value={formData.facebook}
-                    onChange={handleChange}
                     className="form-control"
                     placeholder="Enter Facebook Link"
+                    {...register("facebook")}
                   />
-                  {errors.facebook && (
-                    <span className="text-danger">{errors.facebook}</span>
-                  )}
+                  <span className="text-danger">
+                    {errors.facebook?.message}
+                  </span>
                 </div>
 
-                {/* Instagram */}
                 <div className="col-md-4 mb-2">
                   <label className="fw-semibold">Instagram</label>
                   <input
                     type="text"
-                    name="instagram"
-                    value={formData.instagram}
-                    onChange={handleChange}
                     className="form-control"
                     placeholder="Enter Instagram Link"
+                    {...register("instagram")}
                   />
-                  {errors.instagram && (
-                    <span className="text-danger">{errors.instagram}</span>
-                  )}
+                  <span className="text-danger">
+                    {errors.instagram?.message}
+                  </span>
                 </div>
 
-                {/* YouTube */}
                 <div className="col-md-4 mb-2">
                   <label className="fw-semibold">YouTube</label>
                   <input
                     type="text"
-                    name="youtube"
-                    value={formData.youtube}
-                    onChange={handleChange}
                     className="form-control"
                     placeholder="Enter YouTube Link"
+                    {...register("youtube")}
                   />
-                  {errors.youtube && (
-                    <span className="text-danger">{errors.youtube}</span>
-                  )}
+                  <span className="text-danger">{errors.youtube?.message}</span>
                 </div>
               </div>
 

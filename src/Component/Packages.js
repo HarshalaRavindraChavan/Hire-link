@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
-// import Pagination from "./commenuse/Pagination";
 
 function Packages() {
   const [packages, setPackages] = useState([
@@ -14,7 +13,9 @@ function Packages() {
       support: "Email",
       description: "Suitable for small recruiters",
       benefits: ["5 Job Posts", "Email Support", "50 Resume Views"],
-      status: "Active",
+      status: "1",
+      added_by: "rohan",
+      added_date: "12/11/2025",
     },
   ]);
 
@@ -26,24 +27,21 @@ function Packages() {
     resumeLimit: "",
     support: "",
     description: "",
-    status: "Active",
+    status: "1",
   });
 
-  const [benefit, setBenefit] = useState("");
-  const [benefits, setBenefits] = useState([]);
+  const [benefits, setBenefits] = useState([""]);
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const addBenefit = () => {
-    if (benefit.trim() !== "") {
-      setBenefits([...benefits, benefit]);
-      setBenefit("");
-    }
+    setBenefits([...benefits, ""]);
   };
 
-  const removeBenefit = (index) => {
-    const updated = benefits.filter((_, i) => i !== index);
+  const handleBenefitChange = (index, value) => {
+    const updated = [...benefits];
+    updated[index] = value;
     setBenefits(updated);
   };
 
@@ -51,7 +49,7 @@ function Packages() {
     e.preventDefault();
 
     const newPackage = {
-      id: Date.now(),
+      id: packages.length + 1, // Auto increment ID
       ...formData,
       benefits: benefits,
     };
@@ -69,20 +67,13 @@ function Packages() {
       status: "Active",
     });
 
-    setBenefits([]);
+    setBenefits([""]);
 
     const modal = window.bootstrap.Modal.getInstance(
       document.getElementById("exampleModal")
     );
     modal.hide();
   };
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 1;
-  const lastIndex = currentPage * recordsPerPage;
-  const firstIndex = lastIndex - recordsPerPage;
-  const records = packages.slice(firstIndex, lastIndex);
-  const nPages = Math.ceil(packages.length / recordsPerPage);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
@@ -118,53 +109,108 @@ function Packages() {
           <table className="table table-bordered">
             <thead>
               <tr className="text-center">
-                <th>Name</th>
-                <th>Price</th>
-                <th>Duration</th>
-                <th>Status</th>
-                <th>Benefits</th>
+                <th className="fs-6 fw-bold">Id</th>
+                <th className="fs-6 fw-bold">Package</th>
+                <th className="fs-6 fw-bold">Package Detail</th>
+                <th className="fs-6 fw-bold">Benefits</th>
+                <th className="fs-6 fw-bold">Status</th>
+                <th className="fs-6 fw-bold">Activity Detail</th>
               </tr>
             </thead>
 
             <tbody>
-              {records.length > 0 ? (
-                records.map((pkg) => (
+              {packages.length > 0 ? (
+                packages.map((pkg) => (
                   <tr key={pkg.id} className="text-center align-middle">
-                    <td>
-                      <div className="dropdown">
-                        <span
-                          className="fw-bold text-primary"
-                          role="button"
-                          data-bs-toggle="dropdown"
-                        >
-                          {pkg.packageName}
+                    <td>{pkg.id}</td>
+                    <td className="text-start">
+                      <div className="fw-bold">
+                        Package Name:
+                        <div className="dropdown d-inline ms-2">
+                          <span
+                            className="fw-bold text-primary"
+                            role="button"
+                            data-bs-toggle="dropdown"
+                          >
+                            {pkg.packageName}
+                          </span>
+                          <ul className="dropdown-menu shadow">
+                            <li>
+                              <button className="dropdown-item">
+                                <i className="fas fa-edit me-2"></i>Edit
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                className="dropdown-item text-danger"
+                                onClick={() => handleDeleteClick(pkg.id)}
+                              >
+                                <i className="fas fa-trash me-2"></i>Delete
+                              </button>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+
+                      <div className="fw-bold mt-1">
+                        Price:{"  "}
+                        <span className="text-dark fw-normal">{pkg.price}</span>
+                      </div>
+                      <div className="fw-bold mt-1">
+                        Duration:{"  "}
+                        <span className="text-dark fw-normal">
+                          {pkg.duration}
                         </span>
-                        <ul className="dropdown-menu shadow">
-                          <li>
-                            <button className="dropdown-item">
-                              <i className="fas fa-edit me-2"></i>Edit
-                            </button>
-                          </li>
-                          <li>
-                            <button
-                              className="dropdown-item text-danger"
-                              onClick={() => handleDeleteClick(pkg.id)}
-                            >
-                              <i className="fas fa-trash me-2"></i>Delete
-                            </button>
-                          </li>
-                        </ul>
                       </div>
                     </td>
-                    <td>{pkg.price}</td>
-                    <td>{pkg.duration}</td>
-                    <td>{pkg.status}</td>
+
                     <td className="text-start">
-                      <ul style={{ paddingLeft: "18px" }}>
-                        {pkg.benefits?.map((b, i) => (
-                          <li key={i}>{b}</li>
-                        ))}
-                      </ul>
+                      <div className="fw-bold mt-1">
+                        Job Post Limit:{"  "}
+                        <span className="text-dark fw-normal">
+                          {pkg.jobLimit}
+                        </span>
+                      </div>
+                      <div className="fw-bold mt-1">
+                        Resume Limit:{"  "}
+                        <span className="text-dark fw-normal">
+                          {pkg.resumeLimit}
+                        </span>
+                      </div>
+                      <div className="fw-bold mt-1">
+                        Support:{"  "}
+                        <span className="text-dark fw-normal">
+                          {pkg.support}
+                        </span>
+                      </div>
+                    </td>
+
+                    <td className="text-start">
+                      {pkg.benefits.map((b, i) => (
+                        <div key={i}>• {b}</div>
+                      ))}
+                    </td>
+
+                    <td>
+                      {pkg.status === "1" ? (
+                        <span className="badge bg-success">Active</span>
+                      ) : (
+                        <span className="badge bg-danger">Inactive</span>
+                      )}
+                    </td>
+                    <td className="text-start">
+                      <div className="fw-bold mt-1">
+                        Added By:{"  "}
+                        <span className="text-dark fw-normal">
+                          {pkg.added_by}
+                        </span>
+                      </div>
+                      <div className="fw-bold mt-1">
+                        Added Date:{"  "}
+                        <span className="text-dark fw-normal">
+                          {pkg.added_date}
+                        </span>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -177,11 +223,6 @@ function Packages() {
               )}
             </tbody>
           </table>
-          {/* <Pagination
-            currentPage={currentPage}
-            totalPages={nPages}
-            onPageChange={(page) => setCurrentPage(page)}
-          /> */}
         </div>
       </div>
 
@@ -194,7 +235,7 @@ function Packages() {
               <i
                 className="fa-regular fa-circle-xmark"
                 data-bs-dismiss="modal"
-                style={{ cursor: "pointer", color: "white", fontSize: "25px" }}
+                style={{ cursor: "pointer", fontSize: "25px" }}
               ></i>
             </div>
 
@@ -208,7 +249,7 @@ function Packages() {
                     value={formData.packageName}
                     onChange={handleChange}
                     className="form-control"
-                    placeholder="Basic / Premium"
+                    placeholder="Enter Package Name"
                   />
                 </div>
 
@@ -220,7 +261,7 @@ function Packages() {
                     value={formData.price}
                     onChange={handleChange}
                     className="form-control"
-                    placeholder="499"
+                    placeholder="Enter Price"
                   />
                 </div>
 
@@ -230,7 +271,7 @@ function Packages() {
                     name="duration"
                     value={formData.duration}
                     onChange={handleChange}
-                    className="form-select"
+                    className="form-select form-control"
                   >
                     <option value="">Select</option>
                     <option>30 Days</option>
@@ -248,7 +289,7 @@ function Packages() {
                     value={formData.jobLimit}
                     onChange={handleChange}
                     className="form-control"
-                    placeholder="10"
+                    placeholder="Number Of Limit"
                   />
                 </div>
 
@@ -260,7 +301,7 @@ function Packages() {
                     value={formData.resumeLimit}
                     onChange={handleChange}
                     className="form-control"
-                    placeholder="50"
+                    placeholder="Number Of Limit"
                   />
                 </div>
 
@@ -270,7 +311,7 @@ function Packages() {
                     name="support"
                     value={formData.support}
                     onChange={handleChange}
-                    className="form-select"
+                    className="form-select form-control"
                   >
                     <option>Email</option>
                     <option>Chat</option>
@@ -286,40 +327,49 @@ function Packages() {
                     onChange={handleChange}
                     className="form-control"
                     rows={4}
-                    placeholder="Write something..."
+                    placeholder="Description of Package"
                   ></textarea>
                 </div>
 
-                <div className="col-md-6 mb-2">
+                {/* BENEFITS DYNAMIC INPUT */}
+                <div className="col-md-12 mb-2">
                   <label>Benefits / Features</label>
-                  <div className="d-flex gap-2">
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Enter benefit"
-                      value={benefit}
-                    />
-                    <button
-                      type="button"
-                      className="btn btn-success"
-                      onClick={addBenefit}
-                    >
-                      Add
-                    </button>
-                  </div>
+
+                  {benefits.map((benefit, index) => (
+                    <div className="d-flex gap-2 mb-2" key={index}>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Enter benefit"
+                        value={benefit}
+                        onChange={(e) =>
+                          handleBenefitChange(index, e.target.value)
+                        }
+                      />
+
+                      {index === benefits.length - 1 && (
+                        <button
+                          type="button"
+                          className="btn btn-success"
+                          onClick={addBenefit}
+                        >
+                          Add
+                        </button>
+                      )}
+                    </div>
+                  ))}
                 </div>
               </div>
 
               <div className="modal-footer bg-light rounded-bottom-4 d-flex">
                 <button
-                  className="btn btn-outline-secondary rounded-3"
+                  className="btn btn-outline-secondary"
                   data-bs-dismiss="modal"
                 >
                   Close
                 </button>
-
-                <button type="submit" className="btn btn-primary px-4 ms-auto">
-                  Save User
+                <button type="submit" className="btn btn-primary ms-auto px-4">
+                  Save Package
                 </button>
               </div>
             </form>

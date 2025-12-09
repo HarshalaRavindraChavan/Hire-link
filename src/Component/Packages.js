@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
 import { useForm, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -22,62 +22,6 @@ function Packages() {
     },
   ]);
 
-  const [formData, setFormData] = useState({
-    packageName: "",
-    price: "",
-    duration: "",
-    jobLimit: "",
-    resumeLimit: "",
-    support: "",
-    description: "",
-    status: "1",
-  });
-
-  const [benefits, setBenefits] = useState([""]);
-
-  const handleChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-
-  const addBenefit = () => {
-    setBenefits([...benefits, ""]);
-  };
-
-  const handleBenefitChange = (index, value) => {
-    const updated = [...benefits];
-    updated[index] = value;
-    setBenefits(updated);
-  };
-
-  const handleAddPackage = (e) => {
-    e.preventDefault();
-
-    const newPackage = {
-      id: packages.length + 1, // Auto increment ID
-      ...formData,
-      benefits: benefits,
-    };
-
-    setPackages([...packages, newPackage]);
-
-    setFormData({
-      packageName: "",
-      price: "",
-      duration: "",
-      jobLimit: "",
-      resumeLimit: "",
-      support: "",
-      description: "",
-      status: "Active",
-    });
-
-    setBenefits([""]);
-
-    const modal = window.bootstrap.Modal.getInstance(
-      document.getElementById("exampleModal")
-    );
-    modal.hide();
-  };
-
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
@@ -92,9 +36,7 @@ function Packages() {
     setShowDeleteModal(false);
   };
 
-  // validation code
-
-  // 🟦 VALIDATION SCHEMA
+  // Validation Schema
   const validationSchema = Yup.object().shape({
     packageName: Yup.string().required("Package name is required"),
     price: Yup.number()
@@ -120,6 +62,9 @@ function Packages() {
     control,
     formState: { errors },
     reset,
+    getValues,
+    setError,
+    clearErrors,
   } = useForm({
     resolver: yupResolver(validationSchema),
     defaultValues: {
@@ -130,20 +75,56 @@ function Packages() {
       resumeLimit: "",
       support: "",
       description: "",
-      benefits: [""],
+      benefits: [],
     },
   });
 
-  // Dynamic benefits array
   const { fields, append } = useFieldArray({
     control,
     name: "benefits",
   });
 
-  // Submit function
+  // Ensure first input appears always
+  useEffect(() => {
+    if (fields.length === 0) {
+      append("");
+    }
+  }, [fields]);
+
+  // Benefit Add logic with validation
+  const handleAddBenefit = () => {
+    const values = getValues("benefits");
+    const lastIndex = values.length - 1;
+    const lastValue = values[lastIndex];
+
+    if (!lastValue || lastValue.trim() === "") {
+      setError(`benefits.${lastIndex}`, {
+        type: "manual",
+        message: "Benefit is required",
+      });
+      return;
+    }
+
+    clearErrors(`benefits.${lastIndex}`);
+    append("");
+  };
+
   const onSubmit = (data) => {
-    console.log("VALIDATED DATA:", data);
-    alert("Package saved successfully!");
+    const newPackage = {
+      id: packages.length + 1,
+      added_by: "rohan",
+      added_date: "12/11/2025",
+      status: "1",
+      ...data,
+    };
+
+    setPackages([...packages, newPackage]);
+    reset({ benefits: [""] });
+
+    const modal = window.bootstrap.Modal.getInstance(
+      document.getElementById("exampleModal")
+    );
+    modal.hide();
   };
 
   return (
@@ -210,11 +191,11 @@ function Packages() {
                       </div>
 
                       <div className="fw-bold mt-1">
-                        Price:{"  "}
+                        Price:{" "}
                         <span className="text-dark fw-normal">{pkg.price}</span>
                       </div>
                       <div className="fw-bold mt-1">
-                        Duration:{"  "}
+                        Duration:{" "}
                         <span className="text-dark fw-normal">
                           {pkg.duration}
                         </span>
@@ -223,19 +204,19 @@ function Packages() {
 
                     <td className="text-start">
                       <div className="fw-bold mt-1">
-                        Job Post Limit:{"  "}
+                        Job Post Limit:{" "}
                         <span className="text-dark fw-normal">
                           {pkg.jobLimit}
                         </span>
                       </div>
                       <div className="fw-bold mt-1">
-                        Resume Limit:{"  "}
+                        Resume Limit:{" "}
                         <span className="text-dark fw-normal">
                           {pkg.resumeLimit}
                         </span>
                       </div>
                       <div className="fw-bold mt-1">
-                        Support:{"  "}
+                        Support:{" "}
                         <span className="text-dark fw-normal">
                           {pkg.support}
                         </span>
@@ -257,13 +238,13 @@ function Packages() {
                     </td>
                     <td className="text-start">
                       <div className="fw-bold mt-1">
-                        Added By:{"  "}
+                        Added By:{" "}
                         <span className="text-dark fw-normal">
                           {pkg.added_by}
                         </span>
                       </div>
                       <div className="fw-bold mt-1">
-                        Added Date:{"  "}
+                        Added Date:{" "}
                         <span className="text-dark fw-normal">
                           {pkg.added_date}
                         </span>
@@ -283,12 +264,12 @@ function Packages() {
         </div>
       </div>
 
-      {/* ADD PACKAGE MODAL */}
-      <div className="modal fade" id="exampleModal" tabIndex="-1">
+      {/* Modal */}
+      <div className="modal fade" id="exampleModal">
         <div className="modal-dialog modal-dialog-centered modal-lg">
-          <div className="modal-content rounded-4">
+          <div className="modal-content">
             <div className="modal-header bg-primary text-white">
-              <h5 className="modal-title fw-bold">Add Package</h5>
+              <h5 className="modal-title">Add Package</h5>
               <i
                 className="fa-regular fa-circle-xmark"
                 data-bs-dismiss="modal"
@@ -298,7 +279,6 @@ function Packages() {
 
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="modal-body row">
-                {/* Package Name */}
                 <div className="col-md-4 mb-2">
                   <label>Package Name</label>
                   <input
@@ -311,22 +291,23 @@ function Packages() {
                   </span>
                 </div>
 
-                {/* Price */}
                 <div className="col-md-4 mb-2">
                   <label>Price</label>
                   <input
-                    className="form-control"
                     type="number"
+                    className="form-control"
                     {...register("price")}
-                    placeholder="Enter Price"
+                    placeholder="Enter Package Price"
                   />
                   <span className="text-danger">{errors.price?.message}</span>
                 </div>
 
-                {/* Duration */}
                 <div className="col-md-4 mb-2">
                   <label>Duration</label>
-                  <select className="form-select" {...register("duration")}>
+                  <select
+                    className="form-select form-control"
+                    {...register("duration")}
+                  >
                     <option value="">Select</option>
                     <option>30 Days</option>
                     <option>60 Days</option>
@@ -338,38 +319,39 @@ function Packages() {
                   </span>
                 </div>
 
-                {/* Job limit */}
                 <div className="col-md-4 mb-2">
                   <label>Job Post Limit</label>
                   <input
-                    className="form-control"
                     type="number"
+                    className="form-control"
                     {...register("jobLimit")}
-                    placeholder="Job Limit"
+                    placeholder="Number of Post Limit"
                   />
                   <span className="text-danger">
                     {errors.jobLimit?.message}
                   </span>
                 </div>
 
-                {/* Resume limit */}
                 <div className="col-md-4 mb-2">
                   <label>Resume View Limit</label>
                   <input
-                    className="form-control"
                     type="number"
+                    className="form-control"
                     {...register("resumeLimit")}
-                    placeholder="Resume Limit"
+                    placeholder="Number of View Limit"
                   />
                   <span className="text-danger">
                     {errors.resumeLimit?.message}
                   </span>
                 </div>
 
-                {/* Support */}
                 <div className="col-md-4 mb-2">
                   <label>Support</label>
-                  <select className="form-select" {...register("support")}>
+                  <select
+                    className="form-select form-control"
+                    {...register("support")}
+                  >
+                    <option value="">Select</option>
                     <option>Email</option>
                     <option>Chat</option>
                     <option>Phone</option>
@@ -377,58 +359,56 @@ function Packages() {
                   <span className="text-danger">{errors.support?.message}</span>
                 </div>
 
-                {/* Description */}
                 <div className="col-md-12 mb-2">
                   <label>Description</label>
                   <textarea
                     className="form-control"
-                    rows={4}
+                    rows={3}
                     {...register("description")}
-                    placeholder="Description"
+                    placeholder="Enter Package Description"
                   ></textarea>
                   <span className="text-danger">
                     {errors.description?.message}
                   </span>
                 </div>
 
-                {/* Benefits */}
+                {/* BENEFITS */}
                 <div className="col-md-12 mb-2">
                   <label>Benefits / Features</label>
-
                   {fields.map((field, index) => (
-                    <div className="d-flex gap-2 mb-2" key={field.id}>
-                      <input
-                        className="form-control"
-                        {...register(`benefits.${index}`)}
-                        placeholder="Enter benefit"
-                      />
-
-                      {index === fields.length - 1 && (
-                        <button
-                          type="button"
-                          className="btn btn-success"
-                          onClick={() => append("")}
-                        >
-                          Add
-                        </button>
+                    <div className="mb-2" key={field.id}>
+                      <div className="d-flex gap-2">
+                        <input
+                          type="text"
+                          className="form-control"
+                          {...register(`benefits.${index}`)}
+                          placeholder={`Benefit ${index + 1}`}
+                        />
+                        {index === fields.length - 1 && (
+                          <button
+                            type="button"
+                            className="btn btn-success"
+                            onClick={handleAddBenefit}
+                          >
+                            Add
+                          </button>
+                        )}
+                      </div>
+                      {errors.benefits?.[index] && (
+                        <span className="text-danger">
+                          {errors.benefits[index].message}
+                        </span>
                       )}
                     </div>
                   ))}
-
-                  <span className="text-danger">
-                    {errors.benefits?.[0]?.message}
-                  </span>
                 </div>
               </div>
 
-              <div className="modal-footer bg-light rounded-bottom-4 d-flex">
-                <button
-                  className="btn btn-outline-secondary"
-                  data-bs-dismiss="modal"
-                >
+              <div className="modal-footer">
+                <button className="btn btn-secondary" data-bs-dismiss="modal">
                   Close
                 </button>
-                <button type="submit" className="btn btn-primary ms-auto px-4">
+                <button className="btn btn-primary" type="submit">
                   Save Package
                 </button>
               </div>

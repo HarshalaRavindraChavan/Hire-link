@@ -22,13 +22,15 @@ function Users() {
       mobile: "9876543201",
       location: "Main Road",
       address: "Main Road",
-      state: "",
-      city: "",
+      state: "Maharastra",
+      city: "Pune",
       joindate: "2024-01-05",
       adhar: "1111 2222 3333",
       pan: "ABCDE1234F",
       bankpassbook: "Union Bank",
       experience: "1 Year",
+      added_by: "rohan",
+      added_date: "12/11/2025",
     },
   ]);
 
@@ -161,7 +163,7 @@ function Users() {
           <button
             data-bs-toggle="modal"
             data-bs-target="#exampleModal"
-            className="btn btn-primary"
+            className="btn btn-success"
           >
             <i className="fa fa-plus"></i> Add User
           </button>
@@ -169,28 +171,65 @@ function Users() {
       </div>
 
       {/* TABLE */}
-      <div className="card">
-        <div className="card-body table-responsive">
-          <table className="table table-bordered">
-            <thead>
-              <tr className="text-center">
-                <th>Name</th>
-                <th>Contact</th>
-                <th>Location</th>
-              </tr>
-            </thead>
+      <div className="card shadow-sm p-3">
+        <div className="row g-2 align-items-center mb-3">
+          <div className="col-md-2">
+            <select className="form-select form-control">
+              <option value="">Select Exper</option>
+              <option>Percentage</option>
+              <option>Flat Amount</option>
+            </select>
+          </div>
+          <div className="col-md-2">
+            <input type="date" className="form-control" />
+          </div>
 
-            <tbody>
-              {records.length > 0 ? (
-                records.map((u) => (
-                  <tr key={u.id} className="text-center align-middle">
-                    <td>
-                      <div className="dropdown d-inline-block">
+          <div className="col-md-2">
+            <input type="date" className="form-control" />
+          </div>
+
+          <div className="col-md-3 d-flex">
+            <button type="submit" className="btn btn-success px-4 me-2">
+              Submit
+            </button>
+            <button className="btn btn-light border px-3">
+              <i className="fa fa-refresh"></i>
+            </button>
+          </div>
+
+          <div className="col-md-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Search..."
+            />
+          </div>
+        </div>
+
+        <table className="table table-bordered">
+          <thead className="table-light text-center">
+            <tr className="text-center">
+              <th className="fs-6 fw-bold">ID</th>
+              <th className="fs-6 fw-bold">User Detail</th>
+              <th className="fs-6 fw-bold">User ID Proof</th>
+              <th className="fs-6 fw-bold">User Address</th>
+              <th className="fs-6 fw-bold">Activity Detail</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {records.length > 0 ? (
+              records.map((u) => (
+                <tr key={u.id} className="text-center align-middle">
+                  <td>{u.id}</td>
+                  <td className="text-start">
+                    <div className="fw-bold">
+                      Name:
+                      <div className="dropdown d-inline ms-2">
                         <span
                           className="fw-bold text-primary"
                           role="button"
                           data-bs-toggle="dropdown"
-                          style={{ cursor: "pointer" }}
                         >
                           {u.fullname}
                         </span>
@@ -210,43 +249,95 @@ function Users() {
                           </li>
                         </ul>
                       </div>
-                      <br />
-                      Join: {u.joindate} <br />
-                      Exp: {u.experience}
-                    </td>
-                    <td>
-                      Email: {u.email} <br />
-                      Mobile: {u.mobile}
-                    </td>
-                    <td>
-                      {u.address}, {u.city}, {u.state} <br />
-                      Adhar: {u.adhar}
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="6" className="text-center text-muted py-3">
-                    No data available
+                    </div>
+
+                    <div className="fw-bold">
+                      Email:{"  "}
+                      <span className="text-dark fw-normal">{u.email}</span>
+                    </div>
+                    <div className="fw-bold">
+                      Mobile No:{"  "}
+                      <span className="text-dark fw-normal">{u.mobile}</span>
+                    </div>
+                    <div className="fw-bold">
+                      Experience:{"  "}
+                      <span className="text-dark fw-normal">
+                        {u.experience}
+                      </span>
+                    </div>
+                  </td>
+
+                  {/* User Id Proof */}
+                  <td className="text-start">
+                    <div className="fw-bold">
+                      Aadhar No:{"  "}
+                      <span className="text-dark fw-normal">{u.adhar}</span>
+                    </div>
+                    <div className="fw-bold">
+                      Pan Card No:{"  "}
+                      <span className="text-dark fw-normal">{u.pan}</span>
+                    </div>
+                    <div className="fw-bold">
+                      Join Date:{"  "}
+                      <span className="text-dark fw-normal">{u.joindate}</span>
+                    </div>
+                  </td>
+                  {/* Address */}
+                  <td className="text-start">
+                    <div className="fw-bold">
+                      Location:{"  "}
+                      <span className="text-dark fw-normal">{u.location}</span>
+                    </div>
+                    <div className="fw-bold">
+                      Address:{"  "}
+                      <span className="text-dark fw-normal">{u.address}</span>
+                    </div>
+                    <div className="fw-bold">
+                      City:{"  "}
+                      <span className="text-dark fw-normal">{u.city}</span>
+                    </div>
+                    <div className="fw-bold">
+                      State:{"  "}
+                      <span className="text-dark fw-normal">{u.state}</span>
+                    </div>
+                  </td>
+                  {/* Activity Detail */}
+                  <td className="text-start">
+                    <div className="fw-bold ">
+                      Added By:{"  "}
+                      <span className="text-dark fw-normal">{u.added_by}</span>
+                    </div>
+                    <div className="fw-bold ">
+                      Added Date:{"  "}
+                      <span className="text-dark fw-normal">
+                        {u.added_date}
+                      </span>
+                    </div>
                   </td>
                 </tr>
-              )}
-            </tbody>
-          </table>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="6" className="text-center text-muted py-3">
+                  No data available
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
 
-          {/* <Pagination
+        {/* <Pagination
             currentPage={currentPage}
             totalPages={nPages}
             onPageChange={(page) => setCurrentPage(page)}
           /> */}
-        </div>
       </div>
 
       {/* ADD USER MODAL */}
       <div className="modal fade" id="exampleModal" tabIndex="-1">
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content rounded-4">
-            <div className="modal-header bg-primary text-white">
+            <div className="modal-header bg-success text-white">
               <h5 className="modal-title fw-bold">Add User</h5>
               <i
                 className="fa-regular fa-circle-xmark"
@@ -258,7 +349,7 @@ function Users() {
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="modal-body row">
                 {/* Full Name */}
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4">
                   <label className="fw-semibold">Full Name</label>
                   <input
                     type="text"
@@ -270,7 +361,7 @@ function Users() {
                 </div>
 
                 {/* Email */}
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4">
                   <label className="fw-semibold">Email</label>
                   <input
                     type="text"
@@ -282,7 +373,7 @@ function Users() {
                 </div>
 
                 {/* Mobile */}
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4">
                   <label className="fw-semibold">Mobile</label>
                   <input
                     type="text"
@@ -294,7 +385,7 @@ function Users() {
                 </div>
 
                 {/* Location */}
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4">
                   <label className="fw-semibold">Location</label>
                   <input
                     type="text"
@@ -306,7 +397,7 @@ function Users() {
                 </div>
 
                 {/* Address */}
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4">
                   <label className="fw-semibold">Address</label>
                   <input
                     type="text"
@@ -318,7 +409,7 @@ function Users() {
                 </div>
 
                 {/* State */}
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4">
                   <label className="fw-semibold">State</label>
                   <select
                     {...register("state")}
@@ -335,7 +426,7 @@ function Users() {
                 </div>
 
                 {/* City */}
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4">
                   <label className="fw-semibold">City</label>
                   <select
                     {...register("city")}
@@ -354,7 +445,7 @@ function Users() {
                 </div>
 
                 {/* Join Date */}
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4">
                   <label className="fw-semibold">Join Date</label>
                   <input
                     type="date"
@@ -365,7 +456,7 @@ function Users() {
                 </div>
 
                 {/* Adhar */}
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4">
                   <label className="fw-semibold">Adhar Number</label>
                   <input
                     type="text"
@@ -377,7 +468,7 @@ function Users() {
                 </div>
 
                 {/* PAN */}
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4">
                   <label className="fw-semibold">PAN Number</label>
                   <input
                     type="text"
@@ -389,7 +480,7 @@ function Users() {
                 </div>
 
                 {/* Bank Passbook */}
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4">
                   <label className="fw-semibold">Bank Passbook</label>
                   <input
                     type="text"
@@ -401,7 +492,7 @@ function Users() {
                 </div>
 
                 {/* Experience */}
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4 ">
                   <label className="fw-semibold">Experience</label>
                   <input
                     type="text"
@@ -415,13 +506,14 @@ function Users() {
 
               <div className="modal-footer bg-light rounded-bottom-4 d-flex">
                 <button
+                  type="button"
                   className="btn btn-outline-secondary rounded-3"
                   data-bs-dismiss="modal"
                 >
-                  Close
+                  Cancel
                 </button>
 
-                <button type="submit" className="btn btn-primary px-4 ms-auto">
+                <button type="submit" className="btn btn-success px-4 ms-auto">
                   Save User
                 </button>
               </div>

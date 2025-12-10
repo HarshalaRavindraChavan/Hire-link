@@ -135,17 +135,17 @@ function Packages() {
           <button
             data-bs-toggle="modal"
             data-bs-target="#exampleModal"
-            className="btn btn-primary"
+            className="btn btn-success"
           >
             <i className="fa fa-plus"></i> Add Package
           </button>
         </div>
       </div>
 
-      <div className="card">
-        <div className="card-body">
+      <div className="card shadow-sm p-3">
+        <div className="table-responsive">
           <table className="table table-bordered">
-            <thead>
+            <thead className="table-light text-center">
               <tr className="text-center">
                 <th className="fs-6 fw-bold">Id</th>
                 <th className="fs-6 fw-bold">Package</th>
@@ -190,11 +190,11 @@ function Packages() {
                         </div>
                       </div>
 
-                      <div className="fw-bold mt-1">
+                      <div className="fw-bold ">
                         Price:{" "}
                         <span className="text-dark fw-normal">{pkg.price}</span>
                       </div>
-                      <div className="fw-bold mt-1">
+                      <div className="fw-bold ">
                         Duration:{" "}
                         <span className="text-dark fw-normal">
                           {pkg.duration}
@@ -203,19 +203,19 @@ function Packages() {
                     </td>
 
                     <td className="text-start">
-                      <div className="fw-bold mt-1">
+                      <div className="fw-bold ">
                         Job Post Limit:{" "}
                         <span className="text-dark fw-normal">
                           {pkg.jobLimit}
                         </span>
                       </div>
-                      <div className="fw-bold mt-1">
+                      <div className="fw-bold ">
                         Resume Limit:{" "}
                         <span className="text-dark fw-normal">
                           {pkg.resumeLimit}
                         </span>
                       </div>
-                      <div className="fw-bold mt-1">
+                      <div className="fw-bold ">
                         Support:{" "}
                         <span className="text-dark fw-normal">
                           {pkg.support}
@@ -237,13 +237,13 @@ function Packages() {
                       )}
                     </td>
                     <td className="text-start">
-                      <div className="fw-bold mt-1">
+                      <div className="fw-bold ">
                         Added By:{" "}
                         <span className="text-dark fw-normal">
                           {pkg.added_by}
                         </span>
                       </div>
-                      <div className="fw-bold mt-1">
+                      <div className="fw-bold ">
                         Added Date:{" "}
                         <span className="text-dark fw-normal">
                           {pkg.added_date}
@@ -268,7 +268,7 @@ function Packages() {
       <div className="modal fade" id="exampleModal">
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content">
-            <div className="modal-header bg-primary text-white">
+            <div className="modal-header bg-success text-white">
               <h5 className="modal-title">Add Package</h5>
               <i
                 className="fa-regular fa-circle-xmark"
@@ -279,7 +279,7 @@ function Packages() {
 
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="modal-body row">
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4">
                   <label>Package Name</label>
                   <input
                     className="form-control"
@@ -291,7 +291,7 @@ function Packages() {
                   </span>
                 </div>
 
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4">
                   <label>Price</label>
                   <input
                     type="number"
@@ -302,7 +302,7 @@ function Packages() {
                   <span className="text-danger">{errors.price?.message}</span>
                 </div>
 
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4">
                   <label>Duration</label>
                   <select
                     className="form-select form-control"
@@ -319,7 +319,7 @@ function Packages() {
                   </span>
                 </div>
 
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4">
                   <label>Job Post Limit</label>
                   <input
                     type="number"
@@ -332,7 +332,7 @@ function Packages() {
                   </span>
                 </div>
 
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4">
                   <label>Resume View Limit</label>
                   <input
                     type="number"
@@ -345,7 +345,7 @@ function Packages() {
                   </span>
                 </div>
 
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4 ">
                   <label>Support</label>
                   <select
                     className="form-select form-control"
@@ -359,7 +359,7 @@ function Packages() {
                   <span className="text-danger">{errors.support?.message}</span>
                 </div>
 
-                <div className="col-md-12 mb-2">
+                <div className="col-md-12">
                   <label>Description</label>
                   <textarea
                     className="form-control"
@@ -373,7 +373,7 @@ function Packages() {
                 </div>
 
                 {/* BENEFITS */}
-                <div className="col-md-12 mb-2">
+                <div className="col-md-12 ">
                   <label>Benefits / Features</label>
                   {fields.map((field, index) => (
                     <div className="mb-2" key={field.id}>
@@ -404,12 +404,17 @@ function Packages() {
                 </div>
               </div>
 
-              <div className="modal-footer">
-                <button className="btn btn-secondary" data-bs-dismiss="modal">
-                  Close
+              <div className="modal-footer bg-light rounded-bottom-4 d-flex">
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary rounded-3"
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
                 </button>
-                <button className="btn btn-primary" type="submit">
-                  Save Package
+
+                <button type="submit" className="btn btn-success px-4 ms-auto">
+                  Submit
                 </button>
               </div>
             </form>

@@ -123,7 +123,8 @@ function Interview() {
           <a
             data-bs-toggle="modal"
             data-bs-target="#exampleModal"
-            className="btn btn-primary"
+            className="btn "
+            style={{ backgroundColor: "#05b61aff", color: "white" }}
           >
             <i className="fa fa-plus"> </i> Add Interview
           </a>
@@ -134,9 +135,9 @@ function Interview() {
       <div className="card shadow-sm">
         <div className="card-body">
           {/* FILTERS */}
-          <div className="row g-2 mb-3">
+          <div className="row g-2 align-items-center mb-3">
             {/* Interview Status */}
-            <div className="col-md-3">
+            <div className="col-12 col-md-2">
               <select className="form-select">
                 <option value="">Select Interview Status</option>
                 <option>Scheduled</option>
@@ -148,26 +149,31 @@ function Interview() {
             </div>
 
             {/* From Date */}
-            <div className="col-md-2">
+            <div className="col-6 col-md-2">
               <input type="date" className="form-control" />
             </div>
 
             {/* To Date */}
-            <div className="col-md-2">
+            <div className="col-6 col-md-2">
               <input type="date" className="form-control" />
             </div>
 
-            {/* Submit + Reset Icon */}
-            <div className="col-md-3 d-flex">
-              <button className="btn btn-primary px-4 me-2">Submit</button>
+            {/* Submit + Reset */}
+            <div className="ol-12 col-md-3 d-flex justify-content-md-start justify-content-between">
+              <button
+                className="btn px-4 me-2"
+                style={{ backgroundColor: "#05b61a", color: "white" }}
+              >
+                Submit
+              </button>
 
               <button className="btn btn-light border px-3">
                 <i className="fa fa-refresh"></i>
               </button>
             </div>
 
-            {/* Search Input (right aligned) */}
-            <div className="col-md-2 ms-auto">
+            {/* Search (Right aligned) */}
+            <div className="col-md-2 col-md-3">
               <input
                 type="text"
                 className="form-control"
@@ -177,19 +183,6 @@ function Interview() {
               />
             </div>
           </div>
-
-          {/* SEARCH */}
-          {/* <div className="row mb-3">
-            <div className="col-md-3 ms-auto">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Search..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
-          </div> */}
 
           {/* TABLE */}
           <div className="table-responsive">
@@ -201,8 +194,8 @@ function Interview() {
                   <th>Job Details</th>
                   <th>Interview Info</th>
                   <th>Interviewer</th>
-                  <th>Status</th>
                   <th>Created</th>
+                  <th>Status</th>
                 </tr>
               </thead>
 
@@ -237,14 +230,12 @@ function Interview() {
                     </td>
 
                     <td>{i.interviewer}</td>
-
+                    <td>{i.created_date}</td>
                     <td>
                       <span className="badge bg-success">
                         {i.interview_status}
                       </span>
                     </td>
-
-                    <td>{i.created_date}</td>
                   </tr>
                 ))}
               </tbody>
@@ -253,85 +244,7 @@ function Interview() {
         </div>
       </div>
 
-      {/* <div className="card">
-        <div className="card-body">
-          <div className="table-responsive">
-            <table className="table table-bordered">
-              <thead>
-                <tr className="text-center">
-                  <th className="fw-bold fs-6">Detail</th>
-                  <th className="fw-bold fs-6">Contact</th>
-                  <th className="fw-bold fs-6">Address</th>
-                  <th className="fw-bold fs-6">Other Detail</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {records.length > 0 ? (
-                  records.map((item) => (
-                    <tr key={item.id} className="align-middle">
-                      <td>
-                        <div className="dropdown d-inline-block ms-1">
-                          <span
-                            className="fw-bold text-primary"
-                            role="button"
-                            data-bs-toggle="dropdown"
-                            style={{ cursor: "pointer" }}
-                          >
-                            {item.name}
-                          </span>
-
-                          <ul className="dropdown-menu shadow">
-                            <li>
-                              <button className="dropdown-item">
-                                <i className="fas fa-edit me-2"> </i> Edit
-                              </button>
-                            </li>
-                            <li>
-                              <button
-                                className="dropdown-item text-danger"
-                                onClick={() => handleDeleteClick(item.id)}
-                              >
-                                <i className="fas fa-trash me-2"> </i> Delete
-                              </button>
-                            </li>
-                          </ul>
-                        </div>
-                        <br />
-                        <b>Business:</b> {item.business} <br />
-                        <b>Category:</b> {item.category}
-                      </td>
-
-                      <td>
-                        <b>Email:</b> {item.email} <br />
-                        <b>Mobile:</b> {item.mobile}
-                      </td>
-
-                      <td>
-                        <b>Location:</b> {item.location} <br />
-                        <b>City:</b> {item.city} <br />
-                        <b>State:</b> {item.state}
-                      </td>
-
-                      <td>
-                        <b>Website:</b> {item.website} <br />
-                        <b>Facebook:</b> {item.facebook} <br />
-                        <b>Linkedin:</b> {item.linkedin} <br />
-                        <b>Instagram:</b> {item.instagram}
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="6" className="text-center text-muted py-3">
-                      No data available in table
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-
-            {/* PAGINATION */}
+      {/* PAGINATION */}
       {/* <nav className="d-flex justify-content-end mt-3">
               <ul className="pagination">
                 <li
@@ -385,12 +298,17 @@ function Interview() {
       >
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content shadow-lg border-0 rounded-4">
-            <div className="modal-header bg-primary text-white rounded-top-4">
-              <h5 className="modal-title fw-bold">Interview Details</h5>
+            <div
+              className="modal-header text-white rounded-top-4"
+              style={{ backgroundColor: "yellow" }}
+            >
+              <h5 className="modal-title fw-bold" style={{ color: "gray" }}>
+                Interview Details
+              </h5>
               <i
                 className="fa-regular fa-circle-xmark"
                 data-bs-dismiss="modal"
-                style={{ cursor: "pointer", color: "white", fontSize: "25px" }}
+                style={{ cursor: "pointer", color: "gray", fontSize: "25px" }}
               ></i>
             </div>
 
@@ -527,8 +445,9 @@ function Interview() {
                     />
                     <button
                       type="button"
-                      className="btn btn-primary"
+                      className="btn"
                       onClick={generateMeetingLink}
+                      style={{ backgroundColor: "#05b61aff", color: "white" }}
                     >
                       Generate
                     </button>
@@ -554,15 +473,35 @@ function Interview() {
                 {/* Status */}
                 <div className="col-md-6 mb-2">
                   <label className="form-label fw-semibold">Status</label>
-                  <select
-                    className="form-control rounded-3"
-                    {...register("status")}
-                  >
-                    <option value="">Select Status</option>
-                    <option>Active</option>
-                    <option>Pending</option>
-                    <option>Closed</option>
-                  </select>
+
+                  <div style={{ position: "relative" }}>
+                    {/* Icon */}
+                    <i
+                      className="fa fa-info-circle"
+                      style={{
+                        position: "absolute",
+                        left: "12px",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        color: "#6c757d",
+                        pointerEvents: "none",
+                        fontSize: "16px",
+                      }}
+                    ></i>
+
+                    {/* Select box */}
+                    <select
+                      className="form-control rounded-3"
+                      {...register("status")}
+                      style={{ paddingLeft: "40px" }}
+                    >
+                      <option value="">Select Status</option>
+                      <option value="Active">Active</option>
+                      <option value="Pending">Pending</option>
+                      <option value="Closed">Closed</option>
+                    </select>
+                  </div>
+
                   <span className="text-danger">{errors.status?.message}</span>
                 </div>
 
@@ -583,14 +522,19 @@ function Interview() {
               {/* Submit Button */}
               <div className="modal-footer bg-light rounded-bottom-4 d-flex">
                 <button
-                  className="btn btn-outline-secondary rounded-3"
+                  className="btn  rounded-3"
                   data-bs-dismiss="modal"
+                  style={{ backgroundColor: "#9aa09bff", color: "white" }}
                 >
-                  Close
+                  Cancle
                 </button>
 
-                <button type="submit" className="btn btn-primary px-4 ms-auto">
-                  Save User
+                <button
+                  type="submit"
+                  className="btn  px-4 ms-auto"
+                  style={{ backgroundColor: "#05b61aff", color: "white" }}
+                >
+                  Submit
                 </button>
               </div>
             </form>

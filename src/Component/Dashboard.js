@@ -10,47 +10,41 @@ function Dashboard() {
             Dashboard
           </h3>
         </div>
-        <div className="ms-auto py-2 py-md-0">
+        {/* <div className="ms-auto py-2 py-md-0">
           <a href="#" className="btn btn-label-info btn-round me-2">
             Manage
           </a>
-        </div>
+        </div> */}
       </div>
       <div className="row">
-        <div className="col-sm-6 col-md-3">
+        {/* ---------- Row 1 : Card 1 ---------- */}
+        <div className="col-12 col-sm-6 col-md-4 mb-3">
           <div
             className="card card-stats card-round"
-            onClick={() => navigate("/jobs")} // 🔥 Entire card clickable
-            style={{ cursor: "pointer" }} // 👈 Hand cursor
+            onClick={() => navigate("/jobs")}
+            style={{ cursor: "pointer" }}
           >
             <div className="card-body">
               <div className="row align-items-center">
                 <div className="col-icon">
-                  <div className="icon-big text-center icon-info bubble-shadow-small">
+                  <div
+                    className="icon-big text-center icon-info bubble-shadow-small"
+                    style={{ backgroundColor: "yellow" }}
+                  >
                     <i className="fa fa-briefcase"></i>
                   </div>
                 </div>
-
                 <div className="col col-stats ms-3 ms-sm-0">
                   <div className="numbers">
                     <p
-                      className="card-category"
-                      style={{
-                        fontSize: "18px",
-                        color: "black",
-                        fontWeight: "bold",
-                      }}
+                      className="card-category fw-bold text-dark"
+                      style={{ fontSize: "18px" }}
                     >
                       Jobs
                     </p>
-
                     <h4
-                      className="card-title"
-                      style={{
-                        fontSize: "18px",
-                        color: "black",
-                        fontWeight: "bold",
-                      }}
+                      className="card-title fw-bold text-dark"
+                      style={{ fontSize: "18px" }}
                     >
                       1294
                     </h4>
@@ -61,7 +55,8 @@ function Dashboard() {
           </div>
         </div>
 
-        <div className="col-sm-6 col-md-3">
+        {/* ---------- Row 1 : Card 2 ---------- */}
+        <div className="col-12 col-sm-6 col-md-4 mb-3">
           <div
             className="card card-stats card-round"
             onClick={() => navigate("/condidate")}
@@ -70,31 +65,24 @@ function Dashboard() {
             <div className="card-body">
               <div className="row align-items-center">
                 <div className="col-icon">
-                  <div className="icon-big text-center icon-info bubble-shadow-small">
+                  <div
+                    className="icon-big text-center icon-info bubble-shadow-small"
+                    style={{ backgroundColor: "#05b61a", color: "white" }}
+                  >
                     <i className="fa fa-users"></i>
                   </div>
                 </div>
-
                 <div className="col col-stats ms-3 ms-sm-0">
                   <div className="numbers">
                     <p
-                      className="card-category"
-                      style={{
-                        fontSize: "18px",
-                        color: "black",
-                        fontWeight: "bold",
-                      }}
+                      className="card-category fw-bold text-dark"
+                      style={{ fontSize: "18px" }}
                     >
                       Candidates
                     </p>
-
                     <h4
-                      className="card-title"
-                      style={{
-                        fontSize: "18px",
-                        color: "black",
-                        fontWeight: "bold",
-                      }}
+                      className="card-title fw-bold text-dark"
+                      style={{ fontSize: "18px" }}
                     >
                       1303
                     </h4>
@@ -105,7 +93,8 @@ function Dashboard() {
           </div>
         </div>
 
-        <div className="col-sm-6 col-md-3">
+        {/* ---------- Row 1 : Card 3 ---------- */}
+        <div className="col-12 col-sm-6 col-md-4 mb-3">
           <div
             className="card card-stats card-round"
             onClick={() => navigate("/interview")}
@@ -114,31 +103,24 @@ function Dashboard() {
             <div className="card-body">
               <div className="row align-items-center">
                 <div className="col-icon">
-                  <div className="icon-big text-center icon-info bubble-shadow-small">
+                  <div
+                    className="icon-big text-center icon-info bubble-shadow-small"
+                    style={{ backgroundColor: "#9aa09b", color: "white" }}
+                  >
                     <i className="fa fa-comments"></i>
                   </div>
                 </div>
-
                 <div className="col col-stats ms-3 ms-sm-0">
                   <div className="numbers">
                     <p
-                      className="card-category"
-                      style={{
-                        fontSize: "18px",
-                        color: "black",
-                        fontWeight: "bold",
-                      }}
+                      className="card-category fw-bold text-dark"
+                      style={{ fontSize: "18px" }}
                     >
                       Interview
                     </p>
-
                     <h4
-                      className="card-title"
-                      style={{
-                        fontSize: "18px",
-                        color: "black",
-                        fontWeight: "bold",
-                      }}
+                      className="card-title fw-bold text-dark"
+                      style={{ fontSize: "18px" }}
                     >
                       1345
                     </h4>
@@ -149,7 +131,8 @@ function Dashboard() {
           </div>
         </div>
 
-        <div className="col-sm-6 col-md-3">
+        {/* ---------- Row 2 : Card 4 ---------- */}
+        <div className="col-12 col-sm-6 col-md-4 mb-3">
           <div
             className="card card-stats card-round"
             onClick={() => navigate("/employe")}
@@ -158,29 +141,24 @@ function Dashboard() {
             <div className="card-body">
               <div className="row align-items-center">
                 <div className="col-icon">
-                  <div className="icon-big text-center icon-info bubble-shadow-small">
+                  <div
+                    className="icon-big text-center icon-info bubble-shadow-small"
+                    style={{ backgroundColor: "yellow" }}
+                  >
                     <i className="fa fa-user-tie"></i>
                   </div>
                 </div>
                 <div className="col col-stats ms-3 ms-sm-0">
                   <div className="numbers">
                     <p
-                      className="card-category"
-                      style={{
-                        fontSize: "18px",
-                        color: "black",
-                        fontWeight: "bold",
-                      }}
+                      className="card-category fw-bold text-dark"
+                      style={{ fontSize: "18px" }}
                     >
-                      Employes
+                      Employees
                     </p>
                     <h4
-                      className="card-title"
-                      style={{
-                        fontSize: "18px",
-                        color: "black",
-                        fontWeight: "bold",
-                      }}
+                      className="card-title fw-bold text-dark"
+                      style={{ fontSize: "18px" }}
                     >
                       576
                     </h4>
@@ -191,7 +169,8 @@ function Dashboard() {
           </div>
         </div>
 
-        <div className="col-sm-6 col-md-3">
+        {/* ---------- Row 2 : Card 5 ---------- */}
+        <div className="col-12 col-sm-6 col-md-4 mb-3">
           <div
             className="card card-stats card-round"
             onClick={() => navigate("/contact")}
@@ -200,29 +179,24 @@ function Dashboard() {
             <div className="card-body">
               <div className="row align-items-center">
                 <div className="col-icon">
-                  <div className="icon-big text-center icon-info bubble-shadow-small">
+                  <div
+                    className="icon-big text-center icon-info bubble-shadow-small"
+                    style={{ backgroundColor: "#05b61a", color: "white" }}
+                  >
                     <i className="fa fa-headphones"></i>
                   </div>
                 </div>
                 <div className="col col-stats ms-3 ms-sm-0">
                   <div className="numbers">
                     <p
-                      className="card-category"
-                      style={{
-                        fontSize: "18px",
-                        color: "black",
-                        fontWeight: "bold",
-                      }}
+                      className="card-category fw-bold text-dark"
+                      style={{ fontSize: "18px" }}
                     >
                       Contacts
                     </p>
                     <h4
-                      className="card-title"
-                      style={{
-                        fontSize: "18px",
-                        color: "black",
-                        fontWeight: "bold",
-                      }}
+                      className="card-title fw-bold text-dark"
+                      style={{ fontSize: "18px" }}
                     >
                       200
                     </h4>
@@ -233,7 +207,8 @@ function Dashboard() {
           </div>
         </div>
 
-        <div className="col-sm-6 col-md-3">
+        {/* ---------- Row 2 : Card 6 ---------- */}
+        <div className="col-12 col-sm-6 col-md-4 mb-3">
           <div
             className="card card-stats card-round"
             onClick={() => navigate("/user")}
@@ -242,30 +217,24 @@ function Dashboard() {
             <div className="card-body">
               <div className="row align-items-center">
                 <div className="col-icon">
-                  <div className="icon-big text-center icon-info bubble-shadow-small">
-                    {/* <i className="far fa-check-circle"></i> */}
+                  <div
+                    className="icon-big text-center icon-info bubble-shadow-small"
+                    style={{ backgroundColor: "#9aa09b", color: "white" }}
+                  >
                     <i className="fa fa-user"></i>
                   </div>
                 </div>
                 <div className="col col-stats ms-3 ms-sm-0">
                   <div className="numbers">
                     <p
-                      className="card-category"
-                      style={{
-                        fontSize: "18px",
-                        color: "black",
-                        fontWeight: "bold",
-                      }}
+                      className="card-category fw-bold text-dark"
+                      style={{ fontSize: "18px" }}
                     >
                       Users
                     </p>
                     <h4
-                      className="card-title"
-                      style={{
-                        fontSize: "18px",
-                        color: "black",
-                        fontWeight: "bold",
-                      }}
+                      className="card-title fw-bold text-dark"
+                      style={{ fontSize: "18px" }}
                     >
                       1000
                     </h4>

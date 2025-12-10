@@ -5,6 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 
 function Jobs() {
+  const [search, setSearch] = useState("");
   const [users, setUsers] = useState([
     {
       id: 1,
@@ -85,119 +86,106 @@ function Jobs() {
           <h3 className="fw-bold mb-3">Jobs</h3>
         </div>
         <div className="ms-auto py-2 py-md-0">
-          {/* <a href="#" className="btn btn-label-info btn-round me-2">
-            Manage
-          </a> */}
           <a
             data-bs-toggle="modal"
             data-bs-target="#exampleModal"
-            className="btn btn-primary"
+            className="btn btn-success"
           >
-            <i className="fa fa-plus"> </i> Add Job
+            <i className="fa fa-plus"> </i> Add Jobs
           </a>
         </div>
       </div>
 
-      <div className="card">
-        <div className="card-body">
-          <div className="table-responsive">
-            <table className="table table-bordered table-hover table-responsive">
-              <thead className="text-center align-middle">
-                <tr>
-                  <th>sr_no</th>
-                  <th className="fw-bold fs-10">job_title</th>
-                  <th className="fw-bold fs-10">company_name</th>
-                  <th className="fw-bold fs-10">job_category</th>
-                  <th className="fw-bold fs-10">job_type</th>
-                  <th className="fw-bold fs-10">location</th>
-                  <th className="fw-bold fs-10">salary_range</th>
-                  <th className="fw-bold fs-10">experience_required</th>
-                  <th className="fw-bold fs-10">posted_date</th>
-                  <th className="fw-bold fs-10">applications_count</th>
-                  <th className="fw-bold fs-10">status</th>
-                </tr>
-              </thead>
+      <div className="card shadow-sm p-3">
 
-              <tbody className="text-center align-middle">
-                <tr>
-                  <td>1</td>
-                  <td>Capgemini</td>
-                  <td>Google</td>
-                  <td>IT & Software</td>
-                  <td>Full-Time</td>
-                  <td>Pune</td>
-                  <td>50,000 - 80,000</td>
-                  <td>2 Years</td>
-                  <td>12 Dec 2025</td>
-                  <td>25</td>
-                  <td>
-                    <span className="badge bg-success">active</span>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td>2</td>
-                  <td>Wipro</td>
-                  <td>Human Resources</td>
-                  <td>IT & Software</td>
-                  <td>Full-Time</td>
-                  <td>Mumbai</td>
-                  <td>30,000 - 80,000</td>
-                  <td>3 Years</td>
-                  <td>10 Dec 2025</td>
-                  <td>30</td>
-                  <td>
-                    <span className="badge bg-warning">pending</span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-
-            {/* PAGINATION */}
-            {/* <nav className="d-flex justify-content-end mt-3">
-              <ul className="pagination">
-                <li
-                  className={`page-item ${currentPage === 1 ? "disabled" : ""}`}
-                >
-                  <button
-                    className="page-link"
-                    onClick={() => setCurrentPage(currentPage - 1)}
-                  >
-                    Previous
-                  </button>
-                </li>
-
-                {[...Array(nPages).keys()].map((num) => (
-                  <li
-                    key={num}
-                    className={`page-item ${
-                      currentPage === num + 1 ? "active" : ""
-                    }`}
-                  >
-                    <button
-                      className="page-link"
-                      onClick={() => setCurrentPage(num + 1)}
-                    >
-                      {num + 1}
-                    </button>
-                  </li>
-                ))}
-
-                <li
-                  className={`page-item ${
-                    currentPage === nPages ? "disabled" : ""
-                  }`}
-                >
-                  <button
-                    className="page-link"
-                    onClick={() => setCurrentPage(currentPage + 1)}
-                  >
-                    Next
-                  </button>
-                </li>
-              </ul>
-            </nav> */}
+        {/* FILTER ROW */}
+        <div className="row g-2 align-items-center mb-3">
+          {/* Job Type */}
+          <div className="col-12 col-md-2">
+            <select className="form-select">
+              <option value="">Select Job Type</option>
+              <option>Full-time</option>
+              <option>Part-time</option>
+              <option>Internship</option>
+              <option>Remote</option>
+              <option>Contract</option>
+            </select>
           </div>
+
+          {/* From Date */}
+          <div className="col-6 col-md-2">
+            <input type="date" className="form-control" />
+          </div>
+
+          {/* To Date */}
+          <div className="col-6 col-md-2">
+            <input type="date" className="form-control" />
+          </div>
+
+          {/* Submit + Reset */}
+          <div className="col-12 col-md-3 d-flex justify-content-md-start justify-content-between">
+            <button
+              className="btn px-4 me-2"
+              style={{ backgroundColor: "#05b61aff", color: "white" }}
+            >
+              Submit
+            </button>
+
+            <button className="btn btn-light border px-3">
+              <i className="fa fa-refresh"></i>
+            </button>
+          </div>
+
+          {/* Search */}
+          <div className="col-12 col-md-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Search..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+        </div>
+
+        {/* TABLE */}
+        <div className="table-responsive">
+          <table className="table table-bordered align-middle">
+            <thead className="table-light text-center">
+              <tr>
+                <th>SR/NO</th>
+                <th>Job Title</th>
+                <th>Company Name</th>
+                <th>Job Category</th>
+                <th>Job Type</th>
+                <th>Location</th>
+                <th>Salary Range</th>
+                <th>Experience Required</th>
+                <th>Posted Date</th>
+                <th>Applications Count</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {/* Example Row */}
+              <tr>
+                <td>1</td>
+                <td className="text-center fw-bold">Frontend Developer</td>
+                <td className="text-center">Tech Solutions Pvt. Ltd.</td>
+                <td className="text-center">IT / Software</td>
+                <td className="text-center">Full-time</td>
+                <td className="text-center">Pune, MH</td>
+                <td className="text-center">₹4,00,000 - ₹6,00,000</td>
+                <td className="text-center">3 Years</td>
+                <td className="text-center">2025-12-09</td>
+                <td className="text-center fw-bold">25</td>
+                <td className="text-center">
+                  <span className="badge bg-success">Active</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -210,12 +198,17 @@ function Jobs() {
       >
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content shadow-lg border-0 rounded-4">
-            <div className="modal-header bg-primary text-white rounded-top-4">
-              <h5 className="modal-title fw-bold">Job Details</h5>
+            <div
+              className="modal-header text-white rounded-top-4"
+              style={{ backgroundColor: "yellow" }}
+            >
+              <h5 className="modal-title fw-bold" style={{ color: "gray" }}>
+                Job Details
+              </h5>
               <i
                 className="fa-regular fa-circle-xmark"
                 data-bs-dismiss="modal"
-                style={{ cursor: "pointer", color: "white", fontSize: "25px" }}
+                style={{ cursor: "pointer", color: "gray", fontSize: "25px" }}
               ></i>
             </div>
 
@@ -372,14 +365,19 @@ function Jobs() {
               {/* Submit Button */}
               <div className="modal-footer bg-light rounded-bottom-4 d-flex">
                 <button
-                  className="btn btn-outline-secondary rounded-3"
+                  className="btn rounded-3"
                   data-bs-dismiss="modal"
+                  style={{ backgroundColor: "#9aa09bff", color: "white" }}
                 >
-                  Close
+                  Cancle
                 </button>
 
-                <button type="submit" className="btn btn-primary px-4 ms-auto">
-                  Save User
+                <button
+                  type="submit"
+                  className="btn px-4 ms-auto"
+                  style={{ backgroundColor: "#05b61aff", color: "white" }}
+                >
+                  Submit
                 </button>
               </div>
             </form>

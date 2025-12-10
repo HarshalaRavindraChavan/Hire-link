@@ -31,7 +31,7 @@ function Sidebar() {
       <nav className="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
         <div className="container-fluid">
           <nav className="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
-            <div className="input-group">
+            {/* <div className="input-group">
               <div className="input-group-prepend">
                 <button type="submit" className="btn btn-search pe-1">
                   <i className="fa fa-search search-icon"></i>
@@ -42,7 +42,7 @@ function Sidebar() {
                 placeholder="Search ..."
                 className="form-control"
               />
-            </div>
+            </div> */}
           </nav>
 
           <ul className="navbar-nav topbar-nav ms-md-auto align-items-center">
@@ -69,7 +69,7 @@ function Sidebar() {
                 </form>
               </ul>
             </li>
-            <li className="nav-item topbar-icon dropdown hidden-caret">
+            {/* <li className="nav-item topbar-icon dropdown hidden-caret">
               <a
                 className="nav-link dropdown-toggle"
                 href="#"
@@ -153,8 +153,8 @@ function Sidebar() {
                   </a>
                 </li>
               </ul>
-            </li>
-            <li className="nav-item topbar-icon dropdown hidden-caret">
+            </li> */}
+            {/* <li className="nav-item topbar-icon dropdown hidden-caret">
               <a
                 className="nav-link dropdown-toggle"
                 href="#"
@@ -231,8 +231,8 @@ function Sidebar() {
                   </a>
                 </li>
               </ul>
-            </li>
-            <li className="nav-item topbar-icon dropdown hidden-caret">
+            </li> */}
+            {/* <li className="nav-item topbar-icon dropdown hidden-caret">
               <a
                 className="nav-link"
                 data-bs-toggle="dropdown"
@@ -301,7 +301,7 @@ function Sidebar() {
                   </div>
                 </div>
               </div>
-            </li>
+            </li> */}
 
             <li className="nav-item topbar-user dropdown hidden-caret">
               <a
@@ -312,13 +312,13 @@ function Sidebar() {
               >
                 <div className="avatar-sm">
                   <img
-                    src="assets/img/profile.jpg"
+                    src="https://media.istockphoto.com/id/1553217327/vector/user-profile-icon-avatar-person-sign-profile-picture-portrait-symbol-easily-editable-line.jpg?s=170667a&w=0&k=20&c=xUuHLFaa94WIFdV-XBgxX9SSsaJJgGQhE1Tmevqrytg="
                     alt="..."
                     className="avatar-img rounded-circle"
                   />
                 </div>
                 <span className="profile-username">
-                  <span className="op-7">Hi,</span>
+                  {/* <span className="op-7">Hi,</span> */}
                   <span className="fw-bold">Hizrian</span>
                 </span>
               </a>
@@ -328,20 +328,20 @@ function Sidebar() {
                     <div className="user-box">
                       <div className="avatar-lg">
                         <img
-                          src="assets/img/profile.jpg"
-                          alt="image profile"
+                          src="https://media.istockphoto.com/id/1553217327/vector/user-profile-icon-avatar-person-sign-profile-picture-portrait-symbol-easily-editable-line.jpg?s=170667a&w=0&k=20&c=xUuHLFaa94WIFdV-XBgxX9SSsaJJgGQhE1Tmevqrytg="
+                          alt=""
                           className="avatar-img rounded"
                         />
                       </div>
                       <div className="u-text">
                         <h4>Hizrian</h4>
                         <p className="text-muted">hello@example.com</p>
-                        <a
+                        {/* <a
                           href="profile.html"
                           className="btn btn-xs btn-secondary btn-sm"
                         >
                           View Profile
-                        </a>
+                        </a> */}
                       </div>
                     </div>
                   </li>
@@ -350,16 +350,16 @@ function Sidebar() {
                     <a className="dropdown-item" href="#">
                       My Profile
                     </a>
-                    <a className="dropdown-item" href="#">
+                    {/* <a className="dropdown-item" href="#">
                       My Balance
                     </a>
                     <a className="dropdown-item" href="#">
                       Inbox
-                    </a>
+                    </a> */}
                     <div className="dropdown-divider"></div>
-                    <a className="dropdown-item" href="#">
+                    {/* <a className="dropdown-item" href="#">
                       Account Setting
-                    </a>
+                    </a> */}
                     <div className="dropdown-divider"></div>
                     <a className="dropdown-item" href="#">
                       Logout

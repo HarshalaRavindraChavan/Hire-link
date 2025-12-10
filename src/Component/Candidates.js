@@ -142,16 +142,19 @@ function Candidates() {
           <a
             data-bs-toggle="modal"
             data-bs-target="#exampleModal"
-            className="btn btn-primary"
+            className="btn"
+            style={{ backgroundColor: "#05b61aff", color: "white" }}
           >
             <i className="fa fa-plus"></i> Add Candidates
           </a>
         </div>
       </div>
+
       <div className="card shadow-sm p-3">
         {/* 🔍 FILTER ROW */}
         <div className="row g-2 align-items-center mb-3">
-          <div className="col-md-2">
+          {/* Experience */}
+          <div className="col-12 col-md-2">
             <select className="form-select">
               <option value="">Select Experience</option>
               <option>0–1 Years</option>
@@ -161,24 +164,32 @@ function Candidates() {
             </select>
           </div>
 
-          <div className="col-md-2">
+          {/* From Date */}
+          <div className="col-6 col-md-2">
             <input type="date" className="form-control" />
           </div>
 
-          <div className="col-md-2">
+          {/* To Date */}
+          <div className="col-6 col-md-2">
             <input type="date" className="form-control" />
           </div>
 
-          <div className="col-md-3 d-flex">
-            <button className="btn btn-primary px-4 me-2">Submit</button>
+          {/* Submit + Reset */}
+          <div className="col-12 col-md-3 d-flex justify-content-md-start justify-content-between">
+            <button
+              className="btn px-4 me-2"
+              style={{ backgroundColor: "#05b61aff", color: "white" }}
+            >
+              Submit
+            </button>
 
-            {/* Reset Icon */}
             <button className="btn btn-light border px-3">
               <i className="fa fa-refresh"></i>
             </button>
           </div>
 
-          <div className="col-md-3">
+          {/* Search */}
+          <div className="col-12 col-md-3">
             <input
               type="text"
               className="form-control"
@@ -211,7 +222,7 @@ function Candidates() {
                 <td className="text-center fw-bold">1</td>
 
                 {/* Candidate Info */}
-                <td style={{ width: "30%" }}>
+                <td style={{ width: "40%" }}>
                   <b>Full Name:</b> Harshala Chavan <br />
                   <b>Email:</b> harshala@example.com <br />
                   <b>Phone:</b> 9876543210 <br />
@@ -247,7 +258,11 @@ function Candidates() {
 
                 {/* Resume Button */}
                 <td className="text-center">
-                  <a className="btn btn-sm btn-primary px-3 w-100" href="#">
+                  <a
+                    className="btn btn-sm  px-3 w-100"
+                    href="#"
+                    style={{ backgroundColor: "#05b61aff", color: "white" }}
+                  >
                     View / Download
                   </a>
                 </td>
@@ -256,6 +271,7 @@ function Candidates() {
           </table>
         </div>
       </div>
+      
       {/* DELETE CONFIRM MODAL */}
       <ConfirmDelete
         show={showDeleteModal}
@@ -272,12 +288,17 @@ function Candidates() {
       >
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content shadow-lg border-0 rounded-4">
-            <div className="modal-header bg-primary text-white rounded-top-4">
-              <h5 className="modal-title fw-bold">Candidate Details</h5>
+            <div
+              className="modal-header text-white rounded-top-4"
+              style={{ backgroundColor: "yellow" }}
+            >
+              <h5 className="modal-title fw-bold" style={{ color: "gray" }}>
+                Candidate Details
+              </h5>
               <i
                 className="fa-regular fa-circle-xmark"
                 data-bs-dismiss="modal"
-                style={{ cursor: "pointer", color: "white", fontSize: "25px" }}
+                style={{ cursor: "pointer", color: "gray", fontSize: "25px" }}
               ></i>
             </div>
             <form onSubmit={handleSubmit}>
@@ -459,14 +480,19 @@ function Candidates() {
 
               <div className="modal-footer bg-light rounded-bottom-4 d-flex">
                 <button
-                  className="btn btn-outline-secondary rounded-3"
+                  className="btn rounded-3"
                   data-bs-dismiss="modal"
+                  style={{ backgroundColor: "#9aa09bff", color: "white" }}
                 >
-                  Close
+                  Cancle
                 </button>
 
-                <button type="submit" className="btn btn-primary px-4 ms-auto">
-                  Save User
+                <button
+                  type="submit"
+                  className="btn px-4 ms-auto"
+                  style={{ backgroundColor: "#05b61aff", color: "white" }}
+                >
+                  Submit
                 </button>
               </div>
             </form>

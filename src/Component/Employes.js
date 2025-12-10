@@ -3,9 +3,10 @@ import ConfirmDelete from "./commenuse/ConfirmDelete";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import * as yup from "yup"; 
+import * as yup from "yup";
 
 function Employes() {
+  const [search, setSearch] = useState("");
   const [users, setUsers] = useState([
     {
       id: 1,
@@ -111,7 +112,7 @@ function Employes() {
     location: Yup.string().required("Location is required"),
     city: Yup.string().required("City is required"),
     state: Yup.string().required("State is required"),
-    
+
     website: yup
       .string()
       .url("Please enter a valid website link (https://...)")
@@ -163,13 +164,6 @@ function Employes() {
     console.log("User Saved:", data);
     alert("User Saved Successfully!");
   };
-  // // Submit Handler
-  // const handleAddUser = (e) => {
-  //   e.preventDefault();
-  //   if (!validateForm()) return;
-
-  //   alert("Employer Added Successfully ✔");
-  // };
 
   return (
     <>
@@ -181,7 +175,8 @@ function Employes() {
           <button
             data-bs-toggle="modal"
             data-bs-target="#exampleModal"
-            className="btn btn-primary"
+            className="btn "
+            style={{ backgroundColor: "#05b61aff", color: "white" }}
           >
             <i className="fa fa-plus"></i> Add Employer
           </button>
@@ -189,73 +184,105 @@ function Employes() {
       </div>
 
       {/* TABLE */}
-      <div className="card">
-        <div className="card-body table-responsive">
-          <table className="table table-bordered">
-            <thead>
-              <tr className="text-center">
-                <th>Name</th>
-                <th>Contact</th>
-                <th>Location</th>
+      <div className="card shadow-sm p-3">
+        {/* 🔍 FILTER ROW */}
+        <div className="row g-2 align-items-center mb-3">
+          {/* Category */}
+          <div className="col-12 col-md-2">
+            <select className="form-select">
+              <option value="">Select Category</option>
+              <option>IT</option>
+              <option>Finance</option>
+              <option>Marketing</option>
+              <option>HR</option>
+            </select>
+          </div>
+
+          {/* From Date */}
+          <div className="col-6 col-md-2">
+            <input type="date" className="form-control" />
+          </div>
+
+          {/* To Date */}
+          <div className="col-6 col-md-2">
+            <input type="date" className="form-control" />
+          </div>
+
+          {/* Submit + Reset */}
+          <div className="col-12 col-md-3 d-flex justify-content-md-start justify-content-between">
+            <button
+              className="btn px-4 me-2"
+              style={{ backgroundColor: "#05b61aff", color: "white" }}
+            >
+              Submit
+            </button>
+
+            <button className="btn btn-light border px-3">
+              <i className="fa fa-refresh"></i>
+            </button>
+          </div>
+
+          {/* Search */}
+          <div className="col-12 col-md-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Search..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+        </div>
+
+        {/* TABLE */}
+        <div className="table-responsive" style={{ overflowX: "hidden" }}>
+          <table className="table table-bordered align-middle mb-0">
+            <thead className="table-light text-center">
+              <tr>
+                <th>SR/NO</th>
+                <th>User Details</th>
+                <th>Company Details</th>
+                <th>Social Media</th>
+                <th>Registration Date</th>
               </tr>
             </thead>
 
             <tbody>
-              {records.length ? (
-                records.map((u) => (
-                  <tr key={u.id} className="text-center align-middle">
-                    <td>
-                      <div className="dropdown d-inline-block">
-                        <span
-                          className="fw-bold text-primary"
-                          role="button"
-                          data-bs-toggle="dropdown"
-                        >
-                          {u.fullname}
-                        </span>
-                        <ul className="dropdown-menu shadow">
-                          <li>
-                            <button className="dropdown-item">
-                              <i className="fas fa-edit me-2"></i>Edit
-                            </button>
-                          </li>
-                          <li>
-                            <button
-                              className="dropdown-item text-danger"
-                              onClick={() => handleDeleteClick(u.id)}
-                            >
-                              <i className="fas fa-trash me-2"></i>Delete
-                            </button>
-                          </li>
-                        </ul>
-                      </div>
-                    </td>
+              {/* Example Row */}
+              <tr>
+                <td className="text-center fw-bold">1</td>
 
-                    <td>
-                      Email: {u.email} <br />
-                      Mobile: {u.mobile}
-                    </td>
+                {/* User Details */}
+                <td style={{ width: "35%" }}>
+                  <b>Full Name:</b> Harshala Chavan <br />
+                  <b>Email:</b> harshala@example.com <br />
+                  <b>Mobile:</b> 9876543210 <br />
+                  {/* <b>Password:</b> ******** <br /> */}
+                  <b>Location:</b> Pune <br />
+                  <b>City:</b> Pune <br />
+                  <b>State:</b> Maharashtra
+                </td>
 
-                    <td>
-                      {u.location}, {u.city}, {u.state}
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="3" className="text-center text-muted py-3">
-                    No data available
-                  </td>
-                </tr>
-              )}
+                {/* Company Details */}
+                <td style={{ width: "30%" }}>
+                  <b>Company Name:</b> Monk Vision Pvt Ltd <br />
+                  <b>Category:</b> IT / Software <br />
+                  <b>Website:</b> https://monkvision.com <br />
+                </td>
+
+                {/* Social Media */}
+                <td style={{ width: "25%" }}>
+                  <b>LinkedIn:</b> linkedin.com/xyz <br />
+                  <b>Facebook:</b> facebook.com/xyz <br />
+                  <b>Instagram:</b> instagram.com/xyz <br />
+                  <b>YouTube:</b> youtube.com/xyz
+                </td>
+
+                {/* Registration Date */}
+                <td className="text-center">2025-12-09</td>
+              </tr>
             </tbody>
           </table>
-
-          {/* <Pagination
-            currentPage={currentPage}
-            totalPages={nPages}
-            onPageChange={(page) => setCurrentPage(page)}
-          /> */}
         </div>
       </div>
 
@@ -270,12 +297,17 @@ function Employes() {
       <div className="modal fade" id="exampleModal" tabIndex="-1">
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content rounded-4">
-            <div className="modal-header bg-primary text-white">
-              <h5 className="modal-title fw-bold">Add Employer</h5>
+            <div
+              className="modal-header  text-white"
+              style={{ backgroundColor: "yellow" }}
+            >
+              <h5 className="modal-title fw-bold" style={{ color: "gray" }}>
+                Add Employer
+              </h5>
               <i
                 className="fa-regular fa-circle-xmark"
                 data-bs-dismiss="modal"
-                style={{ cursor: "pointer", color: "white", fontSize: "25px" }}
+                style={{ cursor: "pointer", color: "gray", fontSize: "25px" }}
               ></i>
             </div>
 
@@ -464,14 +496,19 @@ function Employes() {
               {/* Submit */}
               <div className="modal-footer bg-light rounded-bottom-4 d-flex">
                 <button
-                  className="btn btn-outline-secondary rounded-3"
+                  className="btn  rounded-3"
                   data-bs-dismiss="modal"
+                  style={{ backgroundColor: "#9aa09bff", color: "white" }}
                 >
-                  Close
+                  Cancle
                 </button>
 
-                <button type="submit" className="btn btn-primary px-4 ms-auto">
-                  Save User
+                <button
+                  type="submit"
+                  className="btn  px-4 ms-auto"
+                  style={{ backgroundColor: "#05b61aff", color: "white" }}
+                >
+                  Submit
                 </button>
               </div>
             </form>

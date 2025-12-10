@@ -271,7 +271,7 @@ function Candidates() {
           </table>
         </div>
       </div>
-      
+
       {/* DELETE CONFIRM MODAL */}
       <ConfirmDelete
         show={showDeleteModal}
@@ -290,15 +290,15 @@ function Candidates() {
           <div className="modal-content shadow-lg border-0 rounded-4">
             <div
               className="modal-header text-white rounded-top-4"
-              style={{ backgroundColor: "yellow" }}
+              style={{ backgroundColor: "#05b61aff", color: "white" }}
             >
-              <h5 className="modal-title fw-bold" style={{ color: "gray" }}>
+              <h5 className="modal-title fw-bold" style={{ color: "white" }}>
                 Candidate Details
               </h5>
               <i
                 className="fa-regular fa-circle-xmark"
                 data-bs-dismiss="modal"
-                style={{ cursor: "pointer", color: "gray", fontSize: "25px" }}
+                style={{ cursor: "pointer", color: "white", fontSize: "25px" }}
               ></i>
             </div>
             <form onSubmit={handleSubmit}>

@@ -299,15 +299,15 @@ function Employes() {
           <div className="modal-content rounded-4">
             <div
               className="modal-header  text-white"
-              style={{ backgroundColor: "yellow" }}
+              style={{ backgroundColor: "#05b61aff", color: "white" }}
             >
-              <h5 className="modal-title fw-bold" style={{ color: "gray" }}>
+              <h5 className="modal-title fw-bold" style={{ color: "white" }}>
                 Add Employer
               </h5>
               <i
                 className="fa-regular fa-circle-xmark"
                 data-bs-dismiss="modal"
-                style={{ cursor: "pointer", color: "gray", fontSize: "25px" }}
+                style={{ cursor: "pointer", color: "white", fontSize: "25px" }}
               ></i>
             </div>
 

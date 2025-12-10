@@ -1,10 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Pagination from "./commenuse/Pagination";
 
 function Contact() {
-  // tital of tab
-  useState(() => {
+  // Correct way: set tab title
+  useEffect(() => {
     document.title = "Contact Hirelink ";
   }, []);
+
+  // Dummy contact data (तू backend ने replace करू शकतो)
+  const [contacts] = useState([
+    {
+      id: 1,
+      name: "Harshal Mahajan",
+      email: "harshal@email.com",
+      mobile: "9999999999",
+      subject: "Job Application",
+      message:
+        "Include every Bootstrap JavaScript plugin and dependency with one of our bundle files.",
+      added_by: "Admin",
+      added_date: "18/07/2025",
+    },
+  ]);
+
+  // Pagination start
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 5;
+  const lastIndex = currentPage * recordsPerPage;
+  const firstIndex = lastIndex - recordsPerPage;
+
+  const records = contacts.slice(firstIndex, lastIndex);
+  const nPages = Math.ceil(contacts.length / recordsPerPage);
+  // Pagination End
+
   return (
     <>
       <div className="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
@@ -12,6 +39,7 @@ function Contact() {
           <h3 className="fw-bold mb-3">Contacts</h3>
         </div>
       </div>
+
       <div className="card shadow-sm p-3">
         <div className="row g-2 align-items-center mb-3">
           <div className="col-md-2">
@@ -21,6 +49,7 @@ function Contact() {
               <option>Flat Amount</option>
             </select>
           </div>
+
           <div className="col-md-2">
             <input type="date" className="form-control" />
           </div>
@@ -47,70 +76,77 @@ function Contact() {
           </div>
         </div>
 
+        {/* TABLE START */}
         <table className="table table-bordered">
           <thead className="table-light text-center">
-            <tr className="text-center">
+            <tr>
               <th className="fs-6 fw-bold">ID</th>
               <th className="fs-6 fw-bold">Contact Detail</th>
               <th className="fs-6 fw-bold">Subject</th>
-              <th className="fs-6 fw-bold">Massage</th>
+              <th className="fs-6 fw-bold">Message</th>
               <th className="fs-6 fw-bold">Activity Detail</th>
             </tr>
           </thead>
 
           <tbody>
-            <tr className="text-center align-middle">
-              <td>1</td>
-              <td className="text-start">
-                <div className="fw-bold">
-                  Name:{"  "}
-                  <span className="text-dark fw-normal">Harshal mahajan</span>
-                </div>
-                <div className="fw-bold">
-                  Email:{"  "}
-                  <span className="text-dark fw-normal">harshal@hmail.com</span>
-                </div>
-                <div className="fw-bold">
-                  Mobile No:{"  "}
-                  <span className="text-dark fw-normal">9999999999</span>
-                </div>
-              </td>
+            {records.length > 0 ? (
+              records.map((c) => (
+                <tr key={c.id} className="text-center align-middle">
+                  <td>{c.id}</td>
 
-              {/* Subject */}
-              <td className="text-start">Job Application</td>
+                  <td className="text-start">
+                    <div className="fw-bold">
+                      Name:{" "}
+                      <span className="text-dark fw-normal">{c.name}</span>
+                    </div>
+                    <div className="fw-bold">
+                      Email:{" "}
+                      <span className="text-dark fw-normal">{c.email}</span>
+                    </div>
+                    <div className="fw-bold">
+                      Mobile:{" "}
+                      <span className="text-dark fw-normal">{c.mobile}</span>
+                    </div>
+                  </td>
 
-              {/* Massage */}
-              <td className="text-start w-25">
-                Include every Bootstrap JavaScript plugin and dependency with
-                one of our two bundles. Both bootstrap.bundle.js an
-              </td>
-              {/* Activity Detail */}
-              <td className="text-start">
-                <div className="fw-bold ">
-                  Added By:{"  "}
-                  <span className="text-dark fw-normal">11/11/2025</span>
-                </div>
-                <div className="fw-bold ">
-                  Added Date:{"  "}
-                  <span className="text-dark fw-normal">18/07/2025</span>
-                </div>
-              </td>
-            </tr>
-            {/* <tr>
-              <td colSpan="6" className="text-center text-muted py-3">
-                No data available
-              </td>
-            </tr> */}
+                  <td className="text-start">{c.subject}</td>
+
+                  <td className="text-start w-25">{c.message}</td>
+
+                  <td className="text-start">
+                    <div className="fw-bold">
+                      Added By:{" "}
+                      <span className="text-dark fw-normal">{c.added_by}</span>
+                    </div>
+                    <div className="fw-bold">
+                      Added Date:{" "}
+                      <span className="text-dark fw-normal">
+                        {c.added_date}
+                      </span>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" className="text-center text-muted py-3">
+                  No data available
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
+        {/* TABLE END */}
 
-        {/* <Pagination
-            currentPage={currentPage}
-            totalPages={nPages}
-            onPageChange={(page) => setCurrentPage(page)}
-          /> */}
+        {/* Pagination */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={nPages}
+          onPageChange={(page) => setCurrentPage(page)}
+        />
       </div>
     </>
   );
 }
+
 export default Contact;

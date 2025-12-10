@@ -33,8 +33,8 @@ function Dashboard() {
               <div className="row align-items-center">
                 <div className="col-icon">
                   <div
-                    className="icon-big text-center icon-info bubble-shadow-small"
-                    style={{ backgroundColor: "yellow" }}
+                    className="icon-big text-center icon-info bubble-shadow-small bg-success"
+
                   >
                     <i className="fa fa-briefcase"></i>
                   </div>
@@ -71,8 +71,8 @@ function Dashboard() {
               <div className="row align-items-center">
                 <div className="col-icon">
                   <div
-                    className="icon-big text-center icon-info bubble-shadow-small"
-                    style={{ backgroundColor: "#05b61a", color: "white" }}
+                    className="icon-big text-center icon-info bubble-shadow-small bg-warning"
+  
                   >
                     <i className="fa fa-users"></i>
                   </div>
@@ -147,8 +147,8 @@ function Dashboard() {
               <div className="row align-items-center">
                 <div className="col-icon">
                   <div
-                    className="icon-big text-center icon-info bubble-shadow-small"
-                    style={{ backgroundColor: "yellow" }}
+                    className="icon-big text-center icon-info bubble-shadow-small bg-success"
+
                   >
                     <i className="fa fa-user-tie"></i>
                   </div>
@@ -185,9 +185,8 @@ function Dashboard() {
               <div className="row align-items-center">
                 <div className="col-icon">
                   <div
-                    className="icon-big text-center icon-info bubble-shadow-small"
-                    style={{ backgroundColor: "#05b61a", color: "white" }}
-                  >
+                    className="icon-big text-center icon-info bubble-shadow-small bg-warning"
+                  > 
                     <i className="fa fa-headphones"></i>
                   </div>
                 </div>

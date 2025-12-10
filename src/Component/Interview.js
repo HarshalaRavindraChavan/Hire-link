@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
+import Pagination from "./commenuse/Pagination";
 
 function Interview() {
   // tital of tab
@@ -128,8 +129,7 @@ function Interview() {
           <a
             data-bs-toggle="modal"
             data-bs-target="#exampleModal"
-            className="btn "
-            style={{ backgroundColor: "#05b61aff", color: "white" }}
+            className="btn btn-success"
           >
             <i className="fa fa-plus"> </i> Add Interview
           </a>
@@ -137,162 +137,178 @@ function Interview() {
       </div>
 
       {/* FILTER SECTION */}
-      <div className="card shadow-sm">
-        <div className="card-body">
-          {/* FILTERS */}
-          <div className="row g-2 align-items-center mb-3">
-            {/* Interview Status */}
-            <div className="col-12 col-md-2">
-              <select className="form-select">
-                <option value="">Select Interview Status</option>
-                <option>Scheduled</option>
-                <option>Rescheduled</option>
-                <option>Completed</option>
-                <option>Cancelled</option>
-                <option>No-Show</option>
-              </select>
-            </div>
-
-            {/* From Date */}
-            <div className="col-6 col-md-2">
-              <input type="date" className="form-control" />
-            </div>
-
-            {/* To Date */}
-            <div className="col-6 col-md-2">
-              <input type="date" className="form-control" />
-            </div>
-
-            {/* Submit + Reset */}
-            <div className="ol-12 col-md-3 d-flex justify-content-md-start justify-content-between">
-              <button
-                className="btn px-4 me-2"
-                style={{ backgroundColor: "#05b61a", color: "white" }}
-              >
-                Submit
-              </button>
-
-              <button className="btn btn-light border px-3">
-                <i className="fa fa-refresh"></i>
-              </button>
-            </div>
-
-            {/* Search (Right aligned) */}
-            <div className="col-md-2 col-md-3">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Search..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
+      <div className="card shadow-sm p-3">
+        {/* FILTERS */}
+        <div className="row g-2 align-items-center mb-3">
+          {/* Interview Status */}
+          <div className="col-md-2">
+            <select className="form-select form-control">
+              <option value="">Select Intervie </option>
+              <option>Scheduled</option>
+              <option>Rescheduled</option>
+              <option>Completed</option>
+              <option>Cancelled</option>
+              <option>No-Show</option>
+            </select>
           </div>
 
-          {/* TABLE */}
-          <div className="table-responsive">
-            <table className="table table-bordered table-hover table-responsive">
-              <thead className="table-light align-middle">
-                <tr>
-                  <th>id</th>
-                  <th>candidate</th>
-                  <th>Job Details</th>
-                  <th>Interview Info</th>
-                  <th>Interviewer</th>
-                  <th>Created</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
+          {/* From Date */}
+          <div className="col-md-2">
+            <input type="date" className="form-control" />
+          </div>
 
-              <tbody>
-                {interviews.map((i) => (
-                  <tr key={i.id}>
-                    <td>{i.id}</td>
+          {/* To Date */}
+          <div className="col-md-2">
+            <input type="date" className="form-control" />
+          </div>
 
-                    <td>
-                      <b>{i.candidate_name}</b>
-                      <br />
-                      <small>{i.candidate_email}</small>
-                    </td>
+          {/* Submit + Reset */}
+          <div className="col-md-3 d-flex">
+            <button type="submit" className="btn btn-success px-4 me-2">
+              Submit
+            </button>
+            <button className="btn btn-light border px-3">
+              <i className="fa fa-refresh"></i>
+            </button>
+          </div>
 
-                    <td>
-                      <b>Job Title:</b> {i.job_title} <br />
-                      <b>Company:</b> {i.company_name}
-                    </td>
+          {/* Search (Right aligned) */}
+          <div className="col-md-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Search..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+        </div>
 
-                    <td>
-                      <b>Type:</b> {i.interview_type} <br />
-                      <b>Date:</b> {i.interview_date} <br />
-                      <b>Time:</b> {i.interview_time} <br />
-                      <b>Meeting:</b>{" "}
-                      <a
-                        href={i.meeting_details}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Open Link
-                      </a>
-                    </td>
+        {/* TABLE */}
+        <div className="table-responsive">
+          <table className="table table-bordered align-middle">
+            <thead className="table-light text-center">
+              <tr className="text-center">
+                <th className="fs-6 fw-bold">id</th>
+                <th className="fs-6 fw-bold">candidate</th>
+                <th className="fs-6 fw-bold">Job Details</th>
+                <th className="fs-6 fw-bold">Interview Info</th>
+                <th className="fs-6 fw-bold">Created</th>
+              </tr>
+            </thead>
 
-                    <td>{i.interviewer}</td>
-                    <td>{i.created_date}</td>
-                    <td>
+            <tbody>
+              {interviews.map((i) => (
+                <tr key={i.id}>
+                  <td>{i.id}</td>
+
+                  <td className="text-start">
+                    <div className="fw-bold">
+                      Name:
+                      <div className="dropdown d-inline ms-2">
+                        <span
+                          className="fw-bold text-primary"
+                          role="button"
+                          data-bs-toggle="dropdown"
+                        >
+                          {i.candidate_name}
+                        </span>
+                        <ul className="dropdown-menu shadow">
+                          <li>
+                            <button className="dropdown-item">
+                              <i className="fas fa-edit me-2"></i>Edit
+                            </button>
+                          </li>
+                          <li>
+                            <button
+                              className="dropdown-item text-danger"
+                              onClick={() => handleDeleteClick(i.id)}
+                            >
+                              <i className="fas fa-trash me-2"></i>Delete
+                            </button>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div className="fw-bold">
+                      Email:{"  "}
+                      <span className="text-dark fw-normal">
+                        {i.candidate_email}
+                      </span>
+                    </div>
+                  </td>
+
+                  <td className="text-start">
+                    <b>Job Title:</b> {i.job_title} <br />
+                    <b>Company:</b> {i.company_name}
+                  </td>
+
+                  <td className="text-start">
+                    <div className="fw-bold">
+                      Interviewer:{"  "}
+                      <span className="text-dark fw-normal">
+                        {i.interviewer}
+                      </span>
+                    </div>
+                    <div className="fw-bold">
+                      Type:{"  "}
+                      <span className="text-dark fw-normal">
+                        {i.interview_type}
+                      </span>
+                    </div>
+                    <div className="fw-bold">
+                      Date:{"  "}
+                      <span className="text-dark fw-normal">
+                        {i.interview_date}
+                      </span>
+                    </div>
+                    <div className="fw-bold">
+                      Time:{"  "}
+                      <span className="text-dark fw-normal">
+                        {i.interview_time}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="text-start">
+                    <div className="fw-bold">
+                      Created:{"  "}
+                      <span className="text-dark fw-normal">
+                        {i.created_date}
+                      </span>
+                    </div>
+
+                    <div className="fw-bold">
+                      Meeting:{"  "}
+                      <span className="text-dark fw-normal">
+                        <a
+                          href={i.meeting_details}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          Open Link
+                        </a>
+                      </span>
+                    </div>
+                    <div className="fw-bold">
+                      Status:{"  "}
                       <span className="badge bg-success">
                         {i.interview_status}
                       </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {/* Pagination */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={nPages}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
         </div>
       </div>
-
-      {/* PAGINATION */}
-      {/* <nav className="d-flex justify-content-end mt-3">
-              <ul className="pagination">
-                <li
-                  className={`page-item ${currentPage === 1 ? "disabled" : ""}`}
-                >
-                  <button
-                    className="page-link"
-                    onClick={() => setCurrentPage(currentPage - 1)}
-                  >
-                    Previous
-                  </button>
-                </li>
-
-                {[...Array(nPages).keys()].map((num) => (
-                  <li
-                    key={num}
-                    className={`page-item ${
-                      currentPage === num + 1 ? "active" : ""
-                    }`}
-                  >
-                    <button
-                      className="page-link"
-                      onClick={() => setCurrentPage(num + 1)}
-                    >
-                      {num + 1}
-                    </button>
-                  </li>
-                ))}
-
-                <li
-                  className={`page-item ${
-                    currentPage === nPages ? "disabled" : ""
-                  }`}
-                >
-                  <button
-                    className="page-link"
-                    onClick={() => setCurrentPage(currentPage + 1)}
-                  >
-                    Next
-                  </button>
-                </li>
-              </ul>
-            </nav> */}
 
       {/* ADD FORM MODAL */}
       <div
@@ -303,10 +319,7 @@ function Interview() {
       >
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content shadow-lg border-0 rounded-4">
-            <div
-              className="modal-header text-white rounded-top-4"
-              style={{ backgroundColor: "#05b61aff", color: "white" }}
-            >
+            <div className="modal-header text-white rounded-top-4 bg-success">
               <h5 className="modal-title fw-bold" style={{ color: "white" }}>
                 Interview Details
               </h5>
@@ -450,9 +463,8 @@ function Interview() {
                     />
                     <button
                       type="button"
-                      className="btn"
+                      className="btn btn-success"
                       onClick={generateMeetingLink}
-                      style={{ backgroundColor: "#05b61aff", color: "white" }}
                     >
                       Generate
                     </button>
@@ -527,18 +539,14 @@ function Interview() {
               {/* Submit Button */}
               <div className="modal-footer bg-light rounded-bottom-4 d-flex">
                 <button
-                  className="btn  rounded-3"
+                  type="button"
+                  className="btn btn-outline-secondary rounded-3"
                   data-bs-dismiss="modal"
-                  style={{ backgroundColor: "#9aa09bff", color: "white" }}
                 >
-                  Cancle
+                  Cancel
                 </button>
 
-                <button
-                  type="submit"
-                  className="btn  px-4 ms-auto"
-                  style={{ backgroundColor: "#05b61aff", color: "white" }}
-                >
+                <button type="submit" className="btn btn-success px-4 ms-auto">
                   Submit
                 </button>
               </div>

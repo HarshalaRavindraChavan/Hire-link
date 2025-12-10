@@ -3,8 +3,7 @@ import ConfirmDelete from "./commenuse/ConfirmDelete";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-
-// import Pagination from "./commenuse/Pagination";
+import Pagination from "./commenuse/Pagination";
 
 function Offer() {
   // tital of tab
@@ -178,6 +177,7 @@ function Offer() {
             />
           </div>
         </div>
+        
         <div className="table-responsive">
           <table className="table table-bordered align-middle">
             <thead className="table-light text-center">
@@ -302,6 +302,12 @@ function Offer() {
               )}
             </tbody>
           </table>
+          {/* Pagination */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={nPages}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
         </div>
       </div>
 

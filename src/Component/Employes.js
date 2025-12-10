@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import * as yup from "yup";
+import Pagination from "./commenuse/Pagination";
 
 function Employes() {
   // tital of tab
@@ -180,8 +181,7 @@ function Employes() {
           <button
             data-bs-toggle="modal"
             data-bs-target="#exampleModal"
-            className="btn "
-            style={{ backgroundColor: "#05b61aff", color: "white" }}
+            className="btn btn-success"
           >
             <i className="fa fa-plus"></i> Add Employer
           </button>
@@ -194,8 +194,8 @@ function Employes() {
         <div className="row g-2 align-items-center mb-3">
           {/* Category */}
           <div className="col-12 col-md-2">
-            <select className="form-select">
-              <option value="">Select Category</option>
+            <select className="form-select  form-control">
+              <option value="">Select Categor</option>
               <option>IT</option>
               <option>Finance</option>
               <option>Marketing</option>
@@ -215,12 +215,7 @@ function Employes() {
 
           {/* Submit + Reset */}
           <div className="col-12 col-md-3 d-flex justify-content-md-start justify-content-between">
-            <button
-              className="btn px-4 me-2"
-              style={{ backgroundColor: "#05b61aff", color: "white" }}
-            >
-              Submit
-            </button>
+            <button className="btn px-4 me-2 btn-success">Submit</button>
 
             <button className="btn btn-light border px-3">
               <i className="fa fa-refresh"></i>
@@ -244,7 +239,7 @@ function Employes() {
           <table className="table table-bordered align-middle mb-0">
             <thead className="table-light text-center">
               <tr>
-                <th>SR/NO</th>
+                <th>ID</th>
                 <th>User Details</th>
                 <th>Company Details</th>
                 <th>Social Media</th>
@@ -288,6 +283,12 @@ function Employes() {
               </tr>
             </tbody>
           </table>
+          {/* Pagination */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={nPages}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
         </div>
       </div>
 
@@ -302,10 +303,7 @@ function Employes() {
       <div className="modal fade" id="exampleModal" tabIndex="-1">
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content rounded-4">
-            <div
-              className="modal-header  text-white"
-              style={{ backgroundColor: "#05b61aff", color: "white" }}
-            >
+            <div className="modal-header  text-white bg-success">
               <h5 className="modal-title fw-bold" style={{ color: "white" }}>
                 Add Employer
               </h5>
@@ -499,20 +497,17 @@ function Employes() {
               </div>
 
               {/* Submit */}
+
               <div className="modal-footer bg-light rounded-bottom-4 d-flex">
                 <button
-                  className="btn  rounded-3"
+                  type="button"
+                  className="btn btn-outline-secondary rounded-3"
                   data-bs-dismiss="modal"
-                  style={{ backgroundColor: "#9aa09bff", color: "white" }}
                 >
-                  Cancle
+                  Cancel
                 </button>
 
-                <button
-                  type="submit"
-                  className="btn  px-4 ms-auto"
-                  style={{ backgroundColor: "#05b61aff", color: "white" }}
-                >
+                <button type="submit" className="btn btn-success px-4 ms-auto">
                   Submit
                 </button>
               </div>

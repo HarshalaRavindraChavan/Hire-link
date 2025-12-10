@@ -3,7 +3,7 @@ import ConfirmDelete from "./commenuse/ConfirmDelete";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-// import Pagination from "./commenuse/Pagination";
+import Pagination from "./commenuse/Pagination";
 
 function Users() {
   // tital of tab
@@ -330,12 +330,12 @@ function Users() {
             )}
           </tbody>
         </table>
-
-        {/* <Pagination
-            currentPage={currentPage}
-            totalPages={nPages}
-            onPageChange={(page) => setCurrentPage(page)}
-          /> */}
+        {/* Pagination */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={nPages}
+          onPageChange={(page) => setCurrentPage(page)}
+        />
       </div>
 
       {/* ADD USER MODAL */}

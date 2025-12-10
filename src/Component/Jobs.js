@@ -3,6 +3,7 @@ import ConfirmDelete from "./commenuse/ConfirmDelete";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
+import Pagination from "./commenuse/Pagination";
 
 function Jobs() {
   // tital of tab
@@ -106,8 +107,8 @@ function Jobs() {
         <div className="row g-2 align-items-center mb-3">
           {/* Job Type */}
           <div className="col-12 col-md-2">
-            <select className="form-select">
-              <option value="">Select Job Type</option>
+            <select className="form-select form-control">
+              <option value="">Select Type</option>
               <option>Full-time</option>
               <option>Part-time</option>
               <option>Internship</option>
@@ -128,12 +129,7 @@ function Jobs() {
 
           {/* Submit + Reset */}
           <div className="col-12 col-md-3 d-flex justify-content-md-start justify-content-between">
-            <button
-              className="btn px-4 me-2"
-              style={{ backgroundColor: "#05b61aff", color: "white" }}
-            >
-              Submit
-            </button>
+            <button className="btn px-4 me-2 btn-success">Submit</button>
 
             <button className="btn btn-light border px-3">
               <i className="fa fa-refresh"></i>
@@ -154,20 +150,14 @@ function Jobs() {
 
         {/* TABLE */}
         <div className="table-responsive">
-          <table className="table table-bordered align-middle">
+          <table className="table table-bordered ">
             <thead className="table-light text-center">
-              <tr>
-                <th>SR/NO</th>
-                <th>Job Title</th>
-                <th>Company Name</th>
-                <th>Job Category</th>
-                <th>Job Type</th>
-                <th>Location</th>
-                <th>Salary Range</th>
-                <th>Experience Required</th>
-                <th>Posted Date</th>
-                <th>Applications Count</th>
-                <th>Status</th>
+              <tr className="text-center">
+                <th className="fs-6 fw-bold">ID</th>
+                <th className="fs-6 fw-bold">Job Detail</th>
+                <th className="fs-6 fw-bold">Job By</th>
+                <th className="fs-6 fw-bold">Other Detail</th>
+                <th className="fs-6 fw-bold">Status</th>
               </tr>
             </thead>
 
@@ -175,21 +165,76 @@ function Jobs() {
               {/* Example Row */}
               <tr>
                 <td>1</td>
-                <td className="text-center fw-bold">Frontend Developer</td>
-                <td className="text-center">Tech Solutions Pvt. Ltd.</td>
-                <td className="text-center">IT / Software</td>
-                <td className="text-center">Full-time</td>
-                <td className="text-center">Pune, MH</td>
-                <td className="text-center">₹4,00,000 - ₹6,00,000</td>
-                <td className="text-center">3 Years</td>
-                <td className="text-center">2025-12-09</td>
-                <td className="text-center fw-bold">25</td>
+                <td className="text-start fw-bold">
+                  {" "}
+                  <div className="fw-bold">
+                    Title:
+                    <div className="dropdown d-inline ms-2">
+                      <span
+                        className="fw-bold text-primary"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                      >
+                        Frontend Developer
+                      </span>
+                      <ul className="dropdown-menu shadow">
+                        <li>
+                          <button className="dropdown-item">
+                            <i className="fas fa-edit me-2"></i>Edit
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            className="dropdown-item text-danger"
+                            onClick={() => handleDeleteClick()}
+                          >
+                            <i className="fas fa-trash me-2"></i>Delete
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="fw-bold ">
+                    Category:{" "}
+                    <span className="text-dark fw-normal">IT / Software</span>
+                  </div>
+                  <div className="fw-bold ">
+                    Type: <span className="text-dark fw-normal">Full-time</span>
+                  </div>
+                </td>
+
+                <td className="text-start">
+                  <div className="fw-bold ">
+                    Company Name:{" "}
+                    <span className="text-dark fw-normal">Esenceweb IT</span>
+                  </div>
+                  <div className="fw-bold ">
+                    Exp. Required:{" "}
+                    <span className="text-dark fw-normal">3 Years</span>
+                  </div>
+                </td>
+                <td className="text-start">
+                  <div className="fw-bold ">
+                    Posted Date:{" "}
+                    <span className="text-dark fw-normal">2025-12-09</span>
+                  </div>
+                  <div className="fw-bold ">
+                    Applications:{" "}
+                    <span className="text-dark fw-normal">29</span>
+                  </div>
+                </td>
                 <td className="text-center">
                   <span className="badge bg-success">Active</span>
                 </td>
               </tr>
             </tbody>
           </table>
+          {/* Pagination */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={nPages}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
         </div>
       </div>
 
@@ -202,10 +247,7 @@ function Jobs() {
       >
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content shadow-lg border-0 rounded-4">
-            <div
-              className="modal-header text-white rounded-top-4"
-              style={{ backgroundColor: "#05b61aff", color: "white" }}
-            >
+            <div className="modal-header text-white rounded-top-4 bg-success">
               <h5 className="modal-title fw-bold" style={{ color: "white" }}>
                 Job Details
               </h5>
@@ -369,19 +411,15 @@ function Jobs() {
               {/* Submit Button */}
               <div className="modal-footer bg-light rounded-bottom-4 d-flex">
                 <button
-                  className="btn rounded-3"
+                  type="button"
+                  className="btn btn-outline-secondary rounded-3"
                   data-bs-dismiss="modal"
-                  style={{ backgroundColor: "#9aa09bff", color: "white" }}
                 >
-                  Cancle
+                  Cancel
                 </button>
 
-                <button
-                  type="submit"
-                  className="btn px-4 ms-auto"
-                  style={{ backgroundColor: "#05b61aff", color: "white" }}
-                >
-                  Submit
+                <button type="submit" className="btn btn-success px-4 ms-auto">
+                  Save User
                 </button>
               </div>
             </form>

@@ -3,11 +3,12 @@ import ConfirmDelete from "./commenuse/ConfirmDelete";
 import { useForm, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
+import Pagination from "./commenuse/Pagination";
 
 function Packages() {
-  // tital of tab
-  useState(() => {
-    document.title = "Packages Hirelink ";
+  // Correct: useEffect for title
+  useEffect(() => {
+    document.title = "Packages Hirelink";
   }, []);
 
   const [packages, setPackages] = useState([
@@ -40,6 +41,16 @@ function Packages() {
     setPackages(filtered);
     setShowDeleteModal(false);
   };
+
+  // ---------------- Pagination Fix ----------------
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 5;
+  const lastIndex = currentPage * recordsPerPage;
+  const firstIndex = lastIndex - recordsPerPage;
+
+  const records = packages.slice(firstIndex, lastIndex); // FIXED
+  const nPages = Math.ceil(packages.length / recordsPerPage); // FIXED
+  // --------------------------------------------------
 
   // Validation Schema
   const validationSchema = Yup.object().shape({
@@ -80,7 +91,7 @@ function Packages() {
       resumeLimit: "",
       support: "",
       description: "",
-      benefits: [],
+      benefits: [""], // FIX: one benefit by default
     },
   });
 
@@ -89,14 +100,14 @@ function Packages() {
     name: "benefits",
   });
 
-  // Ensure first input appears always
+  // Ensure first input always appears
   useEffect(() => {
     if (fields.length === 0) {
       append("");
     }
-  }, [fields]);
+  }, [fields, append]);
 
-  // Benefit Add logic with validation
+  // Add Benefit
   const handleAddBenefit = () => {
     const values = getValues("benefits");
     const lastIndex = values.length - 1;
@@ -162,13 +173,13 @@ function Packages() {
             </thead>
 
             <tbody>
-              {packages.length > 0 ? (
-                packages.map((pkg) => (
+              {records.length > 0 ? (
+                records.map((pkg) => (
                   <tr key={pkg.id} className="text-center align-middle">
                     <td>{pkg.id}</td>
                     <td className="text-start">
                       <div className="fw-bold">
-                        Package Name:
+                        Name:
                         <div className="dropdown d-inline ms-2">
                           <span
                             className="fw-bold text-primary"
@@ -266,6 +277,12 @@ function Packages() {
               )}
             </tbody>
           </table>
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={nPages}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
         </div>
       </div>
 
@@ -427,6 +444,7 @@ function Packages() {
         </div>
       </div>
 
+      {/* Delete Confirm */}
       <ConfirmDelete
         show={showDeleteModal}
         onConfirm={confirmDelete}

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
+import image from "./logo/hirelink.png";
+import Pagination from "./commenuse/Pagination";
 
 function Candidates() {
   // tital of tab
@@ -147,8 +149,7 @@ function Candidates() {
           <a
             data-bs-toggle="modal"
             data-bs-target="#exampleModal"
-            className="btn"
-            style={{ backgroundColor: "#05b61aff", color: "white" }}
+            className="btn btn-success"
           >
             <i className="fa fa-plus"></i> Add Candidates
           </a>
@@ -160,8 +161,8 @@ function Candidates() {
         <div className="row g-2 align-items-center mb-3">
           {/* Experience */}
           <div className="col-12 col-md-2">
-            <select className="form-select">
-              <option value="">Select Experience</option>
+            <select className="form-select form-control">
+              <option value="">Select Experien</option>
               <option>0–1 Years</option>
               <option>1–3 Years</option>
               <option>3–5 Years</option>
@@ -181,12 +182,7 @@ function Candidates() {
 
           {/* Submit + Reset */}
           <div className="col-12 col-md-3 d-flex justify-content-md-start justify-content-between">
-            <button
-              className="btn px-4 me-2"
-              style={{ backgroundColor: "#05b61aff", color: "white" }}
-            >
-              Submit
-            </button>
+            <button className="btn px-4 me-2 btn-success">Submit</button>
 
             <button className="btn btn-light border px-3">
               <i className="fa fa-refresh"></i>
@@ -209,15 +205,12 @@ function Candidates() {
         <div className="table-responsive">
           <table className="table table-bordered align-middle">
             <thead className="table-light text-center">
-              <tr>
-                <th>Candidate ID</th>
-                <th>Candidate Details</th>
-                <th>Profile Photo</th>
-                <th>Experience</th>
-                <th>Skills</th>
-                <th>Applied Jobs</th>
-                <th>Registration Date</th>
-                <th>Resume</th>
+              <tr className="text-center">
+                <th className="fs-6 fw-bold">ID</th>
+                <th className="fs-6 fw-bold">Candidate Details</th>
+                <th className="fs-6 fw-bold">Profile Photo</th>
+                <th className="fs-6 fw-bold">Experience</th>
+                <th className="fs-6 fw-bold">Resume</th>
               </tr>
             </thead>
 
@@ -227,53 +220,93 @@ function Candidates() {
                 <td className="text-center fw-bold">1</td>
 
                 {/* Candidate Info */}
-                <td style={{ width: "40%" }}>
-                  <b>Full Name:</b> Harshala Chavan <br />
-                  <b>Email:</b> harshala@example.com <br />
-                  <b>Phone:</b> 9876543210 <br />
-                  <b>Location:</b> Pune, MH
+                <td className=" text-start w-auto">
+                  <div className="fw-bold">
+                    Name:
+                    <div className="dropdown d-inline ms-2">
+                      <span
+                        className="fw-bold text-primary"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                      >
+                        Harshal Mahajan
+                      </span>
+                      <ul className="dropdown-menu shadow">
+                        <li>
+                          <button className="dropdown-item">
+                            <i className="fas fa-edit me-2"></i>Edit
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            className="dropdown-item text-danger"
+                            onClick={() => handleDeleteClick()}
+                          >
+                            <i className="fas fa-trash me-2"></i>Delete
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div className="fw-bold">
+                    Email:{"  "}
+                    <span className="text-dark fw-normal">
+                      harshal@gmail.com
+                    </span>
+                  </div>
+                  <div className="fw-bold">
+                    Mobile No:{"  "}
+                    <span className="text-dark fw-normal">9999999999</span>
+                  </div>
+                  <div className="fw-bold">
+                    Registar Date:{"  "}
+                    <span className="text-dark fw-normal">12/10/2025</span>
+                  </div>
                 </td>
 
                 {/* Profile Image */}
                 <td className="text-center">
-                  <img
-                    src="https://via.placeholder.com/60"
-                    alt="profile"
-                    style={{
-                      width: "60px",
-                      height: "60px",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                      border: "2px solid #ddd",
-                    }}
-                  />
+                  <div className="avatar avatar-xl">
+                    <img
+                      src={image}
+                      alt="No Image"
+                      className="avatar-img rounded-circle"
+                    />
+                  </div>
                 </td>
 
                 {/* Experience */}
-                <td className="text-center">3 Years</td>
-
-                {/* Skills */}
-                <td className="text-center">React, Node.js, SQL</td>
-
-                {/* Applied Jobs */}
-                <td className="text-center fw-bold">5</td>
-
-                {/* Registration Date */}
-                <td className="text-center">2025-12-09</td>
+                <td className="text-start">
+                  <div className="fw-bold">
+                    Experience:{"  "}
+                    <span className="text-dark fw-normal">1 Year</span>
+                  </div>
+                  <div className="fw-bold">
+                    Skills:{"  "}
+                    <span className="text-dark fw-normal">Php,React.js,</span>
+                  </div>
+                  <div className="fw-bold">
+                    Applied Jobs:{"  "}
+                    <span className="text-dark fw-normal">5</span>
+                  </div>
+                </td>
 
                 {/* Resume Button */}
                 <td className="text-center">
-                  <a
-                    className="btn btn-sm  px-3 w-100"
-                    href="#"
-                    style={{ backgroundColor: "#05b61aff", color: "white" }}
-                  >
+                  <a className="btn btn-sm  px-3 w-100 btn-success" href="#">
                     View / Download
                   </a>
                 </td>
               </tr>
             </tbody>
           </table>
+          {/* Pagination */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={nPages}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
         </div>
       </div>
 
@@ -293,10 +326,7 @@ function Candidates() {
       >
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content shadow-lg border-0 rounded-4">
-            <div
-              className="modal-header text-white rounded-top-4"
-              style={{ backgroundColor: "#05b61aff", color: "white" }}
-            >
+            <div className="modal-header text-white rounded-top-4 bg-success">
               <h5 className="modal-title fw-bold" style={{ color: "white" }}>
                 Candidate Details
               </h5>
@@ -485,18 +515,14 @@ function Candidates() {
 
               <div className="modal-footer bg-light rounded-bottom-4 d-flex">
                 <button
-                  className="btn rounded-3"
+                  type="button"
+                  className="btn btn-outline-secondary rounded-3"
                   data-bs-dismiss="modal"
-                  style={{ backgroundColor: "#9aa09bff", color: "white" }}
                 >
-                  Cancle
+                  Cancel
                 </button>
 
-                <button
-                  type="submit"
-                  className="btn px-4 ms-auto"
-                  style={{ backgroundColor: "#05b61aff", color: "white" }}
-                >
+                <button type="submit" className="btn btn-success px-4 ms-auto">
                   Submit
                 </button>
               </div>

@@ -8,7 +8,7 @@ function ConfirmDelete({ show, onConfirm, onCancel }) {
         <div className="popup-card">
           <h4 className="popup-title">⚠ Confirm Delete</h4>
           <p className="popup-text">
-            Are you sure you want to delete this record?
+            Are you sure you want to Delete this record?
           </p>
 
           <div className="popup-btn-group">

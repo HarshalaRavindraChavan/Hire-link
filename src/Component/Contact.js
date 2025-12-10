@@ -1,4 +1,10 @@
+import React, { useState } from "react";
+
 function Contact() {
+  // tital of tab
+  useState(() => {
+    document.title = "Contact Hirelink ";
+  }, []);
   return (
     <>
       <div className="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">

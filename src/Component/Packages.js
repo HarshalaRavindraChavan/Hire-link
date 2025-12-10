@@ -5,6 +5,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 
 function Packages() {
+  // tital of tab
+  useState(() => {
+    document.title = "Packages Hirelink ";
+  }, []);
+
   const [packages, setPackages] = useState([
     {
       id: 1,

@@ -1,6 +1,11 @@
 import { useNavigate } from "react-router-dom";
-
+import React, { useState } from "react";
 function Dashboard() {
+  // tital of tab
+  useState(() => {
+    document.title = "Dashboard Hirelink ";
+  }, []);
+
   const navigate = useNavigate();
   return (
     <>

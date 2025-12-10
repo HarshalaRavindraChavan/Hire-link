@@ -6,6 +6,11 @@ import * as Yup from "yup";
 import * as yup from "yup";
 
 function Employes() {
+  // tital of tab
+  useState(() => {
+    document.title = "Employers Hirelink ";
+  }, []);
+
   const [search, setSearch] = useState("");
   const [users, setUsers] = useState([
     {

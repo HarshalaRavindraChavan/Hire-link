@@ -6,6 +6,11 @@ import * as yup from "yup";
 // import Pagination from "./commenuse/Pagination";
 
 function Users() {
+  // tital of tab
+  useState(() => {
+    document.title = "Users Hirelink ";
+  }, []);
+
   // Example data: States and their cities
   const stateCityData = {
     Maharashtra: ["Mumbai", "Pune", "Nagpur", "Nashik"],

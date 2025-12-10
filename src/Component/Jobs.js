@@ -5,6 +5,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 
 function Jobs() {
+  // tital of tab
+  useState(() => {
+    document.title = "Jobs Hirelink ";
+  }, []);
+
   const [search, setSearch] = useState("");
   const [users, setUsers] = useState([
     {
@@ -97,7 +102,6 @@ function Jobs() {
       </div>
 
       <div className="card shadow-sm p-3">
-
         {/* FILTER ROW */}
         <div className="row g-2 align-items-center mb-3">
           {/* Job Type */}

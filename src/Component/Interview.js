@@ -6,6 +6,11 @@ import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 
 function Interview() {
+  // tital of tab
+  useState(() => {
+    document.title = "Interview Hirelink ";
+  }, []);
+
   const [users, setUsers] = useState([
     {
       id: 1,

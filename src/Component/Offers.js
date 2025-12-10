@@ -7,6 +7,11 @@ import * as yup from "yup";
 // import Pagination from "./commenuse/Pagination";
 
 function Offer() {
+  // tital of tab
+  useState(() => {
+    document.title = "Offers Hirelink ";
+  }, []);
+
   const [users, setUsers] = useState([
     {
       id: 1,
@@ -238,7 +243,6 @@ function Offer() {
                           {item.usageLimit}
                         </span>
                       </div>
-                     
                     </td>
 
                     <td className="text-start">
@@ -254,8 +258,8 @@ function Offer() {
                           {item.endDate}
                         </span>
                       </div>
-                       <div className="fw-bold">
-                          Offer Status:{"  "}
+                      <div className="fw-bold">
+                        Offer Status:{"  "}
                         {item.status === "1" ? (
                           <span className="badge bg-success">Active</span>
                         ) : (
@@ -409,7 +413,7 @@ function Offer() {
 
               <div className="modal-footer bg-light rounded-bottom-4 d-flex">
                 <button
-                type="button"
+                  type="button"
                   className="btn btn-outline-secondary rounded-3"
                   data-bs-dismiss="modal"
                 >
@@ -417,7 +421,7 @@ function Offer() {
                 </button>
 
                 <button type="submit" className="btn btn-success px-4 ms-auto">
-                 Submit
+                  Submit
                 </button>
               </div>
             </form>

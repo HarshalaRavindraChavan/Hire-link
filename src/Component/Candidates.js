@@ -2,6 +2,11 @@ import React, { useState } from "react";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
 
 function Candidates() {
+  // tital of tab
+  useState(() => {
+    document.title = "Candidates Hirelink ";
+  }, []);
+
   const [search, setSearch] = useState("");
   const [users, setUsers] = useState([
     {

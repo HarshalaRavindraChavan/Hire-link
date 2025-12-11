@@ -8,7 +8,7 @@ import Pagination from "./commenuse/Pagination";
 function Packages() {
   // Correct: useEffect for title
   useEffect(() => {
-    document.title = "Packages Hirelink";
+    document.title = "Hirelink | Packages";
   }, []);
 
   const [packages, setPackages] = useState([

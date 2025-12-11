@@ -8,7 +8,7 @@ import Pagination from "./commenuse/Pagination";
 function Users() {
   // tital of tab
   useState(() => {
-    document.title = "Users Hirelink ";
+    document.title = "Hirelink | Users";
   }, []);
 
   // Example data: States and their cities
@@ -127,7 +127,11 @@ function Users() {
     address: yup.string().required("Address is required"),
     state: yup.string().required("State is required"),
     city: yup.string().required("City is required"),
-    joindate: yup.date().required("Join Date is required"),
+    joindate: yup
+      .date()
+      .typeError("Please select a valid date")
+      .required("Join Date is required"),
+
     adhar: yup
       .string()
       .matches(/^\d{12}$/, "Adhar number must be 12 digits")
@@ -138,6 +142,11 @@ function Users() {
       .required("PAN number is required"),
     bankpassbook: yup.string().required("Bank passbook details are required"),
     experience: yup.string().required("Experience is required"),
+    role: yup.string().required("Please select a role"),
+    menus: yup
+      .array()
+      .min(1, "Select at least one menu")
+      .required("Select the menus"),
   });
 
   const {
@@ -185,18 +194,17 @@ function Users() {
               <option>Flat Amount</option>
             </select>
           </div>
-          <div className="col-md-2">
+          <div className="col-6 col-md-2">
             <input type="date" className="form-control" />
           </div>
 
-          <div className="col-md-2">
+          <div className="col-6 col-md-2">
             <input type="date" className="form-control" />
           </div>
 
-          <div className="col-md-3 d-flex">
-            <button type="submit" className="btn btn-success px-4 me-2">
-              Submit
-            </button>
+          <div className="col-12 col-md-3 d-flex justify-content-md-start justify-content-between">
+            <button className="btn px-4 me-2 btn-success">Submit</button>
+
             <button className="btn btn-light border px-3">
               <i className="fa fa-refresh"></i>
             </button>
@@ -506,6 +514,48 @@ function Users() {
                     placeholder="Enter Experience"
                   />
                   <p className="text-danger">{errors.experience?.message}</p>
+                </div>
+
+                {/* Role */}
+                <div className="col-md-4">
+                  <label className="fw-semibold">Role</label>
+                  <select
+                    className="form-select form-control"
+                    {...register("role")}
+                  >
+                    <option value="">Selete Role</option>
+                    <option>Super Admin</option>
+                    <option>Sub Admin</option>
+                    <option>Backend</option>
+                    <option>Accountant</option>
+                  </select>
+                  <p className="text-danger">{errors.role?.message}</p>
+                </div>
+
+                {/* menus */}
+                <div className="col-md-4">
+                  <label className="fw-semibold">Menus</label>
+                  <select
+                    className="form-select form-control"
+                    multiple
+                    {...register("menus", {
+                      onChange: (e) => {
+                        const values = Array.from(
+                          e.target.selectedOptions,
+                          (option) => option.value
+                        );
+                        // React Hook Form ला array value द्या
+                        e.target.value = values;
+                      },
+                    })}
+                  >
+                    <option value="Super Admin">Super Admin</option>
+                    <option value="Sub Admin">Sub Admin</option>
+                    <option value="Backend">Backend</option>
+                    <option value="Accountant">Accountant</option>
+                  </select>
+
+                  <p className="text-danger">{errors.menus?.message}</p>
                 </div>
               </div>
 

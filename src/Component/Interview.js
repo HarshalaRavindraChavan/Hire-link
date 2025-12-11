@@ -3,15 +3,89 @@ import ConfirmDelete from "./commenuse/ConfirmDelete";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useNavigate } from "react-router-dom";
 import Pagination from "./commenuse/Pagination";
 
 function Interview() {
-  // tital of tab
+  // Tab Title
   useState(() => {
-    document.title = "Interview Hirelink ";
+    document.title = "Hirelink | Interview";
   }, []);
 
+  //================= Candidate Search =======================
+  const [candiName, setCandiName] = useState("");
+  const [showCandi, setShowCandi] = useState(false);
+
+  const candidateSuggestions = [
+    "Harshal Mahajan",
+    "Rohit Sharma",
+    "Akash Patil",
+    "Priya Deshmukh",
+    "Sneha Joshi",
+    "Amit Shinde",
+  ];
+
+  const filteredCandidate = candidateSuggestions.filter((name) =>
+    name.toLowerCase().includes(candiName.toLowerCase())
+  );
+
+  const selectCandidate = (value) => {
+    setCandiName(value);
+    setShowCandi(false);
+  };
+
+  //================= Job Search =======================
+  const [jobName, setJobName] = useState("");
+  const [showJob, setShowJob] = useState(false);
+
+  const jobSuggestions = [
+    "Frontend Developer",
+    "Backend Developer",
+    "React Developer",
+    "UI/UX Designer",
+    "HR Manager",
+    "PHP Developer",
+  ];
+
+  const filteredJob = jobSuggestions.filter((name) =>
+    name.toLowerCase().includes(jobName.toLowerCase())
+  );
+
+  const selectJob = (value) => {
+    setJobName(value);
+    setShowJob(false);
+  };
+
+  //================= Company Search =======================
+  const [companyName, setCompanyName] = useState("");
+  const [showCompany, setShowCompany] = useState(false);
+
+  const companySuggestions = [
+    "Tata Consultancy Services (TCS)",
+    "Infosys",
+    "Wipro",
+    "Tech Mahindra",
+    "HCL Technologies",
+    "Accenture",
+    "Capgemini",
+    "Cognizant",
+    "L&T Infotech",
+    "IBM",
+    "Amazon",
+    "Google",
+    "Microsoft",
+    "Flipkart",
+  ];
+
+  const filteredCompany = companySuggestions.filter((name) =>
+    name.toLowerCase().includes(companyName.toLowerCase())
+  );
+
+  const selectCompany = (value) => {
+    setCompanyName(value);
+    setShowCompany(false);
+  };
+
+  //========================================
   const [users, setUsers] = useState([
     {
       id: 1,
@@ -31,6 +105,7 @@ function Interview() {
     },
   ]);
 
+  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 5;
 
@@ -39,24 +114,23 @@ function Interview() {
   const records = users.slice(firstIndex, lastIndex);
   const nPages = Math.ceil(users.length / recordsPerPage);
 
-  // Delete modal state
+  // Delete Modal
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
-  // Open Confirm Delete Modal
   const handleDeleteClick = (id) => {
     setDeleteId(id);
     setShowDeleteModal(true);
   };
 
-  // DELETE CONFIRM
   const confirmDelete = () => {
     const filtered = users.filter((u) => u.id !== deleteId);
     setUsers(filtered);
     setShowDeleteModal(false);
   };
 
-  // ✅ Yup Validation Schema
+  //========================================
+  // Yup Validation Schema
   const schema = yup.object().shape({
     candidateName: yup.string().required("Candidate name is required"),
     jobTitle: yup.string().required("Job title is required"),
@@ -65,7 +139,6 @@ function Interview() {
     interviewDate: yup.string().required("Interview date is required"),
     interviewTime: yup.string().required("Interview time is required"),
     interviewer: yup.string().required("Interviewer name is required"),
-    meetingLink: yup.string().required("Meeting link / address is required"),
     phone: yup
       .string()
       .matches(/^[0-9]{10}$/, "Phone must be 10 digits")
@@ -78,25 +151,20 @@ function Interview() {
   const {
     register,
     handleSubmit,
-    setValue,
+    watch,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
   });
 
-  // Generate meeting link
-  const generateMeetingLink = () => {
-    const link =
-      "https://meet.example.com/" + Math.random().toString(36).substring(2, 10);
-    setValue("meetingLink", link);
-  };
+  // Watch interview type
+  const watchInterviewType = watch("interviewType");
 
+  // Submit Handler
   const onSubmit = (data) => {
     console.log("FORM SUBMITTED:", data);
     alert("Form submitted successfully!");
   };
-
-  const navigate = useNavigate();
 
   const [search, setSearch] = useState("");
 
@@ -116,6 +184,8 @@ function Interview() {
       created_date: "2025-05-25",
     },
   ];
+
+  //======================================== UI RETURN
   return (
     <>
       <div className="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
@@ -123,27 +193,22 @@ function Interview() {
           <h3 className="fw-bold mb-3">Interview Details</h3>
         </div>
         <div className="ms-auto py-2 py-md-0">
-          {/* <a href="#" className="btn btn-label-info btn-round me-2">
-            Manage
-          </a> */}
           <a
             data-bs-toggle="modal"
             data-bs-target="#exampleModal"
             className="btn btn-success"
           >
-            <i className="fa fa-plus"> </i> Add Interview
+            <i className="fa fa-plus"></i> Add Interview
           </a>
         </div>
       </div>
 
-      {/* FILTER SECTION */}
+      {/* CARD + TABLE */}
       <div className="card shadow-sm p-3">
-        {/* FILTERS */}
         <div className="row g-2 align-items-center mb-3">
-          {/* Interview Status */}
           <div className="col-md-2">
             <select className="form-select form-control">
-              <option value="">Select Intervie </option>
+              <option value="">Select Interview </option>
               <option>Scheduled</option>
               <option>Rescheduled</option>
               <option>Completed</option>
@@ -152,27 +217,23 @@ function Interview() {
             </select>
           </div>
 
-          {/* From Date */}
-          <div className="col-md-2">
+          <div className="col-6 col-md-2">
             <input type="date" className="form-control" />
           </div>
 
-          {/* To Date */}
-          <div className="col-md-2">
+          <div className="col-6 col-md-2">
             <input type="date" className="form-control" />
           </div>
 
           {/* Submit + Reset */}
-          <div className="col-md-3 d-flex">
-            <button type="submit" className="btn btn-success px-4 me-2">
-              Submit
-            </button>
+          <div className="col-12 col-md-3 d-flex justify-content-md-start justify-content-between">
+            <button className="btn px-4 me-2 btn-success">Submit</button>
+
             <button className="btn btn-light border px-3">
               <i className="fa fa-refresh"></i>
             </button>
           </div>
 
-          {/* Search (Right aligned) */}
           <div className="col-md-3">
             <input
               type="text"
@@ -188,12 +249,12 @@ function Interview() {
         <div className="table-responsive">
           <table className="table table-bordered align-middle">
             <thead className="table-light text-center">
-              <tr className="text-center">
-                <th className="fs-6 fw-bold">id</th>
-                <th className="fs-6 fw-bold">candidate</th>
-                <th className="fs-6 fw-bold">Job Details</th>
-                <th className="fs-6 fw-bold">Interview Info</th>
-                <th className="fs-6 fw-bold">Created</th>
+              <tr>
+                <th>ID</th>
+                <th>Candidate</th>
+                <th>Job Details</th>
+                <th>Interview Info</th>
+                <th>Created</th>
               </tr>
             </thead>
 
@@ -203,7 +264,7 @@ function Interview() {
                   <td>{i.id}</td>
 
                   <td className="text-start">
-                    <div className="fw-bold">
+                    <div className="fw-bold ">
                       Name:
                       <div className="dropdown d-inline ms-2">
                         <span
@@ -230,12 +291,8 @@ function Interview() {
                         </ul>
                       </div>
                     </div>
-
                     <div className="fw-bold">
-                      Email:{"  "}
-                      <span className="text-dark fw-normal">
-                        {i.candidate_email}
-                      </span>
+                      Email: <span>{i.candidate_email}</span>
                     </div>
                   </td>
 
@@ -245,63 +302,29 @@ function Interview() {
                   </td>
 
                   <td className="text-start">
-                    <div className="fw-bold">
-                      Interviewer:{"  "}
-                      <span className="text-dark fw-normal">
-                        {i.interviewer}
-                      </span>
-                    </div>
-                    <div className="fw-bold">
-                      Type:{"  "}
-                      <span className="text-dark fw-normal">
-                        {i.interview_type}
-                      </span>
-                    </div>
-                    <div className="fw-bold">
-                      Date:{"  "}
-                      <span className="text-dark fw-normal">
-                        {i.interview_date}
-                      </span>
-                    </div>
-                    <div className="fw-bold">
-                      Time:{"  "}
-                      <span className="text-dark fw-normal">
-                        {i.interview_time}
-                      </span>
-                    </div>
+                    <b>Interviewer:</b> {i.interviewer} <br />
+                    <b>Type:</b> {i.interview_type} <br />
+                    <b>Date:</b> {i.interview_date} <br />
+                    <b>Time:</b> {i.interview_time}
                   </td>
-                  <td className="text-start">
-                    <div className="fw-bold">
-                      Created:{"  "}
-                      <span className="text-dark fw-normal">
-                        {i.created_date}
-                      </span>
-                    </div>
 
-                    <div className="fw-bold">
-                      Meeting:{"  "}
-                      <span className="text-dark fw-normal">
-                        <a
-                          href={i.meeting_details}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          Open Link
-                        </a>
-                      </span>
-                    </div>
-                    <div className="fw-bold">
-                      Status:{"  "}
-                      <span className="badge bg-success">
-                        {i.interview_status}
-                      </span>
-                    </div>
+                  <td className="text-start">
+                    <b>Created:</b> {i.created_date} <br />
+                    <b>Meeting:</b>{" "}
+                    <a href={i.meeting_details} target="_blank">
+                      Open Link
+                    </a>{" "}
+                    <br />
+                    <b>Status:</b>{" "}
+                    <span className="badge bg-success">
+                      {i.interview_status}
+                    </span>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-          {/* Pagination */}
+
           <Pagination
             currentPage={currentPage}
             totalPages={nPages}
@@ -310,95 +333,207 @@ function Interview() {
         </div>
       </div>
 
-      {/* ADD FORM MODAL */}
+      {/* FORM MODAL */}
       <div
         className="modal fade"
         id="exampleModal"
-        tabindex="-1"
+        tabIndex="-1"
         aria-hidden="true"
       >
         <div className="modal-dialog modal-dialog-centered modal-lg">
-          <div className="modal-content shadow-lg border-0 rounded-4">
-            <div className="modal-header text-white rounded-top-4 bg-success">
-              <h5 className="modal-title fw-bold" style={{ color: "white" }}>
-                Interview Details
-              </h5>
+          <div className="modal-content shadow-lg rounded-4">
+            <div className="modal-header bg-success text-white rounded-top-4">
+              <h5 className="modal-title fw-bold">Interview Details</h5>
+
               <i
                 className="fa-regular fa-circle-xmark"
                 data-bs-dismiss="modal"
-                style={{ cursor: "pointer", color: "white", fontSize: "25px" }}
+                style={{ cursor: "pointer", fontSize: "25px" }}
               ></i>
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="modal-body row">
                 {/* Candidate Name */}
-                <div className="col-md-6 mb-2">
+                <div className="col-md-4 mb-2 position-relative">
                   <label className="form-label fw-semibold">
                     Candidate Name
                   </label>
+
                   <input
                     type="text"
                     className="form-control rounded-3"
                     placeholder="Enter Candidate Name"
                     {...register("candidateName")}
+                    value={candiName}
+                    onChange={(e) => {
+                      setCandiName(e.target.value);
+                      setShowCandi(true);
+                    }}
                   />
+
                   <span className="text-danger">
                     {errors.candidateName?.message}
                   </span>
+
+                  {showCandi && candiName.length > 0 && (
+                    <ul
+                      className="list-group position-absolute"
+                      style={{
+                        width: "90%",
+                        zIndex: 100,
+                        maxHeight: "150px",
+                        overflowY: "auto",
+                        top: "100%",
+                      }}
+                    >
+                      {filteredCandidate.length > 0 ? (
+                        filteredCandidate.map((name, i) => (
+                          <li
+                            key={i}
+                            className="list-group-item list-group-item-action"
+                            style={{
+                              cursor: "pointer",
+                              background: "#e6e3e3ff",
+                            }}
+                            onClick={() => selectCandidate(name)}
+                          >
+                            {name}
+                          </li>
+                        ))
+                      ) : (
+                        <li className="list-group-item">No results found</li>
+                      )}
+                    </ul>
+                  )}
                 </div>
 
                 {/* Job Title */}
-                <div className="col-md-6 mb-2">
+                <div className="col-md-4 mb-2 position-relative">
                   <label className="form-label fw-semibold">Job Title</label>
+
                   <input
                     type="text"
                     className="form-control rounded-3"
                     placeholder="Enter Job Title"
                     {...register("jobTitle")}
+                    value={jobName}
+                    onChange={(e) => {
+                      setJobName(e.target.value);
+                      setShowJob(true);
+                    }}
                   />
+
                   <span className="text-danger">
                     {errors.jobTitle?.message}
                   </span>
+
+                  {showJob && jobName.length > 0 && (
+                    <ul
+                      className="list-group position-absolute"
+                      style={{
+                        width: "90%",
+                        zIndex: 100,
+                        maxHeight: "150px",
+                        overflowY: "auto",
+                        top: "100%",
+                      }}
+                    >
+                      {filteredJob.length > 0 ? (
+                        filteredJob.map((name, i) => (
+                          <li
+                            key={i}
+                            className="list-group-item list-group-item-action"
+                            style={{
+                              cursor: "pointer",
+                              background: "#e6e3e3ff",
+                            }}
+                            onClick={() => selectJob(name)}
+                          >
+                            {name}
+                          </li>
+                        ))
+                      ) : (
+                        <li className="list-group-item">No results found</li>
+                      )}
+                    </ul>
+                  )}
                 </div>
 
                 {/* Company Name */}
-                <div className="col-md-6 mb-2">
+                <div className="col-md-4 mb-2 position-relative">
                   <label className="form-label fw-semibold">Company Name</label>
+
                   <input
                     type="text"
                     className="form-control rounded-3"
                     placeholder="Enter Company Name"
                     {...register("companyName")}
+                    value={companyName}
+                    onChange={(e) => {
+                      setCompanyName(e.target.value);
+                      setShowCompany(true);
+                    }}
                   />
+
                   <span className="text-danger">
                     {errors.companyName?.message}
                   </span>
+
+                  {showCompany && companyName.length > 0 && (
+                    <ul
+                      className="list-group position-absolute"
+                      style={{
+                        width: "90%",
+                        zIndex: 100,
+                        maxHeight: "150px",
+                        overflowY: "auto",
+                        top: "100%",
+                      }}
+                    >
+                      {filteredCompany.length ? (
+                        filteredCompany.map((name, i) => (
+                          <li
+                            key={i}
+                            className="list-group-item list-group-item-action"
+                            style={{
+                              cursor: "pointer",
+                              background: "#e6e3e3ff",
+                            }}
+                            onClick={() => selectCompany(name)}
+                          >
+                            {name}
+                          </li>
+                        ))
+                      ) : (
+                        <li className="list-group-item">No results found</li>
+                      )}
+                    </ul>
+                  )}
                 </div>
 
                 {/* Interview Type */}
-                <div className="col-md-6 mb-2">
+                <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">
                     Interview Type
                   </label>
+
                   <select
                     className="form-control rounded-3"
                     {...register("interviewType")}
                   >
                     <option value="">Select Interview Type</option>
-                    <option>Online</option>
-                    <option>Offline</option>
-                    <option>Telephonic</option>
-                    <option>HR Round</option>
-                    <option>Technical Round</option>
+                    <option>Virtual Interview</option>
+                    <option>In-Person</option>
                   </select>
+
                   <span className="text-danger">
                     {errors.interviewType?.message}
                   </span>
                 </div>
 
                 {/* Interview Date */}
-                <div className="col-md-6 mb-2">
+                <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">
                     Interview Date
                   </label>
@@ -413,7 +548,7 @@ function Interview() {
                 </div>
 
                 {/* Interview Time */}
-                <div className="col-md-6 mb-2">
+                <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">
                     Interview Time
                   </label>
@@ -434,7 +569,7 @@ function Interview() {
                 </div>
 
                 {/* Interviewer */}
-                <div className="col-md-6 mb-2">
+                {/* <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">
                     Assigned Interviewer
                   </label>
@@ -447,96 +582,43 @@ function Interview() {
                   <span className="text-danger">
                     {errors.interviewer?.message}
                   </span>
-                </div>
+                </div> */}
 
-                {/* Meeting Link */}
-                <div className="col-md-6 mb-2">
-                  <label className="form-label fw-semibold">
-                    Meeting Link / Address
-                  </label>
-                  <div className="input-group">
-                    <input
-                      type="text"
-                      className="form-control rounded-3"
-                      placeholder="Enter Meeting Link / Address"
-                      {...register("meetingLink")}
-                    />
-                    <button
-                      type="button"
-                      className="btn btn-success"
-                      onClick={generateMeetingLink}
-                    >
-                      Generate
-                    </button>
+                {/* Meeting Link - Conditional Rendering */}
+                {watchInterviewType === "Virtual Interview" && (
+                  <div className="col-md-4 mb-2">
+                    <label className="form-label fw-semibold">
+                      Meeting Link
+                    </label>
+                    <div className="input-group">
+                      <input
+                        type="text"
+                        className="form-control rounded-3"
+                        placeholder="Enter Meeting Link"
+                      />
+                    </div>
+                    <span className="text-danger"></span>
                   </div>
-                  <span className="text-danger">
-                    {errors.meetingLink?.message}
-                  </span>
-                </div>
-
-                {/* Phone Number */}
-                <div className="col-md-6 mb-2">
-                  <label className="form-label fw-semibold">Phone Number</label>
-                  <input
-                    type="text"
-                    maxLength={10}
-                    className="form-control rounded-3"
-                    placeholder="Enter Phone Number"
-                    {...register("phone")}
-                  />
-                  <span className="text-danger">{errors.phone?.message}</span>
-                </div>
+                )}
 
                 {/* Status */}
-                <div className="col-md-6 mb-2">
+                <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">Status</label>
 
-                  <div style={{ position: "relative" }}>
-                    {/* Icon */}
-                    <i
-                      className="fa fa-info-circle"
-                      style={{
-                        position: "absolute",
-                        left: "12px",
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                        color: "#6c757d",
-                        pointerEvents: "none",
-                        fontSize: "16px",
-                      }}
-                    ></i>
-
-                    {/* Select box */}
-                    <select
-                      className="form-control rounded-3"
-                      {...register("status")}
-                      style={{ paddingLeft: "40px" }}
-                    >
-                      <option value="">Select Status</option>
-                      <option value="Active">Active</option>
-                      <option value="Pending">Pending</option>
-                      <option value="Closed">Closed</option>
-                    </select>
-                  </div>
+                  <select
+                    className="form-control rounded-3"
+                    {...register("status")}
+                  >
+                    <option value="">Select Status</option>
+                    <option value="Active">Active</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Closed">Closed</option>
+                  </select>
 
                   <span className="text-danger">{errors.status?.message}</span>
                 </div>
-
-                {/* Created Date */}
-                <div className="col-md-6 mb-2">
-                  <label className="form-label fw-semibold">Created Date</label>
-                  <input
-                    type="date"
-                    className="form-control rounded-3"
-                    {...register("createdDate")}
-                  />
-                  <span className="text-danger">
-                    {errors.createdDate?.message}
-                  </span>
-                </div>
               </div>
 
-              {/* Submit Button */}
               <div className="modal-footer bg-light rounded-bottom-4 d-flex">
                 <button
                   type="button"
@@ -555,7 +637,7 @@ function Interview() {
         </div>
       </div>
 
-      {/* DELETE CONFIRM MODAL */}
+      {/* DELETE MODAL */}
       <ConfirmDelete
         show={showDeleteModal}
         onConfirm={confirmDelete}

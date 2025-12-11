@@ -9,7 +9,7 @@ import Pagination from "./commenuse/Pagination";
 function Employes() {
   // tital of tab
   useState(() => {
-    document.title = "Employers Hirelink ";
+    document.title = "Hirelink | Employers ";
   }, []);
 
   const [search, setSearch] = useState("");
@@ -317,7 +317,7 @@ function Employes() {
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="modal-body row">
                 {/* Full Name */}
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4">
                   <label className="fw-semibold">Full Name</label>
                   <input
                     type="text"
@@ -331,7 +331,7 @@ function Employes() {
                 </div>
 
                 {/* Email */}
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4">
                   <label className="fw-semibold">Email</label>
                   <input
                     type="text"
@@ -343,7 +343,7 @@ function Employes() {
                 </div>
 
                 {/* Mobile */}
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4">
                   <label className="fw-semibold">Mobile</label>
                   <input
                     type="text"
@@ -355,7 +355,7 @@ function Employes() {
                 </div>
 
                 {/* Company Name */}
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4">
                   <label className="fw-semibold">Company Name</label>
                   <input
                     type="text"
@@ -369,9 +369,9 @@ function Employes() {
                 </div>
 
                 {/* Category */}
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4">
                   <label className="fw-semibold">Category</label>
-                  <select className="form-select" {...register("Category")}>
+                  <select className="form-select form-control" {...register("Category")}>
                     <option value="">Select Category</option>
                     <option value="Percentage">Percentage</option>
                     <option value="Flat Amount">Flat Amount</option>
@@ -382,7 +382,7 @@ function Employes() {
                 </div>
 
                 {/* Password */}
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4">
                   <label className="fw-semibold">Password</label>
                   <input
                     type="password"
@@ -396,7 +396,7 @@ function Employes() {
                 </div>
 
                 {/* Location */}
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4">
                   <label className="fw-semibold">Location</label>
                   <input
                     type="text"
@@ -410,7 +410,7 @@ function Employes() {
                 </div>
 
                 {/* City */}
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4">
                   <label className="fw-semibold">City</label>
                   <input
                     type="text"
@@ -422,7 +422,7 @@ function Employes() {
                 </div>
 
                 {/* State */}
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4">
                   <label className="fw-semibold">State</label>
                   <input
                     type="text"
@@ -434,7 +434,7 @@ function Employes() {
                 </div>
 
                 {/* Website */}
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4">
                   <label className="fw-semibold">Website</label>
                   <input
                     type="text"
@@ -445,7 +445,7 @@ function Employes() {
                   <span className="text-danger">{errors.website?.message}</span>
                 </div>
 
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4">
                   <label className="fw-semibold">LinkedIn</label>
                   <input
                     type="text"
@@ -458,7 +458,7 @@ function Employes() {
                   </span>
                 </div>
 
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4">
                   <label className="fw-semibold">Facebook</label>
                   <input
                     type="text"
@@ -471,7 +471,7 @@ function Employes() {
                   </span>
                 </div>
 
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4">
                   <label className="fw-semibold">Instagram</label>
                   <input
                     type="text"
@@ -484,7 +484,7 @@ function Employes() {
                   </span>
                 </div>
 
-                <div className="col-md-4 mb-2">
+                <div className="col-md-4">
                   <label className="fw-semibold">YouTube</label>
                   <input
                     type="text"

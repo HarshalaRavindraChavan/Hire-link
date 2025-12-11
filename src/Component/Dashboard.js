@@ -3,7 +3,7 @@ import React, { useState } from "react";
 function Dashboard() {
   // tital of tab
   useState(() => {
-    document.title = "Dashboard Hirelink ";
+    document.title = "Hirelink | Dashboard";
   }, []);
 
   const navigate = useNavigate();

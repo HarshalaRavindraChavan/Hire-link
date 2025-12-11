@@ -8,7 +8,7 @@ import Pagination from "./commenuse/Pagination";
 function Offer() {
   // tital of tab
   useState(() => {
-    document.title = "Offers Hirelink ";
+    document.title = "Hirelink | Offers";
   }, []);
 
   const [users, setUsers] = useState([
@@ -152,18 +152,17 @@ function Offer() {
               <option value="Flat Amount">Flat Amount</option>
             </select>
           </div>
-          <div className="col-md-2">
+          <div className="col-6 col-md-2">
             <input type="date" className="form-control" />
           </div>
 
-          <div className="col-md-2">
+          <div className="col-6 col-md-2">
             <input type="date" className="form-control" />
           </div>
 
-          <div className="col-md-3 d-flex">
-            <button type="submit" className="btn btn-success px-4 me-2">
-              Submit
-            </button>
+          <div className="col-12 col-md-3 d-flex justify-content-md-start justify-content-between">
+            <button className="btn px-4 me-2 btn-success">Submit</button>
+
             <button className="btn btn-light border px-3">
               <i className="fa fa-refresh"></i>
             </button>
@@ -177,7 +176,7 @@ function Offer() {
             />
           </div>
         </div>
-        
+
         <div className="table-responsive">
           <table className="table table-bordered align-middle">
             <thead className="table-light text-center">

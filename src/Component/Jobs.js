@@ -8,7 +8,7 @@ import Pagination from "./commenuse/Pagination";
 function Jobs() {
   // tital of tab
   useState(() => {
-    document.title = "Jobs Hirelink ";
+    document.title = "Hirelink | Jobs";
   }, []);
 
   const [search, setSearch] = useState("");
@@ -261,7 +261,7 @@ function Jobs() {
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="modal-body row">
                 {/* Job Title */}
-                <div className="col-md-6 mb-2">
+                <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">Job Title</label>
                   <input
                     type="text"
@@ -275,7 +275,7 @@ function Jobs() {
                 </div>
 
                 {/* Company Name */}
-                <div className="col-md-6 mb-2">
+                <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">Company Name</label>
                   <input
                     type="text"
@@ -289,7 +289,7 @@ function Jobs() {
                 </div>
 
                 {/* Job Category */}
-                <div className="col-md-6 mb-2">
+                <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">Job Category</label>
                   <input
                     type="text"
@@ -303,7 +303,7 @@ function Jobs() {
                 </div>
 
                 {/* Applications Count */}
-                <div className="col-md-6 mb-2">
+                <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">
                     Applications Count
                   </label>
@@ -319,7 +319,7 @@ function Jobs() {
                 </div>
 
                 {/* Job Type */}
-                <div className="col-md-6 mb-2 position-relative">
+                <div className="col-md-4 mb-2 position-relative">
                   <label className="form-label fw-semibold">Job Type</label>
                   <select
                     {...register("jobType")}
@@ -336,7 +336,7 @@ function Jobs() {
                 </div>
 
                 {/* Salary Range */}
-                <div className="col-md-6 mb-2">
+                <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">Salary Range</label>
                   <input
                     type="text"
@@ -350,7 +350,7 @@ function Jobs() {
                 </div>
 
                 {/* Status */}
-                <div className="col-md-6 mb-2 position-relative">
+                <div className="col-md-4 mb-2 position-relative">
                   <label className="form-label fw-semibold">Status</label>
                   <select
                     {...register("status")}
@@ -365,7 +365,7 @@ function Jobs() {
                 </div>
 
                 {/* Posted Date */}
-                <div className="col-md-6 mb-2">
+                <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">Posted Date</label>
                   <input
                     type="date"
@@ -378,7 +378,7 @@ function Jobs() {
                 </div>
 
                 {/* Location */}
-                <div className="col-md-6 mb-2">
+                <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">Location</label>
                   <input
                     type="text"
@@ -392,7 +392,7 @@ function Jobs() {
                 </div>
 
                 {/* Experience Required */}
-                <div className="col-md-6 mb-2">
+                <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">
                     Experience Required
                   </label>

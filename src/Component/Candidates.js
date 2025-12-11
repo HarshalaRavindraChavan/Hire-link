@@ -6,7 +6,7 @@ import Pagination from "./commenuse/Pagination";
 function Candidates() {
   // tital of tab
   useState(() => {
-    document.title = "Candidates Hirelink ";
+    document.title = "Hirelink | Candidates";
   }, []);
 
   const [search, setSearch] = useState("");
@@ -339,7 +339,7 @@ function Candidates() {
             <form onSubmit={handleSubmit}>
               <div className="modal-body row">
                 {/* Full Name */}
-                <div className="col-md-6 mb-2">
+                <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">Full Name</label>
                   <input
                     type="text"
@@ -355,7 +355,7 @@ function Candidates() {
                 </div>
 
                 {/* Email */}
-                <div className="col-md-6 mb-2">
+                <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">Email</label>
                   <input
                     type="email"
@@ -371,7 +371,7 @@ function Candidates() {
                 </div>
 
                 {/* Phone Number */}
-                <div className="col-md-6 mb-2">
+                <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">Phone Number</label>
                   <input
                     type="text"
@@ -388,7 +388,7 @@ function Candidates() {
                 </div>
 
                 {/* Location / City */}
-                <div className="col-md-6 mb-2">
+                <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">
                     Location / City
                   </label>
@@ -406,7 +406,7 @@ function Candidates() {
                 </div>
 
                 {/* Experience */}
-                <div className="col-md-6 mb-2">
+                <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">
                     Experience (Years)
                   </label>
@@ -424,7 +424,7 @@ function Candidates() {
                 </div>
 
                 {/* Skills */}
-                <div className="col-md-6 mb-2">
+                <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">Skills</label>
                   <input
                     type="text"
@@ -440,7 +440,7 @@ function Candidates() {
                 </div>
 
                 {/* Profile Photo */}
-                <div className="col-md-6 mb-2">
+                <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">
                     Profile Photo
                   </label>
@@ -457,7 +457,7 @@ function Candidates() {
                 </div>
 
                 {/* Resume */}
-                <div className="col-md-6 mb-2">
+                <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">
                     Upload Resume
                   </label>
@@ -474,7 +474,7 @@ function Candidates() {
                 </div>
 
                 {/* Registration Date */}
-                <div className="col-md-6 mb-2">
+                <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">
                     Registration Date
                   </label>
@@ -493,7 +493,7 @@ function Candidates() {
                 </div>
 
                 {/* Applied Jobs Count */}
-                <div className="col-md-6 mb-2">
+                <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">
                     Applied Jobs Count
                   </label>

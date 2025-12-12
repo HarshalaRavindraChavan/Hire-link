@@ -1,0 +1,352 @@
+/* ===============================
+   GLOBAL COLORS
+   =============================== */
+:root {
+  --primary: #1b5e20; /* Dark green */
+  --primary-soft: #4caf50; /* Soft green */
+  --accent-yellow: #ffc107; /* Yellow accent */
+  --text-main: #374151; /* Dark grey */
+  --text-muted: #6b7280; /* Light grey */
+  --border-soft: #d1d5db; /* Border grey */
+  --bg-light: #f3f4f6; /* Soft white grey */
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  color: var(--text-main);
+  background-color: #ffffff;
+}
+
+/* ===============================
+   HERO
+   =============================== */
+.hero-section {
+  padding: 3.5rem 0 3rem;
+  background: radial-gradient(circle at top left, #bef150ad 0, #ebeec042 55%);
+}
+
+.hero-kicker {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.hero-title {
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.hero-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  max-width: 32rem;
+}
+
+.hero-form .form-control-lg {
+  font-size: 0.9rem;
+  border-radius: 0.5rem;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.hero-form .input-box {
+  width: 100%;
+  padding: 12px 10px 10px 35px; /* icon spacing */
+  border: 1px solid #e5e5e5;
+  border-radius: 0.5rem;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.hero-form .input-icon-right {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 17px;
+  color: var(--primary);
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.hero-form .btn-lg {
+  font-size: 0.95rem;
+  border-radius: 0.55rem;
+}
+
+.avatar {
+  width: 29px;
+  height: 29px;
+  border-radius: 999px;
+  border: 2px solid #ffffff;
+  background: linear-gradient(
+    135deg,
+    var(--accent-yellow),
+    var(--primary-soft)
+  );
+  display: inline-block;
+  margin-right: -18px;
+}
+
+.hero-card {
+  background-color: #ffffff;
+  border-radius: 1.25rem;
+  padding: 1.5rem 1.6rem;
+  border: 1px solid var(--border-soft);
+  max-width: 420px;
+  margin-left: auto;
+}
+
+/* ===============================
+   LOGO PILL
+   =============================== */
+.logo-pill {
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-soft);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  background-color: #ffffff;
+}
+
+/* ===============================
+   SECTIONS TITLES
+   =============================== */
+.section-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+/* ===============================
+   FEATURES
+   =============================== */
+.bg-light {
+  background-color: var(--bg-light) !important;
+}
+
+.feature-card {
+  background-color: #ffffff;
+  border-radius: 0.9rem;
+  padding: 1.3rem 1.3rem 1.1rem;
+  border: 1px solid var(--border-soft);
+  transition: transform 0.15s ease, box-shadow 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 22px rgba(0, 0, 0, 0.08);
+  border-color: var(--primary-soft);
+}
+
+.icon-circle {
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--accent-yellow);
+  color: #000;
+  font-size: 1.1rem;
+}
+
+/* ===============================
+   HOW IT WORKS
+   =============================== */
+.step-card {
+  background-color: #ffffff;
+  border-radius: 0.9rem;
+  padding: 1rem 1rem 0.95rem;
+  border: 1px dashed var(--border-soft);
+}
+
+.step-number {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-yellow);
+  color: #000;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* ===============================
+   PRICING
+   =============================== */
+.pricing-card {
+  background-color: #ffffff;
+  border-radius: 1rem;
+  padding: 1.6rem 1.5rem 1.5rem;
+  border: 1px solid var(--border-soft);
+  position: relative;
+}
+
+.pricing-featured {
+  border-width: 2px;
+  border-color: var(--primary);
+  box-shadow: 0 16px 30px rgba(27, 94, 32, 0.18);
+}
+
+.badge-top {
+  position: absolute;
+  top: -0.8rem;
+  right: 1.2rem;
+  font-size: 0.7rem;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  background-color: var(--accent-yellow);
+  color: #000;
+}
+
+/* ===============================
+   TESTIMONIAL
+   =============================== */
+.testimonial-card {
+  background: #1a1d24;
+  color: #e5e7eb;
+  border-radius: 1.2rem;
+  padding: 1.8rem 1.7rem;
+}
+
+.testimonial-card .quote {
+  font-size: 0.96rem;
+}
+
+.testimonial-card .avatar {
+  background: linear-gradient(
+    135deg,
+    var(--accent-yellow),
+    var(--primary-soft)
+  );
+}
+
+/* ===============================
+   FAQ
+   =============================== */
+.accordion-item {
+  border-radius: 0.7rem !important;
+  overflow: hidden;
+  border: 1px solid var(--border-soft);
+  margin-bottom: 0.8rem;
+}
+
+.accordion-button {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-main);
+}
+
+.accordion-button:focus {
+  box-shadow: none;
+}
+
+/* ===============================
+   RESPONSIVE
+   =============================== */
+@media (max-width: 991.98px) {
+  .hero-section {
+    padding-top: 2.5rem;
+  }
+
+  .hero-card {
+    margin: 2rem auto 0;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .hero-section {
+    background: radial-gradient(circle at top left, #e4f3c5 0, #f6f7ef42 55%);
+  }
+  .hero-title {
+    font-size: 1.8rem;
+  }
+
+  .hero-card {
+    padding: 1.3rem 1.2rem;
+  }
+}
+/* Common input styling */
+.input-box {
+  width: 100%;
+  padding-right: 45px !important;   /* Space for the icon */
+  border-radius: 10px;
+  font-size: 16px;
+  padding-left: 15px;
+}
+
+/* Icon inside input */
+.input-icon-right {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #777;
+  pointer-events: none; /* Icon not clickable */
+}
+
+/* Fix input heights to match */
+.form-control-lg {
+  height: 48px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .input-box {
+    width: 100%;
+  }
+}
+
+
+
+
+/* Inputs with right-side icons */
+.input-box {
+  width: 100%;
+  padding-right: 45px;   /* Space for the icon */
+  padding-left: 15px;
+  border-radius: 10px;
+  height: 48px;           /* Match button height */
+  font-size: 16px;
+}
+
+/* Icon positioning inside inputs */
+.input-icon-right {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #777;
+  pointer-events: none;  /* Icon not clickable */
+}
+
+/* Hover/focus for input */
+.input-box:focus {
+  border-color: green;
+  box-shadow: none;
+}
+
+/* Responsive spacing */
+@media (max-width: 768px) {
+  .input-box {
+    width: 100%;
+  }
+  .hero-form .d-grid {
+    margin-top: 5px;
+  }
+}

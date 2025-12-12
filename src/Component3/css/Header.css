@@ -1,0 +1,27 @@
+/* * ===============================
+   NAVBAR / HEADER
+   =============================== */
+.logo-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--primary-soft));
+  display: inline-block;
+}
+
+.navbar-brand {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--primary);
+}
+
+.nav-link {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.nav-link:hover,
+.nav-link:focus {
+  color: var(--primary);
+}
+

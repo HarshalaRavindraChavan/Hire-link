@@ -23,7 +23,7 @@ html {
   outline: none !important;
   box-shadow: none !important;
   width: 100%;
-  padding-left: 10px;
+  padding: 3px;
   font-size: 16px;
 }
 

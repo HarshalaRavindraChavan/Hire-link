@@ -6,37 +6,35 @@ export default function Footer() {
 
   return (
     <footer className="footer pt-5 pb-2">
-      <div className="container">
-        <div className="row footer-row align-items-start mb-3">
-          {/* Left Help Section */}
-          <div className="col-lg-5 col-md-5 col-sm-12 left-help">
-            <h3 className="fw-bold text-white">We're here to help</h3>
-            <p className="text-light">
-              Visit our Help Centre for answers to common questions or contact
-              us directly.
-            </p>
+      <div className="row mb-4 ">
+        {/* LEFT HELP COLUMN */}
+        <div className="col-lg-5 col-md-5 mb-5 left-help text-center ">
+          <h3 className="fw-bold text-white">We're here to help</h3>
+          <p className="text-light">
+            Visit our Help Centre for answers to common questions or contact us
+            directly.
+          </p>
 
-            <button
-              className="btn  me-2 st"
-              style={{ background: "green", color: "white" }}
-            >
-              Help Centre
-            </button>
-            <button
-              className="btn btn-outline-primary me-2"
-              style={{
-                color: "white",
-                borderColor: "white",
-              }}
-            >
-              Contact Support
-            </button>
-          </div>
+          <button
+            className="btn st me-2"
+            style={{ background: "green", color: "white" }}
+          >
+            Help Centre
+          </button>
 
-          {/* Right Side – All Links in One Combined Row */}
-          <div className="col-lg-7 col-md-7 col-sm-12 d-flex justify-content-between link-section">
+          <button
+            className="btn btn-outline-light me-2"
+            style={{ borderColor: "white" }}
+          >
+            Contact Support
+          </button>
+        </div>
+
+        {/* RIGHT SIDE LINK COLUMNS */}
+        <div className="col-lg-7 col-md-7 ">
+          <div className="row align-self-center">
             {/* Column 1 */}
-            <div className="footer-col">
+            <div className="col-6 col-md-4 mb-3 text-start">
               <h5 className="fw-bold text-white mb-3">Hirelink</h5>
               <ul className="footer-links list-unstyled">
                 <li>
@@ -64,7 +62,7 @@ export default function Footer() {
             </div>
 
             {/* Column 2 */}
-            <div className="footer-col">
+            <div className="col-6 col-md-4 mb-3 text-start">
               <h5 className="fw-bold text-white mb-3">Employers</h5>
               <ul className="footer-links list-unstyled">
                 <li>
@@ -86,7 +84,7 @@ export default function Footer() {
             </div>
 
             {/* Column 3 */}
-            <div className="col-6 col-md-4 footer-col">
+            <div className="col-6 col-md-4 mb-3 text-start">
               <h5 className="fw-bold text-white mb-3">Resources</h5>
               <ul className="footer-links list-unstyled">
                 <li>
@@ -109,8 +107,10 @@ export default function Footer() {
           </div>
         </div>
       </div>
-      <hr style={{borderColor:"white"}}></hr>
-      <div className="text-center py-3 small text-white fs-6">
+
+      <hr style={{ borderColor: "white" }} />
+
+      <div className="text-center py-3 text-white small">
         © {year} · Esenceweb IT | All Rights Reserved
         <div className="social-icons mt-2">
           <a href="#">

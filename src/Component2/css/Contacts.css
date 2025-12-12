@@ -1,0 +1,79 @@
+/* Background */
+.contact-section {
+  background: linear-gradient(135deg, #eef2f7, #ffffff);
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+/* Title */
+.contact-title {
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+.contact-title span {
+  background: linear-gradient(45deg, #7ac533, #2db93f);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Left Glass Card */
+.info-glass-card {
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  transition: 0.3s;
+}
+.info-glass-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+}
+
+.info-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #198754;
+}
+.info-text {
+  color: #444;
+  line-height: 1.6;
+}
+
+/* Right Form Card */
+.contact-form-card {
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  transition: 0.3s;
+}
+.contact-form-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+}
+
+.form-control {
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ccd4e0;
+}
+.form-control:focus {
+  border-color: #198754;
+  box-shadow: 0 0 8px rgba(25, 135, 84, 0.4);
+}
+
+/* Button */
+.btn-contact {
+  background: linear-gradient(45deg, #14c048, #88b92d);
+  padding: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+  border-radius: 14px;
+  transition: 0.3s;
+}
+.btn-contact:hover {
+  transform: translateY(-3px);
+  opacity: 0.9;
+}

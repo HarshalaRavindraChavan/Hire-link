@@ -123,7 +123,7 @@ function Employer() {
       </section>
 
       {/* <!-- ================= LOGOS STRIP ================= --> */}
-      <section className="py-4 bg-white border-top border-bottom">
+      <section className="py-4 bg-white border-top border-bottom ps-2 pe-2">
         <div className="container text-center">
           <p
             className="mb-3 text-muted small"
@@ -142,7 +142,7 @@ function Employer() {
       </section>
 
       {/* <!-- ================= FEATURES ================= --> */}
-      <section className="py-5 py-lg-6 bg-light" id="features">
+      <section className="py-5 py-lg-6 bg-light ps-3 pe-3" id="features">
         <div className="container">
           <div className="text-center mb-5">
             <h2 className="section-title" style={{ fontWeight: "bold" }}>
@@ -237,7 +237,7 @@ function Employer() {
       </section>
 
       {/* <!-- ================= HOW IT WORKS ================= --> */}
-      <section className="py-5" id="how-it-works">
+      <section className="py-5 ps-4 pe-4" id="how-it-works">
         <div className="container">
           <div className="row align-items-center g-4">
             <div className="col-lg-5">
@@ -297,7 +297,7 @@ function Employer() {
       </section>
 
       {/* <!-- ================= PRICING ================= --> */}
-      <section className="py-5 bg-light" id="pricing">
+      <section className="py-5 bg-light ps-3 pe-3" id="pricing">
         <div className="container">
           <div className="text-center mb-5">
             <h2 className="section-title">
@@ -414,7 +414,7 @@ function Employer() {
       </section>
 
       {/* <!-- ================= TESTIMONIAL ================= --> */}
-      <section className="py-5">
+      <section className="py-5 ps-3 pe-3">
         <div className="container">
           <div className="row align-items-center g-4">
             <div className="col-lg-6">
@@ -474,7 +474,7 @@ function Employer() {
         </div>
       </section>
       {/* !-- ================= FAQ ================= --> */}
-      <section className="py-5 bg-light" id="faq">
+      <section className="py-5 bg-light ps-3 pe-3" id="faq">
         <div className="container">
           <div className="text-center mb-4">
             <h2 className="section-title">Questions employers often ask</h2>
@@ -584,7 +584,7 @@ function Employer() {
 
               <p className="text-center small text-muted mt-3" id="contact">
                 Still have questions?
-                <a href="#contact" className="link-primary">
+                <a href="/contacts" className="link-primary ms-2">
                   Contact our support team
                 </a>
                 .

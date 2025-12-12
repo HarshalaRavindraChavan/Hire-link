@@ -41,7 +41,7 @@ function Company() {
         <p className="sub-text">Get access to millions of company reviews</p>
 
         {/* SEARCH WRAPPER */}
-        <div className="search-wrapper d-flex justify-content-center align-items-center">
+        <div className="search-wrapper d-flex justify-content-center align-items-center ps-3 pe-3">
           {/* SEARCH BOX WITH DROPDOWN */}
           <div className="position-relative flex-grow-1 search-box">
             <i className="fa fa-search"></i>
@@ -78,7 +78,10 @@ function Company() {
             )}
           </div>
 
-          <button className="search-btn">Find Companies</button>
+          <button className="search-btn d-none d-lg-block ">
+            Find Companies
+          </button>
+          <button className="search-btn d-lg-none ps-5 pe-5 pt-2  pb-2 ">Find</button>
         </div>
 
         {/* EXTRA LINK */}
@@ -90,9 +93,9 @@ function Company() {
         </a>
 
         {/* POPULAR COMPANIES */}
-        <h3 className="text-start mt-5 fw-bold">Popular companies</h3>
+        <h3 className="text-start mt-5 fw-bold ps-3">Popular companies</h3>
 
-        <div className="row mt-3 g-3">
+        <div className="row mt-3 g-3 ps-3 pe-3">
           {popularCompanies.map((c, i) => (
             <div className="col-6 col-md-3" key={i}>
               <div className="company-card">

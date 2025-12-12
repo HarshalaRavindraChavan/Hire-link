@@ -103,27 +103,27 @@ function App() {
         {/* USER ROUTES */}
         <Route path="/" element={<UserLayout />}>
           <Route index element={<Home />} />
-          <Route path="companies" element={<Company />} />
-          <Route path="jobs" element={<Jobs />} />
-          <Route path="contacts" element={<Contacts />} />
+          <Route path="/companies" element={<Company />} />
+          <Route path="/jobs" element={<Jobs />} />
+          <Route path="/contacts" element={<Contacts />} />
         </Route>
 
         {/* Employer ROUTES */}
         <Route element={<EmployerLayout />}>
-          <Route path="employer" element={<Employer />} />
+          <Route path="/employer" element={<Employer />} />
         </Route>
 
         {/* ADMIN ROUTES (NO /admin PREFIX) */}
         <Route element={<AdminLayout />}>
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="job" element={<Job />} />
-          <Route path="condidate" element={<Condidates />} />
-          <Route path="interview" element={<Interview />} />
-          <Route path="employe" element={<Employes />} />
-          <Route path="package" element={<Packages />} />
-          <Route path="offer" element={<Offer />} />
-          <Route path="contact" element={<Contact />} />
-          <Route path="user" element={<Users />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/job" element={<Job />} />
+          <Route path="/condidate" element={<Condidates />} />
+          <Route path="/interview" element={<Interview />} />
+          <Route path="/employe" element={<Employes />} />
+          <Route path="/package" element={<Packages />} />
+          <Route path="/offer" element={<Offer />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/user" element={<Users />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -9,7 +9,7 @@ function Home() {
   return (
     <section className="flex-grow-1 text-center mt-5 mb-4 container">
       {/* SEARCH BAR ROW */}
-      <div className="row justify-content-center g-2 mt-4 home-serch">
+      <div className="row justify-content-center g-2 mt-4 home-serch ps-4 pe-4">
         {/* JOB INPUT */}
         <div className="col-12 col-md-3 search-input-wrapper position-relative">
           <div className="search-input d-flex align-items-center">
@@ -38,15 +38,15 @@ function Home() {
 
         {/* SEARCH BUTTON */}
         <div className="col-12 col-md-2">
-          <a href="/jobs" className="btn find-btn w-100 pt-3">
+          <a href="/jobs" type="button" className="btn find-btn w-100 pt-4 pb-5">
             Find jobs
           </a>
         </div>
       </div>
 
       {/* TITLE */}
-      <h1 className="main-title mt-5">Your next job starts here</h1>
-      <p className="text-muted">
+      <h1 className="main-title mt-5 ps-2 pe-2">Your next job starts here</h1>
+      <p className="text-muted ps-3 pe-3">
         Create an account or sign in to see your personalised job
         recommendations.
       </p>

@@ -270,6 +270,7 @@ body {
 @media (max-width: 575.98px) {
   .hero-section {
     background: radial-gradient(circle at top left, #e4f3c5 0, #f6f7ef42 55%);
+    padding:20px 20px;
   }
   .hero-title {
     font-size: 1.8rem;
@@ -350,3 +351,4 @@ body {
     margin-top: 5px;
   }
 }
+ 

@@ -4,7 +4,7 @@ import "../Component3/css/Header.css";
 function Header() {
   return (
     <>
-      <header className="shadow-sm sticky-top bg-white">
+      <header className="shadow-sm sticky-top bg-white py-3 ps-2 pe-3">
         <nav className="navbar navbar-expand-lg navbar-light py-3 container">
           <a
             className="navbar-brand fw-bold d-flex align-items-center"

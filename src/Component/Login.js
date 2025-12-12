@@ -25,25 +25,27 @@ function Login() {
           <input type="password" placeholder="Password" />
         </div>
 
-        <div className="login-remember">
+        {/* <div className="login-remember">
           <input type="checkbox" />
           <span>Keep me signed in</span>
           <a href="#" className="login-forgot">
             Forgot password?
           </a>
-        </div>
+        </div> */}
 
-        <button  className="login-login-btn">LOGIN</button>
+        <button type="submit" className="login-login-btn">
+          LOGIN
+        </button>
 
         {/* <div className="login-social-buttons">
           <button className="login-facebook">Facebook</button>
           <button className="login-google">Google</button>
         </div> */}
-
+        {/* 
         <p className="login-signup-text">
           Don't have an account?
-          <NavLink to="/signup"> Signup</NavLink>
-        </p>
+          <NavLink to="/registar"> Signup</NavLink>
+        </p> */}
       </div>
 
       <div className="login-right-section">

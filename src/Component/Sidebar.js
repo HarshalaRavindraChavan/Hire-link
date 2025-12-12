@@ -43,7 +43,7 @@ function Sidebar() {
 
             <li className="nav-item">
               <NavLink
-                to="/jobs"
+                to="/job"
                 className={({ isActive }) => (isActive ? "active" : "")}
               >
                 <i className="fa fa-briefcase"></i>

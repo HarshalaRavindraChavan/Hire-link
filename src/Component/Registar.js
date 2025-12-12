@@ -7,7 +7,7 @@ import logo from "./logo/hirelink.png";
 import "swiper/css";
 import "swiper/css/effect-fade";
 
-function Signup() {
+function Registar() {
   return (
     <div className="signup-container">
       <div className="signup-left-section">
@@ -30,7 +30,6 @@ function Signup() {
           <div>
             <label>Mobile No.</label>
             <div className="signup-input-box">
-
               <input type="text" placeholder="Mobile Number" />
             </div>
           </div>
@@ -58,12 +57,12 @@ function Signup() {
           <input type="password" placeholder="Enter Password" />
         </div>
 
-        <NavLink type="button" to="/signup" className="signup-login-btn">
+        <button type="submit" className="signup-login-btn">
           SIGN UP
-        </NavLink>
+        </button>
 
         <p className="signup-signup-text">
-          Already have an account? <a href="/">Login</a>
+          Already have an account? <a href="/login">Login</a>
         </p>
       </div>
 
@@ -88,4 +87,4 @@ function Signup() {
   );
 }
 
-export default Signup;
+export default Registar;

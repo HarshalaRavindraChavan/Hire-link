@@ -1,7 +1,6 @@
 import logo from "../Component2/Image/logo.png";
 import "../Component2/css/Header.css";
 
-
 function Header() {
   return (
     <>
@@ -32,11 +31,10 @@ function Header() {
           <a href="/signin" className="nav-link-custom">
             Sign in
           </a>
-<<<<<<< HEAD
-          <a href="/employer" className="nav-link-custom border-start border-3 ps-3">
-=======
-          <a href="employer" className="nav-link-custom border-start border-3 ps-3">
->>>>>>> 4da186f080cac327fb4f003be4eb279470f864e0
+          <a
+            href="/employer"
+            className="nav-link-custom border-start border-3 ps-3"
+          >
             Employers / Post Job
           </a>
         </div>

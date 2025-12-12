@@ -1,0 +1,121 @@
+.job-layout {
+  display: flex;
+}
+
+/* Left panel job list scrolling */
+.job-list {
+  height: 600px;
+  overflow-y: auto;
+}
+
+/* Right panel job details */
+.job-detail {
+  border: 1px solid #e4e4e4;
+  border-radius: 12px;
+  height: 600px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Fixed header inside job details */
+.job-header {
+  padding: 10px 10px 0 10px;
+  position: relative;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid #eee;
+  box-shadow: 0 4px 8px -8px rgba(0, 0, 0, 0.5);
+}
+
+/* Scrollable body section */
+.job-body {
+  padding: 15px 10px 10px 10px;
+  overflow-y: auto;
+}
+
+/* Job card styles */
+.job-card {
+  padding: 18px;
+  border: 1px solid #d9d9d9;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.job-card:hover {
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Selected job highlight */
+.selected {
+  border-color: #2557a7 !important;
+}
+
+/* Job tag & salary badges */
+.tag {
+  display: inline-block;
+  font-size: 13px;
+  background: #e9f1ff;
+  color: #2557a7;
+  padding: 2px 8px;
+  border-radius: 6px;
+  margin-bottom: 5px;
+}
+.badge-chip {
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 8px;
+  background: #eef7ed;
+  color: #188a42;
+  margin-right: 5px;
+}
+
+/* Apply button */
+.apply-btn {
+  background: #ffd60a;
+  padding: 8px 18px;
+  border: none;
+  color: #000;
+  border-radius: 8px;
+  font-weight: 600;
+}
+.apply-btn:hover {
+  background: #008d2a;
+  color: #fff;
+}
+
+/* Rounded bootstrap outline buttons */
+.btn-outline-primary,
+.btn-outline-secondary,
+.btn-outline-dark {
+  border-radius: 20px;
+}
+
+@media (max-width: 768px) {
+  .page-wrapper {
+    min-height: calc(100vh - 120px);
+  }
+  .main-title {
+    font-size: 30px;
+  }
+  .logo {
+    width: 30%;
+  }
+  .home-serch {
+    flex-direction: column !important;
+    gap: 10px;
+  }
+  .find-btn {
+    width: 100%;
+  }
+  .search-btn {
+    font-size: 14px;
+    padding: 7px 9px;
+  }
+  .suggest-list {
+    top: 50px;
+  }
+  .job-detail {
+    display: none;
+  }
+}

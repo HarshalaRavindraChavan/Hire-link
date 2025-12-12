@@ -26,6 +26,10 @@ import Jobs from "./Component2/Jobs";
 import Signin from "./Component2/Signin";
 import Signup from "./Component2/Signup";
 
+// Employer Components
+import Header3 from "./Component3/Header";
+import Footer3 from "./Component3/Footer";
+import Employer from "./Component3/Employer";
 // ---------------- ADMIN LAYOUT ----------------
 const AdminLayout = () => {
   return (
@@ -70,19 +74,17 @@ const UserLayout = () => {
 };
 
 // ---------------- Employer LAYOUT ----------------
-// const EmployesLayout = () => {
-//   return (
-//     <>
-//       <Header3 />
-//       <Routes>
-//         <Route path="/" element={<Home />} />
-//         <Route path="companies" element={<Company />} />
-//         <Route path="jobs" element={<Jobs />} />
-//       </Routes>
-//       <Footer3 />
-//     </>
-//   );
-// };
+const EmployerLayout = () => {
+  return (
+    <>
+      <Header3 />
+      <Routes>
+        <Route path="employer" element={<Employer />} />
+      </Routes>
+      <Footer3 />
+    </>
+  );
+};
 
 // ---------------- MAIN APP ----------------
 function App() {
@@ -101,6 +103,11 @@ function App() {
           <Route index element={<Home />} />
           <Route path="companies" element={<Company />} />
           <Route path="jobs" element={<Jobs />} />
+        </Route>
+
+        {/* Employer ROUTES */}
+        <Route element={<EmployerLayout />}>
+          <Route path="employer" element={<Employer />} />
         </Route>
 
         {/* ADMIN ROUTES (NO /admin PREFIX) */}

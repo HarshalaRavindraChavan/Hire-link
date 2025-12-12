@@ -1,0 +1,82 @@
+/* =====================================================
+   COMPANY PAGE SEARCH UI
+   ===================================================== */
+
+body,
+html {
+  height: 100%;
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: #ffffff;
+  overflow: auto;
+}
+
+.search-box {
+  border: 1px solid #bcbcbc;
+  border-radius: 50px;
+  padding: 6px 15px;
+  display: flex;
+  align-items: center;
+}
+.search-box input {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  width: 100%;
+  padding-left: 10px;
+  font-size: 16px;
+}
+
+.search-btn {
+  background: #00b341;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 50px;
+  padding: 12px 30px;
+  margin-left: 10px;
+  border: none;
+}
+.search-btn:hover {
+  background: #f3cd11;
+}
+
+/* Company card layout */
+.company-card {
+  border: 1px solid #e4e4e4;
+  border-radius: 12px;
+  padding: 15px;
+  background: white;
+  transition: box-shadow 0.2s;
+}
+.company-card:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+}
+
+@media (max-width: 768px) {
+  .page-wrapper {
+    min-height: calc(10vh - 10px);
+  }
+  .main-title {
+    font-size: 30px;
+  }
+  .logo {
+    width: 30%;
+  }
+  .home-serch {
+    flex-direction: column !important;
+    gap: 10px;
+  }
+  .find-btn {
+    width: 100%;
+  }
+  .search-btn {
+    font-size: 14px;
+    padding: 7px 9px;
+  }
+  .suggest-list {
+    top: 50px;
+  }
+  .job-detail {
+    display: none;
+  }
+}

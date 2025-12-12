@@ -1,0 +1,59 @@
+/* GLOBAL COLORS */
+:root {
+  --hl-yellow: #ffd60a;
+  --hl-green: #22c55e;
+  --hl-dark: #0f172a;
+}
+
+/* LEFT SIDE BRAND PANEL */
+.brand-panel {
+  background: radial-gradient(circle at top left, var(--hl-yellow), #111827);
+}
+
+/* PRIMARY AUTH BUTTON */
+.btn-primary-auth {
+  background: var(--hl-dark);
+  border-radius: 999px;
+  color: #fff;
+}
+
+.btn-primary-auth:hover {
+  background: #020617;
+}
+
+/* OUTLINE BUTTON STYLE */
+.btn-outline-auth {
+  border-radius: 999px;
+  border: 1px solid #d4d4d8;
+}
+
+/* ROLE SELECTION PILLS */
+.role-pill {
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.8rem;
+  border: 1px solid #d4d4d8;
+  background: #f9fafb;
+  cursor: pointer;
+}
+
+.role-pill.active {
+  background: var(--hl-dark);
+  color: #fff;
+  border-color: var(--hl-dark);
+}
+
+/* FORM INPUT ROUND RADIUS */
+.form-control {
+  border-radius: 12px;
+}
+
+input::placeholder {
+  color: #9ca3af !important;
+  opacity: 1 !important;
+  font-size: 14px;
+}
+
+p {
+  font-size: 13px;
+}

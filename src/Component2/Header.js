@@ -32,7 +32,11 @@ function Header() {
           <a href="/signin" className="nav-link-custom">
             Sign in
           </a>
+<<<<<<< HEAD
           <a href="/employer" className="nav-link-custom border-start border-3 ps-3">
+=======
+          <a href="employer" className="nav-link-custom border-start border-3 ps-3">
+>>>>>>> 4da186f080cac327fb4f003be4eb279470f864e0
             Employers / Post Job
           </a>
         </div>

@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "../Component2/css/Company.css";
-import logo from "../Component2/Image/logo.png";
 
 function Company() {
+  useState(() => {
+    document.title = "Hirelink | Companies Review";
+  }, []);
+
   const [searchText, setSearchText] = useState("");
   const [showList, setShowList] = useState(false);
 
@@ -17,7 +20,6 @@ function Company() {
     { name: "Hirelink", reviews: "54,409", logo: "image/logo.png" },
     { name: "Hirelink", reviews: "54,409", logo: "image/logo.png" },
     { name: "Hirelink", reviews: "54,409", logo: "image/logo.png" },
-    
   ];
 
   // Click outside hide dropdown

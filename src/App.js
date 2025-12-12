@@ -22,6 +22,7 @@ import Header2 from "./Component2/Header";
 import Footer2 from "./Component2/Footer";
 import Home from "./Component2/Home";
 import Company from "./Component2/Company";
+import Contacts from "./Component2/Contact";
 import Jobs from "./Component2/Jobs";
 import Signin from "./Component2/Signin";
 import Signup from "./Component2/Signup";
@@ -67,6 +68,7 @@ const UserLayout = () => {
         <Route index element={<Home />} />
         <Route path="companies" element={<Company />} />
         <Route path="jobs" element={<Jobs />} />
+        <Route path="contacts" element={<Contacts />} />
       </Routes>
       <Footer2 />
     </>
@@ -103,6 +105,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="companies" element={<Company />} />
           <Route path="jobs" element={<Jobs />} />
+          <Route path="contacts" element={<Contacts />} />
         </Route>
 
         {/* Employer ROUTES */}

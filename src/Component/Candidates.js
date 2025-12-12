@@ -156,7 +156,7 @@ function Candidates() {
         </div>
       </div>
 
-      <div className="card shadow-sm p-3">
+      <div className="card shadow-sm p-3 border">
         {/* 🔍 FILTER ROW */}
         <div className="row g-2 align-items-center mb-3">
           {/* Experience */}

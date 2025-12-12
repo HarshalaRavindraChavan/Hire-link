@@ -158,7 +158,7 @@ function Packages() {
         </div>
       </div>
 
-      <div className="card shadow-sm p-3">
+      <div className="card shadow-sm p-3 border">
         <div className="table-responsive">
           <table className="table table-bordered">
             <thead className="table-light text-center">

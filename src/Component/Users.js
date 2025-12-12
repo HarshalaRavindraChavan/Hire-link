@@ -185,7 +185,7 @@ function Users() {
       </div>
 
       {/* TABLE */}
-      <div className="card shadow-sm p-3">
+      <div className="card shadow-sm p-3 border">
         <div className="row g-2 align-items-center mb-3">
           <div className="col-md-2">
             <select className="form-select form-control">

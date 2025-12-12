@@ -32,7 +32,7 @@ function Header() {
           <a href="/signin" className="nav-link-custom">
             Sign in
           </a>
-          <a href="/employers" className="nav-link-custom border-start border-3 ps-3">
+          <a href="/employer" className="nav-link-custom border-start border-3 ps-3">
             Employers / Post Job
           </a>
         </div>

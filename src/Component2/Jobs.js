@@ -1,6 +1,11 @@
+import React, { useState } from "react";
 import "../Component2/css/Jobs.css";
 
 function Jobs() {
+  useState(() => {
+    document.title = "Hirelink | Jobs";
+  }, []);
+
   return (
     <>
       {/* ===========================

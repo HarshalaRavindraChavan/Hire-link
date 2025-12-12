@@ -25,7 +25,7 @@ function Dashboard() {
         {/* ---------- Row 1 : Card 1 ---------- */}
         <div className="col-12 col-sm-6 col-md-4 mb-3">
           <div
-            className="card card-stats card-round"
+            className="card card-stats card-round border"
             onClick={() => navigate("/jobs")}
             style={{ cursor: "pointer" }}
           >
@@ -63,7 +63,7 @@ function Dashboard() {
         {/* ---------- Row 1 : Card 2 ---------- */}
         <div className="col-12 col-sm-6 col-md-4 mb-3">
           <div
-            className="card card-stats card-round"
+            className="card card-stats card-round border"
             onClick={() => navigate("/condidate")}
             style={{ cursor: "pointer" }}
           >
@@ -101,7 +101,7 @@ function Dashboard() {
         {/* ---------- Row 1 : Card 3 ---------- */}
         <div className="col-12 col-sm-6 col-md-4 mb-3">
           <div
-            className="card card-stats card-round"
+            className="card card-stats card-round border"
             onClick={() => navigate("/interview")}
             style={{ cursor: "pointer" }}
           >
@@ -139,7 +139,7 @@ function Dashboard() {
         {/* ---------- Row 2 : Card 4 ---------- */}
         <div className="col-12 col-sm-6 col-md-4 mb-3">
           <div
-            className="card card-stats card-round"
+            className="card card-stats card-round border"
             onClick={() => navigate("/employe")}
             style={{ cursor: "pointer" }}
           >
@@ -177,7 +177,7 @@ function Dashboard() {
         {/* ---------- Row 2 : Card 5 ---------- */}
         <div className="col-12 col-sm-6 col-md-4 mb-3">
           <div
-            className="card card-stats card-round"
+            className="card card-stats card-round border"
             onClick={() => navigate("/contact")}
             style={{ cursor: "pointer" }}
           >
@@ -214,7 +214,7 @@ function Dashboard() {
         {/* ---------- Row 2 : Card 6 ---------- */}
         <div className="col-12 col-sm-6 col-md-4 mb-3">
           <div
-            className="card card-stats card-round"
+            className="card card-stats card-round border"
             onClick={() => navigate("/user")}
             style={{ cursor: "pointer" }}
           >

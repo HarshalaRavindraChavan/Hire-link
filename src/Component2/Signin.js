@@ -2,6 +2,11 @@ import { useState } from "react";
 import "../Component2/css/Signin.css";
 
 export default function Login() {
+
+    useState(() => {
+      document.title = "Hirelink | Signin";
+    }, []);
+
   const [activeRole, setActiveRole] = useState("Candidate");
 
   return (

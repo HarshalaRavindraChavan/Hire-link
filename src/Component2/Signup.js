@@ -2,6 +2,12 @@ import React, { useState } from "react";
 import "../Component2/css/Signup.css";
 
 const Signup = () => {
+
+  
+    useState(() => {
+      document.title = "Hirelink | Signup";
+    }, []);
+
   const [role, setRole] = useState("Candidate");
 
   return (

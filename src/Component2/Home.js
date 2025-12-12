@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import "../Component2/css/Home.css";
 
 function Home() {
+   useState(() => {
+    document.title = "Welcome To Hirelink";
+  }, []);
+
   return (
     <section className="flex-grow-1 text-center mt-5 mb-4 container">
       {/* SEARCH BAR ROW */}

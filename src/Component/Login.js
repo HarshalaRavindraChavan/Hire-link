@@ -33,9 +33,9 @@ function Login() {
           </a>
         </div> */}
 
-        <button type="submit" className="login-login-btn">
+        <a href="dashboard" type="submit" className="login-login-btn">
           LOGIN
-        </button>
+        </a>
 
         {/* <div className="login-social-buttons">
           <button className="login-facebook">Facebook</button>

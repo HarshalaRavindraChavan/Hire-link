@@ -8,7 +8,7 @@ function Header() {
         <nav className="navbar navbar-expand-lg navbar-light py-3 container">
           <a
             className="navbar-brand fw-bold d-flex align-items-center"
-            href="#"
+            href="/signin"
           >
             <span className="logo-dot me-2 ms-2"></span>
             <span>Hirelink for Employers</span>
@@ -48,13 +48,13 @@ function Header() {
               <li className="nav-item ms-lg-3">
                 <a
                   className="btn btn-sm me-2 mb-2 mb-lg-0"
-                  href="#login"style={{backgroundColor:"green",color:"white",fontWeight:"bold",fontSize:"13px"}}
+                  href="/signin"style={{backgroundColor:"green",color:"white",fontWeight:"bold",fontSize:"13px"}}
                 >
                   Sign in
                 </a>
               </li>
               <li className="nav-item">
-                <a className="btn btn-sm" href="#get-started"style={{backgroundColor:"green",color:"white",fontWeight:"bold",fontSize:"13px"}}>
+                <a className="btn btn-sm" href="/signin"style={{backgroundColor:"green",color:"white",fontWeight:"bold",fontSize:"13px"}}>
                   Post a job
                 </a>
               </li>

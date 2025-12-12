@@ -21,13 +21,12 @@ function Employer() {
               </p>
 
               <form className="row g-2 hero-form align-items-center">
-                
                 <div className="col-12 col-md-5 position-relative">
-                                    <i className="fa fa-search input-icon-right"></i>
+                  <i className="fa fa-search input-icon-right"></i>
 
                   <input
                     type="text"
-                    className="form-control form-control-lg input-bo x"
+                    className="form-control form-control-lg input-box"
                     placeholder="Job title"
                   />
                 </div>
@@ -35,7 +34,7 @@ function Employer() {
                 <div className="col-12 col-md-4 position-relative">
                   <input
                     type="text"
-                    className="input-box form-control-lg"
+                    className="input-box form-control-lg form-control"
                     placeholder="City or remote"
                     aria-label="Location"
                   />
@@ -43,13 +42,18 @@ function Employer() {
                 </div>
 
                 <div className="col-12 col-md-3 d-grid">
-                  <button
+                  <a
+                  href="/signin"
                     type="submit"
                     className="btn btn-lg"
-                    style={{ backgroundColor: "green", color: "white",height:"42px" }}
+                    style={{
+                      backgroundColor: "green",
+                      color: "white",
+                      height: "42px",
+                    }}
                   >
                     Post job
-                  </button>
+                  </a>
                 </div>
               </form>
 
@@ -456,7 +460,7 @@ function Employer() {
                 </li>
               </ul>
               <a
-                href="#get-started"
+                href="/signin"
                 className="btn me-2"
                 style={{ backgroundColor: "green", color: "white" }}
               >

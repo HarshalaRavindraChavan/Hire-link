@@ -57,7 +57,7 @@ function Home() {
       </a>
 
       <p className="mt-5">
-        <a href="#" className="resume-link">
+        <a href="/signin" className="resume-link">
           Post your resume
         </a>{" "}
         - It only takes a few seconds

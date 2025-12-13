@@ -6,7 +6,7 @@ function Forgot() {
       <div className="bg-light d-flex justify-content-center align-items-center vh-100">
         <div
           className="card shadow p-4 m-2"
-          style={{ width: "500px", maxwidth: "420px" }}
+          style={{ width: "500px", maxwidth: "420px",background:"#f7fdf0ff" }}
         >
           <div className="mb-3">
             <a href="/" className="text-decoration-none text-dark">
@@ -41,14 +41,14 @@ function Forgot() {
               />
             </div>
 
-            <button type="submit" className="btn btn-primary w-100">
+            <button type="submit" className="btn btn-success w-100">
               Send reset link
             </button>
           </form>
 
           <p className="text-center mt-3 mb-0 text-muted">
             Already have an account?
-            <a href="/login" className="fw-semibold">
+            <a href="/signin" className="fw-semibold">
               Login
             </a>
           </p>

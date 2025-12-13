@@ -81,7 +81,9 @@ function Company() {
           <button className="search-btn d-none d-lg-block ">
             Find Companies
           </button>
-          <button className="search-btn d-lg-none ps-5 pe-5 pt-2  pb-2 ">Find</button>
+          <button className="search-btn d-lg-none ps-5 pe-5 pt-2  pb-2 ">
+            Find
+          </button>
         </div>
 
         {/* EXTRA LINK */}

@@ -1,7 +1,12 @@
+import { NavLink } from "react-router-dom";
 import { useEffect } from "react";
 import "../Component3/css/Employer.css";
 
 function Employer() {
+  useEffect(() => {
+    document.title = "Hirelink | Employer";
+  }, []);
+
   return (
     <>
       {/* <!-- ================= HERO SECTION ================= --> */}
@@ -42,8 +47,8 @@ function Employer() {
                 </div>
 
                 <div className="col-12 col-md-3 d-grid">
-                  <a
-                  href="/signin"
+                  <NavLink
+                    to="/signin"
                     type="submit"
                     className="btn btn-lg"
                     style={{
@@ -53,7 +58,7 @@ function Employer() {
                     }}
                   >
                     Post job
-                  </a>
+                  </NavLink>
                 </div>
               </form>
 
@@ -459,13 +464,13 @@ function Employer() {
                   platform
                 </li>
               </ul>
-              <a
-                href="/signin"
+              <NavLink
+                to="/signin"
                 className="btn me-2"
                 style={{ backgroundColor: "green", color: "white" }}
               >
                 Post a job now
-              </a>
+              </NavLink>
               <a href="#contact" className="btn btn-link p-0 align-baseline">
                 Book a quick demo <i className="bi bi-arrow-right-short"></i>
               </a>
@@ -584,9 +589,9 @@ function Employer() {
 
               <p className="text-center small text-muted mt-3" id="contact">
                 Still have questions?
-                <a href="/contacts" className="link-primary ms-2">
+                <NavLink to="/contacts" className="link-primary ms-2">
                   Contact our support team
-                </a>
+                </NavLink>
                 .
               </p>
             </div>

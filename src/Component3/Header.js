@@ -1,18 +1,18 @@
 import "../Component3/css/Header.css";
-
+import { NavLink } from "react-router-dom";
 
 function Header() {
   return (
     <>
       <header className="shadow-sm sticky-top bg-white py-3 ps-2 pe-3">
         <nav className="navbar navbar-expand-lg navbar-light py-3 container">
-          <a
+          <NavLink
             className="navbar-brand fw-bold d-flex align-items-center"
-            href="/signin"
+            to="/signin"
           >
             <span className="logo-dot me-2 ms-2"></span>
             <span>Hirelink for Employers</span>
-          </a>
+          </NavLink>
 
           <button
             className="navbar-toggler"
@@ -46,17 +46,17 @@ function Header() {
                 </a>
               </li>
               <li className="nav-item ms-lg-3">
-                <a
+                <NavLink
                   className="btn btn-sm me-2 mb-2 mb-lg-0"
-                  href="/signin"style={{backgroundColor:"green",color:"white",fontWeight:"bold",fontSize:"13px"}}
+                  to="/signin"style={{backgroundColor:"green",color:"white",fontWeight:"bold",fontSize:"13px"}}
                 >
                   Sign in
-                </a>
+                </NavLink>
               </li>
               <li className="nav-item">
-                <a className="btn btn-sm" href="/signin"style={{backgroundColor:"green",color:"white",fontWeight:"bold",fontSize:"13px"}}>
+                <NavLink className="btn btn-sm" to="/signin"style={{backgroundColor:"green",color:"white",fontWeight:"bold",fontSize:"13px"}}>
                   Post a job
-                </a>
+                </NavLink>
               </li>
             </ul>
           </div>

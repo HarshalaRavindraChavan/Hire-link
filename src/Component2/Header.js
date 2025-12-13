@@ -1,3 +1,4 @@
+import { NavLink } from "react-router-dom";
 import logo from "../Component2/Image/logo.png";
 import "../Component2/css/Header.css";
 
@@ -10,12 +11,13 @@ function Header() {
 
         {/* <!-- DESKTOP NAVIGATION LINKS --> */}
         <nav className="d-none d-md-flex gap-3">
-          <a href="/" className="nav-link-custom fs-6 fw-semibold">
+          <NavLink to="/" className="nav-link-custom fs-6 fw-semibold">
             Home
-          </a>
-          <a href="/companies" className="nav-link-custom fs-6 fw-semibold">
+          </NavLink>
+
+          <NavLink to="/companies" className="nav-link-custom fs-6 fw-semibold">
             Company reviews
-          </a>
+          </NavLink>
         </nav>
 
         {/* <!-- RIGHT SIDE DESKTOP BUTTONS --> */}
@@ -28,15 +30,15 @@ function Header() {
           <a href="#" className="nav-link-custom"><i className="fa fa-user"></i></a> */}
 
           {/* <!-- BEFORE LOGIN --> */}
-          <a href="/signin" className="nav-link-custom">
+          <NavLink to="/signin" className="nav-link-custom">
             Sign in
-          </a>
-          <a
-            href="/employer"
+          </NavLink>
+          <NavLink
+            to="/employer"
             className="nav-link-custom border-start border-3 ps-3"
           >
             Employers / Post Job
-          </a>
+          </NavLink>
         </div>
         {/*  MOBILE MENU TOGGLER BUTTON -- */}
         <button
@@ -51,18 +53,18 @@ function Header() {
 
       {/* ===================== MOBILE MENU =====================  */}
       <div className="collapse bg-light p-3" id="mobileMenu">
-        <a href="/" className="mobile-link">
+        <NavLink to="/" className="mobile-link">
           Home
-        </a>
-        <a href="/companies" className="mobile-link">
+        </NavLink>
+        <NavLink to="/companies" className="mobile-link">
           Company reviews
-        </a>
-        <a href="/signin" className="mobile-link">
+        </NavLink>
+        <NavLink to="/signin" className="mobile-link">
           Sign in
-        </a>
-        <a href="/employer" className="mobile-link">
+        </NavLink>
+        <NavLink to="/employer" className="mobile-link">
           Employers / Post Job
-        </a>
+        </NavLink>
       </div>
     </>
   );

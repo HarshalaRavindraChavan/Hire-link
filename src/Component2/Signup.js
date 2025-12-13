@@ -1,11 +1,47 @@
 import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
 import "../Component2/css/Signup.css";
 import logo from "../Component2/Image/logo.png";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
 
 const Signup = () => {
   useState(() => {
     document.title = "Hirelink | Signup";
   }, []);
+
+  const validationSchema = Yup.object({
+    fullname: Yup.string().required("Full name is required"),
+
+    email: Yup.string()
+      .email("Invalid email")
+      .required("Work email is required"),
+
+    password: Yup.string()
+      .min(6, "Password must be at least 6 characters")
+      .required("Password is required"),
+
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref("password")], "Passwords do not match")
+      .required("Confirm password is required"),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
+
+  const onSubmit = (data) => {
+    console.log({
+      ...data,
+      role,
+    });
+    alert("Account Created Successfully!");
+  };
 
   const [role, setRole] = useState("Candidate");
 
@@ -48,7 +84,7 @@ const Signup = () => {
         {/* RIGHT SIGNUP FORM */}
         <div className="col-lg-6 p-4 p-md-5">
           <div className="text-center ">
-            <a href="/">
+            <NavLink to="/">
               <img
                 src={logo}
                 style={{
@@ -57,7 +93,7 @@ const Signup = () => {
                   margin: "-15px 0 10px 0",
                 }}
               ></img>
-            </a>
+            </NavLink>
           </div>
           <div className="d-flex justify-content-between align-items-center mb-3">
             <div>
@@ -67,50 +103,74 @@ const Signup = () => {
               </p>
             </div>
 
-            <a href="/signin" className="btn btn-sm btn-outline-auth">
+            <NavLink to="/signin" className="btn btn-sm btn-outline-auth">
               <b>Login</b>
-            </a>
+            </NavLink>
           </div>
 
           {/* SIGNUP FORM */}
-          <form>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="row g-3">
+              {/* FULL NAME */}
               <div className="col-md-6">
                 <label className="fw-medium">Full name</label>
                 <input
                   type="text"
-                  className="form-control"
+                  className={`form-control ${
+                    errors.fullname ? "is-invalid" : ""
+                  }`}
                   placeholder="Full Name"
+                  {...register("fullname")}
                 />
+                <div className="invalid-feedback">
+                  {errors.fullname?.message}
+                </div>
               </div>
 
+              {/* EMAIL */}
               <div className="col-md-6">
                 <label className="fw-medium">Work Email</label>
                 <input
                   type="email"
-                  className="form-control"
+                  className={`form-control ${errors.email ? "is-invalid" : ""}`}
                   placeholder="you@gmail.com"
+                  {...register("email")}
                 />
+                <div className="invalid-feedback">{errors.email?.message}</div>
               </div>
             </div>
 
             <div className="row g-3 mt-1">
+              {/* PASSWORD */}
               <div className="col-md-6">
                 <label className="fw-medium">Password</label>
                 <input
                   type="password"
-                  className="form-control"
+                  className={`form-control ${
+                    errors.password ? "is-invalid" : ""
+                  }`}
                   placeholder="Strong password"
+                  {...register("password")}
                 />
+                <div className="invalid-feedback">
+                  {errors.password?.message}
+                </div>
               </div>
 
+              {/* CONFIRM PASSWORD */}
               <div className="col-md-6">
                 <label className="fw-medium">Confirm password</label>
                 <input
                   type="password"
-                  className="form-control"
+                  className={`form-control ${
+                    errors.confirmPassword ? "is-invalid" : ""
+                  }`}
                   placeholder="Repeat password"
+                  {...register("confirmPassword")}
                 />
+                <div className="invalid-feedback">
+                  {errors.confirmPassword?.message}
+                </div>
               </div>
             </div>
 
@@ -139,7 +199,8 @@ const Signup = () => {
               </div>
             </div>
 
-            <button className="btn btn-primary-auth w-100 mt-4">
+            {/* SUBMIT */}
+            <button type="submit" className="btn btn-primary-auth w-100 mt-4">
               Create Account ✓
             </button>
           </form>

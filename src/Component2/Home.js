@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../Component2/css/Home.css";
+import { NavLink } from "react-router-dom";
 
 function Home() {
    useState(() => {
@@ -38,9 +39,9 @@ function Home() {
 
         {/* SEARCH BUTTON */}
         <div className="col-12 col-md-2">
-          <a href="/jobs" type="button" className="btn find-btn w-100 pt-4 pb-5">
+          <NavLink to="/jobs" type="button" className="btn find-btn w-100 pt-4 pb-5">
             Find jobs
-          </a>
+          </NavLink>
         </div>
       </div>
 
@@ -52,14 +53,14 @@ function Home() {
       </p>
 
       {/* GET STARTED */}
-      <a href="/signin" className="btn start-btn mt-2 px-4 py-2">
+      <NavLink to="/signin" className="btn start-btn mt-2 px-4 py-2">
         Get Started <i className="fa fa-right-long ms-2 arrow"></i>
-      </a>
+      </NavLink>
 
       <p className="mt-5">
-        <a href="/signin" className="resume-link">
+        <NavLink to="/signin" className="resume-link">
           Post your resume
-        </a>{" "}
+        </NavLink>{" "}
         - It only takes a few seconds
       </p>
     </section>

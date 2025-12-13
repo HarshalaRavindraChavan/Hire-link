@@ -1,11 +1,41 @@
+import { NavLink } from "react-router-dom";
 import { useState } from "react";
 import "../Component2/css/Signin.css";
 import logo from "../Component2/Image/logo.png";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
 
 export default function Login() {
   useState(() => {
     document.title = "Hirelink | Signin";
   }, []);
+
+  const validationSchema = Yup.object({
+    email: Yup.string()
+      .email("Invalid email address")
+      .required("Enter Register Email Address"),
+
+    password: Yup.string()
+      .min(6, "Password must be at least 6 characters")
+      .required("Enter password"),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
+
+  const onSubmit = (data) => {
+    console.log("Form Data:", {
+      ...data,
+      role: activeRole,
+    });
+    alert("Form Submitted Successfully!");
+  };
 
   const [activeRole, setActiveRole] = useState("Candidate");
 
@@ -48,7 +78,7 @@ export default function Login() {
         {/* RIGHT LOGIN FORM PANEL */}
         <div className="col-lg-6 p-4 p-md-5">
           <div className="text-center ">
-            <a href="/">
+            <NavLink to="/">
               <img
                 src={logo}
                 style={{
@@ -57,47 +87,52 @@ export default function Login() {
                   margin: "-15px 0 10px 0",
                 }}
               ></img>
-            </a>
+            </NavLink>
           </div>
           <div className="d-flex justify-content-between align-items-center mb-3">
             <div>
               <h2 className="fw-semibold">Welcome back</h2>
               <p className="text-muted">Login to Hirelink.</p>
             </div>
-            <a href="/signup" className="btn btn-sm btn-outline-auth">
+            <NavLink to="/signup" className="btn btn-sm btn-outline-auth">
               <b>Sign Up</b>
-            </a>
+            </NavLink>
           </div>
 
-          <form>
+          <form onSubmit={handleSubmit(onSubmit)}>
             {/* EMAIL INPUT */}
             <div className="mb-3">
               <label className="fw-bold">Email</label>
               <input
                 type="email"
-                className="form-control"
+                className={`form-control ${errors.email ? "is-invalid" : ""}`}
                 placeholder="you@example.com"
-                required
+                {...register("email")}
               />
+              <div className="invalid-feedback">{errors.email?.message}</div>
             </div>
 
             {/* PASSWORD INPUT */}
             <div className="mb-2">
               <label className="fw-bold d-flex justify-content-between">
                 Password
-                <a href="/forgot" className="text-decoration-none small">
+                <NavLink to="/forgot" className="text-decoration-none small">
                   Forgot?
-                </a>
+                </NavLink>
               </label>
+
               <input
                 type="password"
-                className="form-control"
+                className={`form-control ${
+                  errors.password ? "is-invalid" : ""
+                }`}
                 placeholder="Enter your password"
-                required
+                {...register("password")}
               />
+              <div className="invalid-feedback">{errors.password?.message}</div>
             </div>
 
-            {/* ROLE SELECTION PILLS */}
+            {/* ROLE SELECTION */}
             <div className="mt-3 mb-4">
               <label className="small fw-medium d-block">Login as</label>
 

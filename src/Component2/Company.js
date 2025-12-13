@@ -12,14 +12,14 @@ function Company() {
   const companies = ["Amazon", "TCS", "Infosys", "Wipro", "Cognizant"];
 
   const popularCompanies = [
-    { name: "Hirelink", reviews: "54,409", logo: "image/logo.png" },
-    { name: "Hirelink", reviews: "54,409", logo: "image/logo.png" },
-    { name: "Hirelink", reviews: "54,409", logo: "image/logo.png" },
-    { name: "Hirelink", reviews: "54,409", logo: "image/logo.png" },
-    { name: "Hirelink", reviews: "54,409", logo: "image/logo.png" },
-    { name: "Hirelink", reviews: "54,409", logo: "image/logo.png" },
-    { name: "Hirelink", reviews: "54,409", logo: "image/logo.png" },
-    { name: "Hirelink", reviews: "54,409", logo: "image/logo.png" },
+    { name: "Hirelink", reviews: "54,409", logo: "image1.jpeg" },
+    { name: "Hirelink", reviews: "54,409", logo: "image2.jpeg" },
+    { name: "Hirelink", reviews: "54,409", logo: "image3.jpeg" },
+    { name: "Hirelink", reviews: "54,409", logo: "image4.jpeg" },
+    // { name: "Hirelink", reviews: "54,409", logo: "image/logo.png" },
+    // { name: "Hirelink", reviews: "54,409", logo: "image/logo.png" },
+    // { name: "Hirelink", reviews: "54,409", logo: "image/logo.png" },
+    // { name: "Hirelink", reviews: "54,409", logo: "image/logo.png" },
   ];
 
   // Click outside hide dropdown

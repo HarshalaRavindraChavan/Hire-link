@@ -57,11 +57,11 @@ export default function Login() {
               Smart matching for fast teams & ambitious job seekers.
             </p>
 
-            <span className="badge bg-dark rounded-pill p-2 mb-2">
+            <span className="badge bg-dark rounded-pill p-3 mb-2 border-0">
               10k+ Active Candidates
             </span>
             <br />
-            <span className="badge bg-warning text-dark rounded-pill p-2">
+            <span className="badge bg-warning text-dark rounded-pill p-3 border-0">
               Trusted by 250+ companies
             </span>
           </div>

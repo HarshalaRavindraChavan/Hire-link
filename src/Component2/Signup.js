@@ -52,7 +52,7 @@ const Signup = () => {
         style={{ maxWidth: "1000px" }}
       >
         {/* LEFT BRAND PANEL */}
-        <div className="col-lg-6 d-none d-lg-flex flex-column justify-content-between text-white p-4 brand-panel">
+        <div className="col-lg-6 d-none d-lg-flex flex-column justify-content-between text-white p-4 signup-brand-panel">
           <div>
             <h2 className="fw-bold">Hirelink</h2>
             <h4 className="fw-semibold">
@@ -64,11 +64,11 @@ const Signup = () => {
             </p>
 
             <div className="mt-4">
-              <span className="badge bg-dark rounded-pill p-2 mb-2">
+              <span className="badge bg-dark rounded-pill p-3 mb-2 border-0">
                 Step 1 – 1 min
               </span>
               <br />
-              <span className="badge bg-warning text-dark rounded-pill p-2">
+              <span className="badge bg-warning text-dark rounded-pill p-3 border-0">
                 Step 2 – Instant
               </span>
             </div>
@@ -200,7 +200,7 @@ const Signup = () => {
             </div>
 
             {/* SUBMIT */}
-            <button type="submit" className="btn btn-primary-auth w-100 mt-4">
+            <button type="submit" className="btn btn-primary-signup w-100 mt-4">
               Create Account ✓
             </button>
           </form>

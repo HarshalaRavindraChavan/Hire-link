@@ -283,10 +283,9 @@ body {
 /* Common input styling */
 .input-box {
   width: 100%;
-  padding-right: 45px !important; /* Space for the icon */
   border-radius: 10px;
   font-size: 16px;
-  padding-left: 15px;
+  padding-left: 30px !important;
 }
 
 /* Icon inside input */
@@ -319,10 +318,6 @@ body {
   border-radius: 10px;
   height: 48px; /* Match button height */
   font-size: 16px;
-}
-
-.input-box::placeholder {
-  padding-left: 20px;
 }
 
 /* Icon positioning inside inputs */

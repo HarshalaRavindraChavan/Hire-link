@@ -6,19 +6,19 @@
 
 
 /* LEFT SIDE PANEL GRADIENT */
-.brand-panel {
-  background: radial-gradient(circle at top left, var(--hl-green), #111827);
+.signup-brand-panel {
+  background: radial-gradient(circle at top left, #22c55e, #111827) !important;
 }
 
 /* PRIMARY BUTTON */
-.btn-primary-auth {
-  background: var(--hl-green);
+.btn-primary-signup {
+  background: #22c55e;
   border-radius: 50px;
   color: #fff;
 }
 
-.btn-primary-auth:hover {
-  background: #020617;
+.btn-primary-signup:hover {
+  background: #fbfcfd;
 }
 
 

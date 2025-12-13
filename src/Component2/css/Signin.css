@@ -1,18 +1,18 @@
 /* GLOBAL COLORS */
-:root {
+/* :root {
   --hl-yellow: #ffd60a;
   --hl-green: #22c55e;
   --hl-dark: #0f172a;
-}
+} */
 
 /* LEFT SIDE BRAND PANEL */
 .brand-panel {
-  background: radial-gradient(circle at top left, var(--hl-yellow), #111827);
+  background: radial-gradient(circle at top left, #ffd60a, #111827) !important;
 }
 
 /* PRIMARY AUTH BUTTON */
 .btn-primary-auth {
-  background: var(--hl-dark);
+  background: #0f172a;
   border-radius: 999px;
   color: #fff;
 }
@@ -38,9 +38,9 @@
 }
 
 .role-pill.active {
-  background: var(--hl-dark);
+  background: #0f172a;
   color: #fff;
-  border-color: var(--hl-dark);
+  border-color: #0f172a;
 }
 
 /* FORM INPUT ROUND RADIUS */

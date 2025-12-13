@@ -1,0 +1,36 @@
+/* ==============================
+   FINAL PAGINATION CSS
+   ============================== */
+
+/* Base style */
+.pagination .page-link {
+  color: #6c757d;
+  outline: none;
+}
+
+/* Remove Bootstrap blue focus ring */
+.pagination .page-link:focus {
+  box-shadow: 0 0 0 0.15rem rgba(108, 117, 125, 0.4);
+  outline: none;
+}
+
+/* Active page */
+.pagination .page-item.active .page-link {
+  background-color: #8b8b8b; /* gray */
+  border-color: #7d7a6c;
+  color: #fff;
+  box-shadow: 0 0 0 0.15rem rgba(108, 117, 125, 0.4);
+}
+
+/* Hover on inactive pages */
+.pagination .page-item:not(.active):not(.disabled) .page-link:hover {
+  background-color: #e9ecef; /* light gray */
+  color: #495057;
+}
+
+/* Disabled state */
+.pagination .page-item.disabled .page-link {
+  color: #adb5bd;
+  pointer-events: none;
+  background-color: #fff;
+}

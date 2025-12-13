@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import "../Component2/css/Signup.css";
+import logo from "../Component2/Image/logo.png";
 
 const Signup = () => {
-
-  
-    useState(() => {
-      document.title = "Hirelink | Signup";
-    }, []);
+  useState(() => {
+    document.title = "Hirelink | Signup";
+  }, []);
 
   const [role, setRole] = useState("Candidate");
 
@@ -48,6 +47,18 @@ const Signup = () => {
 
         {/* RIGHT SIGNUP FORM */}
         <div className="col-lg-6 p-4 p-md-5">
+          <div className="text-center ">
+            <a href="/">
+              <img
+                src={logo}
+                style={{
+                  wirth: "50px",
+                  height: "50px",
+                  margin: "-15px 0 10px 0",
+                }}
+              ></img>
+            </a>
+          </div>
           <div className="d-flex justify-content-between align-items-center mb-3">
             <div>
               <h4 className="fw-semibold">Create your Hirelink Account</h4>

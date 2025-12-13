@@ -1,11 +1,11 @@
 import { useState } from "react";
 import "../Component2/css/Signin.css";
+import logo from "../Component2/Image/logo.png";
 
 export default function Login() {
-
-    useState(() => {
-      document.title = "Hirelink | Signin";
-    }, []);
+  useState(() => {
+    document.title = "Hirelink | Signin";
+  }, []);
 
   const [activeRole, setActiveRole] = useState("Candidate");
 
@@ -47,6 +47,18 @@ export default function Login() {
 
         {/* RIGHT LOGIN FORM PANEL */}
         <div className="col-lg-6 p-4 p-md-5">
+          <div className="text-center ">
+            <a href="/">
+              <img
+                src={logo}
+                style={{
+                  wirth: "50px",
+                  height: "50px",
+                  margin: "-15px 0 10px 0",
+                }}
+              ></img>
+            </a>
+          </div>
           <div className="d-flex justify-content-between align-items-center mb-3">
             <div>
               <h2 className="fw-semibold">Welcome back</h2>

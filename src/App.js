@@ -26,11 +26,14 @@ import Contacts from "./Component2/Contact";
 import Jobs from "./Component2/Jobs";
 import Signin from "./Component2/Signin";
 import Signup from "./Component2/Signup";
+import Forgot from "./Component2/Forgot";
 
 // Employer Components
 import Header3 from "./Component3/Header";
 import Footer3 from "./Component3/Footer";
 import Employer from "./Component3/Employer";
+
+
 // ---------------- ADMIN LAYOUT ----------------
 const AdminLayout = () => {
   return (
@@ -99,6 +102,7 @@ function App() {
         <Route path="/verify" element={<Verify />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/signin" element={<Signin />} />
+        <Route path="/forgot" element={<Forgot />} />
 
         {/* USER ROUTES */}
         <Route path="/" element={<UserLayout />}>

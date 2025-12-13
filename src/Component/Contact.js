@@ -20,6 +20,7 @@ function Contact() {
       added_by: "Admin",
       added_date: "18/07/2025",
     },
+    
   ]);
 
   // Pagination start
@@ -43,11 +44,7 @@ function Contact() {
       <div className="card shadow-sm p-3 border">
         <div className="row g-2 align-items-center mb-3">
           <div className="col-md-2">
-            <select className="form-select form-control">
-              <option value="">Select Exper</option>
-              <option>Percentage</option>
-              <option>Flat Amount</option>
-            </select>
+            <input className="form-control" placeholder="Enter Subject...."/>
           </div>
 
           <div className="col-6 col-md-2">

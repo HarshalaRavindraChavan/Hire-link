@@ -550,19 +550,13 @@ function Interview() {
                 {/* Interview Time */}
                 <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">
-                    Interview Time
+                    Interview Date
                   </label>
-                  <select
+                  <input
+                    type="time"
                     className="form-control rounded-3"
                     {...register("interviewTime")}
-                  >
-                    <option value="">Select Interview Time</option>
-                    <option>10:00 AM</option>
-                    <option>11:00 AM</option>
-                    <option>12:00 PM</option>
-                    <option>02:00 PM</option>
-                    <option>03:00 PM</option>
-                  </select>
+                  />
                   <span className="text-danger">
                     {errors.interviewTime?.message}
                   </span>

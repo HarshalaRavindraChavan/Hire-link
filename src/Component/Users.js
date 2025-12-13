@@ -94,7 +94,7 @@ function Users() {
 
   // PAGINATION
   const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 5;
+  const recordsPerPage = 1;
   const lastIndex = currentPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
   const records = users.slice(firstIndex, lastIndex);
@@ -140,6 +140,39 @@ function Users() {
       .string()
       .matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN number")
       .required("PAN number is required"),
+    adharupload: yup
+      .mixed()
+      .required("Aadhar Card is required")
+      .test(
+        "fileSize",
+        "File size is too large (max 500kb)",
+        (value) => value && value[0] && value[0].size <= 2 * 500 * 1024
+      )
+      .test(
+        "fileType",
+        "Only JPG, PNG or PDF allowed",
+        (value) =>
+          value &&
+          value[0] &&
+          ["image/jpeg", "image/png", "application/pdf"].includes(value[0].type)
+      ),
+
+    panupload: yup
+      .mixed()
+      .required("PAN Card is required")
+      .test(
+        "fileSize",
+        "File size is too large (max 500kb)",
+        (value) => value && value[0] && value[0].size <= 2 * 500 * 1024
+      )
+      .test(
+        "fileType",
+        "Only JPG, PNG or PDF allowed",
+        (value) =>
+          value &&
+          value[0] &&
+          ["image/jpeg", "image/png", "application/pdf"].includes(value[0].type)
+      ),
     bankpassbook: yup.string().required("Bank passbook details are required"),
     experience: yup.string().required("Experience is required"),
     role: yup.string().required("Please select a role"),
@@ -189,9 +222,11 @@ function Users() {
         <div className="row g-2 align-items-center mb-3">
           <div className="col-md-2">
             <select className="form-select form-control">
-              <option value="">Select Exper</option>
-              <option>Percentage</option>
-              <option>Flat Amount</option>
+              <option value="">Select Experienc</option>
+              <option>6 Month</option>
+              <option>2 Year</option>
+              <option>3 Year</option>
+              <option>4 Year</option>
             </select>
           </div>
           <div className="col-6 col-md-2">
@@ -492,6 +527,30 @@ function Users() {
                   <p className="text-danger">{errors.pan?.message}</p>
                 </div>
 
+                {/* adhar Upload */}
+                <div className="col-md-4">
+                  <label className="fw-semibold">Aadhar Card Upload</label>
+                  <input
+                    type="file"
+                    {...register("adharupload")}
+                    className="form-control"
+                    placeholder="Enter PAN Number"
+                  />
+                  <p className="text-danger">{errors.adharupload?.message}</p>
+                </div>
+
+                {/* PAN Upload */}
+                <div className="col-md-4">
+                  <label className="fw-semibold">PAN Card Upload</label>
+                  <input
+                    type="file"
+                    {...register("panupload")}
+                    className="form-control"
+                    placeholder="Enter PAN Number"
+                  />
+                  <p className="text-danger">{errors.panupload?.message}</p>
+                </div>
+
                 {/* Bank Passbook */}
                 <div className="col-md-4">
                   <label className="fw-semibold">Bank Passbook</label>
@@ -549,10 +608,15 @@ function Users() {
                       },
                     })}
                   >
-                    <option value="Super Admin">Super Admin</option>
-                    <option value="Sub Admin">Sub Admin</option>
-                    <option value="Backend">Backend</option>
-                    <option value="Accountant">Accountant</option>
+                    <option value="Dashboard">Dashboard</option>
+                    <option value="Job">Job</option>
+                    <option value="Candidate">Candidate</option>
+                    <option value="Interview">Interview</option>
+                    <option value="Employer">Employer</option>
+                    <option value="Packages">Packages</option>
+                    <option value="Offers">Offers</option>
+                    <option value="Contact">Contact</option>
+                    <option value="User">User</option>
                   </select>
 
                   <p className="text-danger">{errors.menus?.message}</p>
@@ -569,7 +633,7 @@ function Users() {
                 </button>
 
                 <button type="submit" className="btn btn-success px-4 ms-auto">
-                  Save User
+                  Submit
                 </button>
               </div>
             </form>

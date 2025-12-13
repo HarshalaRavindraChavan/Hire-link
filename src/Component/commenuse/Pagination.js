@@ -1,3 +1,5 @@
+import "../css/Pagination.css";
+
 function Pagination({ currentPage, totalPages, onPageChange }) {
   return (
     <nav className="d-flex justify-content-end mt-3">

@@ -419,7 +419,7 @@ function Jobs() {
                 </button>
 
                 <button type="submit" className="btn btn-success px-4 ms-auto">
-                  Save User
+                  Submit
                 </button>
               </div>
             </form>

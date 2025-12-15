@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./css/Login.css";
 
@@ -8,31 +8,93 @@ import "swiper/css";
 import "swiper/css/effect-fade";
 
 import logo from "./logo/hirelink.png";
-
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import axios from "axios";
 
 function Login() {
-
-   useState(() => {
-    document.title = "Hirelink | admin Login";
-  }, []);
-
   const navigate = useNavigate();
+  const [successMsg, setSuccessMsg] = useState("");
+
+  useEffect(() => {
+    console.log("Login component mounted");
+    document.title = "Hirelink | Admin Login";
+  }, []);
 
   const formik = useFormik({
     initialValues: {
-      username: "",
-      password: "",
+      user_email: "",
+      user_password: "",
     },
 
     validationSchema: Yup.object({
-      username: Yup.string().required("Username is required"),
-      password: Yup.string().required("Password is required"),
+      user_email: Yup.string()
+        .email("Invalid email format")
+        .required("Email is required"),
+      user_password: Yup.string()
+        .min(6, "Minimum 6 characters")
+        .required("Password is required"),
     }),
 
-    onSubmit: () => {
-      navigate("/dashboard");
+    onSubmit: async (values, { setSubmitting, resetForm }) => {
+      console.log("Form Submitted");
+      console.log("Form Values:", values);
+
+      try {
+        console.log("Sending login API request...");
+
+        const response = await axios.post(
+          "https://norealtor.in/hirelink_apis/admin/login",
+          {
+            user_email: values.user_email.trim(),
+            user_password: values.user_password.trim(),
+          }
+        );
+
+        console.log("Full Axios Response:", response);
+        console.log("Response Data:", response.data);
+
+        const data = response.data;
+
+        if (
+          data.status === true ||
+          data.status === "success" ||
+          data.success === true
+        ) {
+          console.log("Login SUCCESS");
+
+          if (data.token) {
+            console.log("Token received:", data.token);
+            localStorage.setItem("token", data.token);
+          } else {
+            console.log("No token in response");
+          }
+
+          setSuccessMsg("✅ Login successful! Redirecting...");
+          resetForm();
+
+          console.log("Redirecting to dashboard...");
+          setTimeout(() => {
+            navigate("/dashboard");
+          }, 1500);
+        } else {
+          console.log("Login FAILED:", data.message || data.msg);
+          alert(data.message || data.msg || "Login failed");
+        }
+      } catch (error) {
+        console.log("LOGIN ERROR OCCURRED");
+        console.log("Error Object:", error);
+        console.log("Error Response:", error.response);
+        console.log("Error Data:", error.response?.data);
+
+        alert(
+          error.response?.data?.message ||
+          "Invalid email or password"
+        );
+      } finally {
+        console.log("Login request completed");
+        setSubmitting(false);
+      }
     },
   });
 
@@ -42,21 +104,27 @@ function Login() {
       <form onSubmit={formik.handleSubmit} className="login-left-section">
         <img className="login-logo" src={logo} alt="logo" />
 
-        {/* Username */}
-        <label>Username</label>
+        {/* SUCCESS MESSAGE */}
+        {successMsg && (
+          <div className="success-message">{successMsg}</div>
+        )}
+
+        {/* Email */}
+        <label>Email</label>
         <div className="login-input-box">
           <span>👤</span>
           <input
-            type="text"
-            name="username"
-            placeholder="Username"
-            value={formik.values.username}
+            type="email"
+            name="user_email"
+            placeholder="Email"
+            value={formik.values.user_email}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
           />
         </div>
-        {formik.touched.username && formik.errors.username && (
-          <small className="text-danger">{formik.errors.username}</small>
+        {formik.touched.user_email && formik.errors.user_email && (
+          console.log("Email validation error:", formik.errors.user_email),
+          <small className="text-danger">{formik.errors.user_email}</small>
         )}
 
         {/* Password */}
@@ -65,20 +133,25 @@ function Login() {
           <span>🔒</span>
           <input
             type="password"
-            name="password"
+            name="user_password"
             placeholder="Password"
-            value={formik.values.password}
+            value={formik.values.user_password}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
           />
         </div>
-        {formik.touched.password && formik.errors.password && (
-          <small className="text-danger">{formik.errors.password}</small>
+        {formik.touched.user_password && formik.errors.user_password && (
+          console.log("Password validation error:", formik.errors.user_password),
+          <small className="text-danger">{formik.errors.user_password}</small>
         )}
 
         {/* Login Button */}
-        <button type="submit" className="login-login-btn">
-          LOGIN
+        <button
+          type="submit"
+          className="login-login-btn"
+          disabled={formik.isSubmitting}
+        >
+          {formik.isSubmitting ? "Logging in..." : "LOGIN"}
         </button>
       </form>
 
@@ -92,33 +165,10 @@ function Login() {
           speed={1000}
           className="login-swiper"
         >
-          <SwiperSlide>
-            <img
-              src="https://images.unsplash.com/photo-1482192596544-9eb780fc7f66?q=80&w=1600"
-              alt="slide1"
-            />
-          </SwiperSlide>
-
-          <SwiperSlide>
-            <img
-              src="https://images.unsplash.com/photo-1503264116251-35a269479413?q=80&w=1600"
-              alt="slide2"
-            />
-          </SwiperSlide>
-
-          <SwiperSlide>
-            <img
-              src="https://images.unsplash.com/photo-1552083375-1447ce886485?q=80&w=1600"
-              alt="slide3"
-            />
-          </SwiperSlide>
-
-          <SwiperSlide>
-            <img
-              src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1600"
-              alt="slide4"
-            />
-          </SwiperSlide>
+          <SwiperSlide><img src="https://images.unsplash.com/photo-1482192596544-9eb780fc7f66?q=80&w=1600" alt="slide1" /></SwiperSlide>
+          <SwiperSlide><img src="https://images.unsplash.com/photo-1503264116251-35a269479413?q=80&w=1600" alt="slide2" /></SwiperSlide>
+          <SwiperSlide><img src="https://images.unsplash.com/photo-1552083375-1447ce886485?q=80&w=1600" alt="slide3" /></SwiperSlide>
+          <SwiperSlide><img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1600" alt="slide4" /></SwiperSlide>
         </Swiper>
       </div>
     </div>

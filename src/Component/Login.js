@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./css/Login.css";
 
@@ -13,6 +13,11 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 
 function Login() {
+
+   useState(() => {
+    document.title = "Hirelink | admin Login";
+  }, []);
+
   const navigate = useNavigate();
 
   const formik = useFormik({

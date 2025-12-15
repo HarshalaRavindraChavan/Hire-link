@@ -26,7 +26,7 @@ function Dashboard() {
         <div className="col-12 col-sm-6 col-md-4 mb-3">
           <div
             className="card card-stats card-round border"
-            onClick={() => navigate("/jobs")}
+            onClick={() => navigate("/job")}
             style={{ cursor: "pointer" }}
           >
             <div className="card-body">

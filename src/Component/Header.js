@@ -360,7 +360,7 @@ function Sidebar() {
                     {/* <a className="dropdown-item" href="#">
                       Account Setting
                     </a> */}
-                    <div className="dropdown-divider"></div>
+                    {/* <div className="dropdown-divider"></div> */}
                     <a className="dropdown-item" href="#">
                       Logout
                     </a>

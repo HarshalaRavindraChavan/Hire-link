@@ -24,6 +24,7 @@ import Home from "./Component2/Home";
 import Company from "./Component2/Company";
 import Contacts from "./Component2/Contact";
 import Jobs from "./Component2/Jobs";
+import Profile from "./Component2/Profile";
 import Signin from "./Component2/Signin";
 import Signup from "./Component2/Signup";
 import Forgot from "./Component2/Forgot";
@@ -32,7 +33,6 @@ import Forgot from "./Component2/Forgot";
 import Header3 from "./Component3/Header";
 import Footer3 from "./Component3/Footer";
 import Employer from "./Component3/Employer";
-
 
 // ---------------- ADMIN LAYOUT ----------------
 const AdminLayout = () => {
@@ -72,6 +72,7 @@ const UserLayout = () => {
         <Route path="companies" element={<Company />} />
         <Route path="jobs" element={<Jobs />} />
         <Route path="contacts" element={<Contacts />} />
+        <Route path="profile" element={<Profile />} />
       </Routes>
       <Footer2 />
     </>
@@ -110,6 +111,7 @@ function App() {
           <Route path="/companies" element={<Company />} />
           <Route path="/jobs" element={<Jobs />} />
           <Route path="/contacts" element={<Contacts />} />
+          <Route path="/profile" element={<Profile />} />
         </Route>
 
         {/* Employer ROUTES */}

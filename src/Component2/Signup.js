@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink , useNavigate } from "react-router-dom";
 import "../Component2/css/Signup.css";
 import logo from "../Component2/Image/logo.png";
 import { useForm } from "react-hook-form";
@@ -8,6 +8,7 @@ import * as Yup from "yup";
 import axios from "axios"; // ✅ FIX: axios import
 
 const Signup = () => {
+  const navigate = useNavigate();
   const [role, setRole] = useState("Candidate");
   const [message, setMessage] = useState("");
 
@@ -61,6 +62,10 @@ const Signup = () => {
       if (response.data.status === true) {
         setMessage("✅ Account created successfully");
         reset();
+
+        setTimeout(() => {
+          navigate("/profile");
+        }, 1500);
       } else {
         setMessage(response.data.message || "Signup failed");
       }

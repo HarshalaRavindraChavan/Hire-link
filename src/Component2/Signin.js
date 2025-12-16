@@ -61,7 +61,7 @@ export default function Login() {
           resetForm();
 
           setTimeout(() => {
-            navigate("/dashboard");
+            navigate("/profile");
           }, 1500);
         } else {
           setApiError(data.message || "Login failed");

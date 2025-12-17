@@ -1,7 +1,65 @@
 import React, { useState } from "react";
+import "../Component2/css/Profile.css";
 
-function Profile() {
+function Profile({ show, onClose }) {
   const [activeTab, setActiveTab] = useState("saved");
+  const [showModal, setShowModal] = useState(false);
+  //  if (!show) return null;
+
+  function UpdateStatusModal({ show, onClose }) {
+    if (!show) return null;
+
+    return (
+      <div className="status-modal-overlay">
+        <div className="status-modal">
+          <div className="status-modal-header">
+            <div>
+              <h6 className="mb-0" style={{ fontWeight: "bold" }}>
+                Update your application status
+              </h6>
+              <small className="text-muted d-flex align-items-center gap-1">
+                <i
+                  className="fa fa-eye"
+                  style={{ textDecoration: "line-through" }}
+                ></i>
+                <span>Employers</span> won’t see this
+              </small>
+            </div>
+            <button className="close-btn" onClick={onClose}>
+              ×
+            </button>
+          </div>
+
+          <ul className="status-list">
+            <li className="status-item">
+              <span className="icon green">←</span>
+              Show the last Indeed update
+            </li>
+
+            <li className="status-item">
+              <span className="icon green">✔</span>
+              Offer received
+            </li>
+
+            <li className="status-item">
+              <span className="icon green">👤</span>
+              Hired
+            </li>
+
+            <li className="status-item">
+              <span className="icon red">✖</span>
+              Not selected by employer
+            </li>
+
+            <li className="status-item last">
+              <span className="icon red">👎</span>
+              No longer interested
+            </li>
+          </ul>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <main className="container my-5">
@@ -185,7 +243,10 @@ function Profile() {
                 </div>
 
                 <div>
-                  <button className="btn btn-outline-success btn-sm">
+                  <button
+                    className="btn btn-outline-success btn-sm"
+                    onClick={() => setShowModal(true)}
+                  >
                     Update status
                   </button>
                 </div>
@@ -193,6 +254,47 @@ function Profile() {
             </div>
           </>
         )}
+
+        {/* model code  */}
+
+        {/* <div className="status-modal-overlay">
+          <div className="status-modal">
+            <div className="status-modal-header">
+              <div>
+                <h6 className="mb-0">Update your application status</h6>
+                <small className="text-muted">Employers won’t see this</small>
+              </div>
+              <button className="close-btn" onClick={onClose}>
+                ×
+              </button>
+            </div>
+
+            <ul className="status-list">
+              <li>
+                <span className="icon green">←</span> Show the last Indeed
+                update
+              </li>
+              <li>
+                <span className="icon green">✔</span> Offer received
+              </li>
+              <li>
+                <span className="icon green">👤</span> Hired
+              </li>
+              <li>
+                <span className="icon red">✖</span> Not selected by employer
+              </li>
+              <li>
+                <span className="icon red">👎</span> No longer interested
+              </li>
+            </ul>
+          </div>
+        </div> */}
+
+        {/* Modal */}
+        <UpdateStatusModal
+          show={showModal}
+          onClose={() => setShowModal(false)}
+        />
 
         {/* INTERVIEWS */}
         {activeTab === "interviews" && (

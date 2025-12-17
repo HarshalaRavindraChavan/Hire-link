@@ -14,9 +14,10 @@ import axios from "axios";
 
 function Login() {
   const navigate = useNavigate();
-  const [message, setMessage] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
 
   useEffect(() => {
+    console.log("Login component mounted");
     document.title = "Hirelink | Admin Login";
   }, []);
 
@@ -30,45 +31,68 @@ function Login() {
       user_email: Yup.string()
         .email("Invalid email format")
         .required("Email is required"),
-      user_password: Yup.string().required("Password is required"),
+      user_password: Yup.string()
+        .min(6, "Minimum 6 characters")
+        .required("Password is required"),
     }),
 
-    onSubmit: async (values, { setSubmitting }) => {
-      setMessage("");
+    onSubmit: async (values, { setSubmitting, resetForm }) => {
+      console.log("Form Submitted");
+      console.log("Form Values:", values);
 
       try {
-        console.log("Form Values:", values);
-
-        const formData = new FormData();
-        formData.append("user_email", values.user_email);
-        formData.append("user_password", values.user_password);
+        console.log("Sending login API request...");
 
         const response = await axios.post(
           "https://norealtor.in/hirelink_apis/admin/login",
-          formData,
           {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
+            user_email: values.user_email.trim(),
+            user_password: values.user_password.trim(),
           }
         );
 
-        console.log("API Response:", response.data);
+        console.log("Full Axios Response:", response);
+        console.log("Response Data:", response.data);
 
-        if (response.data.status === true) {
-          setMessage("✅ Login successful");
+        const data = response.data;
+
+        if (
+          data.status === true ||
+          data.status === "success" ||
+          data.success === true
+        ) {
+          console.log("Login SUCCESS");
+
+          if (data.token) {
+            console.log("Token received:", data.token);
+            localStorage.setItem("token", data.token);
+          } else {
+            console.log("No token in response");
+          }
+
+          setSuccessMsg("Login successful! Redirecting...");
+          resetForm();
+
+          console.log("Redirecting to dashboard...");
           setTimeout(() => {
             navigate("/dashboard");
-          }, 1000);
+          }, 1500);
         } else {
-          setMessage(response.data.message || "Login failed");
+          console.log("Login FAILED:", data.message || data.msg);
+          alert(data.message || data.msg || "Login failed");
         }
       } catch (error) {
-        console.error("Login Error:", error);
-        setMessage(
-          error.response?.data?.message || "Server error. Try again."
+        console.log("LOGIN ERROR OCCURRED");
+        console.log("Error Object:", error);
+        console.log("Error Response:", error.response);
+        console.log("Error Data:", error.response?.data);
+
+        alert(
+          error.response?.data?.message ||
+          "Invalid email or password"
         );
       } finally {
+        console.log("Login request completed");
         setSubmitting(false);
       }
     },
@@ -76,12 +100,16 @@ function Login() {
 
   return (
     <div className="login-container">
-      {/* LEFT */}
+      {/* LEFT SECTION */}
       <form onSubmit={formik.handleSubmit} className="login-left-section">
         <img className="login-logo" src={logo} alt="logo" />
 
-        {message && <p className="login-message">{message}</p>}
+        {/* SUCCESS MESSAGE */}
+        {successMsg && (
+          <div className="success-message">{successMsg}</div>
+        )}
 
+        {/* Email */}
         <label>Email</label>
         <div className="login-input-box">
           <span>👤</span>
@@ -95,9 +123,11 @@ function Login() {
           />
         </div>
         {formik.touched.user_email && formik.errors.user_email && (
+          console.log("Email validation error:", formik.errors.user_email),
           <small className="text-danger">{formik.errors.user_email}</small>
         )}
 
+        {/* Password */}
         <label>Password</label>
         <div className="login-input-box">
           <span>🔒</span>
@@ -111,9 +141,11 @@ function Login() {
           />
         </div>
         {formik.touched.user_password && formik.errors.user_password && (
+          console.log("Password validation error:", formik.errors.user_password),
           <small className="text-danger">{formik.errors.user_password}</small>
         )}
 
+        {/* Login Button */}
         <button
           type="submit"
           className="login-login-btn"
@@ -123,7 +155,7 @@ function Login() {
         </button>
       </form>
 
-      {/* RIGHT */}
+      {/* RIGHT SECTION */}
       <div className="login-right-section">
         <Swiper
           modules={[Autoplay, EffectFade]}
@@ -131,19 +163,12 @@ function Login() {
           autoplay={{ delay: 2500, disableOnInteraction: false }}
           effect="fade"
           speed={1000}
+          className="login-swiper"
         >
-          <SwiperSlide>
-            <img src="https://images.unsplash.com/photo-1482192596544-9eb780fc7f66?q=80&w=1600" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://images.unsplash.com/photo-1503264116251-35a269479413?q=80&w=1600" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://images.unsplash.com/photo-1552083375-1447ce886485?q=80&w=1600" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1600" />
-          </SwiperSlide>
+          <SwiperSlide><img src="https://images.unsplash.com/photo-1482192596544-9eb780fc7f66?q=80&w=1600" alt="slide1" /></SwiperSlide>
+          <SwiperSlide><img src="https://images.unsplash.com/photo-1503264116251-35a269479413?q=80&w=1600" alt="slide2" /></SwiperSlide>
+          <SwiperSlide><img src="https://images.unsplash.com/photo-1552083375-1447ce886485?q=80&w=1600" alt="slide3" /></SwiperSlide>
+          <SwiperSlide><img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1600" alt="slide4" /></SwiperSlide>
         </Swiper>
       </div>
     </div>

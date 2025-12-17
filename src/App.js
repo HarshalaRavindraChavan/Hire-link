@@ -25,6 +25,7 @@ import Company from "./Component2/Company";
 import Contacts from "./Component2/Contact";
 import Jobs from "./Component2/Jobs";
 import Profile from "./Component2/Profile";
+import Apply from "./Component2/Apply";
 import Signin from "./Component2/Signin";
 import Signup from "./Component2/Signup";
 import Forgot from "./Component2/Forgot";
@@ -73,6 +74,7 @@ const UserLayout = () => {
         <Route path="jobs" element={<Jobs />} />
         <Route path="contacts" element={<Contacts />} />
         <Route path="profile" element={<Profile />} />
+        <Route path="apply" element={<Apply />} />
       </Routes>
       <Footer2 />
     </>
@@ -111,6 +113,7 @@ function App() {
           <Route path="/companies" element={<Company />} />
           <Route path="/jobs" element={<Jobs />} />
           <Route path="/contacts" element={<Contacts />} />
+          <Route path="/apply" element={<Apply />} />
           <Route path="/profile" element={<Profile />} />
         </Route>
 

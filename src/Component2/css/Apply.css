@@ -1,0 +1,51 @@
+/* BACKDROP */
+.preview-backdrop {
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(6px);
+}
+
+/* MODAL CONTAINER */
+.preview-modal {
+  border-radius: 14px;
+  overflow: hidden;
+  border: none;
+}
+
+/* HEADER */
+.preview-header {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  padding: 16px 22px;
+}
+
+/* PREVIEW CARDS */
+.preview-card {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 16px;
+  height: 100%;
+  border-left: 4px solid #22c55e;
+}
+
+.preview-card h6 {
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #0f172a;
+}
+
+.preview-card p {
+  margin-bottom: 6px;
+  color: #334155;
+  font-size: 14px;
+}
+
+.preview-card span {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* FOOTER */
+.preview-footer {
+  padding: 14px 22px;
+  background: #f1f5f9;
+  border-top: none;
+}

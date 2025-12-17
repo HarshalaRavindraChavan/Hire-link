@@ -88,9 +88,177 @@ function Profile({ show, onClose }) {
           </div>
 
           {/* Edit Button */}
-          <button className="btn btn-outline-success mt-3 mt-md-0">
+          <button
+            className="btn btn-outline-success mt-3 mt-md-0"
+            data-bs-toggle="modal"
+            data-bs-target="#editProfileModal"
+          >
             Edit Profile
           </button>
+        </div>
+      </div>
+
+      <div
+        className="modal fade"
+        id="editProfileModal"
+        tabindex="-1"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-md modal-dialog-centered">
+          <div className="modal-content border-0 shadow rounded-4">
+            {/* <!-- ================= MODAL HEADER ================= --> */}
+            <div className="modal-header border-0 px-4 pt-4 pb-2">
+              <div>
+                <h4 className="fw-bold mb-1">Edit Profile</h4>
+                <p className="text-muted mb-0 fs-6">
+                  Keep your profile updated to get better job matches
+                </p>
+              </div>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+              ></button>
+            </div>
+
+            {/* <!-- ================= MODAL BODY ================= --> */}
+            <div className="modal-body px-4 py-3">
+              {/* <!-- PROFILE IMAGE SECTION --> */}
+              <div className="d-flex align-items-center gap-4 mb-4">
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                  className="rounded-circle border"
+                  width="110"
+                  height="110"
+                  alt="Profile"
+                />
+
+                <div className="flex-grow-1">
+                  <h6 className="fw-semibold mb-1">Profile Photo</h6>
+
+                  <p className="text-muted mb-2 fs-6">
+                    Upload a clear photo to increase profile visibility
+                  </p>
+
+                  <div className="d-flex align-items-center gap-2">
+                    <input
+                      type="file"
+                      className="form-control form-control-sm"
+                      style={{ maxWidth: "200px" }}
+                    />
+
+                    <button
+                      type="button"
+                      className="btn btn-outline-success btn-sm"
+                    >
+                      <i className="fa fa-upload me-1"></i>
+                      Update
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <hr />
+
+              {/* <!-- BASIC DETAILS --> */}
+              <h6 className="fw-bold mb-1">Basic Information</h6>
+
+              <div className="row g-3 mb-4">
+                <div className="col-md-12">
+                  <label className="fw-semibold">Full Name</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter Full Name"
+                  />
+                </div>
+
+                <div className="col-md-6">
+                  <label className="fw-semibold">Email Address</label>
+                  <input
+                    type="email"
+                    className="form-control"
+                    placeholder="Enter Email Address"
+                  />
+                </div>
+
+                <div className="col-md-6">
+                  <label className="fw-semibold">Mobile Number</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter Mobile Number"
+                  />
+                </div>
+              </div>
+
+              {/* <!-- ADDRESS --> */}
+              <h6 className="fw-bold mb-3">Address Details</h6>
+
+              <div className="row g-3 mb-1">
+                <div className="col-md-6">
+                  <label className="fw-semibold">Country</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value="India"
+                    readonly
+                  />
+                </div>
+
+                <div className="col-md-6">
+                  <label className="fw-semibold">State</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter State"
+                  />
+                </div>
+
+                <div className="col-md-6">
+                  <label className="fw-semibold">City</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter City"
+                  />
+                </div>
+
+                <div className="col-md-6">
+                  <label className="fw-semibold">Pin Code</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter Pin code"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label className="fw-semibold">Address</label>
+                  <textarea
+                    className="form-control"
+                    rows="2"
+                    placeholder="Enter Address"
+                  ></textarea>
+                </div>
+              </div>
+
+              {/* <!-- ================= MODAL FOOTER ================= --> */}
+              <div className="rounded-bottom-4 d-flex">
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary rounded-3"
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+
+                <button type="submit" className="btn btn-success px-4 ms-auto">
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

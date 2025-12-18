@@ -44,16 +44,16 @@ function Header() {
           {/* ✅ AFTER LOGIN */}
           {isLogin && (
             <>
-              <a href="#" className="nav-link-custom">
+              <a href="#" className="nav-link-custom ms-2 me-2">
                 <i className="fa fa-bookmark"></i>
               </a>
-              <a href="#" className="nav-link-custom">
+              <a href="#" className="nav-link-custom ms-2 me-2">
                 <i className="fa fa-message"></i>
               </a>
-              <a href="#" className="nav-link-custom">
+              <a href="#" className="nav-link-custom ms-2 me-2">
                 <i className="fa fa-bell"></i>
               </a>
-              <NavLink to="/profile" className="nav-link-custom">
+              <NavLink to="/profile" className="nav-link-custom ms-2 me-2">
                 <i className="fa fa-user"></i>
               </NavLink>
 
@@ -63,10 +63,17 @@ function Header() {
               >
                 Logout
               </button>
+
+              <NavLink
+                to="/employer"
+                className="nav-link-custom border-start border-3 ps-3"
+              >
+                Employers / Post Job
+              </NavLink>
             </>
           )}
 
-          {/* ❌ BEFORE LOGIN */}
+          {/* BEFORE LOGIN */}
           {!isLogin && (
             <>
               <NavLink to="/signin" className="nav-link-custom">

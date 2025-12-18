@@ -77,10 +77,10 @@ function Jobs() {
 
                 <h5 className="fw-bold">{job.job_title}</h5>
                 <p className="text-muted m-0">
-                  {job.company_name} · {job.city}, {job.state}
+                  {job.job_company} · {job.job_city}, {job.job_state}
                 </p>
 
-                <span className="badge-chip">₹{job.salary}/month</span>
+                <span className="badge-chip">₹{job.job_salary}/month</span>
                 <span className="badge-chip">{job.job_type}</span>
               </div>
             ))}
@@ -96,31 +96,53 @@ function Jobs() {
 
                 <h4 className="fw-bold">{selectedJob.job_title}</h4>
                 <p className="text-muted">
-                  {selectedJob.company_name} · {selectedJob.city},{" "}
+                  {selectedJob.job_company} · {selectedJob.job_city},{" "}
                   {selectedJob.state}
                 </p>
 
                 <p className="m-0 fw-semibold text-success">
-                  ₹{selectedJob.salary} a month
+                  ₹{selectedJob.job_salary} a month
                 </p>
 
                 <button className="apply-btn mt-3 mb-3">Apply Now</button>
               </div>
 
               <div className="job-body">
+                <h6 className="fw-bold fs-5">Profile insights</h6>
+                <p className="small text-muted">
+                  Here’s how the job qualifications align with your profile.
+                </p>
+                <h6 className="fw-bold mt-3 fs-6">Skills</h6>
+                <p className="small">{selectedJob.job_skills}</p>
+                <div className="d-flex gap-2 mb-3">
+                  <button className="btn btn-outline-primary btn-sm">
+                    Yes
+                  </button>
+                  <button className="btn btn-outline-secondary btn-sm">
+                    No
+                  </button>
+                  <button className="btn btn-outline-dark btn-sm">Skip</button>
+                </div>
+                <hr /> <h6 className="fw-bold fs-5">Job details</h6>
+                <p>
+                  <strong>Pay:</strong> {selectedJob.job_salary} month
+                </p>
+                <hr /> <h6 className="fw-bold fs-5">Location</h6>
+                <p>
+                  {selectedJob.job_city}, {selectedJob.job_state}
+                </p>{" "}
+                <hr />
+                <h6 className="fw-bold fs-5">Benefits</h6>
                 <h6 className="fw-bold fs-5">Job Description</h6>
-                <p>{selectedJob.description}</p>
-
+                <p>{selectedJob.job_description}</p>
                 <hr />
                 <h6 className="fw-bold fs-6">Job Type</h6>
                 <p>{selectedJob.job_type}</p>
-
                 <hr />
                 <h6 className="fw-bold fs-6">Location</h6>
                 <p>
-                  {selectedJob.city}, {selectedJob.state}
+                  {selectedJob.job_city}, {selectedJob.job_state}
                 </p>
-
                 <hr />
                 <button className="btn btn-outline-danger btn-sm">
                   Report job

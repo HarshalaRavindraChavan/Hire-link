@@ -1,29 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../Component2/css/Profile.css";
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
 
 function Profile() {
   const [activeTab, setActiveTab] = useState("saved");
   const [showModal, setShowModal] = useState(false);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
 
-  const [candidate, setCandidate] = useState(null);
-  const navigate = useNavigate();
+  const [candidate, setCandidate] = React.useState({
+    can_id: "",
+    can_mobile: "",
+    can_address: "",
+    can_experience: "",
+    can_skill: "",
+    can_about: "",
+  });
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem("candidate");
-
-    if (!storedUser) {
-      navigate("/signin");
-      return;
+  React.useEffect(() => {
+    const stored = localStorage.getItem("candidate");
+    if (stored) {
+      setCandidate(JSON.parse(stored));
     }
-
-    setCandidate(JSON.parse(storedUser));
   }, []);
-
-  if (!candidate) {
-    return <div className="text-center mt-5">Loading profile...</div>;
-  }
 
   function UpdateStatusModal({ show, onClose }) {
     if (!show) return null;
@@ -192,433 +192,565 @@ function Profile() {
     );
   }
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setCandidate((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleUpdateProfile = async (e) => {
+    e.preventDefault();
+
+    // ✅ VALIDATION
+    if (!candidate?.can_id) {
+      toast.error("Candidate ID missing");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `https://norealtor.in/hirelink_apis/candidate/updatedata/tbl_candidate/can_id/${candidate.can_id}`,
+        {
+          can_mobile: candidate.can_mobile,
+          can_address: candidate.can_address,
+          can_experience: candidate.can_experience,
+          can_skill: candidate.can_skill,
+          can_about: candidate.can_about,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const result = response.data;
+
+      if (result?.status === true) {
+        toast.success("Profile updated successfully ✅");
+
+        const updatedCandidate = {
+          ...candidate,
+          ...result.data,
+        };
+
+        localStorage.setItem("candidate", JSON.stringify(updatedCandidate));
+
+        setTimeout(() => {
+          const modalEl = document.getElementById("editProfileModal");
+
+          if (modalEl && window.bootstrap) {
+            const modalInstance =
+              window.bootstrap.Modal.getInstance(modalEl) ||
+              new window.bootstrap.Modal(modalEl);
+
+            modalInstance.hide();
+          }
+        }, 800);
+      } else {
+        toast.error(result?.message || "Update failed");
+      }
+    } catch (error) {
+      console.error("UPDATE ERROR:", error);
+      toast.error(error.response?.data?.message || "Server error. Try again.");
+    }
+  };
+
   return (
-    <main className="container my-5">
-      {/* ================= PROFILE CARD ================= */}
-      <div className="card p-4 mb-4">
-        <div className="d-flex flex-column flex-md-row align-items-center align-items-md-start gap-4 text-center text-md-start">
-          {/* Profile Image */}
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-            className="rounded-circle"
-            width="90"
-            height="90"
-            alt="Candidate"
-          />
+    <>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="colored"
+      />
 
-          {/* Profile Info */}
-          <div className="flex-grow-1">
-            <h5 className="mb-1 fw-bold"> {candidate.can_name}</h5>
-            <p className="mb-1 text-muted">
-              {candidate.can_email} | {candidate.can_mobile}
-            </p>
-            <p className="mb-0 text-muted">
-              {candidate.can_city}, {candidate.can_state} <br />
-              {candidate.can_address}
-            </p>
-          </div>
+      <main className="container my-5">
+        {/* ================= PROFILE CARD ================= */}
+        <div className="card p-4 mb-4">
+          <div className="d-flex flex-column flex-md-row align-items-center align-items-md-start gap-4 text-center text-md-start">
+            {/* Profile Image */}
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+              className="rounded-circle"
+              width="90"
+              height="90"
+              alt="Candidate"
+            />
 
-          {/* Edit Button */}
-          <button
-            className="btn btn-outline-success mt-3 mt-md-0"
-            data-bs-toggle="modal"
-            data-bs-target="#editProfileModal"
-          >
-            Edit Profile
-          </button>
-        </div>
-      </div>
-
-      <div class="modal fade" id="editProfileModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-scrollable modal-md">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Edit Profile</h5>
-              <button class="btn-close" data-bs-dismiss="modal"></button>
+            {/* Profile Info */}
+            <div className="flex-grow-1">
+              <h5 className="mb-1 fw-bold">
+                {" "}
+                {candidate.can_name
+                  ?.split(" ")
+                  .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                  .join(" ")}
+              </h5>
+              <p className="mb-1 text-muted">
+                {candidate.can_email} | {candidate.can_mobile}
+              </p>
+              <p className="mb-0 text-muted">
+                {candidate.can_address}
+                <br/>
+                {candidate.can_city}, {candidate.can_state}
+              </p>
             </div>
 
-            {/* ================= MODAL BODY ================= */}
-            <div className="modal-body px-4 py-2">
-              {/* PROFILE IMAGE SECTION */}
-              <div className="d-flex align-items-center gap-3 mb-3">
-                <input type="text" value={candidate.can_id} />
-                <img
-                  src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-                  className="rounded-circle border"
-                  width="90"
-                  height="90"
-                  alt="Profile"
-                />
+            {/* Edit Button */}
+            <button
+              className="btn btn-outline-success mt-3 mt-md-0"
+              data-bs-toggle="modal"
+              data-bs-target="#editProfileModal"
+            >
+              Edit Profile
+            </button>
+          </div>
+        </div>
 
-                <div className="flex-grow-1">
-                  <h5 className="mb-1 fw-bold"> {candidate.can_name}</h5>
-                  <p className="mb-1 text-muted">
-                    {" "}
-                    {candidate.can_email} | {candidate.can_mobile}
-                  </p>
-                  {/* <p className="mb-0 text-muted">
+        <div class="modal fade" id="editProfileModal" tabindex="-1">
+          <div class="modal-dialog modal-dialog-scrollable modal-md">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Edit Profile</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+
+              {/* ================= MODAL BODY ================= */}
+              <div className="modal-body px-4 py-2">
+                {/* PROFILE IMAGE SECTION */}
+                <div className="d-flex align-items-center gap-3 mb-3">
+                  <input type="hidden" value={candidate.can_id} />
+                  <img
+                    src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                    className="rounded-circle border"
+                    width="90"
+                    height="90"
+                    alt="Profile"
+                  />
+
+                  <div className="flex-grow-1">
+                    <h5 className="mb-1 fw-bold">
+                      {" "}
+                      {candidate.can_name
+                        ?.split(" ")
+                        .map(
+                          (word) => word.charAt(0).toUpperCase() + word.slice(1)
+                        )
+                        .join(" ")}
+                    </h5>
+                    <p className="mb-1 text-muted">
+                      {" "}
+                      {candidate.can_email} | {candidate.can_mobile}
+                    </p>
+                    {/* <p className="mb-0 text-muted">
                     {/* {candidate.can_city}, {candidate.can_state} <br /> */}
-                  {/* {candidate.can_address} 
+                    {/* {candidate.can_address} 
                   </p> */}
+                  </div>
+                </div>
+
+                <hr className="my-2" />
+
+                {/* BASIC DETAILS */}
+                <h6 className="fw-bold mb-2">Professional Information</h6>
+                <div className="row g-2 mb-2">
+                  <div className="col-md-6">
+                    <input
+                      type="text"
+                      name="can_mobile"
+                      className="form-control form-control-md"
+                      placeholder="Mobile"
+                      value={candidate.can_mobile}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="col-md-6">
+                    <input
+                      type="text"
+                      name="can_address"
+                      className="form-control form-control-md"
+                      placeholder="Address"
+                      value={candidate.can_address}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="col-md-6">
+                    <label className="btn btn-outline-success w-100">
+                      <i className="fa fa-upload me-2"></i>Upload Resume
+                      <input
+                        type="file"
+                        hidden
+                        name="resume"
+                        onChange={(e) =>
+                          setCandidate({
+                            ...candidate,
+                            resume: e.target.files[0],
+                          })
+                        }
+                      />
+                    </label>
+                  </div>
+
+                  <div className="col-md-6">
+                    <label className="btn btn-outline-success w-100">
+                      <i className="fa fa-upload me-2"></i>Upload CV
+                      <input
+                        type="file"
+                        hidden
+                        name="cv"
+                        onChange={(e) =>
+                          setCandidate({ ...candidate, cv: e.target.files[0] })
+                        }
+                      />
+                    </label>
+                  </div>
+
+                  <div className="col-md-6">
+                    <input
+                      type="text"
+                      name="can_experience"
+                      className="form-control form-control-md"
+                      placeholder="Experience"
+                      value={candidate.can_experience}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="col-md-6">
+                    <input
+                      type="text"
+                      name="can_skill"
+                      className="form-control form-control-md"
+                      placeholder="Skills"
+                      value={candidate.can_skill}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="col-12">
+                    <textarea
+                      name="can_about"
+                      className="form-control form-control-md"
+                      rows="2"
+                      placeholder="Briefly describe yourself"
+                      value={candidate.can_about}
+                      onChange={handleChange}
+                    ></textarea>
+                  </div>
+                </div>
+
+                {/* ADDRESS */}
+                <h6 className="fw-bold mb-2">Category</h6>
+
+                <div className="row g-2">
+                  <div className="col-md-6">
+                    <select className="form-control form-select rounded-3">
+                      <option value="">Select</option>
+                      <option value="Active">Pharmaceutical Jobs</option>
+                      <option value="Active">Nutraceutics Jobs</option>
+                      <option value="Active">Pharmacist Jobs</option>
+                    </select>
+                  </div>
+
+                  <div className="col-md-6">
+                    <select className="form-control form-select rounded-3">
+                      <option value="">Select</option>
+                      <option value="Active">R & D</option>
+                      <option value="Active">Manufacturing</option>
+                      <option value="Active">Clinical Trials</option>
+                      <option value="Active">Bioequilances</option>
+                      <option value="Active">Regulatory</option>
+                      <option value="Active">
+                        Intellectual Property Rights (IPR)
+                      </option>
+                      <option value="Active">Logistics Chain supply</option>
+                      <option value="Active">Marketing</option>
+                      <option value="Active">Sales</option>
+                    </select>
+                  </div>
+                  <div className="col-md-6">
+                    <select className="form-control form-select rounded-3">
+                      <option value="">Select</option>
+                      <option value="Active">Active</option>
+                    </select>
+                  </div>
+                  <div className="col-md-6">
+                    <select className="form-control form-select rounded-3">
+                      <option value="">Select</option>
+                      <option value="Active">Active</option>
+                    </select>
+                  </div>
+                  <div className="col-md-6">
+                    <select className="form-control form-select rounded-3">
+                      <option value="">Select</option>
+                      <option value="Active">Active</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 
-              <hr className="my-2" />
+              {/* ================= MODAL FOOTER ================= */}
+              <div className="modal-footer border-0 px-4 py-3">
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary rounded-3"
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
 
-              {/* BASIC DETAILS */}
-              <h6 className="fw-bold mb-2">Professional Information</h6>
-
-              <div className="row g-2 mb-2">
-                <div className="col-md-6">
-                  <input
-                    type="text"
-                    className="form-control form-control-md"
-                    value={candidate.can_mobile}
-                    placeholder="Mobile"
-                  />
-                </div>
-
-                <div className="col-md-6">
-                  <input
-                    type="text"
-                    className="form-control form-control-md"
-                    value={candidate.can_address}
-                    placeholder="Address"
-                  />
-                </div>
-                <div class="col-md-6">
-                  <label class="btn btn-outline-success w-100">
-                    <i class="fa fa-upload me-2"></i>Upload Resume
-                    <input type="file" hidden />
-                  </label>
-                </div>
-
-                <div class="col-md-6">
-                  <label class="btn btn-outline-success w-100">
-                    <i class="fa fa-upload me-2"></i> Upload CV
-                    <input type="file" hidden />
-                  </label>
-                </div>
-
-                <div className="col-md-6">
-                  <input
-                    type="text"
-                    className="form-control form-control-md"
-                    placeholder="Experience"
-                    value={candidate.can_experience}
-                  />
-                </div>
-                <div className="col-md-6">
-                  <input
-                    type="text"
-                    className="form-control form-control-md"
-                    placeholder="Skills"
-                    value={candidate.can_skill}
-                  />
-                </div>
-
-                <div className="col-12">
-                  <textarea
-                    className="form-control form-control-md"
-                    rows="2"
-                    placeholder="Briefly describe yourself"
-                    value={candidate.can_about}
-                  ></textarea>
-                </div>
+                <button
+                  type="button"
+                  className="btn btn-success px-4 ms-auto"
+                  onClick={handleUpdateProfile}
+                >
+                  Submit
+                </button>
               </div>
-
-              {/* ADDRESS */}
-              <h6 className="fw-bold mb-2">Category</h6>
-
-              <div className="row g-2">
-                <div className="col-md-6">
-                  <select className="form-control form-select rounded-3">
-                    <option value="">Select</option>
-                    <option value="Active">Pharmaceutical Jobs</option>
-                    <option value="Active">Nutraceutics Jobs</option>
-                    <option value="Active">Pharmacist Jobs</option>
-                  </select>
-                </div>
-
-                <div className="col-md-6">
-                  <select className="form-control form-select rounded-3">
-                    <option value="">Select</option>
-                    <option value="Active">R & D</option>
-                    <option value="Active">Manufacturing</option>
-                    <option value="Active">Clinical Trials</option>
-                    <option value="Active">Bioequilances</option>
-                    <option value="Active">Regulatory</option>
-                    <option value="Active">
-                      Intellectual Property Rights (IPR)
-                    </option>
-                    <option value="Active">Logistics Chain supply</option>
-                    <option value="Active">Marketing</option>
-                    <option value="Active">Sales</option>
-                  </select>
-                </div>
-                <div className="col-md-6">
-                  <select className="form-control form-select rounded-3">
-                    <option value="">Select</option>
-                    <option value="Active">Active</option>
-                  </select>
-                </div>
-                <div className="col-md-6">
-                  <select className="form-control form-select rounded-3">
-                    <option value="">Select</option>
-                    <option value="Active">Active</option>
-                  </select>
-                </div>
-                <div className="col-md-6">
-                  <select className="form-control form-select rounded-3">
-                    <option value="">Select</option>
-                    <option value="Active">Active</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            {/* ================= MODAL FOOTER ================= */}
-            <div className="modal-footer border-0 px-4 py-3">
-              <button
-                type="button"
-                className="btn btn-outline-secondary rounded-3"
-                data-bs-dismiss="modal"
-              >
-                Cancel
-              </button>
-
-              <button type="submit" className="btn btn-success px-4 ms-auto">
-                Submit
-              </button>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* ================= TABS ================= */}
-      <ul
-        className="nav nav-pills gap-2 mb-4 flex-nowrap overflow-auto ps-4 pe-4"
-        role="tablist"
-        style={{ WebkitOverflowScrolling: "touch" }}
-      >
-        {/* SAVED */}
-        <li className="nav-item">
-          <button
-            className={`nav-link ${activeTab === "saved" ? "active" : ""}`}
-            type="button"
-            onClick={() => setActiveTab("saved")}
-            style={{
-              borderRadius: "30px",
-              padding: "8px 18px",
-              fontWeight: "500",
-              backgroundColor: activeTab === "saved" ? "#22c55e" : "#f1f5f9",
-              color: activeTab === "saved" ? "#fff" : "#0f172a",
-              boxShadow:
-                activeTab === "saved"
-                  ? "0 8px 20px rgba(34,197,94,0.35)"
-                  : "none",
-              border: "none",
-              whiteSpace: "nowrap",
-            }}
-          >
-            Saved{" "}
-            <span
-              className="badge ms-1"
+        {/* ================= TABS ================= */}
+        <ul
+          className="nav nav-pills gap-2 mb-4 flex-nowrap overflow-auto ps-4 pe-4"
+          role="tablist"
+          style={{ WebkitOverflowScrolling: "touch" }}
+        >
+          {/* SAVED */}
+          <li className="nav-item">
+            <button
+              className={`nav-link ${activeTab === "saved" ? "active" : ""}`}
+              type="button"
+              onClick={() => setActiveTab("saved")}
               style={{
-                backgroundColor: activeTab === "saved" ? "#fff" : "#e5e7eb",
-                color: activeTab === "saved" ? "#22c55e" : "#0f172a",
+                borderRadius: "30px",
+                padding: "8px 18px",
+                fontWeight: "500",
+                backgroundColor: activeTab === "saved" ? "#22c55e" : "#f1f5f9",
+                color: activeTab === "saved" ? "#fff" : "#0f172a",
+                boxShadow:
+                  activeTab === "saved"
+                    ? "0 8px 20px rgba(34,197,94,0.35)"
+                    : "none",
+                border: "none",
+                whiteSpace: "nowrap",
               }}
             >
-              1
-            </span>
-          </button>
-        </li>
+              Saved{" "}
+              <span
+                className="badge ms-1"
+                style={{
+                  backgroundColor: activeTab === "saved" ? "#fff" : "#e5e7eb",
+                  color: activeTab === "saved" ? "#22c55e" : "#0f172a",
+                }}
+              >
+                1
+              </span>
+            </button>
+          </li>
 
-        {/* APPLIED */}
-        <li className="nav-item">
-          <button
-            className={`nav-link ${activeTab === "applied" ? "active" : ""}`}
-            type="button"
-            onClick={() => setActiveTab("applied")}
-            style={{
-              borderRadius: "30px",
-              padding: "8px 18px",
-              fontWeight: "500",
-              backgroundColor: activeTab === "applied" ? "#22c55e" : "#f1f5f9",
-              color: activeTab === "applied" ? "#fff" : "#0f172a",
-              border: "none",
-              whiteSpace: "nowrap",
-            }}
-          >
-            Applied{" "}
-            <span
-              className="badge ms-1"
+          {/* APPLIED */}
+          <li className="nav-item">
+            <button
+              className={`nav-link ${activeTab === "applied" ? "active" : ""}`}
+              type="button"
+              onClick={() => setActiveTab("applied")}
               style={{
-                backgroundColor: activeTab === "applied" ? "#fff" : "#e5e7eb",
-                color: activeTab === "applied" ? "#22c55e" : "#0f172a",
-              }}
-            >
-              2
-            </span>
-          </button>
-        </li>
-
-        {/* INTERVIEWS */}
-        <li className="nav-item">
-          <button
-            className={`nav-link ${activeTab === "interviews" ? "active" : ""}`}
-            type="button"
-            onClick={() => setActiveTab("interviews")}
-            style={{
-              borderRadius: "30px",
-              padding: "8px 18px",
-              fontWeight: "500",
-              backgroundColor:
-                activeTab === "interviews" ? "#22c55e" : "#f1f5f9",
-              color: activeTab === "interviews" ? "#fff" : "#0f172a",
-              border: "none",
-              whiteSpace: "nowrap",
-            }}
-          >
-            Interviews{" "}
-            <span
-              className="badge ms-1"
-              style={{
+                borderRadius: "30px",
+                padding: "8px 18px",
+                fontWeight: "500",
                 backgroundColor:
-                  activeTab === "interviews" ? "#fff" : "#e5e7eb",
-                color: activeTab === "interviews" ? "#22c55e" : "#0f172a",
+                  activeTab === "applied" ? "#22c55e" : "#f1f5f9",
+                color: activeTab === "applied" ? "#fff" : "#0f172a",
+                border: "none",
+                whiteSpace: "nowrap",
               }}
             >
-              1
-            </span>
-          </button>
-        </li>
-      </ul>
+              Applied{" "}
+              <span
+                className="badge ms-1"
+                style={{
+                  backgroundColor: activeTab === "applied" ? "#fff" : "#e5e7eb",
+                  color: activeTab === "applied" ? "#22c55e" : "#0f172a",
+                }}
+              >
+                2
+              </span>
+            </button>
+          </li>
 
-      {/* ================= TAB CONTENT ================= */}
-      <div className="tab-content ps-2 pe-2">
-        {/* SAVED */}
-        {activeTab === "saved" && (
-          <div className="card mb-3 p-3">
-            <div className="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
-              <div className="d-flex gap-3">
-                <div className="bg-light rounded p-3">
-                  <i className="fa fa-building fs-4 text-secondary"></i>
-                </div>
+          {/* INTERVIEWS */}
+          <li className="nav-item">
+            <button
+              className={`nav-link ${
+                activeTab === "interviews" ? "active" : ""
+              }`}
+              type="button"
+              onClick={() => setActiveTab("interviews")}
+              style={{
+                borderRadius: "30px",
+                padding: "8px 18px",
+                fontWeight: "500",
+                backgroundColor:
+                  activeTab === "interviews" ? "#22c55e" : "#f1f5f9",
+                color: activeTab === "interviews" ? "#fff" : "#0f172a",
+                border: "none",
+                whiteSpace: "nowrap",
+              }}
+            >
+              Interviews{" "}
+              <span
+                className="badge ms-1"
+                style={{
+                  backgroundColor:
+                    activeTab === "interviews" ? "#fff" : "#e5e7eb",
+                  color: activeTab === "interviews" ? "#22c55e" : "#0f172a",
+                }}
+              >
+                1
+              </span>
+            </button>
+          </li>
+        </ul>
 
-                <div>
-                  <h6 className="fw-bold mb-1">Sr. Website Designer</h6>
-                  <p className="mb-0">Esenceweb</p>
-                  <small className="text-muted">Pune, Maharashtra</small>
-                  <p className="mb-0 text-muted">Saved today</p>
-                </div>
-              </div>
-
-              <div className="d-flex align-items-center gap-3 mt-2 mt-md-0">
-                <button className="btn btn-success btn-sm">Apply now</button>
-                <i className="fa fa-bookmark"></i>
-                <i className="fa fa-ellipsis-vertical"></i>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* APPLIED */}
-        {activeTab === "applied" && (
-          <>
-            <h6 className="fw-bold mt-3 mb-2 ps-3">Last 14 days</h6>
-
+        {/* ================= TAB CONTENT ================= */}
+        <div className="tab-content ps-2 pe-2">
+          {/* SAVED */}
+          {activeTab === "saved" && (
             <div className="card mb-3 p-3">
-              <div className="d-flex flex-column flex-md-row justify-content-between gap-3">
+              <div className="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
                 <div className="d-flex gap-3">
                   <div className="bg-light rounded p-3">
                     <i className="fa fa-building fs-4 text-secondary"></i>
                   </div>
 
                   <div>
-                    <span className="badge bg-success mb-1">Interviewing</span>
-                    <h6 className="fw-bold mb-1">Lead Generation Specialist</h6>
-                    <p className="mb-0">Esenceweb IT</p>
+                    <h6 className="fw-bold mb-1">Sr. Website Designer</h6>
+                    <p className="mb-0">Esenceweb</p>
                     <small className="text-muted">Pune, Maharashtra</small>
+                    <p className="mb-0 text-muted">Saved today</p>
                   </div>
                 </div>
 
+                <div className="d-flex align-items-center gap-3 mt-2 mt-md-0">
+                  <button className="btn btn-success btn-sm">Apply now</button>
+                  <i className="fa fa-bookmark"></i>
+                  <i className="fa fa-ellipsis-vertical"></i>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* APPLIED */}
+          {activeTab === "applied" && (
+            <>
+              <h6 className="fw-bold mt-3 mb-2 ps-3">Last 14 days</h6>
+
+              <div className="card mb-3 p-3">
+                <div className="d-flex flex-column flex-md-row justify-content-between gap-3">
+                  <div className="d-flex gap-3">
+                    <div className="bg-light rounded p-3">
+                      <i className="fa fa-building fs-4 text-secondary"></i>
+                    </div>
+
+                    <div>
+                      <span className="badge bg-success mb-1">
+                        Interviewing
+                      </span>
+                      <h6 className="fw-bold mb-1">
+                        Lead Generation Specialist
+                      </h6>
+                      <p className="mb-0">Esenceweb IT</p>
+                      <small className="text-muted">Pune, Maharashtra</small>
+                    </div>
+                  </div>
+
+                  <div>
+                    <button
+                      className="btn btn-outline-success btn-sm"
+                      onClick={() => setShowModal(true)}
+                    >
+                      Update status
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* Modal */}
+          <UpdateStatusModal
+            show={showModal}
+            onClose={() => setShowModal(false)}
+          />
+
+          {/* INTERVIEWS */}
+          {activeTab === "interviews" && (
+            <div className="card p-4 position-relative">
+              {/* LEFT TOP BADGE */}
+              <span
+                className="badge bg-success position-absolute"
+                style={{ top: "15px", left: "15px" }}
+              >
+                Interview starts in 19 hours
+              </span>
+
+              <h6 className="fw-bold mt-4">Wednesday, 17 December</h6>
+              <hr />
+
+              <div className="d-flex flex-column flex-md-row justify-content-between gap-3">
                 <div>
+                  <h6 className="fw-bold mb-1">Lead Generation Specialist</h6>
+                  <p className="mb-0">Esenceweb IT</p>
+                  <small className="text-muted">Pune, Maharashtra</small>
+
+                  <div className="mt-2">
+                    <p className="mb-1">
+                      <i className="fa fa-clock me-2"></i>
+                      9:00 am – 9:30 am IST
+                    </p>
+                    <p className="mb-0">
+                      <i className="fa fa-phone me-2"></i>
+                      Phone interview
+                    </p>
+                  </div>
+                </div>
+
+                <div className="d-flex flex-column flex-sm-row gap-2 mt-3 mt-md-0">
                   <button
-                    className="btn btn-outline-success btn-sm"
-                    onClick={() => setShowModal(true)}
+                    className="btn btn-success"
+                    onClick={() => setShowScheduleModal(true)}
+                    style={{
+                      height: "40px",
+                      padding: "0 18px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
                   >
-                    Update status
+                    Schedule
                   </button>
+
+                  <ScheduleInterviewModal
+                    show={showScheduleModal}
+                    onClose={() => setShowScheduleModal(false)}
+                  />
                 </div>
               </div>
             </div>
-          </>
-        )}
-
-        {/* Modal */}
-        <UpdateStatusModal
-          show={showModal}
-          onClose={() => setShowModal(false)}
-        />
-
-        {/* INTERVIEWS */}
-        {activeTab === "interviews" && (
-          <div className="card p-4 position-relative">
-            {/* LEFT TOP BADGE */}
-            <span
-              className="badge bg-success position-absolute"
-              style={{ top: "15px", left: "15px" }}
-            >
-              Interview starts in 19 hours
-            </span>
-
-            <h6 className="fw-bold mt-4">Wednesday, 17 December</h6>
-            <hr />
-
-            <div className="d-flex flex-column flex-md-row justify-content-between gap-3">
-              <div>
-                <h6 className="fw-bold mb-1">Lead Generation Specialist</h6>
-                <p className="mb-0">Esenceweb IT</p>
-                <small className="text-muted">Pune, Maharashtra</small>
-
-                <div className="mt-2">
-                  <p className="mb-1">
-                    <i className="fa fa-clock me-2"></i>
-                    9:00 am – 9:30 am IST
-                  </p>
-                  <p className="mb-0">
-                    <i className="fa fa-phone me-2"></i>
-                    Phone interview
-                  </p>
-                </div>
-              </div>
-
-              <div className="d-flex flex-column flex-sm-row gap-2 mt-3 mt-md-0">
-                <button
-                  className="btn btn-success"
-                  onClick={() => setShowScheduleModal(true)}
-                  style={{
-                    height: "40px",
-                    padding: "0 18px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  Schedule
-                </button>
-
-                <ScheduleInterviewModal
-                  show={showScheduleModal}
-                  onClose={() => setShowScheduleModal(false)}
-                />
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-    </main>
+          )}
+        </div>
+      </main>
+    </>
   );
 }
 

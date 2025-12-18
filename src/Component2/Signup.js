@@ -5,18 +5,19 @@ import logo from "../Component2/Image/logo.png";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import axios from "axios"; // ✅ FIX: axios import
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Signup = () => {
   const navigate = useNavigate();
   const [role, setRole] = useState("Candidate");
-  const [message, setMessage] = useState("");
 
-  // ✅ FIX: useEffect import already added above
   useEffect(() => {
     document.title = "Hirelink | Signup";
   }, []);
 
+  /* ---------------- VALIDATION ---------------- */
   const validationSchema = Yup.object({
     fullname: Yup.string().required("Full name is required"),
     email: Yup.string()
@@ -39,10 +40,9 @@ const Signup = () => {
     resolver: yupResolver(validationSchema),
   });
 
+  /* ---------------- SUBMIT ---------------- */
   const onSubmit = async (formData) => {
     try {
-      setMessage("");
-
       const payload = {
         can_name: formData.fullname,
         can_email: formData.email,
@@ -52,199 +52,152 @@ const Signup = () => {
       const response = await axios.post(
         "https://norealtor.in/hirelink_apis/candidate/signup/tbl_candidate",
         payload,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+        { headers: { "Content-Type": "application/json" } }
       );
 
-      const candidate = response.data; // ✅ FIX
-      console.log("SIGNUP RESPONSE:", candidate);
+      const candidate = response.data;
 
       if (candidate.status === true) {
         localStorage.setItem("candidate", JSON.stringify(candidate.data));
+        toast.success("Account created successfully");
 
-        setMessage("✅ Account created successfully");
         reset();
-
-        setTimeout(() => {
-          navigate("/profile");
-        }, 1000);
+        setTimeout(() => navigate("/profile"), 1000);
       } else {
-        setMessage(candidate.message || "Signup failed");
+        toast.error(candidate.message || "Signup failed");
       }
     } catch (error) {
-      setMessage(error.response?.data?.message || "Server error. Try again.");
+      toast.error(
+        error.response?.data?.message || "Server error. Try again."
+      );
     }
   };
 
+  /* ---------------- JSX ---------------- */
   return (
-    <div className="min-vh-100 d-flex align-items-center justify-content-center p-3">
-      <div
-        className="row g-0 shadow-lg rounded-4 overflow-hidden bg-white"
-        style={{ maxWidth: "1000px" }}
-      >
-        {/* LEFT BRAND PANEL */}
-        <div className="col-lg-6 d-none d-lg-flex flex-column justify-content-between text-white p-4 signup-brand-panel">
-          <div>
-            <h2 className="fw-bold">Hirelink</h2>
-            <h4 className="fw-semibold">
-              Build your hiring{" "}
-              <span style={{ color: "#ffd60a" }}>in minutes.</span>
-            </h4>
-            <p className="small opacity-75">
-              Set up profile, post jobs, or start applying.
-            </p>
+    <>
+      {/* TOAST */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        pauseOnHover
+        theme="colored"
+      />
 
-            <div className="mt-4">
-              <span className="badge bg-dark rounded-pill p-3 mb-2 border-0">
-                Step 1 – 1 min
-              </span>
-              <br />
-              <span className="badge bg-warning text-dark rounded-pill p-3 border-0">
-                Step 2 – Instant
-              </span>
-            </div>
-          </div>
-
-          <p className="small opacity-75">
-            “Hirelink helped us close roles 2x faster with better fit.”
-            <br />
-            <span className="opacity-100">– Product Lead, GrowthStage Co.</span>
-          </p>
-        </div>
-
-        {/* RIGHT SIGNUP FORM */}
-        <div className="col-lg-6 p-4 p-md-5">
-          <div className="text-center ">
-            <NavLink to="/">
-              <img
-                src={logo}
-                style={{
-                  wirth: "50px",
-                  height: "50px",
-                  margin: "-15px 0 10px 0",
-                }}
-                alt="logo"
-              />
-            </NavLink>
-          </div>
-
-          <div className="d-flex justify-content-between align-items-center mb-3">
+      <div className="min-vh-100 d-flex align-items-center justify-content-center p-3">
+        <div
+          className="row g-0 shadow-lg rounded-4 overflow-hidden bg-white"
+          style={{ maxWidth: "1000px" }}
+        >
+          {/* LEFT PANEL */}
+          <div className="col-lg-6 d-none d-lg-flex flex-column justify-content-between text-white p-4 signup-brand-panel">
             <div>
-              <h4 className="fw-semibold">Create your Hirelink Account</h4>
-              <p className="text-muted">
-                It takes less than a minute to get started.
+              <h2 className="fw-bold">Hirelink</h2>
+              <h4 className="fw-semibold">
+                Build your hiring{" "}
+                <span style={{ color: "#ffd60a" }}>in minutes.</span>
+              </h4>
+              <p className="small opacity-75">
+                Set up profile, post jobs, or start applying.
               </p>
             </div>
 
-            <NavLink to="/signin" className="btn btn-sm btn-outline-auth">
-              <b>Login</b>
-            </NavLink>
+            <p className="small opacity-75">
+              “Hirelink helped us close roles 2x faster.”
+            </p>
           </div>
 
-          {message && <div className="alert alert-info py-2">{message}</div>}
-
-          {/* SIGNUP FORM */}
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="row g-3">
-              <div className="col-md-6">
-                <label className="fw-medium">Full name</label>
-                <input
-                  type="text"
-                  className={`form-control ${
-                    errors.fullname ? "is-invalid" : ""
-                  }`}
-                  placeholder="Full Name"
-                  {...register("fullname")}
+          {/* RIGHT FORM */}
+          <div className="col-lg-6 p-4 p-md-5">
+            <div className="text-center">
+              <NavLink to="/">
+                <img
+                  src={logo}
+                  style={{ width: "50px", height: "50px" }}
+                  alt="logo"
                 />
-                <div className="invalid-feedback">
-                  {errors.fullname?.message}
+              </NavLink>
+            </div>
+
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <div>
+                <h4 className="fw-semibold">Create your Hirelink Account</h4>
+                <p className="text-muted">
+                  It takes less than a minute to get started.
+                </p>
+              </div>
+
+              <NavLink to="/signin" className="btn btn-sm btn-outline-auth">
+                <b>Login</b>
+              </NavLink>
+            </div>
+
+            {/* FORM */}
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="row g-3">
+                <div className="col-md-6">
+                  <label>Full name</label>
+                  <input
+                    className={`form-control ${
+                      errors.fullname ? "is-invalid" : ""
+                    }`}
+                    {...register("fullname")}
+                    placeholder="Enter your name"
+                  />
+                  <div className="invalid-feedback">
+                    {errors.fullname?.message}
+                  </div>
+                </div>
+
+                <div className="col-md-6">
+                  <label>Email</label>
+                  <input
+                    className={`form-control ${
+                      errors.email ? "is-invalid" : ""
+                    }`}
+                    {...register("email")}
+                    placeholder="Enter your email"
+                  />
+                  <div className="invalid-feedback">
+                    {errors.email?.message}
+                  </div>
                 </div>
               </div>
 
-              <div className="col-md-6">
-                <label className="fw-medium">Work Email</label>
-                <input
-                  type="email"
-                  className={`form-control ${errors.email ? "is-invalid" : ""}`}
-                  placeholder="you@gmail.com"
-                  {...register("email")}
-                />
-                <div className="invalid-feedback">{errors.email?.message}</div>
-              </div>
-            </div>
+              <div className="row g-3 mt-2">
+                <div className="col-md-6">
+                  <label>Password</label>
+                  <input
+                    type="password"
+                    className={`form-control ${
+                      errors.password ? "is-invalid" : ""
+                    }`}
+                    {...register("password")}
+                    placeholder="Enter your password"
+                  />
+                </div>
 
-            <div className="row g-3 mt-1">
-              <div className="col-md-6">
-                <label className="fw-medium">Password</label>
-                <input
-                  type="password"
-                  className={`form-control ${
-                    errors.password ? "is-invalid" : ""
-                  }`}
-                  placeholder="Strong password"
-                  {...register("password")}
-                />
-                <div className="invalid-feedback">
-                  {errors.password?.message}
+                <div className="col-md-6">
+                  <label>Confirm password</label>
+                  <input
+                    type="password"
+                    className={`form-control ${
+                      errors.confirmPassword ? "is-invalid" : ""
+                    }`}
+                    {...register("confirmPassword")}
+                    placeholder="Enter confirm password"
+                  />
                 </div>
               </div>
 
-              <div className="col-md-6">
-                <label className="fw-medium">Confirm password</label>
-                <input
-                  type="password"
-                  className={`form-control ${
-                    errors.confirmPassword ? "is-invalid" : ""
-                  }`}
-                  placeholder="Repeat password"
-                  {...register("confirmPassword")}
-                />
-                <div className="invalid-feedback">
-                  {errors.confirmPassword?.message}
-                </div>
-              </div>
-            </div>
-
-            {/* ROLE SELECTION */}
-            <div className="mt-4">
-              <label className="small fw-medium d-block mb-2">Signup as</label>
-
-              <div className="d-flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  className={`role-pill ${
-                    role === "Candidate" ? "active" : ""
-                  }`}
-                  onClick={() => setRole("Candidate")}
-                >
-                  Candidate
-                </button>
-
-                <button
-                  type="button"
-                  className={`role-pill ${role === "Employer" ? "active" : ""}`}
-                  onClick={() => setRole("Employer")}
-                >
-                  Employer / Recruiter
-                </button>
-              </div>
-            </div>
-
-            <button type="submit" className="btn btn-primary-signup w-100 mt-4">
-              Create Account ✓
-            </button>
-          </form>
-
-          <p className="text-center text-muted mt-3">
-            By signing up, you agree to Hirelink’s <a href="#">Terms</a> &{" "}
-            <a href="#">Privacy Policy</a>
-          </p>
+              <button className="btn btn-primary-signup w-100 mt-4">
+                Create Account ✓
+              </button>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

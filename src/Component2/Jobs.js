@@ -1,241 +1,133 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "../Component2/css/Jobs.css";
 
 function Jobs() {
-  useState(() => {
+  const [jobs, setJobs] = useState([]);
+  const [selectedJob, setSelectedJob] = useState(null);
+
+  useEffect(() => {
     document.title = "Hirelink | Jobs";
+
+    axios
+      .get("https://norealtor.in/hirelink_apis/getdata/tbl_job")
+      .then((res) => {
+        if (res.data.status === "success") {
+          setJobs(res.data.data);
+          setSelectedJob(res.data.data[0]); // default first job
+        }
+      })
+      .catch((error) => {
+        console.error("API Error:", error);
+      });
   }, []);
 
   return (
     <>
-      {/* ===========================
-          TOP SEARCH SECTION
-      ============================ */}
+      {/* ================= SEARCH SECTION ================= */}
       <section className="flex-grow-1 text-center mt-5 mb-4 container">
         <div className="row justify-content-center g-2 mt-4 home-serch ps-3 pe-3">
-          {/* JOB TITLE SEARCH */}
           <div className="col-12 col-md-3 search-input-wrapper">
             <div className="search-input d-flex align-items-center">
               <i className="fa fa-search"></i>
               <input
                 type="text"
-                id="jobSearch"
                 placeholder="Job title, keywords, or company"
                 className="form-control border-0"
               />
             </div>
           </div>
 
-          {/* LOCATION SEARCH */}
           <div className="col-12 col-md-3 search-input-wrapper">
             <div className="search-input d-flex align-items-center">
               <i className="fa fa-location-dot"></i>
               <input
                 type="text"
-                id="locationSearch"
-                placeholder="City, state, zip code, or remote"
+                placeholder="City, state, or remote"
                 className="form-control border-0"
               />
             </div>
           </div>
 
-          {/* SEARCH BUTTON */}
           <div className="col-12 col-md-2">
             <button className="btn find-btn w-100 pt-4 pb-5">Find jobs</button>
           </div>
         </div>
       </section>
 
-      {/* ===========================
-          JOB LIST MAIN SECTION
-      ============================ */}
-      <section className="container mt-4 ">
+      {/* ================= JOB LIST & DETAILS ================= */}
+      <section className="container mt-4">
         <h3 className="fw-bold mb-3 ps-4">Jobs for you</h3>
 
         <div className="row g-3 job-layout ps-4 pe-4">
-          {/* LEFT COLUMN JOB LIST */}
+          {/* ========== LEFT JOB LIST ========== */}
           <div className="col-12 col-md-4 job-list">
-            {/* SAMPLE JOB CARD */}
+            {jobs.map((job) => (
+              <div
+                key={job.job_id}
+                className={`job-card position-relative ${
+                  selectedJob?.job_id === job.job_id ? "selected" : ""
+                }`}
+                onClick={() => setSelectedJob(job)}
+                style={{ cursor: "pointer" }}
+              >
+                <button className="save-btn">
+                  <i className="fa-regular fa-bookmark"></i>
+                </button>
 
-            {/* JOB CARD 1 */}
-            <div className="job-card selected position-relative">
-              <button className="save-btn">
-                <i className="fa-regular fa-bookmark"></i>
-              </button>
+                <h5 className="fw-bold">{job.job_title}</h5>
+                <p className="text-muted m-0">
+                  {job.company_name} · {job.city}, {job.state}
+                </p>
 
-              <p className="tag">Hiring multiple candidates</p>
-              <h5 className="fw-bold">Delivery Boy/Girl</h5>
-              <p className="text-muted m-0">
-                Garime Solutions · Pune, Maharashtra
-              </p>
-              <span className="badge-chip">Up to ₹30,000/month</span>
-              <span className="badge-chip">Full-time</span>
-              <span className="badge-chip">Health insurance</span>
-            </div>
-
-            {/* JOB CARD 2 */}
-            <div className="job-card position-relative">
-              <button className="save-btn">
-                <i className="fa-regular fa-bookmark"></i>
-              </button>
-
-              <p className="tag">Urgently Hiring</p>
-              <h5 className="fw-bold">HR Generalist</h5>
-              <p className="text-muted m-0">Kelz Relocare · Pune</p>
-              <span className="badge-chip">₹25,000/month</span>
-              <span className="badge-chip">Full-time</span>
-            </div>
-
-            {/* JOB CARD 3 */}
-            <div className="job-card position-relative">
-              <button className="save-btn">
-                <i className="fa-regular fa-bookmark"></i>
-              </button>
-
-              <p className="tag">Walk-in Interview</p>
-              <h5 className="fw-bold">Customer Support Executive</h5>
-              <p className="text-muted m-0">TechSpace Pvt Ltd · Mumbai</p>
-              <span className="badge-chip">₹20,000–₹35,000/month</span>
-              <span className="badge-chip">Full-time</span>
-              <span className="badge-chip">Work from Office</span>
-            </div>
-
-            {/* JOB CARD 4 */}
-            <div className="job-card position-relative">
-              <button className="save-btn">
-                <i className="fa-regular fa-bookmark"></i>
-              </button>
-
-              <p className="tag">New</p>
-              <h5 className="fw-bold">Frontend Developer (React)</h5>
-              <p className="text-muted m-0">Softin Systems · Remote</p>
-              <span className="badge-chip">₹50,000–₹80,000/month</span>
-              <span className="badge-chip">Remote</span>
-              <span className="badge-chip">Flexible hours</span>
-            </div>
-
-            {/* JOB CARD 5 */}
-            <div className="job-card position-relative">
-              <button className="save-btn">
-                <i className="fa-regular fa-bookmark"></i>
-              </button>
-
-              <p className="tag">Actively Recruiting</p>
-              <h5 className="fw-bold">Graphic Designer</h5>
-              <p className="text-muted m-0">PixelHive Studio · Bangalore</p>
-              <span className="badge-chip">₹30,000–₹45,000/month</span>
-              <span className="badge-chip">Full-time</span>
-              <span className="badge-chip">Portfolio required</span>
-            </div>
-
-            {/* JOB CARD 6 */}
-            <div className="job-card position-relative">
-              <button className="save-btn">
-                <i className="fa-regular fa-bookmark"></i>
-              </button>
-
-              <p className="tag">Immediate Joiners Preferred</p>
-              <h5 className="fw-bold">Warehouse Manager</h5>
-              <p className="text-muted m-0">LogiFast Warehousing · Chennai</p>
-              <span className="badge-chip">₹40,000/month</span>
-              <span className="badge-chip">Full-time</span>
-              <span className="badge-chip">On-site</span>
-            </div>
-
-            {/* JOB CARD 7 */}
-            <div className="job-card position-relative">
-              <button className="save-btn">
-                <i className="fa-regular fa-bookmark"></i>
-              </button>
-
-              <p className="tag">Remote Opportunity</p>
-              <h5 className="fw-bold">Data Entry Associate</h5>
-              <p className="text-muted m-0">Digital Sphere · Remote</p>
-              <span className="badge-chip">₹18,000–₹22,000/month</span>
-              <span className="badge-chip">Remote</span>
-              <span className="badge-chip">Flexible timing</span>
-            </div>
+                <span className="badge-chip">₹{job.salary}/month</span>
+                <span className="badge-chip">{job.job_type}</span>
+              </div>
+            ))}
           </div>
 
-          {/* RIGHT SIDE JOB DETAILS */}
-          <div className="col-12 col-md-8 job-detail mb-5">
-            <div className="job-header">
-              <button className="save-btn">
-                <i className="fa-regular fa-bookmark"></i>
-              </button>
-              <h4 className="fw-bold">Delivery Boy/Girl</h4>
-              <p className="text-muted">Garime Solutions · Pune, Maharashtra</p>
-              <p className="m-0 fw-semibold text-success">
-                Up to ₹30,000 a month
-              </p>
-              <button className="apply-btn mt-3 mb-3">Apply Now</button>
-            </div>
+          {/* ========== RIGHT JOB DETAILS ========== */}
+          {selectedJob && (
+            <div className="col-12 col-md-8 job-detail mb-5">
+              <div className="job-header">
+                <button className="save-btn">
+                  <i className="fa-regular fa-bookmark"></i>
+                </button>
 
-            {/* SCROLLABLE JOB DETAILS */}
-            <div className="job-body">
-              <h6 className="fw-bold fs-5">Profile insights</h6>
-              <p className="small text-muted">
-                Here’s how the job qualifications align with your profile.
-              </p>
+                <h4 className="fw-bold">{selectedJob.job_title}</h4>
+                <p className="text-muted">
+                  {selectedJob.company_name} · {selectedJob.city},{" "}
+                  {selectedJob.state}
+                </p>
 
-              <h6 className="fw-bold mt-3 fs-6">Licences</h6>
-              <p className="small">Driving Licence (required)</p>
+                <p className="m-0 fw-semibold text-success">
+                  ₹{selectedJob.salary} a month
+                </p>
 
-              <div className="d-flex gap-2 mb-3">
-                <button className="btn btn-outline-primary btn-sm">Yes</button>
-                <button className="btn btn-outline-secondary btn-sm">No</button>
-                <button className="btn btn-outline-dark btn-sm">Skip</button>
+                <button className="apply-btn mt-3 mb-3">Apply Now</button>
               </div>
 
-              <h6 className="fw-bold mt-3 fs-6">Skills</h6>
-              <p className="small">Driving, Communication</p>
+              <div className="job-body">
+                <h6 className="fw-bold fs-5">Job Description</h6>
+                <p>{selectedJob.description}</p>
 
-              <div className="d-flex gap-2 mb-3">
-                <button className="btn btn-outline-primary btn-sm">Yes</button>
-                <button className="btn btn-outline-secondary btn-sm">No</button>
-                <button className="btn btn-outline-dark btn-sm">Skip</button>
+                <hr />
+                <h6 className="fw-bold fs-6">Job Type</h6>
+                <p>{selectedJob.job_type}</p>
+
+                <hr />
+                <h6 className="fw-bold fs-6">Location</h6>
+                <p>
+                  {selectedJob.city}, {selectedJob.state}
+                </p>
+
+                <hr />
+                <button className="btn btn-outline-danger btn-sm">
+                  Report job
+                </button>
               </div>
-
-              <hr />
-              <h6 className="fw-bold fs-5">Job details</h6>
-              <p>
-                <strong>Pay:</strong> Up to ₹30,000 a month
-              </p>
-
-              <hr />
-              <h6 className="fw-bold fs-5">Location</h6>
-              <p>Pune, Maharashtra</p>
-
-              <hr />
-              <h6 className="fw-bold fs-5">Benefits</h6>
-              <ul>
-                <li>Health Insurance</li>
-                <li>Fuel Reimbursement</li>
-                <li>Mobile Reimbursement</li>
-              </ul>
-
-              <hr />
-              <h6 className="fw-bold fs-5">Full Job Description</h6>
-              <p>
-                • Create awareness and develop the brand
-                <br />
-                • Address inquiries and concerns
-                <br />
-                • Marketing & Promotion activities
-                <br />• Attend events & build partnerships
-              </p>
-
-              <hr />
-              <h6 className="fw-bold">Contact</h6>
-              <p>
-                WhatsApp: <strong>7972892556</strong>
-              </p>
-
-              <button className="btn btn-outline-danger btn-sm">
-                Report job
-              </button>
             </div>
-          </div>
+          )}
         </div>
       </section>
     </>

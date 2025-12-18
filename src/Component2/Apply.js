@@ -1,258 +1,133 @@
 import React, { useState } from "react";
-import "../Component2/css/Apply.css";
 
 function Apply() {
-  const [activeStep, setActiveStep] = useState(1);
-  const [showPreview, setShowPreview] = useState(false);
+  const [resumeName, setResumeName] = useState("");
 
-  const [formData, setFormData] = useState({
-    fullname: "",
-    email: "",
-    resumeFile: null,
-    question: "",
-    experience: "",
-    skills: "",
-  });
-
-  const steps = [
-    { id: 1, title: "Personal Details" },
-    { id: 2, title: "Resume" },
-    { id: 3, title: "Company Questions" },
-    { id: 4, title: "Experience & Skills" },
-    { id: 5, title: "Review & Submit" },
-  ];
-
-  const nextStep = () => {
-    if (activeStep < steps.length) setActiveStep(activeStep + 1);
+  const handleResume = (e) => {
+    if (e.target.files.length > 0) {
+      setResumeName(e.target.files[0].name);
+    }
   };
 
-  const prevStep = () => {
-    if (activeStep > 1) setActiveStep(activeStep - 1);
-  };
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const submitApplication = () => {
-    alert("Application Submitted Successfully ✅");
-    setShowPreview(false);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    alert("Application Submitted Successfully 🚀");
   };
 
   return (
-    <div className="container my-4">
-      <h4 className="fw-bold mb-4 ms-3">Apply Job</h4>
+    <div className="container py-5">
+      <div className="row justify-content-center">
+        <div className="col-md-6">
+          <div className="card border-0 shadow-lg rounded-4">
+            <div className="card-body p-4 p-md-5">
+              {/* Header */}
+              <div className="text-center mb-4">
+                <h4 className="fw-bold text-success">Apply for this Job</h4>
+                <p className="text-muted mb-0">
+                  Takes less than 2 minutes to apply
+                </p>
+              </div>
 
-      <div className="row g-4">
-        {steps.map((step) => (
-          <div className="col-md-4" key={step.id}>
-            <div
-              className={`card h-100 shadow-sm
-              ${activeStep === step.id ? "border-success" : ""}
-              ${activeStep !== step.id ? "opacity-50" : ""}`}
-              style={{
-                pointerEvents: activeStep === step.id ? "auto" : "none",
-              }}
-            >
-              <div className="card-body d-flex flex-column">
-                <h6 className="fw-semibold mb-3">
-                  Step {step.id}: {step.title}
-                </h6>
+              <form onSubmit={handleSubmit}>
+                {/* Full Name */}
+                <div className="mb-3">
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="name"
+                    placeholder="Full Name"
+                    required
+                  />
+                </div>
 
-                {/* STEP 1 */}
-                {step.id === 1 && activeStep === 1 && (
-                  <>
-                    <input
-                      type="text"
-                      name="fullname"
-                      className="form-control mb-2"
-                      placeholder="Full Name"
-                      onChange={handleChange}
-                    />
-                    <input
-                      type="email"
-                      name="email"
-                      className="form-control mb-3"
-                      placeholder="Email"
-                      onChange={handleChange}
-                    />
-                  </>
-                )}
+                {/* Email */}
+                <div className="mb-3">
+                  <input
+                    type="email"
+                    className="form-control"
+                    id="email"
+                    placeholder="Email"
+                    required
+                  />
+                </div>
 
-                {/* STEP 2 – RESUME UPLOAD */}
-                {step.id === 2 && activeStep === 2 && (
-                  <>
-                    <label className="fw-medium mb-1">Upload Resume</label>
+                {/* Mobile */}
+                <div className="mb-3">
+                  <input
+                    type="tel"
+                    className="form-control"
+                    id="mobile"
+                    placeholder="Mobile"
+                    required
+                  />
+                </div>
+
+                {/* Experience */}
+                <div className="mb-3">
+                  <label className="form-label fw-semibold">
+                    Experience Level
+                  </label>
+                  <select className="form-select rounded-3" required>
+                    <option value="">Choose experience</option>
+                    <option>Fresher</option>
+                    <option>1–2 Years</option>
+                    <option>3–5 Years</option>
+                    <option>5+ Years</option>
+                  </select>
+                </div>
+
+                {/* Skill */}
+                <div className="mb-3">
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="skill"
+                    placeholder="Primary Skill"
+                  />
+                </div>
+
+                {/* Resume Upload */}
+                <div className="mb-4">
+                  <label className="form-label fw-semibold">Resume</label>
+                  <div className="border rounded-3 p-3 text-center">
                     <input
                       type="file"
-                      className="form-control mb-2"
-                      accept=".pdf,.doc,.docx"
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          resumeFile: e.target.files[0],
-                        })
-                      }
+                      className="form-control d-none"
+                      id="resume"
+                      onChange={handleResume}
+                      required
                     />
-                    <small className="text-muted">PDF / DOC / DOCX only</small>
-                  </>
-                )}
-
-                {/* STEP 3 */}
-                {step.id === 3 && activeStep === 3 && (
-                  <textarea
-                    name="question"
-                    className="form-control mb-3"
-                    rows="4"
-                    placeholder="Why should we hire you?"
-                    onChange={handleChange}
-                  ></textarea>
-                )}
-
-                {/* STEP 4 */}
-                {step.id === 4 && activeStep === 4 && (
-                  <>
-                    <input
-                      type="text"
-                      name="experience"
-                      className="form-control mb-2"
-                      placeholder="Total Experience"
-                      onChange={handleChange}
-                    />
-                    <input
-                      type="text"
-                      name="skills"
-                      className="form-control mb-3"
-                      placeholder="Skills"
-                      onChange={handleChange}
-                    />
-                  </>
-                )}
-
-                {/* STEP 5 */}
-                {step.id === 5 && activeStep === 5 && (
-                  <p className="text-muted">
-                    Click preview to verify details before submission.
-                  </p>
-                )}
-
-                {/* ACTION BUTTONS */}
-                {activeStep === step.id && (
-                  <div className="mt-auto d-flex gap-2">
-                    {step.id > 1 && (
-                      <button
-                        className="btn btn-outline-secondary w-50"
-                        onClick={prevStep}
-                      >
-                        Back
-                      </button>
-                    )}
-
-                    {step.id < 5 && (
-                      <button
-                        className="btn btn-success w-50"
-                        onClick={nextStep}
-                      >
-                        Save & Next
-                      </button>
-                    )}
-
-                    {step.id === 5 && (
-                      <button
-                        className="btn btn-success w-50"
-                        onClick={() => setShowPreview(true)}
-                      >
-                        Preview
-                      </button>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* PREVIEW MODAL */}
-      {showPreview && (
-        <div className="modal fade show d-block preview-backdrop">
-          <div className="modal-dialog modal-xl modal-dialog-centered">
-            <div className="modal-content preview-modal">
-              <div className="modal-header preview-header">
-                <h5 className="modal-title text-white">Application Preview</h5>
-                <button
-                  className="btn-close btn-close-white"
-                  onClick={() => setShowPreview(false)}
-                ></button>
-              </div>
-
-              <div className="modal-body">
-                <div className="row g-3">
-                  <div className="col-md-6">
-                    <div className="preview-card">
-                      <h6>Personal Details</h6>
-                      <p>
-                        <span>Name:</span> {formData.fullname}
-                      </p>
-                      <p>
-                        <span>Email:</span> {formData.email}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="col-md-6">
-                    <div className="preview-card">
-                      <h6>Resume</h6>
-                      <p>
-                        <span>File:</span>{" "}
-                        {formData.resumeFile
-                          ? formData.resumeFile.name
-                          : "Not uploaded"}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="col-md-12">
-                    <div className="preview-card">
-                      <h6>Company Question</h6>
-                      <p>{formData.question}</p>
-                    </div>
-                  </div>
-
-                  <div className="col-md-6">
-                    <div className="preview-card">
-                      <h6>Experience</h6>
-                      <p>{formData.experience}</p>
-                    </div>
-                  </div>
-
-                  <div className="col-md-6">
-                    <div className="preview-card">
-                      <h6>Skills</h6>
-                      <p>{formData.skills}</p>
+                    <label htmlFor="resume" className="btn btn-outline-success">
+                      Upload Resume
+                    </label>
+                    <div className="small text-muted mt-2">
+                      {resumeName || "PDF / DOC (Max 2MB)"}
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="modal-footer preview-footer">
+                {/* Message */}
+                <div className="mb-4">
+                  <textarea
+                    className="form-control"
+                    placeholder="Message"
+                    id="message"
+                    style={{ height: "90px" }}
+                  ></textarea>
+                </div>
+
+                {/* Submit */}
                 <button
-                  className="btn btn-outline-secondary"
-                  onClick={() => setShowPreview(false)}
+                  type="submit"
+                  className="btn btn-success w-100 py-2 rounded-3 fw-semibold"
                 >
-                  Back & Edit
+                  Apply Now
                 </button>
-                <button
-                  className="btn btn-success px-4"
-                  onClick={submitApplication}
-                >
-                  Submit Application
-                </button>
-              </div>
+              </form>
             </div>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

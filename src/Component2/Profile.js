@@ -1,10 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../Component2/css/Profile.css";
 
-function Profile({ show, onClose }) {
+function Profile() {
   const [activeTab, setActiveTab] = useState("saved");
   const [showModal, setShowModal] = useState(false);
-  //  if (!show) return null;
+
+  const [candidate, setCandidate] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("candidate");
+
+    if (!storedUser) {
+      navigate("/signin");
+      return;
+    }
+
+    setCandidate(JSON.parse(storedUser));
+  }, []);
+
+  if (!candidate) {
+    return <div className="text-center mt-5">Loading profile...</div>;
+  }
 
   function UpdateStatusModal({ show, onClose }) {
     if (!show) return null;
@@ -77,13 +95,13 @@ function Profile({ show, onClose }) {
 
           {/* Profile Info */}
           <div className="flex-grow-1">
-            <h5 className="mb-1 fw-bold">Harshal Mahajan</h5>
+            <h5 className="mb-1 fw-bold"> {candidate.can_name}</h5>
             <p className="mb-1 text-muted">
-              harshal@gmail.com | +91 9876543210
+              {candidate.can_email} | {candidate.can_mobile}
             </p>
             <p className="mb-0 text-muted">
-              Pune, Maharashtra <br />
-              Address: Wakad, Pune – 411057
+              {candidate.can_city}, {candidate.can_state} <br />
+              {candidate.can_address}
             </p>
           </div>
 
@@ -99,21 +117,19 @@ function Profile({ show, onClose }) {
       </div>
 
       <div
-        className="modal fade"
+        className="modal fade p-0 m-0"
         id="editProfileModal"
-        tabindex="-1"
+        tabIndex="-1"
         aria-hidden="true"
       >
         <div className="modal-dialog modal-md modal-dialog-centered">
           <div className="modal-content border-0 shadow rounded-4">
-            {/* <!-- ================= MODAL HEADER ================= --> */}
+            {/* ================= MODAL HEADER ================= */}
             <div className="modal-header border-0 px-4 pt-4 pb-2">
               <div>
-                <h4 className="fw-bold mb-1">Edit Profile</h4>
-                <p className="text-muted mb-0 fs-6">
-                  Keep your profile updated to get better job matches
-                </p>
+                <h5 className="fw-bold">Edit Profile</h5>
               </div>
+
               <button
                 type="button"
                 className="btn-close"
@@ -121,142 +137,119 @@ function Profile({ show, onClose }) {
               ></button>
             </div>
 
-            {/* <!-- ================= MODAL BODY ================= --> */}
-            <div className="modal-body px-4 py-3">
-              {/* <!-- PROFILE IMAGE SECTION --> */}
-              <div className="d-flex align-items-center gap-4 mb-4">
+            {/* ================= MODAL BODY ================= */}
+            <div className="modal-body px-4 py-2">
+              {/* PROFILE IMAGE SECTION */}
+              <div className="d-flex align-items-center gap-3 mb-3">
                 <img
                   src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
                   className="rounded-circle border"
-                  width="110"
-                  height="110"
+                  width="90"
+                  height="90"
                   alt="Profile"
                 />
 
                 <div className="flex-grow-1">
                   <h6 className="fw-semibold mb-1">Profile Photo</h6>
-
-                  <p className="text-muted mb-2 fs-6">
-                    Upload a clear photo to increase profile visibility
-                  </p>
+                  <p className="text-muted small mb-2">Upload a clear photo</p>
 
                   <div className="d-flex align-items-center gap-2">
                     <input
                       type="file"
-                      className="form-control form-control-sm"
-                      style={{ maxWidth: "200px" }}
+                      className="form-control form-control-md"
+                      style={{ maxWidth: "180px" }}
                     />
 
                     <button
                       type="button"
                       className="btn btn-outline-success btn-sm"
                     >
-                      <i className="fa fa-upload me-1"></i>
                       Update
                     </button>
                   </div>
                 </div>
               </div>
 
-              <hr />
+              <hr className="my-2" />
 
-              {/* <!-- BASIC DETAILS --> */}
-              <h6 className="fw-bold mb-1">Basic Information</h6>
+              {/* BASIC DETAILS */}
+              <h6 className="fw-bold mb-2">Basic Information</h6>
 
-              <div className="row g-3 mb-4">
+              <div className="row g-2 mb-2">
                 <div className="col-md-12">
-                  <label className="fw-semibold">Full Name</label>
                   <input
                     type="text"
-                    className="form-control"
-                    placeholder="Enter Full Name"
+                    className="form-control form-control-md"
+                    placeholder="Full Name"
+                    value={candidate.can_name}
                   />
                 </div>
 
                 <div className="col-md-6">
-                  <label className="fw-semibold">Email Address</label>
                   <input
                     type="email"
-                    className="form-control"
-                    placeholder="Enter Email Address"
+                    className="form-control form-control-md"
+                    placeholder="Email"
+                    value={candidate.can_email}
                   />
                 </div>
 
                 <div className="col-md-6">
-                  <label className="fw-semibold">Mobile Number</label>
                   <input
                     type="text"
-                    className="form-control"
-                    placeholder="Enter Mobile Number"
+                    className="form-control form-control-md"
+                    placeholder="Mobile"
+                    value={candidate.can_mobile}
                   />
                 </div>
               </div>
 
-              {/* <!-- ADDRESS --> */}
-              <h6 className="fw-bold mb-3">Address Details</h6>
+              {/* ADDRESS */}
+              <h6 className="fw-bold mb-2">Address</h6>
 
-              <div className="row g-3 mb-1">
+              <div className="row g-2">
                 <div className="col-md-6">
-                  <label className="fw-semibold">Country</label>
                   <input
                     type="text"
-                    className="form-control"
-                    value="India"
-                    readonly
+                    className="form-control form-control-md"
+                    placeholder="State"
+                    value={candidate.can_state}
                   />
                 </div>
 
                 <div className="col-md-6">
-                  <label className="fw-semibold">State</label>
                   <input
                     type="text"
-                    className="form-control"
-                    placeholder="Enter State"
+                    className="form-control form-control-md"
+                    placeholder="City"
+                    value={candidate.can_city}
                   />
                 </div>
 
-                <div className="col-md-6">
-                  <label className="fw-semibold">City</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Enter City"
-                  />
-                </div>
-
-                <div className="col-md-6">
-                  <label className="fw-semibold">Pin Code</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Enter Pin code"
-                  />
-                </div>
-
-                <div className="mb-4">
-                  <label className="fw-semibold">Address</label>
+                <div className="col-12">
                   <textarea
-                    className="form-control"
+                    className="form-control form-control-md"
                     rows="2"
-                    placeholder="Enter Address"
+                    placeholder="Address"
+                    value={candidate.can_address}
                   ></textarea>
                 </div>
               </div>
+            </div>
 
-              {/* <!-- ================= MODAL FOOTER ================= --> */}
-              <div className="rounded-bottom-4 d-flex">
-                <button
-                  type="button"
-                  className="btn btn-outline-secondary rounded-3"
-                  data-bs-dismiss="modal"
-                >
-                  Cancel
-                </button>
+            {/* ================= MODAL FOOTER ================= */}
+            <div className="modal-footer border-0 px-4 py-3">
+              <button
+                type="button"
+                className="btn btn-outline-secondary btn-md"
+                data-bs-dismiss="modal"
+              >
+                Cancel
+              </button>
 
-                <button type="submit" className="btn btn-success px-4 ms-auto">
-                  Submit
-                </button>
-              </div>
+              <button type="submit" className="btn btn-success btn-md px-4">
+                Submit
+              </button>
             </div>
           </div>
         </div>

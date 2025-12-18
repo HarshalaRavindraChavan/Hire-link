@@ -52,17 +52,17 @@ export default function Login() {
 
         const data = response.data;
 
-        if (data.status === true || data.success === true) {
-          if (data.token) {
-            localStorage.setItem("token", data.token);
-          }
+        if (data.status === true) {
+          console.log("LOGIN DATA:", data.data);
 
-          setSuccessMsg("✅ Login successful! Redirecting...");
+          localStorage.setItem("candidate", JSON.stringify(data.data[0]));
+
+          setSuccessMsg("✅ Login successful!");
           resetForm();
 
           setTimeout(() => {
             navigate("/profile");
-          }, 1500);
+          }, 1000);
         } else {
           setApiError(data.message || "Login failed");
         }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { NavLink , useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "../Component2/css/Signup.css";
 import logo from "../Component2/Image/logo.png";
 import { useForm } from "react-hook-form";
@@ -60,6 +60,9 @@ const Signup = () => {
       );
 
       if (response.data.status === true) {
+        
+        localStorage.setItem("candidate", JSON.stringify(data.data[0]));
+
         setMessage("✅ Account created successfully");
         reset();
 

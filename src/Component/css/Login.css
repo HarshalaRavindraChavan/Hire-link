@@ -206,3 +206,16 @@ label {
     padding: 7px;
   }
 }
+
+
+.login-input-box {
+  display: flex;
+  align-items: center;
+}
+
+.login-input-box input {
+  flex: 1;
+  border: none;
+  outline: none;
+}
+

@@ -39,14 +39,14 @@ const Signup = () => {
     resolver: yupResolver(validationSchema),
   });
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (formData) => {
     try {
       setMessage("");
 
       const payload = {
-        can_name: data.fullname,
-        can_email: data.email,
-        can_password: data.password,
+        can_name: formData.fullname,
+        can_email: formData.email,
+        can_password: formData.password,
       };
 
       const response = await axios.post(
@@ -59,18 +59,20 @@ const Signup = () => {
         }
       );
 
-      if (response.data.status === true) {
-        
-        localStorage.setItem("candidate", JSON.stringify(data.data[0]));
+      const candidate = response.data; // ✅ FIX
+      console.log("SIGNUP RESPONSE:", candidate);
+
+      if (candidate.status === true) {
+        localStorage.setItem("candidate", JSON.stringify(candidate.data));
 
         setMessage("✅ Account created successfully");
         reset();
 
         setTimeout(() => {
           navigate("/profile");
-        }, 1500);
+        }, 1000);
       } else {
-        setMessage(response.data.message || "Signup failed");
+        setMessage(candidate.message || "Signup failed");
       }
     } catch (error) {
       setMessage(error.response?.data?.message || "Server error. Try again.");

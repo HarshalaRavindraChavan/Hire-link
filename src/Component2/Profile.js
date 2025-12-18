@@ -7,23 +7,23 @@ function Profile() {
   const [showModal, setShowModal] = useState(false);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
 
-  // const [candidate, setCandidate] = useState(null);
-  // const navigate = useNavigate();
+  const [candidate, setCandidate] = useState(null);
+  const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const storedUser = localStorage.getItem("candidate");
+  useEffect(() => {
+    const storedUser = localStorage.getItem("candidate");
 
-  //   if (!storedUser) {
-  //     navigate("/signin");
-  //     return;
-  //   }
+    if (!storedUser) {
+      navigate("/signin");
+      return;
+    }
 
-  //   setCandidate(JSON.parse(storedUser));
-  // }, []);
+    setCandidate(JSON.parse(storedUser));
+  }, []);
 
-  // if (!candidate) {
-  //   return <div className="text-center mt-5">Loading profile...</div>;
-  // }
+  if (!candidate) {
+    return <div className="text-center mt-5">Loading profile...</div>;
+  }
 
   function UpdateStatusModal({ show, onClose }) {
     if (!show) return null;
@@ -208,13 +208,13 @@ function Profile() {
 
           {/* Profile Info */}
           <div className="flex-grow-1">
-            {/* <h5 className="mb-1 fw-bold"> {candidate.can_name}</h5> */}
+            <h5 className="mb-1 fw-bold"> {candidate.can_name}</h5>
             <p className="mb-1 text-muted">
-              {/* {candidate.can_email} | {candidate.can_mobile} */}
+              {candidate.can_email} | {candidate.can_mobile}
             </p>
             <p className="mb-0 text-muted">
-              {/* {candidate.can_city}, {candidate.can_state} <br /> */}
-              {/* {candidate.can_address} */}
+              {candidate.can_city}, {candidate.can_state} <br />
+              {candidate.can_address}
             </p>
           </div>
 
@@ -229,31 +229,19 @@ function Profile() {
         </div>
       </div>
 
-      <div
-        className="modal fade p-0 m-0"
-        id="editProfileModal"
-        tabIndex="-1"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog modal-md modal-dialog-centered">
-          <div className="modal-content border-0 shadow rounded-4">
-            {/* ================= MODAL HEADER ================= */}
-            <div className="modal-header border-0 px-4 pt-4 pb-2">
-              <div>
-                <h5 className="fw-bold">Edit Profile</h5>
-              </div>
-
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-              ></button>
+      <div class="modal fade" id="editProfileModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-scrollable modal-md">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Edit Profile</h5>
+              <button class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             {/* ================= MODAL BODY ================= */}
             <div className="modal-body px-4 py-2">
               {/* PROFILE IMAGE SECTION */}
               <div className="d-flex align-items-center gap-3 mb-3">
+                <input type="text" value={candidate.can_id} />
                 <img
                   src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
                   className="rounded-circle border"
@@ -263,70 +251,30 @@ function Profile() {
                 />
 
                 <div className="flex-grow-1">
-                  <h6 className="fw-semibold mb-1">Profile Photo</h6>
-                  <p className="text-muted small mb-2">Upload a clear photo</p>
-
-                  <div className="d-flex align-items-center gap-2">
-                    <input
-                      type="file"
-                      className="form-control form-control-md"
-                      style={{ maxWidth: "180px" }}
-                    />
-
-                    <button
-                      type="button"
-                      className="btn btn-outline-success btn-sm"
-                    >
-                      Update
-                    </button>
-                  </div>
+                  <h5 className="mb-1 fw-bold"> {candidate.can_name}</h5>
+                  <p className="mb-1 text-muted">
+                    {" "}
+                    {candidate.can_email} | {candidate.can_mobile}
+                  </p>
+                  {/* <p className="mb-0 text-muted">
+                    {/* {candidate.can_city}, {candidate.can_state} <br /> */}
+                  {/* {candidate.can_address} 
+                  </p> */}
                 </div>
               </div>
 
               <hr className="my-2" />
 
               {/* BASIC DETAILS */}
-              <h6 className="fw-bold mb-2">Basic Information</h6>
+              <h6 className="fw-bold mb-2">Professional Information</h6>
 
               <div className="row g-2 mb-2">
-                <div className="col-md-12">
-                  <input
-                    type="text"
-                    className="form-control form-control-md"
-                    placeholder="Full Name"
-                    // value={candidate.can_name}
-                  />
-                </div>
-
-                <div className="col-md-6">
-                  <input
-                    type="email"
-                    className="form-control form-control-md"
-                    placeholder="Email"
-                    // value={candidate.can_email}
-                  />
-                </div>
-
                 <div className="col-md-6">
                   <input
                     type="text"
                     className="form-control form-control-md"
+                    value={candidate.can_mobile}
                     placeholder="Mobile"
-                    // value={candidate.can_mobile}
-                  />
-                </div>
-              </div>
-
-              {/* ADDRESS */}
-              <h6 className="fw-bold mb-2">Address</h6>
-
-              <div className="row g-2">
-                <div className="col-md-6">
-                  <input
-                    type="text"
-                    className="form-control form-control-md"
-                    placeholder="State"
-                    // value={candidate.can_state}
                   />
                 </div>
 
@@ -334,8 +282,38 @@ function Profile() {
                   <input
                     type="text"
                     className="form-control form-control-md"
-                    placeholder="City"
-                    // value={candidate.can_city}
+                    value={candidate.can_address}
+                    placeholder="Address"
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label class="btn btn-outline-success w-100">
+                    <i class="fa fa-upload me-2"></i>Upload Resume
+                    <input type="file" hidden />
+                  </label>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="btn btn-outline-success w-100">
+                    <i class="fa fa-upload me-2"></i> Upload CV
+                    <input type="file" hidden />
+                  </label>
+                </div>
+
+                <div className="col-md-6">
+                  <input
+                    type="text"
+                    className="form-control form-control-md"
+                    placeholder="Experience"
+                    value={candidate.can_experience}
+                  />
+                </div>
+                <div className="col-md-6">
+                  <input
+                    type="text"
+                    className="form-control form-control-md"
+                    placeholder="Skills"
+                    value={candidate.can_skill}
                   />
                 </div>
 
@@ -343,9 +321,58 @@ function Profile() {
                   <textarea
                     className="form-control form-control-md"
                     rows="2"
-                    placeholder="Address"
-                    // value={candidate.can_address}
+                    placeholder="Briefly describe yourself"
+                    value={candidate.can_about}
                   ></textarea>
+                </div>
+              </div>
+
+              {/* ADDRESS */}
+              <h6 className="fw-bold mb-2">Category</h6>
+
+              <div className="row g-2">
+                <div className="col-md-6">
+                  <select className="form-control form-select rounded-3">
+                    <option value="">Select</option>
+                    <option value="Active">Pharmaceutical Jobs</option>
+                    <option value="Active">Nutraceutics Jobs</option>
+                    <option value="Active">Pharmacist Jobs</option>
+                  </select>
+                </div>
+
+                <div className="col-md-6">
+                  <select className="form-control form-select rounded-3">
+                    <option value="">Select</option>
+                    <option value="Active">R & D</option>
+                    <option value="Active">Manufacturing</option>
+                    <option value="Active">Clinical Trials</option>
+                    <option value="Active">Bioequilances</option>
+                    <option value="Active">Regulatory</option>
+                    <option value="Active">
+                      Intellectual Property Rights (IPR)
+                    </option>
+                    <option value="Active">Logistics Chain supply</option>
+                    <option value="Active">Marketing</option>
+                    <option value="Active">Sales</option>
+                  </select>
+                </div>
+                <div className="col-md-6">
+                  <select className="form-control form-select rounded-3">
+                    <option value="">Select</option>
+                    <option value="Active">Active</option>
+                  </select>
+                </div>
+                <div className="col-md-6">
+                  <select className="form-control form-select rounded-3">
+                    <option value="">Select</option>
+                    <option value="Active">Active</option>
+                  </select>
+                </div>
+                <div className="col-md-6">
+                  <select className="form-control form-select rounded-3">
+                    <option value="">Select</option>
+                    <option value="Active">Active</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -354,13 +381,13 @@ function Profile() {
             <div className="modal-footer border-0 px-4 py-3">
               <button
                 type="button"
-                className="btn btn-outline-secondary btn-md"
+                className="btn btn-outline-secondary rounded-3"
                 data-bs-dismiss="modal"
               >
                 Cancel
               </button>
 
-              <button type="submit" className="btn btn-success btn-md px-4">
+              <button type="submit" className="btn btn-success px-4 ms-auto">
                 Submit
               </button>
             </div>

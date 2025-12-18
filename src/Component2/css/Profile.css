@@ -1,7 +1,7 @@
 .status-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0, 0, 0, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -80,4 +80,14 @@
 
 .status-item.last {
   border-bottom: none;
+}
+
+/* Hide scrollbar but allow scroll */
+.modal-body {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE & Edge */
+}
+
+.modal-body::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
 }

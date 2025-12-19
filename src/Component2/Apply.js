@@ -15,112 +15,104 @@ function Apply() {
   };
 
   return (
-    <div className="container py-5">
+    <div className="container my-4 my-md-5">
       <div className="row justify-content-center">
-        <div className="col-md-6">
-          <div className="card border-0 shadow-lg rounded-4">
-            <div className="card-body p-4 p-md-5">
-              {/* Header */}
-              <div className="text-center mb-4">
-                <h4 className="fw-bold text-success">Apply for this Job</h4>
-                <p className="text-muted mb-0">
-                  Takes less than 2 minutes to apply
-                </p>
-              </div>
+        <div className="col-lg-8 col-md-10 col-12 ">
+          <div className="card shadow-sm border-0" style={{ outline: "0px solid gray" }}>
+            <div className="card-body p-4">
+              <h5
+                className="mb-3"
+                style={{ textAlign: "center", fontWeight: "bold" }}
+              >
+                Apply For This Job
+              </h5>
 
               <form onSubmit={handleSubmit}>
-                {/* Full Name */}
-                <div className="mb-3">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="name"
-                    placeholder="Full Name"
-                    required
-                  />
+                {/* Row 1 */}
+                <div className="row">
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label">Full Name</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Enter full name"
+                      required
+                    />
+                  </div>
+
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label">Email</label>
+                    <input
+                      type="email"
+                      className="form-control"
+                      placeholder="Enter email"
+                      required
+                    />
+                  </div>
                 </div>
 
-                {/* Email */}
-                <div className="mb-3">
-                  <input
-                    type="email"
-                    className="form-control"
-                    id="email"
-                    placeholder="Email"
-                    required
-                  />
+                {/* Row 2 */}
+                <div className="row">
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label">Mobile</label>
+                    <input
+                      type="tel"
+                      className="form-control"
+                      placeholder="Enter mobile number"
+                      required
+                    />
+                  </div>
+
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label">Experience</label>
+                    <select
+                      className="form-select"
+                      required
+                      style={{ height: "45px" }}
+                    >
+                      <option value="">Select experience</option>
+                      <option>Fresher</option>
+                      <option>1–2 Years</option>
+                      <option>3–5 Years</option>
+                      <option>5+ Years</option>
+                    </select>
+                  </div>
                 </div>
 
-                {/* Mobile */}
-                <div className="mb-3">
-                  <input
-                    type="tel"
-                    className="form-control"
-                    id="mobile"
-                    placeholder="Mobile"
-                    required
-                  />
-                </div>
+                {/* Row 3 */}
+                <div className="row">
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label">Primary Skill</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Eg: React, Java"
+                    />
+                  </div>
 
-                {/* Experience */}
-                <div className="mb-3">
-                  <label className="form-label fw-semibold">
-                    Experience Level
-                  </label>
-                  <select className="form-select rounded-3" required>
-                    <option value="">Choose experience</option>
-                    <option>Fresher</option>
-                    <option>1–2 Years</option>
-                    <option>3–5 Years</option>
-                    <option>5+ Years</option>
-                  </select>
-                </div>
-
-                {/* Skill */}
-                <div className="mb-3">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="skill"
-                    placeholder="Primary Skill"
-                  />
-                </div>
-
-                {/* Resume Upload */}
-                <div className="mb-4">
-                  <label className="form-label fw-semibold">Resume</label>
-                  <div className="border rounded-3 p-3 text-center">
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label">Upload Resume</label>
                     <input
                       type="file"
-                      className="form-control d-none"
-                      id="resume"
+                      className="form-control"
                       onChange={handleResume}
                       required
                     />
-                    <label htmlFor="resume" className="btn btn-outline-success">
-                      Upload Resume
-                    </label>
-                    <div className="small text-muted mt-2">
-                      {resumeName || "PDF / DOC (Max 2MB)"}
-                    </div>
                   </div>
                 </div>
 
                 {/* Message */}
                 <div className="mb-4">
+                  <label className="form-label">Message (optional)</label>
                   <textarea
                     className="form-control"
-                    placeholder="Message"
-                    id="message"
-                    style={{ height: "90px" }}
+                    rows="3"
+                    placeholder="Any additional information"
                   ></textarea>
                 </div>
 
                 {/* Submit */}
-                <button
-                  type="submit"
-                  className="btn btn-success w-100 py-2 rounded-3 fw-semibold"
-                >
+                <button type="submit" className="btn btn-success w-100 py-2">
                   Apply Now
                 </button>
               </form>

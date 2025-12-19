@@ -676,7 +676,13 @@ function Profile() {
                 </div>
 
                 <div className="d-flex align-items-center gap-3 mt-2 mt-md-0">
-                  <button className="btn btn-success btn-sm">Apply now</button>
+                  <button
+                    className="btn btn-success btn-sm"
+                    onClick={() => navigate("/apply")}
+                  >
+                    Apply now
+                  </button>
+
                   <i className="fa fa-bookmark"></i>
                   <i className="fa fa-ellipsis-vertical"></i>
                 </div>

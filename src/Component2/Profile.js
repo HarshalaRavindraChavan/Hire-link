@@ -18,8 +18,16 @@ function Profile() {
     can_about: "",
   });
 
+  const navigate = useNavigate();
+
   React.useEffect(() => {
     const stored = localStorage.getItem("candidate");
+
+    if (!stored) {
+      navigate("/signin");
+      return;
+    }
+
     if (stored) {
       setCandidate(JSON.parse(stored));
     }
@@ -297,7 +305,7 @@ function Profile() {
               </p>
               <p className="mb-0 text-muted">
                 {candidate.can_address}
-                <br/>
+                <br />
                 {candidate.can_city}, {candidate.can_state}
               </p>
             </div>

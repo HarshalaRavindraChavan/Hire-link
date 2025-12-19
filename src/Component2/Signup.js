@@ -13,6 +13,9 @@ const Signup = () => {
   const navigate = useNavigate();
   const [role, setRole] = useState("Candidate");
 
+  // ✅ FIX 1: activeRole state
+  const [activeRole, setActiveRole] = useState("Candidate");
+
   useEffect(() => {
     document.title = "Hirelink | Signup";
   }, []);
@@ -67,9 +70,7 @@ const Signup = () => {
         toast.error(candidate.message || "Signup failed");
       }
     } catch (error) {
-      toast.error(
-        error.response?.data?.message || "Server error. Try again."
-      );
+      toast.error(error.response?.data?.message || "Server error. Try again.");
     }
   };
 
@@ -109,11 +110,11 @@ const Signup = () => {
 
           {/* RIGHT FORM */}
           <div className="col-lg-6 p-4 p-md-5">
-            <div className="text-center">
+            <div className="text-center mb-2">
               <NavLink to="/">
                 <img
                   src={logo}
-                  style={{ width: "50px", height: "50px" }}
+                  style={{ width: "150px", height: "50px" }}
                   alt="logo"
                 />
               </NavLink>
@@ -187,6 +188,32 @@ const Signup = () => {
                     {...register("confirmPassword")}
                     placeholder="Enter confirm password"
                   />
+                </div>
+              </div>
+
+              <div className="mt-3 mb-4">
+                <label className="small fw-medium d-block">Login as</label>
+
+                <div className="d-flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    className={`role-pill ${
+                      activeRole === "Candidate" ? "active" : ""
+                    }`}
+                    onClick={() => setActiveRole("Candidate")}
+                  >
+                    Candidate
+                  </button>
+
+                  <button
+                    type="button"
+                    className={`role-pill ${
+                      activeRole === "Employer" ? "active" : ""
+                    }`}
+                    onClick={() => setActiveRole("Employer")}
+                  >
+                    Employer / Recruiter
+                  </button>
                 </div>
               </div>
 

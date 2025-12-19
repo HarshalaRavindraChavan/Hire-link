@@ -1,21 +1,32 @@
-import React, { useState } from "react";
 import "../Component2/css/Home.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 function Home() {
   useState(() => {
     document.title = "Welcome To Hirelink";
   }, []);
 
+  const [isLogin, setIsLogin] = useState(false);
+
+  useEffect(() => {
+    const user = localStorage.getItem("candidate");
+    if (user) {
+      setIsLogin(true);
+    } else {
+      setIsLogin(false);
+    }
+  }, []);
+
   const jobList = [
-    { title: "React Developer"},
-    { title: "Frontend Developer"},
-    { title: "Backend Developer"},
-    { title: "Full Stack Developer"},
-    { title: "UI/UX Designer"},
-    { title: "Software Engineer"},
-    { title: "Java Developer"},
-    { title: "Angular Developer"},
+    { title: "React Developer" },
+    { title: "Frontend Developer" },
+    { title: "Backend Developer" },
+    { title: "Full Stack Developer" },
+    { title: "UI/UX Designer" },
+    { title: "Software Engineer" },
+    { title: "Java Developer" },
+    { title: "Angular Developer" },
   ];
 
   const [query, setQuery] = useState("");
@@ -114,16 +125,36 @@ function Home() {
       </p>
 
       {/* GET STARTED */}
-      <NavLink to="/signin" className="btn start-btn mt-2 px-4 py-2">
-        Get Started <i className="fa fa-right-long ms-2 arrow"></i>
-      </NavLink>
+      {isLogin && (
+        <>
+          <NavLink to="/jobs" className="btn start-btn mt-2 px-4 py-2">
+            Get Started <i className="fa fa-right-long ms-2 arrow"></i>
+          </NavLink>
 
-      <p className="mt-5">
-        <NavLink to="/signin" className="resume-link">
-          Post your resume
-        </NavLink>{" "}
-        - It only takes a few seconds
-      </p>
+          <p className="mt-5">
+            <NavLink to="/profile" className="resume-link">
+              Post your resume
+            </NavLink>{" "}
+            - It only takes a few seconds
+          </p>
+        </>
+      )}
+
+      {!isLogin && (
+        <>
+          <NavLink to="/signin" className="btn start-btn mt-2 px-4 py-2">
+            Get Started <i className="fa fa-right-long ms-2 arrow"></i>
+          </NavLink>
+
+          <p className="mt-5">
+            <NavLink to="/signin" className="resume-link">
+              Post your resume
+            </NavLink>{" "}
+            - It only takes a few seconds
+          </p>
+        </>
+      )}
+      
     </section>
   );
 }

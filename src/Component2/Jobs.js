@@ -10,11 +10,11 @@ function Jobs() {
     document.title = "Hirelink | Jobs";
 
     axios
-      .get("https://norealtor.in/hirelink_apis/getdata/tbl_job")
+      .get("https://norealtor.in/hirelink_apis/candidate/getdata/tbl_job")
       .then((res) => {
         if (res.data.status === "success") {
           setJobs(res.data.data);
-          setSelectedJob(res.data.data[0]); // default first job
+          setSelectedJob(res.data.data[0]);
         }
       })
       .catch((error) => {

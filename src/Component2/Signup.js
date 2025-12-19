@@ -101,6 +101,16 @@ const Signup = () => {
               <p className="small opacity-75">
                 Set up profile, post jobs, or start applying.
               </p>
+
+              <div className="mt-4">
+                <span className="badge bg-dark rounded-pill p-3 mb-2 border-0">
+                  Step 1 – 1 min
+                </span>
+                <br />
+                <span className="badge bg-warning text-dark rounded-pill p-3 border-0">
+                  Step 2 – Instant
+                </span>
+              </div>
             </div>
 
             <p className="small opacity-75">

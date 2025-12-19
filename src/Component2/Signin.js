@@ -7,7 +7,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast, ToastContainer } from "react-toastify";
 
-export default function Login() {
+function Signin() {
   const navigate = useNavigate();
 
   const [successMsg, setSuccessMsg] = useState("");
@@ -21,59 +21,69 @@ export default function Login() {
     document.title = "Hirelink | Signin";
   }, []);
 
- 
-
   /* ================= FORMik ================= */
   const formik = useFormik({
     initialValues: {
-      can_email: "",
-      can_password: "",
+      email: "",
+      password: "",
     },
 
     validationSchema: Yup.object({
-      can_email: Yup.string()
+      email: Yup.string()
         .email("Invalid email format")
         .required("Email is required"),
-      can_password: Yup.string()
+      password: Yup.string()
         .min(6, "Minimum 6 characters")
         .required("Password is required"),
     }),
 
-
-    // Api fecth code 
+    // Api fecth code
     onSubmit: async (values, { resetForm }) => {
       setLoading(true);
 
       try {
-        const response = await axios.post(
-          "https://norealtor.in/hirelink_apis/candidate/signin/tbl_candidate",
-          {
-            can_email: values.can_email.trim(),
-            can_password: values.can_password.trim(),
-          }
-        );
+        let url = "";
+        let payload = {};
 
+        if (activeRole === "Candidate") {
+          url =
+            "https://norealtor.in/hirelink_apis/candidate/signin/tbl_candidate";
+
+          payload = {
+            can_email: values.email,
+            can_password: values.password,
+          };
+        } else {
+          url =
+            "https://norealtor.in/hirelink_apis/employer/signin/tbl_employer";
+
+          payload = {
+            emp_email: values.email,
+            emp_password: values.password,
+          };
+        }
+
+        const response = await axios.post(url, payload);
         const data = response.data;
 
         if (data.status === true) {
-          console.log("LOGIN DATA:", data.data);
-
-          localStorage.setItem("candidate", JSON.stringify(data.data[0]));
-
-          // ✅ SUCCESS TOAST
-          toast.success("Login successful!");
-
-          resetForm();
-
-          setTimeout(() => {
+          if (activeRole === "Candidate") {
+            localStorage.setItem("candidate", JSON.stringify(data.data));
             navigate("/profile");
-          }, 1000);
+
+            toast.success("Login successful!");
+            resetForm();
+          } else {
+            localStorage.setItem("employer", JSON.stringify(data.data));
+            navigate("/employer");
+          }
+
+          toast.success("Login successful!");
+          resetForm();
         } else {
-          // ❌ API ERROR
           toast.error(data.message || "Login failed");
         }
       } catch (error) {
-        // ❌ SERVER / AUTH ERROR
         toast.error(
           error.response?.data?.message || "Invalid email or password"
         );
@@ -83,10 +93,9 @@ export default function Login() {
     },
   });
 
-   // ✅ FIX 2: handleSubmit define
+  // ✅ FIX 2: handleSubmit define
   const handleSubmit = formik.handleSubmit;
 
-  
   return (
     <>
       {/* TOAST */}
@@ -172,15 +181,15 @@ export default function Login() {
                 <input
                   type="email"
                   className="form-control"
-                  name="can_email"
+                  name="email"
                   placeholder="Enter Email"
-                  value={formik.values.can_email}
+                  value={formik.values.email}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                 />
-                {formik.touched.can_email && formik.errors.can_email && (
+                {formik.touched.email && formik.errors.email && (
                   <div className="invalid-feedback d-block">
-                    {formik.errors.can_email}
+                    {formik.errors.email}
                   </div>
                 )}
               </div>
@@ -197,15 +206,15 @@ export default function Login() {
                 <input
                   type="password"
                   className="form-control"
-                  name="can_password"
+                  name="password"
                   placeholder="Enter Password"
-                  value={formik.values.can_password}
+                  value={formik.values.password}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                 />
-                {formik.touched.can_password && formik.errors.can_password && (
+                {formik.touched.password && formik.errors.password && (
                   <div className="invalid-feedback d-block">
-                    {formik.errors.can_password}
+                    {formik.errors.password}
                   </div>
                 )}
               </div>
@@ -257,3 +266,5 @@ export default function Login() {
     </>
   );
 }
+
+export default Signin;

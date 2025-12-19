@@ -9,12 +9,17 @@ function Profile() {
   const [showModal, setShowModal] = useState(false);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
 
+  const [uploadedFiles, setUploadedFile] = useState({
+    can_aadhar: "",
+    can_pan: "",
+    resume: "",
+    cv: "",
+  });
+
   const [candidate, setCandidate] = React.useState({
     can_id: "",
     can_mobile: "",
     can_address: "",
-    can_city: "",
-    can_state: "",
     can_experience: "",
     can_skill: "",
     can_about: "",
@@ -203,10 +208,11 @@ function Profile() {
   }
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, files } = e.target;
+
     setCandidate((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: files ? files[0] : value,
     }));
   };
 
@@ -225,8 +231,6 @@ function Profile() {
         {
           can_mobile: candidate.can_mobile,
           can_address: candidate.can_address,
-          can_city: candidate.can_city,
-          can_state: candidate.can_state,
           can_experience: candidate.can_experience,
           can_skill: candidate.can_skill,
           can_about: candidate.can_about,
@@ -269,6 +273,42 @@ function Profile() {
       toast.error(error.response?.data?.message || "Server error. Try again.");
     }
   };
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("filename", file); // backend key
+
+    try {
+      const res = await axios.post(
+        "https://norealtor.in/hirelink_apis/candidate/fileupload",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (res.data.status) {
+        setUploadedFile(res.data.filename);
+      }
+    } catch (err) {
+      console.error("File upload failed", err);
+    }
+  };
+
+  {
+    /* File Upload */
+  }
+  <input type="file" className="form-control" onChange={handleFileUpload} />;
+
+  {
+    /* Hidden Input – filename store honar */
+  }
+  <input type="hidden" name="resume" value={uploadedFiles} />;
 
   return (
     <>
@@ -372,25 +412,25 @@ function Profile() {
                 {/* BASIC DETAILS */}
                 <h6 className="fw-bold mb-2">Professional Information</h6>
                 <div className="row g-2 mb-2">
-                  <div className="col-md-6">
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label">Upload Aadhar</label>
                     <input
-                      type="text"
-                      name="can_mobile"
+                      type="file"
+                      name="can_aadhar"
                       className="form-control form-control-md"
-                      placeholder="Mobile"
-                      value={candidate.can_mobile}
-                      onChange={handleChange}
+                      accept=".pdf,.jpg,.jpeg,.png"
+                      onChange={handleFileUpload}
                     />
                   </div>
 
-                  <div className="col-md-6">
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label">Upload PAN</label>
                     <input
-                      type="text"
-                      name="can_address"
+                      type="file"
+                      name="can_pan"
                       className="form-control form-control-md"
-                      placeholder="Address"
-                      value={candidate.can_address}
-                      onChange={handleChange}
+                      accept=".pdf,.jpg,.jpeg,.png"
+                      onChange={handleFileUpload}
                     />
                   </div>
 
@@ -416,35 +456,26 @@ function Profile() {
                     />
                   </div>
 
-                  <div className="col-md-6">
-                    <label className="btn btn-outline-success w-100">
-                      <i className="fa fa-upload me-2"></i>Upload Resume
-                      <input
-                        type="file"
-                        hidden
-                        name="resume"
-                        onChange={(e) =>
-                          setCandidate({
-                            ...candidate,
-                            resume: e.target.files[0],
-                          })
-                        }
-                      />
-                    </label>
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label">Upload Resume</label>
+                    <input
+                      type="file"
+                      name="resume"
+                      className="form-control form-control-md"
+                      accept=".pdf,.doc,.docx"
+                      onChange={handleFileUpload}
+                    />
                   </div>
 
-                  <div className="col-md-6">
-                    <label className="btn btn-outline-success w-100">
-                      <i className="fa fa-upload me-2"></i>Upload CV
-                      <input
-                        type="file"
-                        hidden
-                        name="cv"
-                        onChange={(e) =>
-                          setCandidate({ ...candidate, cv: e.target.files[0] })
-                        }
-                      />
-                    </label>
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label">Upload CV</label>
+                    <input
+                      type="file"
+                      name="cv"
+                      className="form-control form-control-md"
+                      accept=".pdf,.doc,.docx"
+                      onChange={handleFileUpload}
+                    />
                   </div>
 
                   <div className="col-md-6">

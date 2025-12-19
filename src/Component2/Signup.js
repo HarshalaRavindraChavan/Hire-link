@@ -23,15 +23,18 @@ const Signup = () => {
   /* ---------------- VALIDATION ---------------- */
   const validationSchema = Yup.object({
     fullname: Yup.string().required("Full name is required"),
+
     email: Yup.string()
       .email("Invalid email")
       .required("Work email is required"),
+
+    can_mobile: Yup.string()
+      .required("Mobile number is required")
+      .matches(/^[6-9]\d{9}$/, "Mobile number must be exactly 10 digits"),
+
     password: Yup.string()
       .min(6, "Password must be at least 6 characters")
       .required("Password is required"),
-    confirmPassword: Yup.string()
-      .oneOf([Yup.ref("password")], "Passwords do not match")
-      .required("Confirm password is required"),
   });
 
   const {
@@ -50,6 +53,7 @@ const Signup = () => {
         can_name: formData.fullname,
         can_email: formData.email,
         can_password: formData.password,
+        can_mobile: formData.can_mobile,
       };
 
       const response = await axios.post(
@@ -130,9 +134,9 @@ const Signup = () => {
               </NavLink>
             </div>
 
-            <div className="d-flex justify-content-between align-items-center mb-3">
+            <div className="d-flex justify-content-between align-items-center">
               <div>
-                <h4 className="fw-semibold">Create your Hirelink Account</h4>
+                <h4 className=""style={{fontSize:"18px",fontWeight:"bold"}}>Create Your Hirelink Account</h4>
                 <p className="text-muted">
                   It takes less than a minute to get started.
                 </p>
@@ -145,9 +149,9 @@ const Signup = () => {
 
             {/* FORM */}
             <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="row g-3">
+              <div className="row g-2">
                 <div className="col-md-6">
-                  <label>Full name</label>
+                  <label className="mb-1">Full name</label>
                   <input
                     className={`form-control ${
                       errors.fullname ? "is-invalid" : ""
@@ -161,7 +165,7 @@ const Signup = () => {
                 </div>
 
                 <div className="col-md-6">
-                  <label>Email</label>
+                  <label className="mb-1">Email</label>
                   <input
                     className={`form-control ${
                       errors.email ? "is-invalid" : ""
@@ -175,9 +179,9 @@ const Signup = () => {
                 </div>
               </div>
 
-              <div className="row g-3 mt-2">
+              <div className="row g-2 mt-1">
                 <div className="col-md-6">
-                  <label>Password</label>
+                  <label className="mb-1">Password</label>
                   <input
                     type="password"
                     className={`form-control ${
@@ -189,22 +193,32 @@ const Signup = () => {
                 </div>
 
                 <div className="col-md-6">
-                  <label>Confirm password</label>
+                  <label className="mb-1">Mobile Number</label>
                   <input
-                    type="password"
+                    type="tel"
                     className={`form-control ${
-                      errors.confirmPassword ? "is-invalid" : ""
+                      errors.can_mobile ? "is-invalid" : ""
                     }`}
-                    {...register("confirmPassword")}
-                    placeholder="Enter confirm password"
+                    placeholder="Enter yor mobile number"
+                    maxLength={10}
+                    {...register("can_mobile")}
+                    onInput={(e) => {
+                      e.target.value = e.target.value
+                        .replace(/\D/g, "")
+                        .slice(0, 10);
+                    }}
                   />
+                  {errors.can_mobile && (
+                    <div className="invalid-feedback">
+                      {errors.can_mobile.message}
+                    </div>
+                  )}
                 </div>
               </div>
 
-              <div className="mt-3 mb-4">
-                <label className="small fw-medium d-block">Login as</label>
-
-                <div className="d-flex flex-wrap gap-2">
+              <div className="mt-2">
+                <label className="small fw-medium d-block ">Login as</label>
+                <div className="d-flex gap-2">
                   <button
                     type="button"
                     className={`role-pill ${
@@ -227,8 +241,8 @@ const Signup = () => {
                 </div>
               </div>
 
-              <button className="btn btn-primary-signup w-100 mt-4">
-                Create Account ✓
+              <button className="btn btn-primary-signup w-100 mt-3">
+                Create Account
               </button>
             </form>
           </div>

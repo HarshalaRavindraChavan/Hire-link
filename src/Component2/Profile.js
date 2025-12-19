@@ -13,6 +13,8 @@ function Profile() {
     can_id: "",
     can_mobile: "",
     can_address: "",
+    can_city: "",
+    can_state: "",
     can_experience: "",
     can_skill: "",
     can_about: "",
@@ -20,18 +22,18 @@ function Profile() {
 
   const navigate = useNavigate();
 
-  React.useEffect(() => {
-    const stored = localStorage.getItem("candidate");
+  // React.useEffect(() => {
+  //   const stored = localStorage.getItem("candidate");
 
-    if (!stored) {
-      navigate("/signin");
-      return;
-    }
+  //   if (!stored) {
+  //     navigate("/signin");
+  //     return;
+  //   }
 
-    if (stored) {
-      setCandidate(JSON.parse(stored));
-    }
-  }, []);
+  //   if (stored) {
+  //     setCandidate(JSON.parse(stored));
+  //   }
+  // }, []);
 
   function UpdateStatusModal({ show, onClose }) {
     if (!show) return null;
@@ -223,6 +225,8 @@ function Profile() {
         {
           can_mobile: candidate.can_mobile,
           can_address: candidate.can_address,
+          can_city: candidate.can_city,
+          can_state: candidate.can_state,
           can_experience: candidate.can_experience,
           can_skill: candidate.can_skill,
           can_about: candidate.can_about,
@@ -386,6 +390,28 @@ function Profile() {
                       className="form-control form-control-md"
                       placeholder="Address"
                       value={candidate.can_address}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="col-md-6">
+                    <input
+                      type="text"
+                      name="can_city"
+                      className="form-control form-control-md"
+                      placeholder="City"
+                      value={candidate.can_city}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="col-md-6">
+                    <input
+                      type="text"
+                      name="can_state"
+                      className="form-control form-control-md"
+                      placeholder="State"
+                      value={candidate.can_state}
                       onChange={handleChange}
                     />
                   </div>

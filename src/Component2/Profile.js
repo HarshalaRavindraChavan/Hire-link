@@ -3,23 +3,28 @@ import { useNavigate } from "react-router-dom";
 import "../Component2/css/Profile.css";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
+// import { resume } from "react-dom/server";
 
 function Profile() {
   const [activeTab, setActiveTab] = useState("saved");
   const [showModal, setShowModal] = useState(false);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
 
-  const [uploadedFiles, setUploadedFile] = useState({
-    can_aadhar: "",
-    can_pan: "",
-    resume: "",
-    cv: "",
-  });
+  // const [uploadedFiles, setUploadedFile] = useState({
+  //   can_aadhar: "",
+  //   can_pan: "",
+  //   resume: "",
+  //   cv: "",
+  // });
 
   const [candidate, setCandidate] = React.useState({
     can_id: "",
-    can_mobile: "",
-    can_address: "",
+    can_state: "",
+    can_city: "",
+    can_aadhar: "",
+    can_pan: "",
+    can_resume: "",
+    can_cv: "",
     can_experience: "",
     can_skill: "",
     can_about: "",
@@ -27,18 +32,18 @@ function Profile() {
 
   const navigate = useNavigate();
 
-  // React.useEffect(() => {
-  //   const stored = localStorage.getItem("candidate");
+  React.useEffect(() => {
+    const stored = localStorage.getItem("candidate");
 
-  //   if (!stored) {
-  //     navigate("/signin");
-  //     return;
-  //   }
+    if (!stored) {
+      navigate("/signin");
+      return;
+    }
 
-  //   if (stored) {
-  //     setCandidate(JSON.parse(stored));
-  //   }
-  // }, []);
+    if (stored) {
+      setCandidate(JSON.parse(stored));
+    }
+  }, []);
 
   function UpdateStatusModal({ show, onClose }) {
     if (!show) return null;
@@ -208,37 +213,53 @@ function Profile() {
   }
 
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
+    const { name, value } = e.target;
 
     setCandidate((prev) => ({
       ...prev,
-      [name]: files ? files[0] : value,
+      [name]: value,
     }));
   };
 
+  // ============ Profile Update ============
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
 
-    // ✅ VALIDATION
     if (!candidate?.can_id) {
       toast.error("Candidate ID missing");
       return;
+    }
+
+    const fileErrors = {
+      can_aadhar: "Please upload Aadhar file",
+      can_pan: "Please upload PAN file",
+      can_resume: "Please upload Resume",
+      can_cv: "Please upload CV",
+    };
+
+    for (const key in fileErrors) {
+      if (!candidate[key]) {
+        toast.error(fileErrors[key]);
+        return;
+      }
     }
 
     try {
       const response = await axios.post(
         `https://norealtor.in/hirelink_apis/candidate/updatedata/tbl_candidate/can_id/${candidate.can_id}`,
         {
-          can_mobile: candidate.can_mobile,
-          can_address: candidate.can_address,
           can_experience: candidate.can_experience,
           can_skill: candidate.can_skill,
           can_about: candidate.can_about,
+          can_state: candidate.can_state,
+          can_city: candidate.can_city,
+          can_aadhar: candidate.can_aadhar,
+          can_pan: candidate.can_pan,
+          can_resume: candidate.can_resume,
+          can_cv: candidate.can_cv,
         },
         {
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
         }
       );
 
@@ -256,12 +277,10 @@ function Profile() {
 
         setTimeout(() => {
           const modalEl = document.getElementById("editProfileModal");
-
           if (modalEl && window.bootstrap) {
             const modalInstance =
               window.bootstrap.Modal.getInstance(modalEl) ||
               new window.bootstrap.Modal(modalEl);
-
             modalInstance.hide();
           }
         }, 800);
@@ -274,41 +293,45 @@ function Profile() {
     }
   };
 
-  const handleFileUpload = async (e) => {
+  // ============File Uploading Api Call
+  const [files, setFiles] = useState({
+    can_aadhar: "",
+    can_pan: "",
+    can_resume: "",
+    can_cv: "",
+  });
+
+  // ============ File Upload API ============
+  const uploadFile = async (e, fieldName) => {
     const file = e.target.files[0];
     if (!file) return;
 
     const formData = new FormData();
-    formData.append("filename", file); // backend key
+    formData.append(fieldName, file);
 
     try {
       const res = await axios.post(
         "https://norealtor.in/hirelink_apis/candidate/fileupload",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
+        formData
       );
 
       if (res.data.status) {
-        setUploadedFile(res.data.filename);
+        const filename = res.data.files[fieldName];
+
+        setCandidate((prev) => ({
+          ...prev,
+          [fieldName]: filename,
+        }));
+
+        toast.success("File uploaded successfully ✅");
+      } else {
+        toast.error("File not uploaded ❌");
       }
     } catch (err) {
-      console.error("File upload failed", err);
+      toast.error("File not uploaded ❌");
+      console.error(err);
     }
   };
-
-  {
-    /* File Upload */
-  }
-  <input type="file" className="form-control" onChange={handleFileUpload} />;
-
-  {
-    /* Hidden Input – filename store honar */
-  }
-  <input type="hidden" name="resume" value={uploadedFiles} />;
 
   return (
     <>
@@ -365,19 +388,23 @@ function Profile() {
           </div>
         </div>
 
-        <div class="modal fade" id="editProfileModal" tabindex="-1">
-          <div class="modal-dialog modal-dialog-scrollable modal-md">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title">Edit Profile</h5>
-                <button class="btn-close" data-bs-dismiss="modal"></button>
+        <div className="modal fade" id="editProfileModal" tabIndex="-1">
+          <div className="modal-dialog modal-dialog-scrollable modal-md">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Edit Profile</h5>
+                <button className="btn-close" data-bs-dismiss="modal"></button>
               </div>
 
               {/* ================= MODAL BODY ================= */}
               <div className="modal-body px-4 py-2">
                 {/* PROFILE IMAGE SECTION */}
                 <div className="d-flex align-items-center gap-3 mb-3">
-                  <input type="hidden" value={candidate.can_id} />
+                  <input
+                    type="hidden"
+                    name="can_aadhar"
+                    value={candidate.can_aadhar}
+                  />
                   <img
                     src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
                     className="rounded-circle border"
@@ -413,24 +440,42 @@ function Profile() {
                 <h6 className="fw-bold mb-2">Professional Information</h6>
                 <div className="row g-2 mb-2">
                   <div className="col-md-6 mb-3">
-                    <label className="form-label">Upload Aadhar</label>
+                    <label className="form-label">
+                      Upload Aadhar{" "}
+                      {candidate.can_aadhar && (
+                        <i className="fa-solid fa-circle-check text-success"></i>
+                      )}
+                    </label>
                     <input
                       type="file"
-                      name="can_aadhar"
                       className="form-control form-control-md"
-                      accept=".pdf,.jpg,.jpeg,.png"
-                      onChange={handleFileUpload}
+                      // accept=".pdf,.jpg,.jpeg,.png"
+                      onChange={(e) => uploadFile(e, "can_aadhar")}
+                    />
+                    <input
+                      type="hidden"
+                      name="can_aadhar"
+                      value={candidate.can_aadhar}
                     />
                   </div>
 
                   <div className="col-md-6 mb-3">
-                    <label className="form-label">Upload PAN</label>
+                    <label className="form-label">
+                      Upload PAN{" "}
+                      {candidate.can_pan && (
+                        <i className="fa-solid fa-circle-check text-success"></i>
+                      )}
+                    </label>
                     <input
                       type="file"
-                      name="can_pan"
                       className="form-control form-control-md"
-                      accept=".pdf,.jpg,.jpeg,.png"
-                      onChange={handleFileUpload}
+                      // accept=".pdf,.jpg,.jpeg,.png"
+                      onChange={(e) => uploadFile(e, "can_pan")}
+                    />
+                    <input
+                      type="hidden"
+                      name="can_pan"
+                      value={candidate.can_pan}
                     />
                   </div>
 
@@ -457,24 +502,42 @@ function Profile() {
                   </div>
 
                   <div className="col-md-6 mb-3">
-                    <label className="form-label">Upload Resume</label>
+                    <label className="form-label">
+                      Upload Resume{" "}
+                      {candidate.can_resume && (
+                        <i className="fa-solid fa-circle-check text-success"></i>
+                      )}
+                    </label>
                     <input
                       type="file"
-                      name="resume"
                       className="form-control form-control-md"
-                      accept=".pdf,.doc,.docx"
-                      onChange={handleFileUpload}
+                      // accept=".pdf,.doc,.docx"
+                      onChange={(e) => uploadFile(e, "can_resume")}
+                    />
+                    <input
+                      type="hidden"
+                      name="can_resume"
+                      value={candidate.can_resume}
                     />
                   </div>
 
                   <div className="col-md-6 mb-3">
-                    <label className="form-label">Upload CV</label>
+                    <label className="form-label">
+                      Upload CV{" "}
+                      {candidate.can_cv && (
+                        <i className="fa-solid fa-circle-check text-success"></i>
+                      )}
+                    </label>
                     <input
                       type="file"
-                      name="cv"
                       className="form-control form-control-md"
-                      accept=".pdf,.doc,.docx"
-                      onChange={handleFileUpload}
+                      // accept=".pdf,.doc,.docx"
+                      onChange={(e) => uploadFile(e, "can_cv")}
+                    />
+                    <input
+                      type="hidden"
+                      name="can_cv"
+                      value={candidate.can_cv}
                     />
                   </div>
 

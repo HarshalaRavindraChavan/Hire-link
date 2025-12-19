@@ -67,18 +67,22 @@ function Signin() {
         const data = response.data;
 
         if (data.status === true) {
+          toast.success("Login successful!");
+
           if (activeRole === "Candidate") {
             localStorage.setItem("candidate", JSON.stringify(data.data));
-            navigate("/profile");
 
-            toast.success("Login successful!");
-            resetForm();
+            setTimeout(() => {
+              navigate("/profile");
+            }, 1200); //  1.2 sec delay
           } else {
             localStorage.setItem("employer", JSON.stringify(data.data));
-            navigate("/employer");
+
+            setTimeout(() => {
+              navigate("/employer");
+            }, 1200);
           }
 
-          toast.success("Login successful!");
           resetForm();
         } else {
           toast.error(data.message || "Login failed");

@@ -29,11 +29,11 @@
 
 /* ROLE SELECTION PILLS */
 .role-pill {
-  border-radius: 999px;
-  padding: 0.4rem 0.9rem;
-  font-size: 0.8rem;
   border: 1px solid #d4d4d8;
+  border-radius: 50px;
   background: #f9fafb;
+  padding: 6px 14px;
+  font-size: 0.8rem;
   cursor: pointer;
 }
 

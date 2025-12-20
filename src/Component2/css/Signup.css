@@ -1,9 +1,8 @@
-:root {
+/* :root {
   --hl-yellow: #ffd60a;
   --hl-green: #22c55e;
   --hl-dark: #0f172a;
-}
-
+} */
 
 /* LEFT SIDE PANEL GRADIENT */
 .signup-brand-panel {
@@ -20,7 +19,6 @@
 .btn-primary-signup:hover {
   background: #fbfcfd;
 }
-
 
 /* OUTLINE BUTTON FOR LOGIN */
 .btn-outline-auth {
@@ -39,9 +37,9 @@
 }
 
 .role-pill.active {
-  background: var(--hl-dark);
+  background: #0f172a;
   color: #fff;
-  border-color: var(--hl-dark);
+  border-color: #0f172a;
 }
 
 /* ROUNDED INPUT FIELDS */
@@ -57,34 +55,4 @@ input::placeholder {
 
 p {
   font-size: 13px;
-}
-
-
-/* Base button */
-.role-pill {
-  padding: 8px 18px;
-  border-radius: 20px;
-  border: 1.5px solid black; 
-  /* background-color: #198754; */
-  color: black;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-/* Hover */
-.role-pill:hover {
-  background-color: #e6f4ea;
-}
-
-/* Active button */
-.role-pill.active {
-  background-color: white;
-  color:black;
-  border-color: black;
-  box-shadow: 0 4px 10px rgba(25, 135, 84, 0.3);
-  transform: scale(1.03);
-  margin-left: 40px;
-    cursor: pointer;
 }

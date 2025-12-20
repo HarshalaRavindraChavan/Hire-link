@@ -143,10 +143,16 @@ function Profile() {
     can_experience: "",
     can_skill: "",
     can_about: "",
+    can_mc: "",
+    can_sc: "",
+    can_sc1: "",
+    can_sc2: "",
+    can_sc3: "",
   });
 
-  const navigate = useNavigate();
+  // Login Check but not login to redirect Signin page
 
+  const navigate = useNavigate();
   React.useEffect(() => {
     const stored = localStorage.getItem("candidate");
 
@@ -158,6 +164,16 @@ function Profile() {
     if (stored) {
       setCandidate(JSON.parse(stored));
     }
+
+    const data = JSON.parse(stored);
+    setCandidate(data);
+
+    // ✅ SET SELECTED VALUES
+    setSelectedCategory(data.can_mc || "");
+    setSelectedSubCategory(data.can_sc || "");
+    setSelectedSubCat1(data.can_sc1 || "");
+    setSelectedSubCat2(data.can_sc2 || "");
+    setSelectedSubCat3(data.can_sc3 || "");
   }, []);
 
   function UpdateStatusModal({ show, onClose }) {
@@ -359,6 +375,13 @@ function Profile() {
       }
     }
 
+    const categoryPayload = {};
+    if (selectedCategory) categoryPayload.can_mc = selectedCategory;
+    if (selectedSubCategory) categoryPayload.can_sc = selectedSubCategory;
+    if (selectedSubCat1) categoryPayload.can_sc1 = selectedSubCat1;
+    if (selectedSubCat2) categoryPayload.can_sc2 = selectedSubCat2;
+    if (selectedSubCat3) categoryPayload.can_sc3 = selectedSubCat3;
+
     try {
       const response = await axios.post(
         `https://norealtor.in/hirelink_apis/candidate/updatedata/tbl_candidate/can_id/${candidate.can_id}`,
@@ -368,6 +391,8 @@ function Profile() {
           can_about: candidate.can_about,
           can_state: candidate.can_state,
           can_city: candidate.can_city,
+          // ✅ SAVE CATEGORY HERE
+          ...categoryPayload,
           can_aadhar: candidate.can_aadhar,
           can_pan: candidate.can_pan,
           can_resume: candidate.can_resume,
@@ -408,18 +433,30 @@ function Profile() {
     }
   };
 
-  // ============File Uploading Api Call
-  const [files, setFiles] = useState({
-    can_aadhar: "",
-    can_pan: "",
-    can_resume: "",
-    can_cv: "",
-  });
-
   // ============ File Upload API ============
   const uploadFile = async (e, fieldName) => {
     const file = e.target.files[0];
     if (!file) return;
+
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+
+    // ✅ SIZE LIMITS (KB → Bytes)
+    const minSize = 30 * 1024; // 30 KB
+    const maxSize = 50 * 1024; // 50 KB
+
+    // ❌ TYPE VALIDATION
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Only JPG, JPEG, PNG files are allowed");
+      e.target.value = "";
+      return;
+    }
+
+    // ❌ SIZE VALIDATION
+    if (file.size < minSize || file.size > maxSize) {
+      toast.error("File size must be between 30 KB and 50 KB");
+      e.target.value = "";
+      return;
+    }
 
     const formData = new FormData();
     formData.append(fieldName, file);
@@ -486,8 +523,8 @@ function Profile() {
                 {candidate.can_email} | {candidate.can_mobile}
               </p>
               <p className="mb-0 text-muted">
-                {candidate.can_address}
-                <br />
+                {/* {candidate.can_address}
+                <br /> */}
                 {candidate.can_city}, {candidate.can_state}
               </p>
             </div>
@@ -554,46 +591,6 @@ function Profile() {
                 {/* BASIC DETAILS */}
                 <h6 className="fw-bold mb-2">Professional Information</h6>
                 <div className="row g-2 mb-2">
-                  <div className="col-md-6 mb-3">
-                    <label className="form-label">
-                      Upload Aadhar{" "}
-                      {candidate.can_aadhar && (
-                        <i className="fa-solid fa-circle-check text-success"></i>
-                      )}
-                    </label>
-                    <input
-                      type="file"
-                      className="form-control form-control-md"
-                      // accept=".pdf,.jpg,.jpeg,.png"
-                      onChange={(e) => uploadFile(e, "can_aadhar")}
-                    />
-                    <input
-                      type="hidden"
-                      name="can_aadhar"
-                      value={candidate.can_aadhar}
-                    />
-                  </div>
-
-                  <div className="col-md-6 mb-3">
-                    <label className="form-label">
-                      Upload PAN{" "}
-                      {candidate.can_pan && (
-                        <i className="fa-solid fa-circle-check text-success"></i>
-                      )}
-                    </label>
-                    <input
-                      type="file"
-                      className="form-control form-control-md"
-                      // accept=".pdf,.jpg,.jpeg,.png"
-                      onChange={(e) => uploadFile(e, "can_pan")}
-                    />
-                    <input
-                      type="hidden"
-                      name="can_pan"
-                      value={candidate.can_pan}
-                    />
-                  </div>
-
                   <div className="col-md-6">
                     <input
                       type="text"
@@ -616,44 +613,124 @@ function Profile() {
                     />
                   </div>
 
-                  <div className="col-md-6 mb-3">
-                    <label className="form-label">
-                      Upload Resume{" "}
-                      {candidate.can_resume && (
-                        <i className="fa-solid fa-circle-check text-success"></i>
+                  <div className="col-md-6">
+                    {" "}
+                    <label className="btn btn-outline-success w-100">
+                      {" "}
+                      {candidate.can_aadhar ? (
+                        <>
+                          <i className="fa-solid fa-circle-check text-success"></i>{" "}
+                          <span className="text-success fw-semibold">
+                            Aadhar Card Uploaded
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <i className="fa fa-upload text-muted"></i>{" "}
+                          <span className="text-muted">Upload Aadhar Card</span>
+                        </>
                       )}
-                    </label>
-                    <input
-                      type="file"
-                      className="form-control form-control-md"
-                      // accept=".pdf,.doc,.docx"
-                      onChange={(e) => uploadFile(e, "can_resume")}
-                    />
-                    <input
-                      type="hidden"
-                      name="can_resume"
-                      value={candidate.can_resume}
-                    />
+                      <input
+                        type="file"
+                        hidden
+                        onChange={(e) => uploadFile(e, "can_aadhar")}
+                      />{" "}
+                      <input
+                        type="hidden"
+                        name="can_aadhar"
+                        value={candidate.can_aadhar}
+                      />
+                    </label>{" "}
                   </div>
 
-                  <div className="col-md-6 mb-3">
-                    <label className="form-label">
-                      Upload CV{" "}
-                      {candidate.can_cv && (
-                        <i className="fa-solid fa-circle-check text-success"></i>
+                  <div className="col-md-6">
+                    {" "}
+                    <label className="btn btn-outline-success w-100">
+                      {" "}
+                      {candidate.can_pan ? (
+                        <>
+                          <i className="fa-solid fa-circle-check text-success"></i>{" "}
+                          <span className="text-success fw-semibold">
+                            Pan Card Uploaded
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <i className="fa fa-upload text-muted"></i>{" "}
+                          <span className="text-muted">Upload Pan Card</span>
+                        </>
                       )}
-                    </label>
-                    <input
-                      type="file"
-                      className="form-control form-control-md"
-                      // accept=".pdf,.doc,.docx"
-                      onChange={(e) => uploadFile(e, "can_cv")}
-                    />
-                    <input
-                      type="hidden"
-                      name="can_cv"
-                      value={candidate.can_cv}
-                    />
+                      <input
+                        type="file"
+                        hidden
+                        onChange={(e) => uploadFile(e, "can_pan")}
+                      />{" "}
+                      <input
+                        type="hidden"
+                        name="can_pan"
+                        value={candidate.can_pan}
+                      />
+                    </label>{" "}
+                  </div>
+
+                  <div className="col-md-6">
+                    {" "}
+                    <label className="btn btn-outline-success w-100">
+                      {" "}
+                      {candidate.can_resume ? (
+                        <>
+                          <i className="fa-solid fa-circle-check text-success"></i>{" "}
+                          <span className="text-success fw-semibold">
+                            Resume Uploaded
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <i className="fa fa-upload text-muted"></i>{" "}
+                          <span className="text-muted">Upload Resume</span>
+                        </>
+                      )}
+                      <input
+                        type="file"
+                        hidden
+                        onChange={(e) => uploadFile(e, "can_resume")}
+                      />{" "}
+                      <input
+                        type="hidden"
+                        name="can_resume"
+                        value={candidate.can_resume}
+                      />
+                    </label>{" "}
+                  </div>
+
+                  <div className="col-md-6">
+                    {" "}
+                    <label className="btn btn-outline-success w-100">
+                      {" "}
+                      {candidate.can_cv ? (
+                        <>
+                          <i className="fa-solid fa-circle-check text-success"></i>{" "}
+                          <span className="text-success fw-semibold">
+                            CV Uploaded
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <i className="fa fa-upload text-muted"></i>{" "}
+                          <span className="text-muted">Upload CV</span>
+                        </>
+                      )}
+                      <input
+                        type="file"
+                        hidden
+                        onChange={(e) => uploadFile(e, "can_cv")}
+                      />{" "}
+                      <input
+                        type="hidden"
+                        name="can_cv"
+                        value={candidate.can_cv}
+                      />
+                    </label>{" "}
                   </div>
 
                   <div className="col-md-6">
@@ -690,21 +767,17 @@ function Profile() {
                   </div>
                 </div>
 
-                {/* ADDRESS */}
+                {/* Categorys */}
                 <h6 className="fw-bold mb-2">Category</h6>
 
                 <div className="row g-2">
                   <div className="col-md-6">
-                    <label className="form-label fw-semibold">
-                      Main Category
-                    </label>
-
                     <select
                       className="form-control form-select rounded-3"
                       value={selectedCategory}
                       onChange={(e) => setSelectedCategory(e.target.value)}
                     >
-                      <option value="">Select</option>
+                      <option value="">Select Category</option>
                       {categories.map((cat) => (
                         <option key={cat.mc_id} value={cat.mc_id}>
                           {cat.mc_name}
@@ -714,17 +787,20 @@ function Profile() {
                   </div>
 
                   <div className="col-md-6">
-                    <label className="form-label fw-semibold">
-                      Sub Category
-                    </label>
-
                     <select
                       className="form-control form-select rounded-3"
                       value={selectedSubCategory}
                       onChange={(e) => setSelectedSubCategory(e.target.value)}
-                      disabled={!selectedCategory}
+                      disabled={!selectedCategory || subCategories.length === 0}
                     >
-                      <option value="">Select</option>
+                      <option value="">
+                        {!selectedCategory
+                          ? "Select Main Category first"
+                          : subCategories.length === 0
+                          ? "No sub categories available"
+                          : "Select"}
+                      </option>
+
                       {subCategories.map((sub) => (
                         <option key={sub.sc_id} value={sub.sc_id}>
                           {sub.sc_name}
@@ -734,16 +810,20 @@ function Profile() {
                   </div>
 
                   <div className="col-md-6">
-                    <label className="form-label fw-semibold">
-                      Sub Categoray-1
-                    </label>
                     <select
                       className="form-control form-select rounded-3"
                       value={selectedSubCat1}
                       onChange={(e) => setSelectedSubCat1(e.target.value)}
-                      disabled={!selectedSubCategory}
+                      disabled={!selectedSubCategory || subCat1.length === 0}
                     >
-                      <option value="">Select</option>
+                      <option value="">
+                        {!selectedSubCategory
+                          ? "Select Sub Category first"
+                          : subCat1.length === 0
+                          ? "No sub category available"
+                          : "Select"}
+                      </option>
+
                       {subCat1.map((item) => (
                         <option key={item.sc1_id} value={item.sc1_id}>
                           {item.sc1_name}
@@ -757,9 +837,16 @@ function Profile() {
                       className="form-control form-select rounded-3"
                       value={selectedSubCat2}
                       onChange={(e) => setSelectedSubCat2(e.target.value)}
-                      disabled={!selectedSubCat1}
+                      disabled={!selectedSubCat1 || subCat2.length === 0}
                     >
-                      <option value="">Select</option>
+                      <option value="">
+                        {!selectedSubCat1
+                          ? "Select previous category first"
+                          : subCat2.length === 0
+                          ? "No sub category available"
+                          : "Select"}
+                      </option>
+
                       {subCat2.map((item) => (
                         <option key={item.sc2_id} value={item.sc2_id}>
                           {item.sc2_name}
@@ -772,9 +859,16 @@ function Profile() {
                       className="form-control form-select rounded-3"
                       value={selectedSubCat3}
                       onChange={(e) => setSelectedSubCat3(e.target.value)}
-                      disabled={!selectedSubCat2}
+                      disabled={!selectedSubCat2 || subCat3.length === 0}
                     >
-                      <option value="">Select</option>
+                      <option value="">
+                        {!selectedSubCat2
+                          ? "Select previous category first"
+                          : subCat3.length === 0
+                          ? "No sub category available"
+                          : "Select"}
+                      </option>
+
                       {subCat3.map((item) => (
                         <option key={item.sc3_id} value={item.sc3_id}>
                           {item.sc3_name}

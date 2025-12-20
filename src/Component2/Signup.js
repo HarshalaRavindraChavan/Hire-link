@@ -136,7 +136,12 @@ const Signup = () => {
 
             <div className="d-flex justify-content-between align-items-center">
               <div>
-                <h4 className=""style={{fontSize:"18px",fontWeight:"bold"}}>Create Your Hirelink Account</h4>
+                <h4
+                  className=""
+                  style={{ fontSize: "18px", fontWeight: "bold" }}
+                >
+                  Create Your Hirelink Account
+                </h4>
                 <p className="text-muted">
                   It takes less than a minute to get started.
                 </p>
@@ -181,18 +186,6 @@ const Signup = () => {
 
               <div className="row g-2 mt-1">
                 <div className="col-md-6">
-                  <label className="mb-1">Password</label>
-                  <input
-                    type="password"
-                    className={`form-control ${
-                      errors.password ? "is-invalid" : ""
-                    }`}
-                    {...register("password")}
-                    placeholder="Enter your password"
-                  />
-                </div>
-
-                <div className="col-md-6">
                   <label className="mb-1">Mobile Number</label>
                   <input
                     type="tel"
@@ -213,6 +206,18 @@ const Signup = () => {
                       {errors.can_mobile.message}
                     </div>
                   )}
+                </div>
+
+                <div className="col-md-6">
+                  <label className="mb-1">Password</label>
+                  <input
+                    type="password"
+                    className={`form-control ${
+                      errors.password ? "is-invalid" : ""
+                    }`}
+                    {...register("password")}
+                    placeholder="Enter your password"
+                  />
                 </div>
               </div>
 

@@ -9,13 +9,25 @@ function Profile() {
   const [activeTab, setActiveTab] = useState("saved");
   const [showModal, setShowModal] = useState(false);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
 
-  // const [uploadedFiles, setUploadedFile] = useState({
-  //   can_aadhar: "",
-  //   can_pan: "",
-  //   resume: "",
-  //   cv: "",
-  // });
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(
+        "https://norealtor.in/hirelink_apis/candidate/getdata/tbl_main_category"
+      );
+
+      // set data from API
+      setCategories(response.data.data);
+    } catch (error) {
+      console.error("Error fetching categories", error);
+    }
+  };
 
   const [candidate, setCandidate] = React.useState({
     can_id: "",
@@ -580,15 +592,29 @@ function Profile() {
 
                 <div className="row g-2">
                   <div className="col-md-6">
-                    <select className="form-control form-select rounded-3">
+                    <label className="form-label fw-semibold">
+                      Main Category
+                    </label>
+
+                    <select
+                      className="form-control form-select rounded-3"
+                      value={selectedCategory}
+                      onChange={(e) => setSelectedCategory(e.target.value)}
+                    >
                       <option value="">Select</option>
-                      <option value="Active">Pharmaceutical Jobs</option>
-                      <option value="Active">Nutraceutics Jobs</option>
-                      <option value="Active">Pharmacist Jobs</option>
+
+                      {categories.map((cat) => (
+                        <option key={cat.mc_id} value={cat.mc_id}>
+                          {cat.mc_name}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
                   <div className="col-md-6">
+                    <label className="form-label fw-semibold">
+                      Sub Category
+                    </label>
                     <select className="form-control form-select rounded-3">
                       <option value="">Select</option>
                       <option value="Active">R & D</option>

@@ -5,13 +5,18 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 // import { resume } from "react-dom/server";
 
-function Profile() {
+function Profile({ mainCategoryId }) {
   const [activeTab, setActiveTab] = useState("saved");
   const [showModal, setShowModal] = useState(false);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
 
+  //Category state code
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [subCategories, setSubCategories] = useState([]);
+  const [selectedSubCategory, setSelectedSubCategory] = useState("");
+
+  //Main cat
   useEffect(() => {
     fetchCategories();
   }, []);
@@ -26,6 +31,27 @@ function Profile() {
       setCategories(response.data.data);
     } catch (error) {
       console.error("Error fetching categories", error);
+    }
+  };
+
+  //Sub cat
+  useEffect(() => {
+    if (mainCategoryId) {
+      fetchSubCategories(mainCategoryId);
+    } else {
+      setSubCategories([]);
+    }
+  }, [mainCategoryId]);
+
+  const fetchSubCategories = async (mc_id) => {
+    try {
+      const response = await axios.get(
+        `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_subcategory/sc_mc_id/${mc_id}`
+      );
+
+      setSubCategories(response.data.data);
+    } catch (error) {
+      console.error("Error fetching sub categories", error);
     }
   };
 
@@ -615,21 +641,23 @@ function Profile() {
                     <label className="form-label fw-semibold">
                       Sub Category
                     </label>
-                    <select className="form-control form-select rounded-3">
+
+                    <select
+                      className="form-control form-select rounded-3"
+                      value={selectedSubCategory}
+                      onChange={(e) => setSelectedSubCategory(e.target.value)}
+                      disabled={!mainCategoryId}
+                    >
                       <option value="">Select</option>
-                      <option value="Active">R & D</option>
-                      <option value="Active">Manufacturing</option>
-                      <option value="Active">Clinical Trials</option>
-                      <option value="Active">Bioequilances</option>
-                      <option value="Active">Regulatory</option>
-                      <option value="Active">
-                        Intellectual Property Rights (IPR)
-                      </option>
-                      <option value="Active">Logistics Chain supply</option>
-                      <option value="Active">Marketing</option>
-                      <option value="Active">Sales</option>
+
+                      {subCategories.map((sub) => (
+                        <option key={sub.sc_id} value={sub.sc_id}>
+                          {sub.sc_name}
+                        </option>
+                      ))}
                     </select>
                   </div>
+
                   <div className="col-md-6">
                     <select className="form-control form-select rounded-3">
                       <option value="">Select</option>

@@ -16,6 +16,9 @@ function Profile() {
   const [subCategories, setSubCategories] = useState([]);
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
 
+  const [subSubCategories, setSubSubCategories] = useState([]);
+  const [selectedSubSubCategory, setSelectedSubSubCategory] = useState("");
+
   //Main cat
   useEffect(() => {
     fetchCategories();
@@ -34,6 +37,7 @@ function Profile() {
     }
   };
 
+  //Sub cateagory
   useEffect(() => {
     if (selectedCategory) {
       fetchSubCategories(selectedCategory);
@@ -53,6 +57,23 @@ function Profile() {
     } catch (error) {
       console.error("Error fetching sub categories", error);
     }
+  };
+
+  //Categoray Three
+  useEffect(() => {
+    if (selectedSubCategory) {
+      fetchStatus(selectedSubCategory);
+      setSelectedStatus("");
+    } else {
+      setSubSubCategories([]);
+    }
+  }, [selectedSubCategory]);
+
+  const fetchStatus = async (sc_id) => {
+    const res = await axios.get(
+      `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_subcategory_1/sc1_sc_id/${sc_id}`
+    );
+    setSubSubCategories(res.data.data);
   };
 
   const [candidate, setCandidate] = React.useState({
@@ -659,11 +680,22 @@ function Profile() {
                   </div>
 
                   <div className="col-md-6">
-                    <select className="form-control form-select rounded-3">
+                    <label className="form-label fw-semibold">Sub Categoray-1</label>
+                    <select
+                      className="form-control form-select rounded-3"
+                      value={selectedStatus}
+                      onChange={(e) => setSelectedStatus(e.target.value)}
+                      disabled={!selectedSubCategory}
+                    >
                       <option value="">Select</option>
-                      <option value="Active">Active</option>
+                      {subSubCategories.map((item) => (
+                        <option key={item.sc2_id} value={item.sc2_id}>
+                          {item.sc2_name}
+                        </option>
+                      ))}
                     </select>
                   </div>
+
                   <div className="col-md-6">
                     <select className="form-control form-select rounded-3">
                       <option value="">Select</option>

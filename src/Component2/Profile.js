@@ -5,7 +5,7 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 // import { resume } from "react-dom/server";
 
-function Profile({ mainCategoryId }) {
+function Profile() {
   const [activeTab, setActiveTab] = useState("saved");
   const [showModal, setShowModal] = useState(false);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
@@ -34,14 +34,14 @@ function Profile({ mainCategoryId }) {
     }
   };
 
-  //Sub cat
   useEffect(() => {
-    if (mainCategoryId) {
-      fetchSubCategories(mainCategoryId);
+    if (selectedCategory) {
+      fetchSubCategories(selectedCategory);
     } else {
       setSubCategories([]);
+      setSelectedSubCategory("");
     }
-  }, [mainCategoryId]);
+  }, [selectedCategory]);
 
   const fetchSubCategories = async (mc_id) => {
     try {
@@ -646,7 +646,7 @@ function Profile({ mainCategoryId }) {
                       className="form-control form-select rounded-3"
                       value={selectedSubCategory}
                       onChange={(e) => setSelectedSubCategory(e.target.value)}
-                      disabled={!mainCategoryId}
+                      disabled={!selectedCategory}
                     >
                       <option value="">Select</option>
 

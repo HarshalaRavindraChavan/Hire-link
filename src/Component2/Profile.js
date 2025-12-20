@@ -9,15 +9,28 @@ function Profile() {
   const [activeTab, setActiveTab] = useState("saved");
   const [showModal, setShowModal] = useState(false);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
-  const [categories, setCategories] = useState([]);
 
-  //Category state code
+  // ================= CATEGORY STATES =================
+
+  // Main
+  const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
+
+  // Sub Category
   const [subCategories, setSubCategories] = useState([]);
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
 
-  const [subSubCategories, setSubSubCategories] = useState([]);
-  const [selectedSubSubCategory, setSelectedSubSubCategory] = useState("");
+  // Sub Category 1
+  const [subCat1, setSubCat1] = useState([]);
+  const [selectedSubCat1, setSelectedSubCat1] = useState("");
+
+  // Sub Category 2
+  const [subCat2, setSubCat2] = useState([]);
+  const [selectedSubCat2, setSelectedSubCat2] = useState("");
+
+  // Sub Category 3
+  const [subCat3, setSubCat3] = useState([]);
+  const [selectedSubCat3, setSelectedSubCat3] = useState("");
 
   //Main cat
   useEffect(() => {
@@ -26,14 +39,12 @@ function Profile() {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get(
+      const res = await axios.get(
         "https://norealtor.in/hirelink_apis/candidate/getdata/tbl_main_category"
       );
-
-      // set data from API
-      setCategories(response.data.data);
-    } catch (error) {
-      console.error("Error fetching categories", error);
+      setCategories(res.data.data || []);
+    } catch (err) {
+      console.error("Main category error", err);
     }
   };
 
@@ -49,31 +60,76 @@ function Profile() {
 
   const fetchSubCategories = async (mc_id) => {
     try {
-      const response = await axios.get(
+      const res = await axios.get(
         `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_subcategory/sc_mc_id/${mc_id}`
       );
-
-      setSubCategories(response.data.data);
-    } catch (error) {
-      console.error("Error fetching sub categories", error);
+      setSubCategories(res.data.data || []);
+    } catch (err) {
+      console.error("Sub category error", err);
     }
   };
 
-  //Categoray Three
+  //Sub Categoray one
   useEffect(() => {
     if (selectedSubCategory) {
-      fetchStatus(selectedSubCategory);
-      setSelectedStatus("");
+      fetchSubCat1(selectedSubCategory);
     } else {
-      setSubSubCategories([]);
+      setSubCat1([]);
+      setSelectedSubCat1("");
     }
   }, [selectedSubCategory]);
 
-  const fetchStatus = async (sc_id) => {
-    const res = await axios.get(
-      `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_subcategory_1/sc1_sc_id/${sc_id}`
-    );
-    setSubSubCategories(res.data.data);
+  const fetchSubCat1 = async (sc_id) => {
+    try {
+      const res = await axios.get(
+        `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_subcategory_1/sc1_sc_id/${sc_id}`
+      );
+      setSubCat1(res.data.data || []);
+    } catch (err) {
+      console.error("Sub category 1 error", err);
+    }
+  };
+
+  //Sub Categoray Two
+  useEffect(() => {
+    if (selectedSubCat1) {
+      fetchSubCat2(selectedSubCat1);
+    } else {
+      setSubCat2([]);
+      setSelectedSubCat2("");
+    }
+  }, [selectedSubCat1]);
+
+  const fetchSubCat2 = async (sc1_id) => {
+    try {
+      const res = await axios.get(
+        `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_subcategory_2/sc2_sc1_id/${sc1_id}`
+      );
+      setSubCat2(res.data.data || []);
+    } catch (err) {
+      console.error("Sub category 2 error", err);
+    }
+  };
+
+  //Sub Categoray Three
+  useEffect(() => {
+    if (selectedSubCat2) {
+      fetchSubCat3(selectedSubCat2);
+    } else {
+      setSubCat3([]);
+      setSelectedSubCat3("");
+    }
+  }, [selectedSubCat2]);
+
+  const fetchSubCat3 = async (sc2_id) => {
+    try {
+      const res = await axios.get(
+        `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_subcategory_3/sc3_sc2_id/${sc2_id}`
+      );
+      setSubCat3(res.data.data || []);
+    } catch (err) {
+      console.error("Sub category 3 error", err);
+    }
   };
 
   const [candidate, setCandidate] = React.useState({
@@ -649,7 +705,6 @@ function Profile() {
                       onChange={(e) => setSelectedCategory(e.target.value)}
                     >
                       <option value="">Select</option>
-
                       {categories.map((cat) => (
                         <option key={cat.mc_id} value={cat.mc_id}>
                           {cat.mc_name}
@@ -670,7 +725,6 @@ function Profile() {
                       disabled={!selectedCategory}
                     >
                       <option value="">Select</option>
-
                       {subCategories.map((sub) => (
                         <option key={sub.sc_id} value={sub.sc_id}>
                           {sub.sc_name}
@@ -680,32 +734,52 @@ function Profile() {
                   </div>
 
                   <div className="col-md-6">
-                    <label className="form-label fw-semibold">Sub Categoray-1</label>
+                    <label className="form-label fw-semibold">
+                      Sub Categoray-1
+                    </label>
                     <select
                       className="form-control form-select rounded-3"
-                      value={selectedStatus}
-                      onChange={(e) => setSelectedStatus(e.target.value)}
+                      value={selectedSubCat1}
+                      onChange={(e) => setSelectedSubCat1(e.target.value)}
                       disabled={!selectedSubCategory}
                     >
                       <option value="">Select</option>
-                      {subSubCategories.map((item) => (
-                        <option key={item.sc2_id} value={item.sc2_id}>
-                          {item.sc2_name}
+                      {subCat1.map((item) => (
+                        <option key={item.sc1_id} value={item.sc1_id}>
+                          {item.sc1_name}
                         </option>
                       ))}
                     </select>
                   </div>
 
                   <div className="col-md-6">
-                    <select className="form-control form-select rounded-3">
+                    <select
+                      className="form-control form-select rounded-3"
+                      value={selectedSubCat2}
+                      onChange={(e) => setSelectedSubCat2(e.target.value)}
+                      disabled={!selectedSubCat1}
+                    >
                       <option value="">Select</option>
-                      <option value="Active">Active</option>
+                      {subCat2.map((item) => (
+                        <option key={item.sc2_id} value={item.sc2_id}>
+                          {item.sc2_name}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   <div className="col-md-6">
-                    <select className="form-control form-select rounded-3">
+                    <select
+                      className="form-control form-select rounded-3"
+                      value={selectedSubCat3}
+                      onChange={(e) => setSelectedSubCat3(e.target.value)}
+                      disabled={!selectedSubCat2}
+                    >
                       <option value="">Select</option>
-                      <option value="Active">Active</option>
+                      {subCat3.map((item) => (
+                        <option key={item.sc3_id} value={item.sc3_id}>
+                          {item.sc3_name}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>

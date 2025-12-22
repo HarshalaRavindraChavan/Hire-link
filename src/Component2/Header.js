@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import logo from "../Component2/Image/logo.png";
 import "../Component2/css/Header.css";
@@ -26,7 +26,9 @@ function Header() {
     <>
       <header className="d-flex align-items-center justify-content-between px-4 py-2 header-bg">
         {/* LOGO */}
-        <img className="m-0 logo" src={logo} alt="logo" />
+        <Link to="/">
+          <img className="m-0 logo" src={logo} alt="logo" />
+        </Link>
 
         {/* DESKTOP NAVIGATION LINKS */}
         <nav className="d-none d-md-flex gap-3">

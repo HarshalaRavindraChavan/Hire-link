@@ -47,34 +47,72 @@ const Signup = () => {
   });
 
   /* ---------------- SUBMIT ---------------- */
-  const onSubmit = async (formData) => {
+  const onSubmit = async (values, { resetForm }) => {
+    setLoading(true);
+
     try {
-      const payload = {
-        can_name: formData.fullname,
-        can_email: formData.email,
-        can_password: formData.password,
-        can_mobile: formData.can_mobile,
-      };
+      let url = "";
+      let payload = {};
 
-      const response = await axios.post(
-        "https://norealtor.in/hirelink_apis/candidate/signup/tbl_candidate",
-        payload,
-        { headers: { "Content-Type": "application/json" } }
-      );
+      if (activeRole === "Candidate") {
+        // 🔹 Candidate Signup
+        url =
+          "https://norealtor.in/hirelink_apis/candidate/signup/tbl_candidate";
 
-      const candidate = response.data;
-
-      if (candidate.status === true) {
-        localStorage.setItem("candidate", JSON.stringify(candidate.data));
-        toast.success("Account created successfully");
-
-        reset();
-        setTimeout(() => navigate("/profile"), 1000);
+        payload = {
+          can_name: values.fullname,
+          can_email: values.email,
+          can_password: values.password,
+          can_mobile: values.can_mobile,
+        };
       } else {
-        toast.error(candidate.message || "Signup failed");
+        // 🔹 Employer Signup
+        url =
+          "https://norealtor.in/hirelink_apis/candidate/signup/tbl_employer";
+
+        payload = {
+          emp_name: values.fullname,
+          emp_email: values.email,
+          emp_password: values.password,
+          emp_mobile: values.can_mobile,
+        };
+      }
+
+      const response = await axios.post(url, payload);
+      const data = response.data;
+
+      if (data.status === true) {
+        toast.success(`${activeRole} account created successfully!`);
+
+        // 🔹 Store based on role
+        if (activeRole === "Candidate") {
+          localStorage.setItem("candidate", JSON.stringify(data.data));
+
+          setTimeout(() => {
+            navigate("/profile");
+          }, 1200);
+        } else {
+          localStorage.setItem(
+            "auth",
+            JSON.stringify({
+              role: "employer",
+              emp_id: data.data.emp_id,
+            })
+          );
+
+          setTimeout(() => {
+            navigate("/job");
+          }, 1200);
+        }
+
+        resetForm();
+      } else {
+        toast.error(data.message || "Signup failed");
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Server error. Try again.");
+    } finally {
+      setLoading(false);
     }
   };
 

@@ -6,6 +6,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import Pagination from "./commenuse/Pagination";
 
+import { toast, ToastContainer } from "react-toastify";
+
 function Jobs() {
   // tital of tab
   useState(() => {
@@ -50,6 +52,7 @@ function Jobs() {
       }
     } catch (error) {
       console.error("Jobs fetch error:", error);
+      toast.error("Failed to load jobs");
     }
   };
 
@@ -85,11 +88,11 @@ function Jobs() {
 
         fetchJobs();
       } else {
-        alert("Delete failed");
+        toast.error("Failed to delete job");
       }
     } catch (error) {
       console.error("Delete error:", error);
-      alert("Something went wrong while deleting");
+      toast.error("Something went wrong while deleting");
     }
   };
 
@@ -97,48 +100,237 @@ function Jobs() {
 
   // Validation Schema (NO if/else)
   const validationSchema = Yup.object({
-    jobTitle: Yup.string().required("Job Title is required"),
-    companyName: Yup.string().required("Company Name is required"),
-    jobCategory: Yup.string().required("Job Category is required"),
-    applicationsCount: Yup.number()
+    job_title: Yup.string().required("Job Title is required"),
+    job_company: Yup.string().required("Company Name is required"),
+    job_no_hiring: Yup.number()
       .typeError("Applications Count must be a number")
       .required("Applications Count is required"),
-    jobType: Yup.string().required("Job Type is required"),
-    salaryRange: Yup.string().required("Salary Range is required"),
-    status: Yup.string().required("Status is required"),
-    postedDate: Yup.string().required("Posted Date is required"),
-    location: Yup.string().required("Location is required"),
-    experienceRequired: Yup.string().required("Experience is required"),
+    job_type: Yup.string().required("Job Type is required"),
+    job_salary: Yup.string().required("Salary Range is required"),
+    job_status: Yup.string().required("Status is required"),
+    job_date: Yup.string().required("Posted Date is required"),
+    job_location: Yup.string().required("Location is required"),
+    job_skills: Yup.string().required("Skills is required"),
+    job_experience: Yup.string().required("Experience is required"),
   });
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
 
-  const onSubmit = (data) => {
-    console.log("Form Data:", data);
-    alert("Form Submitted Successfully!");
+  const onSubmit = async (data) => {
+    if (role !== "employer") {
+      toast.error("Only employer can add jobs");
+      return;
+    }
+
+    try {
+      const payload = {
+        job_title: data.job_title,
+        job_company: data.job_company,
+        job_mc: selectedCategory,
+        job_sc: selectedSubCategory,
+        job_sc1: selectedSubCat1,
+        job_sc2: selectedSubCat2,
+        job_sc3: selectedSubCat3,
+        job_no_hiring: Number(data.job_no_hiring),
+        job_type: data.job_type,
+        job_salary: data.job_salary,
+        job_status: data.job_status, // 1 or 0
+        job_date: data.job_date,
+        job_skills: data.job_skills,
+        job_location: data.job_location,
+        job_experience: data.job_experience,
+        job_employer: employerId,
+      };
+      const res = await axios.post(
+        "https://norealtor.in/hirelink_apis/admin/insert/tbl_job",
+        payload
+      );
+
+      if (res.data.status === true) {
+        reset();
+        toast.success("Job Added Successfully");
+        fetchJobs();
+      }
+    } catch (error) {
+      console.error("Add job error:", error);
+      toast.error("Failed to add job. Please try again.");
+    }
+  };
+
+  // ================= CATEGORY STATES =================
+
+  // Main
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+
+  // Sub Category
+  const [subCategories, setSubCategories] = useState([]);
+  const [selectedSubCategory, setSelectedSubCategory] = useState("");
+
+  // Sub Category 1
+  const [subCat1, setSubCat1] = useState([]);
+  const [selectedSubCat1, setSelectedSubCat1] = useState("");
+
+  // Sub Category 2
+  const [subCat2, setSubCat2] = useState([]);
+  const [selectedSubCat2, setSelectedSubCat2] = useState("");
+
+  // Sub Category 3
+  const [subCat3, setSubCat3] = useState([]);
+  const [selectedSubCat3, setSelectedSubCat3] = useState("");
+
+  const [categoryErrors, setCategoryErrors] = useState({});
+
+  // 🔥 CLEAR CATEGORY ERRORS ON CHANGE
+  useEffect(() => {
+    setCategoryErrors({});
+  }, [
+    selectedCategory,
+    selectedSubCategory,
+    selectedSubCat1,
+    selectedSubCat2,
+    selectedSubCat3,
+  ]);
+
+  const handleSelectChange = (key, value, setter) => {
+    setter(value);
+    setCategoryErrors((prev) => ({
+      ...prev,
+      [key]: "",
+    }));
+  };
+
+  //Main cat
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const res = await axios.get(
+        "https://norealtor.in/hirelink_apis/admin/getdata/tbl_main_category"
+      );
+      setCategories(res.data.data || []);
+    } catch (err) {
+      console.error("Main category error", err);
+    }
+  };
+
+  //Sub cateagory
+  useEffect(() => {
+    if (selectedCategory) {
+      fetchSubCategories(selectedCategory);
+    } else {
+      setSubCategories([]);
+      setSelectedSubCategory("");
+    }
+  }, [selectedCategory]);
+
+  const fetchSubCategories = async (mc_id) => {
+    try {
+      const res = await axios.get(
+        `https://norealtor.in/hirelink_apis/admin/getdatawhere/tbl_subcategory/sc_mc_id/${mc_id}`
+      );
+      setSubCategories(res.data.data || []);
+    } catch (err) {
+      console.error("Sub category error", err);
+    }
+  };
+
+  //Sub Categoray one
+  useEffect(() => {
+    if (selectedSubCategory) {
+      fetchSubCat1(selectedSubCategory);
+    } else {
+      setSubCat1([]);
+      setSelectedSubCat1("");
+    }
+  }, [selectedSubCategory]);
+
+  const fetchSubCat1 = async (sc_id) => {
+    try {
+      const res = await axios.get(
+        `https://norealtor.in/hirelink_apis/admin/getdatawhere/tbl_subcategory_1/sc1_sc_id/${sc_id}`
+      );
+      setSubCat1(res.data.data || []);
+    } catch (err) {
+      console.error("Sub category 1 error", err);
+    }
+  };
+
+  //Sub Categoray Two
+  useEffect(() => {
+    if (selectedSubCat1) {
+      fetchSubCat2(selectedSubCat1);
+    } else {
+      setSubCat2([]);
+      setSelectedSubCat2("");
+    }
+  }, [selectedSubCat1]);
+
+  const fetchSubCat2 = async (sc1_id) => {
+    try {
+      const res = await axios.get(
+        `https://norealtor.in/hirelink_apis/admin/getdatawhere/tbl_subcategory_2/sc2_sc1_id/${sc1_id}`
+      );
+      setSubCat2(res.data.data || []);
+    } catch (err) {
+      console.error("Sub category 2 error", err);
+    }
+  };
+
+  //Sub Categoray Three
+  useEffect(() => {
+    if (selectedSubCat2) {
+      fetchSubCat3(selectedSubCat2);
+    } else {
+      setSubCat3([]);
+      setSelectedSubCat3("");
+    }
+  }, [selectedSubCat2]);
+
+  const fetchSubCat3 = async (sc2_id) => {
+    try {
+      const res = await axios.get(
+        `https://norealtor.in/hirelink_apis/admin/getdatawhere/tbl_subcategory_3/sc3_sc2_id/${sc2_id}`
+      );
+      setSubCat3(res.data.data || []);
+    } catch (err) {
+      console.error("Sub category 3 error", err);
+    }
   };
 
   return (
     <>
+      {/* TOAST */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        pauseOnHover
+        theme="colored"
+      />
       <div className="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
         <div>
           <h3 className="fw-bold mb-3">Jobs</h3>
         </div>
-        <div className="ms-auto py-2 py-md-0">
-          <a
-            data-bs-toggle="modal"
-            data-bs-target="#exampleModal"
-            className="btn btn-success"
-          >
-            <i className="fa fa-plus"> </i> Add Jobs
-          </a>
-        </div>
+        {role === "employer" && (
+          <div className="ms-auto py-2 py-md-0">
+            <a
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+              className="btn btn-success"
+            >
+              <i className="fa fa-plus"></i> Add Jobs
+            </a>
+          </div>
+        )}
       </div>
 
       <div className="card shadow-sm p-3 border">
@@ -280,7 +472,7 @@ function Jobs() {
                       {job.job_status === "1" ? (
                         <span className="badge bg-success">Active</span>
                       ) : (
-                        <span className="badge bg-danger">Inactive</span>
+                        <span className="badge bg-warning">Pending</span>
                       )}
                     </td>
                   </tr>
@@ -307,7 +499,7 @@ function Jobs() {
       <div
         className="modal fade"
         id="exampleModal"
-        tabindex="-1"
+        tabIndex="-1"
         aria-hidden="true"
       >
         <div className="modal-dialog modal-dialog-centered modal-lg">
@@ -330,12 +522,12 @@ function Jobs() {
                   <label className="form-label fw-semibold">Job Title</label>
                   <input
                     type="text"
-                    {...register("jobTitle")}
+                    {...register("job_title")}
                     className="form-control form-control-md rounded-3"
                     placeholder="Enter Job Title"
                   />
                   <span className="text-danger">
-                    {errors.jobTitle?.message}
+                    {errors.job_title?.message}
                   </span>
                 </div>
 
@@ -344,42 +536,157 @@ function Jobs() {
                   <label className="form-label fw-semibold">Company Name</label>
                   <input
                     type="text"
-                    {...register("companyName")}
+                    {...register("job_company")}
                     className="form-control form-control-md rounded-3"
                     placeholder="Enter Company Name"
                   />
                   <span className="text-danger">
-                    {errors.companyName?.message}
+                    {errors.job_company?.message}
                   </span>
                 </div>
 
                 {/* Job Category */}
                 <div className="col-md-4 mb-2">
-                  <label className="form-label fw-semibold">Job Category</label>
-                  <input
-                    type="text"
-                    {...register("jobCategory")}
-                    className="form-control form-control-md rounded-3"
-                    placeholder="Enter Job Category"
-                  />
-                  <span className="text-danger">
-                    {errors.jobCategory?.message}
-                  </span>
+                  <label className="form-label fw-semibold">
+                    Main Category
+                  </label>
+                  <select
+                    className="form-control form-select rounded-3"
+                    value={selectedCategory}
+                    onChange={(e) =>
+                      handleSelectChange(
+                        "job_mc",
+                        e.target.value,
+                        setSelectedCategory
+                      )
+                    }
+                  >
+                    <option value="">Select Category</option>
+                    {categories.map((cat) => (
+                      <option key={cat.mc_id} value={cat.mc_id}>
+                        {cat.mc_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="col-md-4 mb-2">
+                  <label className="form-label fw-semibold">Sub Category</label>
+                  <select
+                    className="form-control form-select rounded-3"
+                    value={selectedSubCategory}
+                    onChange={(e) =>
+                      handleSelectChange(
+                        "job_sc",
+                        e.target.value,
+                        setSelectedSubCategory
+                      )
+                    }
+                    disabled={!selectedCategory || subCategories.length === 0}
+                  >
+                    <option value="">Select</option>
+                    {subCategories.map((sub) => (
+                      <option key={sub.sc_id} value={sub.sc_id}>
+                        {sub.sc_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="col-md-4 mb-2">
+                  <label className="form-label fw-semibold">
+                    Sub Category 1
+                  </label>
+                  <select
+                    className="form-control form-select rounded-3"
+                    value={selectedSubCat1}
+                    onChange={(e) =>
+                      handleSelectChange(
+                        "job_sc1",
+                        e.target.value,
+                        setSelectedSubCat1
+                      )
+                    }
+                    disabled={!selectedSubCategory || subCat1.length === 0}
+                  >
+                    <option value="">Select</option>
+                    {subCat1.map((item) => (
+                      <option key={item.sc1_id} value={item.sc1_id}>
+                        {item.sc1_name}
+                      </option>
+                    ))}
+                  </select>
+
+                  {categoryErrors.job_sc1 && (
+                    <small className="text-danger">
+                      {categoryErrors.job_sc1}
+                    </small>
+                  )}
+                </div>
+
+                <div className="col-md-4 mb-2">
+                  <label className="form-label fw-semibold">
+                    Sub Category 2
+                  </label>
+                  <select
+                    className="form-control form-select rounded-3"
+                    value={selectedSubCat2}
+                    onChange={(e) =>
+                      handleSelectChange(
+                        "job_sc2",
+                        e.target.value,
+                        setSelectedSubCat2
+                      )
+                    }
+                    disabled={!selectedSubCat1 || subCat2.length === 0}
+                  >
+                    <option value="">Select</option>
+                    {subCat2.map((item) => (
+                      <option key={item.sc2_id} value={item.sc2_id}>
+                        {item.sc2_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="col-md-4 mb-2">
+                  <label className="form-label fw-semibold">
+                    Sub Category 3
+                  </label>
+                  <select
+                    className="form-control form-select rounded-3"
+                    value={selectedSubCat3}
+                    onChange={(e) =>
+                      handleSelectChange(
+                        "job_sc3",
+                        e.target.value,
+                        setSelectedSubCat3
+                      )
+                    }
+                    disabled={!selectedSubCat2 || subCat3.length === 0}
+                  >
+                    <option value="">Select</option>
+                    {subCat3.map((item) => (
+                      <option key={item.sc3_id} value={item.sc3_id}>
+                        {item.sc3_name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 {/* Applications Count */}
                 <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">
-                    Applications Count
+                    No of Candidates Hiring
                   </label>
                   <input
                     type="number"
-                    {...register("applicationsCount")}
+                    {...register("job_no_hiring")}
                     className="form-control form-control-md rounded-3"
-                    placeholder="Enter Applications Count"
+                    placeholder="Enter No of Candidates Hiring"
                   />
                   <span className="text-danger">
-                    {errors.applicationsCount?.message}
+                    {errors.job_no_hiring?.message}
                   </span>
                 </div>
 
@@ -387,7 +694,7 @@ function Jobs() {
                 <div className="col-md-4 mb-2 position-relative">
                   <label className="form-label fw-semibold">Job Type</label>
                   <select
-                    {...register("jobType")}
+                    {...register("job_type")}
                     className="form-control form-control-md rounded-3"
                   >
                     <option value="">Select Job Type</option>
@@ -397,7 +704,9 @@ function Jobs() {
                     <option value="Remote">Remote</option>
                     <option value="Contract">Contract</option>
                   </select>
-                  <span className="text-danger">{errors.jobType?.message}</span>
+                  <span className="text-danger">
+                    {errors.job_type?.message}
+                  </span>
                 </div>
 
                 {/* Salary Range */}
@@ -405,12 +714,12 @@ function Jobs() {
                   <label className="form-label fw-semibold">Salary Range</label>
                   <input
                     type="text"
-                    {...register("salaryRange")}
+                    {...register("job_salary")}
                     className="form-control form-control-md rounded-3"
                     placeholder="Enter Salary Range"
                   />
                   <span className="text-danger">
-                    {errors.salaryRange?.message}
+                    {errors.job_salary?.message}
                   </span>
                 </div>
 
@@ -418,15 +727,16 @@ function Jobs() {
                 <div className="col-md-4 mb-2 position-relative">
                   <label className="form-label fw-semibold">Status</label>
                   <select
-                    {...register("status")}
+                    {...register("job_status")}
                     className="form-control form-control-md rounded-3"
                   >
                     <option value="">Select Status</option>
-                    <option value="Active">Active</option>
-                    <option value="Pending">Pending</option>
-                    <option value="Closed">Closed</option>
+                    <option value="1">Active</option>
+                    <option value="2">Pending</option>
                   </select>
-                  <span className="text-danger">{errors.status?.message}</span>
+                  <span className="text-danger">
+                    {errors.job_status?.message}
+                  </span>
                 </div>
 
                 {/* Posted Date */}
@@ -434,11 +744,11 @@ function Jobs() {
                   <label className="form-label fw-semibold">Posted Date</label>
                   <input
                     type="date"
-                    {...register("postedDate")}
+                    {...register("job_date")}
                     className="form-control form-control-md rounded-3"
                   />
                   <span className="text-danger">
-                    {errors.postedDate?.message}
+                    {errors.job_date?.message}
                   </span>
                 </div>
 
@@ -447,12 +757,12 @@ function Jobs() {
                   <label className="form-label fw-semibold">Location</label>
                   <input
                     type="text"
-                    {...register("location")}
+                    {...register("job_location")}
                     className="form-control form-control-md rounded-3"
                     placeholder="Enter Location"
                   />
                   <span className="text-danger">
-                    {errors.location?.message}
+                    {errors.job_location?.message}
                   </span>
                 </div>
 
@@ -463,12 +773,26 @@ function Jobs() {
                   </label>
                   <input
                     type="text"
-                    {...register("experienceRequired")}
+                    {...register("job_experience")}
                     className="form-control form-control-md rounded-3"
                     placeholder="Enter Experience Required"
                   />
                   <span className="text-danger">
-                    {errors.experienceRequired?.message}
+                    {errors.job_experience?.message}
+                  </span>
+                </div>
+
+                {/* Location */}
+                <div className="col-md-4 mb-2">
+                  <label className="form-label fw-semibold">Skills</label>
+                  <input
+                    type="text"
+                    {...register("job_skills")}
+                    className="form-control form-control-md rounded-3"
+                    placeholder="Enter Required Skills"
+                  />
+                  <span className="text-danger">
+                    {errors.job_skills?.message}
                   </span>
                 </div>
               </div>

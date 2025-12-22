@@ -5,8 +5,14 @@ import axios from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Pagination from "./commenuse/Pagination";
+import { toast } from "react-toastify";
 
 function Users() {
+
+  const [User, setUser] = useState({
+  user_aadhar_image: "",
+  user_pan_image: "",
+});
   // tital of tab
   useState(() => {
     document.title = "Hirelink | Users";
@@ -251,7 +257,7 @@ function Users() {
       if (res.data.status) {
         const filename = res.data.files[fieldName];
 
-        setCandidate((prev) => ({
+        setUser((prev) => ({
           ...prev,
           [fieldName]: filename, // save file name
         }));

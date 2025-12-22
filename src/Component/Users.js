@@ -110,6 +110,7 @@ function Users() {
     setDeleteId(id);
     setShowDeleteModal(true);
   };
+
   const confirmDelete = async () => {
     try {
       const res = await axios.get(
@@ -213,6 +214,60 @@ function Users() {
     console.log("Form Data:", data);
     // call your API here
     reset(); // reset form after submission
+  };
+
+  const uploadFile = async (e, fieldName) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+    const minSize = 30 * 1024; // 30 KB
+    const maxSize = 50 * 1024; // 50 KB
+
+    // TYPE CHECK
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Only JPG, JPEG, PNG files are allowed");
+      e.target.value = "";
+      return;
+    }
+
+    // SIZE CHECK
+    if (file.size < minSize || file.size > maxSize) {
+      toast.error("File size must be between 30 KB and 50 KB");
+      e.target.value = "";
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append(fieldName, file); // 🔥 KEY MUST MATCH BACKEND
+
+    try {
+      const res = await axios.post(
+        "https://norealtor.in/hirelink_apis/admin/fileupload",
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+
+      if (res.data.status) {
+        const filename = res.data.files[fieldName];
+
+        setCandidate((prev) => ({
+          ...prev,
+          [fieldName]: filename, // save file name
+        }));
+
+        toast.success(
+          `${
+            fieldName === "user_aadhar_image" ? "Aadhar" : "PAN"
+          } uploaded successfully ✅`
+        );
+      } else {
+        toast.error("File upload failed ❌");
+      }
+    } catch (err) {
+      toast.error("File upload failed ❌");
+      console.error(err);
+    }
   };
 
   return (
@@ -569,9 +624,10 @@ function Users() {
                   <label className="fw-semibold">Aadhar Card Upload</label>
                   <input
                     type="file"
-                    {...register("adharupload")}
                     className="form-control"
-                    placeholder="Enter PAN Number"
+                    accept="image/png, image/jpeg"
+                    {...register("adharupload")}
+                    onChange={(e) => uploadFile(e, "user_aadhar_image")}
                   />
                   <p className="text-danger">{errors.adharupload?.message}</p>
                 </div>
@@ -581,9 +637,10 @@ function Users() {
                   <label className="fw-semibold">PAN Card Upload</label>
                   <input
                     type="file"
-                    {...register("panupload")}
                     className="form-control"
-                    placeholder="Enter PAN Number"
+                    accept="image/png, image/jpeg"
+                    {...register("panupload")}
+                    onChange={(e) => uploadFile(e, "user_pan_image")}
                   />
                   <p className="text-danger">{errors.panupload?.message}</p>
                 </div>
@@ -629,7 +686,7 @@ function Users() {
                 </div>
 
                 {/* menus */}
-                <div className="col-md-4">
+                {/* <div className="col-md-4">
                   <label className="fw-semibold">Menus</label>
                   <select
                     className="form-select form-control"
@@ -657,7 +714,7 @@ function Users() {
                   </select>
 
                   <p className="text-danger">{errors.menus?.message}</p>
-                </div>
+                </div> */}
               </div>
 
               <div className="modal-footer bg-light rounded-bottom-4 d-flex">

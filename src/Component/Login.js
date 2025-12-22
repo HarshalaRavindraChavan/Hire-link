@@ -57,24 +57,18 @@ function Login() {
 
         const data = response.data;
 
-        if (
-          data.status === true ||
-          data.status === "success" ||
-          data.success === true
-        ) {
-          console.log("Login SUCCESS");
-
-          if (data.token) {
-            console.log("Token received:", data.token);
-            localStorage.setItem("token", data.token);
-          }
+        if (data.status === true) {
+          localStorage.setItem(
+            "auth",
+            JSON.stringify({
+              role: response.data.data.user_role,
+              user_id: response.data.data.user_id,
+            })
+          );
 
           // ✅ SUCCESS TOAST
           toast.success("Login successful! Redirecting...");
-
           resetForm();
-
-          console.log("Redirecting to dashboard...");
           setTimeout(() => {
             navigate("/dashboard");
           }, 1500);

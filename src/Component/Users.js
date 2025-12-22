@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Pagination from "./commenuse/Pagination";
@@ -19,25 +20,26 @@ function Users() {
     TamilNadu: ["Chennai", "Coimbatore", "Madurai"],
   };
 
-  const [users, setUsers] = useState([
-    {
-      id: 1,
-      fullname: "Harshal Mahajan",
-      email: "harshal1@gmail.com",
-      mobile: "9876543201",
-      location: "Main Road",
-      address: "Main Road",
-      state: "Maharastra",
-      city: "Pune",
-      joindate: "2024-01-05",
-      adhar: "1111 2222 3333",
-      pan: "ABCDE1234F",
-      bankpassbook: "Union Bank",
-      experience: "1 Year",
-      added_by: "rohan",
-      added_date: "12/11/2025",
-    },
-  ]);
+  const [users, setUsers] = useState([]);
+
+  //=============== all Data Disply=============
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    try {
+      const res = await axios.get(
+        "https://norealtor.in/hirelink_apis/admin/getdata/tbl_user"
+      );
+
+      if (res.data.status === true) {
+        setUsers(res.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching users", error);
+    }
+  };
 
   const [formData, setFormData] = useState({
     fullname: "",
@@ -94,7 +96,7 @@ function Users() {
 
   // PAGINATION
   const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 1;
+  const recordsPerPage = 10;
   const lastIndex = currentPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
   const records = users.slice(firstIndex, lastIndex);
@@ -108,11 +110,24 @@ function Users() {
     setDeleteId(id);
     setShowDeleteModal(true);
   };
+  const confirmDelete = async () => {
+    try {
+      const res = await axios.get(
+        `https://norealtor.in/hirelink_apis/admin/deletedata/tbl_user/user_id/${deleteId}`
+      );
 
-  const confirmDelete = () => {
-    const filtered = users.filter((u) => u.id !== deleteId);
-    setUsers(filtered);
-    setShowDeleteModal(false);
+      if (res.data.status === true) {
+        setShowDeleteModal(false);
+        setDeleteId(null);
+
+        fetchUsers();
+      } else {
+        alert("Delete failed");
+      }
+    } catch (error) {
+      console.error("Delete error", error);
+      alert("Something went wrong while deleting");
+    }
   };
 
   // Validation schema using Yup
@@ -267,103 +282,125 @@ function Users() {
 
           <tbody>
             {records.length > 0 ? (
-              records.map((u) => (
-                <tr key={u.id} className="text-center align-middle">
-                  <td>{u.id}</td>
-                  <td className="text-start">
-                    <div className="fw-bold">
-                      Name:
-                      <div className="dropdown d-inline ms-2">
-                        <span
-                          className="fw-bold text-primary"
-                          role="button"
-                          data-bs-toggle="dropdown"
-                        >
-                          {u.fullname}
-                        </span>
-                        <ul className="dropdown-menu shadow">
-                          <li>
-                            <button className="dropdown-item">
-                              <i className="fas fa-edit me-2"></i>Edit
-                            </button>
-                          </li>
-                          <li>
-                            <button
-                              className="dropdown-item text-danger"
-                              onClick={() => handleDeleteClick(u.id)}
-                            >
-                              <i className="fas fa-trash me-2"></i>Delete
-                            </button>
-                          </li>
-                        </ul>
+              records
+                .filter((u) => String(u.user_id) !== "1")
+                .map((u) => (
+                  <tr key={u.user_id} className="text-center align-middle">
+                    <td>{u.user_id}</td>
+                    <td className="text-start">
+                      <div className="fw-bold">
+                        Name:
+                        <div className="dropdown d-inline ms-2">
+                          <span
+                            className="fw-bold text-primary"
+                            role="button"
+                            data-bs-toggle="dropdown"
+                          >
+                            {u.user_name}
+                          </span>
+                          <ul className="dropdown-menu shadow">
+                            <li>
+                              <button className="dropdown-item">
+                                <i className="fas fa-edit me-2"></i>Edit
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                className="dropdown-item text-danger"
+                                onClick={() => handleDeleteClick(u.user_id)}
+                              >
+                                <i className="fas fa-trash me-2"></i>Delete
+                              </button>
+                            </li>
+                          </ul>
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="fw-bold">
-                      Email:{"  "}
-                      <span className="text-dark fw-normal">{u.email}</span>
-                    </div>
-                    <div className="fw-bold">
-                      Mobile No:{"  "}
-                      <span className="text-dark fw-normal">{u.mobile}</span>
-                    </div>
-                    <div className="fw-bold">
-                      Experience:{"  "}
-                      <span className="text-dark fw-normal">
-                        {u.experience}
-                      </span>
-                    </div>
-                  </td>
+                      <div className="fw-bold">
+                        Email:{"  "}
+                        <span className="text-dark fw-normal">
+                          {u.user_email}
+                        </span>
+                      </div>
+                      <div className="fw-bold">
+                        Mobile No:{"  "}
+                        <span className="text-dark fw-normal">
+                          {u.user_mobile}
+                        </span>
+                      </div>
+                      <div className="fw-bold">
+                        Experience:{"  "}
+                        <span className="text-dark fw-normal">
+                          {u.user_experience}
+                        </span>
+                      </div>
+                    </td>
 
-                  {/* User Id Proof */}
-                  <td className="text-start">
-                    <div className="fw-bold">
-                      Aadhar No:{"  "}
-                      <span className="text-dark fw-normal">{u.adhar}</span>
-                    </div>
-                    <div className="fw-bold">
-                      Pan Card No:{"  "}
-                      <span className="text-dark fw-normal">{u.pan}</span>
-                    </div>
-                    <div className="fw-bold">
-                      Join Date:{"  "}
-                      <span className="text-dark fw-normal">{u.joindate}</span>
-                    </div>
-                  </td>
-                  {/* Address */}
-                  <td className="text-start">
-                    <div className="fw-bold">
-                      Location:{"  "}
-                      <span className="text-dark fw-normal">{u.location}</span>
-                    </div>
-                    <div className="fw-bold">
-                      Address:{"  "}
-                      <span className="text-dark fw-normal">{u.address}</span>
-                    </div>
-                    <div className="fw-bold">
-                      City:{"  "}
-                      <span className="text-dark fw-normal">{u.city}</span>
-                    </div>
-                    <div className="fw-bold">
-                      State:{"  "}
-                      <span className="text-dark fw-normal">{u.state}</span>
-                    </div>
-                  </td>
-                  {/* Activity Detail */}
-                  <td className="text-start">
-                    <div className="fw-bold ">
-                      Added By:{"  "}
-                      <span className="text-dark fw-normal">{u.added_by}</span>
-                    </div>
-                    <div className="fw-bold ">
-                      Added Date:{"  "}
-                      <span className="text-dark fw-normal">
-                        {u.added_date}
-                      </span>
-                    </div>
-                  </td>
-                </tr>
-              ))
+                    {/* User Id Proof */}
+                    <td className="text-start">
+                      <div className="fw-bold">
+                        Aadhar No:{"  "}
+                        <span className="text-dark fw-normal">
+                          {u.user_adhar}
+                        </span>
+                      </div>
+                      <div className="fw-bold">
+                        Pan Card No:{"  "}
+                        <span className="text-dark fw-normal">
+                          {u.user_pan}
+                        </span>
+                      </div>
+                      <div className="fw-bold">
+                        Join Date:{"  "}
+                        <span className="text-dark fw-normal">
+                          {u.user_joindate}
+                        </span>
+                      </div>
+                    </td>
+                    {/* Address */}
+                    <td className="text-start">
+                      <div className="fw-bold">
+                        Location:{"  "}
+                        <span className="text-dark fw-normal">
+                          {u.user_location}
+                        </span>
+                      </div>
+                      <div className="fw-bold">
+                        Address:{"  "}
+                        <span className="text-dark fw-normal">
+                          {u.user_address}
+                        </span>
+                      </div>
+                      <div className="fw-bold">
+                        City:{"  "}
+                        <span className="text-dark fw-normal">
+                          {u.user_city}
+                        </span>
+                      </div>
+                      <div className="fw-bold">
+                        State:{"  "}
+                        <span className="text-dark fw-normal">
+                          {u.user_state}
+                        </span>
+                      </div>
+                    </td>
+                    {/* Activity Detail */}
+                    <td className="text-start">
+                      <div className="fw-bold ">
+                        Added By:{"  "}
+                        <span className="text-dark fw-normal">
+                          {u.user_added_by}
+                        </span>
+                      </div>
+                      <div className="fw-bold ">
+                        Added Date:{"  "}
+                        <span className="text-dark fw-normal">
+                          {u.user_added_date}
+                        </span>
+                      </div>
+                    </td>
+                  </tr>
+                ))
             ) : (
               <tr>
                 <td colSpan="6" className="text-center text-muted py-3">

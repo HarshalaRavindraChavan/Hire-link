@@ -1,93 +1,47 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import * as yup from "yup";
 import Pagination from "./commenuse/Pagination";
 
 function Employes() {
   // tital of tab
-  useState(() => {
-    document.title = "Hirelink | Employers ";
+  useEffect(() => {
+    document.title = "Hirelink | Employers";
   }, []);
 
   const [search, setSearch] = useState("");
-  const [users, setUsers] = useState([
-    {
-      id: 1,
-      fullname: "Harshal Mahajan",
-      email: "harshal1@gmail.com",
-      mobile: "9876543201",
-      companyname: "HireLink Pvt Ltd",
-      Category: "Percentage",
-      password: "Harshal@123",
-      location: "Main Road",
-      city: "Mumbai",
-      state: "Maharashtra",
-      website: "https://hirelink.in",
-      linkedin: "https://linkedin.com/in/harshal",
-      facebook: "https://facebook.com/harshal",
-      instagram: "https://instagram.com/harshal",
-      youtube: "https://youtube.com/harshal",
-    },
-  ]);
+  const [employer, setEmployer] = useState([]);
 
-  const [formData, setFormData] = useState({
-    fullname: "",
-    email: "",
-    mobile: "",
-    companyname: "",
-    Category: "",
-    password: "",
-    location: "",
-    city: "",
-    state: "",
-    website: "",
-    linkedin: "",
-    facebook: "",
-    instagram: "",
-    youtube: "",
-  });
+  useEffect(() => {
+    fetchEmployers();
+  }, []);
 
-  const handleChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const fetchEmployers = async () => {
+    try {
+      const res = await axios.get(
+        "https://norealtor.in/hirelink_apis/admin/getdata/tbl_employer"
+      );
 
-  const handleAddUserr = (e) => {
-    e.preventDefault();
-
-    const newUser = { id: Date.now(), ...formData };
-    setUsers([...users, newUser]);
-
-    setFormData({
-      fullname: "",
-      email: "",
-      mobile: "",
-      companyname: "",
-      Category: "",
-      password: "",
-      location: "",
-      city: "",
-      state: "",
-      website: "",
-      linkedin: "",
-      facebook: "",
-      instagram: "",
-      youtube: "",
-    });
-
-    const modal = window.bootstrap.Modal.getInstance(
-      document.getElementById("exampleModal")
-    );
-    modal.hide();
+      if (res.data.status === true) {
+        setEmployer(res.data.data);
+      }
+    } catch (error) {
+      console.error("Error Employer Fetch:", error);
+    }
   };
+
   // PAGINATION
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 5;
+
   const lastIndex = currentPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
-  const records = users.slice(firstIndex, lastIndex);
-  const nPages = Math.ceil(users.length / recordsPerPage);
+
+  const records = employer.slice(firstIndex, lastIndex);
+  const nPages = Math.ceil(employer.length / recordsPerPage);
 
   // DELETE
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -98,10 +52,24 @@ function Employes() {
     setShowDeleteModal(true);
   };
 
-  const confirmDelete = () => {
-    const filtered = users.filter((u) => u.id !== deleteId);
-    setUsers(filtered);
-    setShowDeleteModal(false);
+  const confirmDelete = async () => {
+    try {
+      const res = await axios.get(
+        `https://norealtor.in/hirelink_apis/admin/deletedata/tbl_employer/emp_id/${deleteId}`
+      );
+
+      if (res.data.status === true) {
+        setShowDeleteModal(false);
+        setDeleteId(null);
+
+        fetchEmployers();
+      } else {
+        alert("Delete failed");
+      }
+    } catch (error) {
+      console.error("Delete Error:", error);
+      alert("Server error while deleting employer");
+    }
   };
 
   const validationSchema = Yup.object().shape({
@@ -113,37 +81,32 @@ function Employes() {
     companyname: Yup.string().required("Company name is required"),
     Category: Yup.string().required("Please select a category"),
     password: Yup.string()
-      .min(6, "Password must be at least 6 characters")
+      .min(6, "Password must be 6 characters")
       .required("Password is required"),
     location: Yup.string().required("Location is required"),
     city: Yup.string().required("City is required"),
     state: Yup.string().required("State is required"),
 
-    website: yup
-      .string()
+    website: Yup.string()
       .url("Please enter a valid website link (https://...)")
       .required("Website is required"),
 
-    linkedin: yup
-      .string()
+    linkedin: Yup.string()
       .url("Enter a valid LinkedIn link")
       .matches(/linkedin\.com/, "Link must be a LinkedIn profile URL")
       .required("LinkedIn link is required"),
 
-    facebook: yup
-      .string()
+    facebook: Yup.string()
       .url("Enter a valid Facebook link")
       .matches(/facebook\.com/, "Link must be a Facebook profile URL")
       .required("Facebook link is required"),
 
-    instagram: yup
-      .string()
+    instagram: Yup.string()
       .url("Enter a valid Instagram link")
       .matches(/instagram\.com/, "Link must be an Instagram profile URL")
       .required("Instagram link is required"),
 
-    youtube: yup
-      .string()
+    youtube: Yup.string()
       .url("Enter a valid YouTube link")
       .matches(
         /(youtube\.com|youtu\.be)/,
@@ -248,39 +211,75 @@ function Employes() {
             </thead>
 
             <tbody>
-              {/* Example Row */}
-              <tr>
-                <td className="text-center fw-bold">1</td>
+              {records.length > 0 ? (
+                records.map((emp, index) => (
+                  <tr key={emp.emp_id || index}>
+                    <td className="text-center fw-bold">
+                      {firstIndex + index + 1}
+                    </td>
 
-                {/* User Details */}
-                <td style={{ width: "35%" }}>
-                  <b>Full Name:</b> Harshala Chavan <br />
-                  <b>Email:</b> harshala@example.com <br />
-                  <b>Mobile:</b> 9876543210 <br />
-                  {/* <b>Password:</b> ******** <br /> */}
-                  <b>Location:</b> Pune <br />
-                  <b>City:</b> Pune <br />
-                  <b>State:</b> Maharashtra
-                </td>
+                    {/* User Details */}
+                    <td style={{ width: "35%" }}>
+                      <div className="fw-bold">
+                        Name:
+                        <div className="dropdown d-inline ms-2">
+                          <span
+                            className="fw-bold text-primary"
+                            role="button"
+                            data-bs-toggle="dropdown"
+                          >
+                            {emp.emp_name}
+                          </span>
+                          <ul className="dropdown-menu shadow">
+                            <li>
+                              <button className="dropdown-item">
+                                <i className="fas fa-edit me-2"></i>Edit
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                className="dropdown-item text-danger"
+                                onClick={() => handleDeleteClick(emp.emp_id)}
+                              >
+                                <i className="fas fa-trash me-2"></i>Delete
+                              </button>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      <b>Email:</b> {emp.emp_email} <br />
+                      <b>Mobile:</b> {emp.emp_mobile} <br />
+                      <b>Location:</b> {emp.emp_location} <br />
+                      <b>City:</b> {emp.emp_city} <br />
+                      <b>State:</b> {emp.emp_state}
+                    </td>
 
-                {/* Company Details */}
-                <td style={{ width: "30%" }}>
-                  <b>Company Name:</b> Monk Vision Pvt Ltd <br />
-                  <b>Category:</b> IT / Software <br />
-                  <b>Website:</b> https://monkvision.com <br />
-                </td>
+                    {/* Company Details */}
+                    <td style={{ width: "30%" }}>
+                      <b>Company Name:</b> {emp.emp_companyname} <br />
+                      <b>Category:</b> {emp.emp_category} <br />
+                      <b>Website:</b> {emp.emp_website}
+                    </td>
 
-                {/* Social Media */}
-                <td style={{ width: "25%" }}>
-                  <b>LinkedIn:</b> linkedin.com/xyz <br />
-                  <b>Facebook:</b> facebook.com/xyz <br />
-                  <b>Instagram:</b> instagram.com/xyz <br />
-                  <b>YouTube:</b> youtube.com/xyz
-                </td>
+                    {/* Social Media */}
+                    <td style={{ width: "25%" }}>
+                      <b>LinkedIn:</b> {emp.emp_linkedin} <br />
+                      <b>Facebook:</b> {emp.emp_facebook} <br />
+                      <b>Instagram:</b> {emp.emp_instagram} <br />
+                      <b>YouTube:</b> {emp.emp_youtube}
+                    </td>
 
-                {/* Registration Date */}
-                <td className="text-center">2025-12-09</td>
-              </tr>
+                    {/* Registration Date */}
+                    <td className="text-center">{emp.emp_added_date}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" className="text-center">
+                    No Employers Found
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
           {/* Pagination */}
@@ -371,7 +370,10 @@ function Employes() {
                 {/* Category */}
                 <div className="col-md-4">
                   <label className="fw-semibold">Category</label>
-                  <select className="form-select form-control" {...register("Category")}>
+                  <select
+                    className="form-select form-control"
+                    {...register("Category")}
+                  >
                     <option value="">Select Category</option>
                     <option value="Percentage">Percentage</option>
                     <option value="Flat Amount">Flat Amount</option>

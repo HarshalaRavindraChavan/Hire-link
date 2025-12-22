@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
+import axios from "axios";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -7,74 +8,42 @@ import Pagination from "./commenuse/Pagination";
 
 function Offer() {
   // tital of tab
-  useState(() => {
+  useEffect(() => {
     document.title = "Hirelink | Offers";
   }, []);
 
-  const [users, setUsers] = useState([
-    {
-      id: 1,
-      title: "New Year Offer",
-      code: "NEW50",
-      offerin: "Percentage",
-      value: "50",
-      startDate: "2025-01-01",
-      endDate: "2025-01-10",
-      usageLimit: "13",
-      status: "1",
-      added_by: "rohan",
-      added_date: "12/11/2025",
-    },
-  ]);
+  const [offers, setOffers] = useState([]);
 
-  const [formData, setFormData] = useState({
-    title: "",
-    code: "",
-    discountType: "",
-    value: "",
-    startDate: "",
-    endDate: "",
-    applyOn: "",
-    usageLimit: "",
-    description: "",
-    status: "1",
-  });
+  //============All Offer Disply==================================
 
-  const handleChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  useEffect(() => {
+    fetchOffers();
+  }, []);
 
-  const handleAddOffer = (e) => {
-    e.preventDefault();
+  const fetchOffers = async () => {
+    try {
+      const res = await axios.get(
+        "https://norealtor.in/hirelink_apis/admin/getdata/tbl_offer"
+      );
 
-    const newOffer = { id: Date.now(), ...formData };
-    setUsers([...users, newOffer]);
-
-    // Reset form
-    setFormData({
-      title: "",
-      code: "",
-      offerin: "",
-      startDate: "",
-      endDate: "",
-      applyOn: "",
-      usageLimit: "",
-      description: "",
-      status: "Active",
-    });
-
-    const modal = window.bootstrap.Modal.getInstance(
-      document.getElementById("exampleModal")
-    );
-    modal.hide();
+      if (res.data.status === true) {
+        setOffers(res.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching offers", error);
+    }
   };
+
+  // =================================================================
 
   // Pagination start
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 5;
   const lastIndex = currentPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
-  const records = users.slice(firstIndex, lastIndex);
-  const nPages = Math.ceil(users.length / recordsPerPage);
+  const records = offers.slice(firstIndex, lastIndex);
+  const nPages = Math.ceil(offers.length / recordsPerPage);
+
   // pagination End
 
   // Delete modal start
@@ -86,10 +55,23 @@ function Offer() {
     setShowDeleteModal(true);
   };
 
-  const confirmDelete = () => {
-    const filtered = users.filter((u) => u.id !== deleteId);
-    setUsers(filtered);
-    setShowDeleteModal(false);
+  const confirmDelete = async () => {
+    try {
+      const res = await axios.get(
+        `https://norealtor.in/hirelink_apis/admin/deletedata/tbl_offer/offer_id/${deleteId}`
+      );
+
+      if (res.data.status === true) {
+        setShowDeleteModal(false);
+        setDeleteId(null);
+
+        fetchOffers();
+      } else {
+        alert("Delete failed");
+      }
+    } catch (error) {
+      console.error("Delete error:", error);
+    }
   };
 
   // Delete modal End
@@ -193,8 +175,8 @@ function Offer() {
               {/* Example Row (same style as your screenshot) */}
               {records.length > 0 ? (
                 records.map((item) => (
-                  <tr key={item.id}>
-                    <td>{item.id}</td>
+                  <tr key={item.offer_id}>
+                    <td>{item.offer_id}</td>
                     <td className="text-start">
                       <div className="fw-bold">
                         Offer Tital:
@@ -204,7 +186,7 @@ function Offer() {
                             role="button"
                             data-bs-toggle="dropdown"
                           >
-                            {item.title}
+                            {item.offer_title}
                           </span>
                           <ul className="dropdown-menu shadow">
                             <li>
@@ -215,7 +197,7 @@ function Offer() {
                             <li>
                               <button
                                 className="dropdown-item text-danger"
-                                onClick={() => handleDeleteClick(item.id)}
+                                onClick={() => handleDeleteClick(item.offer_id)}
                               >
                                 <i className="fas fa-trash me-2"></i>Delete
                               </button>
@@ -227,19 +209,19 @@ function Offer() {
                       <div className="fw-bold">
                         Coupon Code:{"  "}
                         <span className="text-dark fw-normal">
-                          {item.code} j uygyf sfsd Sfsd
+                          {item.offer_coupon_code}
                         </span>
                       </div>
                       <div className="fw-bold">
                         Offer In:{"  "}
                         <span className="text-dark fw-normal">
-                          {item.offerin}
+                          {item.offer_in}
                         </span>
                       </div>
                       <div className="fw-bold">
                         Usage Limit:{"  "}
                         <span className="text-dark fw-normal">
-                          {item.usageLimit}
+                          {item.offer_usage_limit}
                         </span>
                       </div>
                     </td>
@@ -248,18 +230,18 @@ function Offer() {
                       <div className="fw-bold">
                         Start:{"  "}
                         <span className="text-dark fw-normal">
-                          {item.startDate}
+                          {item.offer_start_date}
                         </span>
                       </div>
                       <div className="fw-bold">
                         End:{"  "}
                         <span className="text-dark fw-normal">
-                          {item.endDate}
+                          {item.offer_end_date}
                         </span>
                       </div>
                       <div className="fw-bold">
                         Offer Status:{"  "}
-                        {item.status === "1" ? (
+                        {item.offer_status === "1" ? (
                           <span className="badge bg-success">Active</span>
                         ) : (
                           <span className="badge bg-danger">Inactive</span>
@@ -280,13 +262,13 @@ function Offer() {
                       <div className="fw-bold ">
                         Added By:{"  "}
                         <span className="text-dark fw-normal">
-                          {item.added_by}
+                          {item.offer_added_by}
                         </span>
                       </div>
                       <div className="fw-bold ">
                         Added Date:{"  "}
                         <span className="text-dark fw-normal">
-                          {item.added_date}
+                          {item.offer_added_date}
                         </span>
                       </div>
                     </td>

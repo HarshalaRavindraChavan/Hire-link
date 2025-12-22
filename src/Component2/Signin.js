@@ -76,10 +76,16 @@ function Signin() {
               navigate("/profile");
             }, 1200); //  1.2 sec delay
           } else {
-            localStorage.setItem("employer", JSON.stringify(data.data));
+            localStorage.setItem(
+              "auth",
+              JSON.stringify({
+                role: "employer",
+                emp_id: response.data.data.emp_id,
+              })
+            );
 
             setTimeout(() => {
-              navigate("/employer");
+              navigate("/job");
             }, 1200);
           }
 

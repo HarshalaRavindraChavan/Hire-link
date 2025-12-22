@@ -1,43 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
 import image from "./logo/hirelink.png";
 import Pagination from "./commenuse/Pagination";
+import axios from "axios";
+import * as Yup from "yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 function Candidates() {
   // tital of tab
-  useState(() => {
+  useEffect(() => {
     document.title = "Hirelink | Candidates";
   }, []);
 
   const [search, setSearch] = useState("");
-  const [users, setUsers] = useState([
-    {
-      id: 1,
-      name: "Harshal Mahajan",
-      email: "harshal1@gmail.com",
-      mobile: "9876543201",
-      business: "1 year",
-      category: "2024-01-05",
-      location: "",
-      city: "Mumbai",
-      state: "Maharashtra",
-      website: "1111 2222 3333",
-      facebook: "ABCDE1234F",
-      linkedin: "Maharashtra",
-      instagram: "1111 2222 3333",
-      youtube: "ABCDE1234F",
-    },
-  ]);
+  const [candidates, setCandidates] = useState([]);
+  //==================== get All candidate
+  useEffect(() => {
+    fetchCandidates();
+  }, []);
+
+  const fetchCandidates = async () => {
+    try {
+      const res = await axios.get(
+        "https://norealtor.in/hirelink_apis/admin/getdata/tbl_candidate"
+      );
+
+      if (res.data.status === true) {
+        setCandidates(res.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching candidates", error);
+    }
+  };
+
+  //==================== pagination Code
 
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 5;
-
   const lastIndex = currentPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
-  const records = users.slice(firstIndex, lastIndex);
-  const nPages = Math.ceil(users.length / recordsPerPage);
+  const records = candidates.slice(firstIndex, lastIndex);
+  const nPages = Math.ceil(candidates.length / recordsPerPage);
 
-  // Delete modal state
+  //============================== Delete modal state
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
@@ -48,92 +54,89 @@ function Candidates() {
   };
 
   // DELETE CONFIRM
-  const confirmDelete = () => {
-    const filtered = users.filter((u) => u.id !== deleteId);
-    setUsers(filtered);
-    setShowDeleteModal(false);
+  const confirmDelete = async () => {
+    try {
+      const res = await axios.get(
+        `https://norealtor.in/hirelink_apis/admin/deletedata/tbl_candidate/can_id/${deleteId}`
+      );
+
+      if (res.data.status === true) {
+        setShowDeleteModal(false);
+        setDeleteId(null);
+
+        fetchCandidates();
+      }
+    } catch (error) {
+      console.error("Delete failed", error);
+    }
   };
 
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    phone: "",
-    location: "",
-    experience: "",
-    skills: "",
-    profilePhoto: null,
-    resume: null,
-    registrationDate: "",
-    appliedJobsCount: "",
+  const validationSchema = Yup.object().shape({
+    fullname: Yup.string()
+      .min(3, "Minimum 3 characters required")
+      .required("Full name is required"),
+
+    email: Yup.string()
+      .email("Enter valid email address")
+      .required("Email is required"),
+
+    mobile: Yup.string()
+      .matches(/^[0-9]{10}$/, "Enter valid 10-digit mobile number")
+      .required("Mobile number is required"),
+
+    location: Yup.string().required("Location / City is required"),
+
+    experience: Yup.number()
+      .typeError("Experience must be a number")
+      .min(0, "Experience cannot be negative")
+      .max(50, "Invalid experience")
+      .required("Experience is required"),
+
+    skill: Yup.string().required("Skills are required"),
+
+    profilePhoto: Yup.mixed()
+      .required("Profile photo is required")
+      .test(
+        "fileType",
+        "Only JPG, JPEG, PNG allowed",
+        (value) =>
+          value &&
+          ["image/jpeg", "image/png", "image/jpg"].includes(value[0]?.type)
+      ),
+
+    resume: Yup.mixed()
+      .required("Resume is required")
+      .test(
+        "fileType",
+        "Only PDF, DOC, DOCX allowed",
+        (value) =>
+          value &&
+          [
+            "application/pdf",
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          ].includes(value[0]?.type)
+      ),
+
+    registrationDate: Yup.string().required("Registration date is required"),
+
+    appliedJobsCount: Yup.number()
+      .typeError("Must be a number")
+      .min(0, "Cannot be negative")
+      .required("Applied jobs count is required"),
   });
 
-  const [errors, setErrors] = useState({});
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
 
-  const handleChange = (e) => {
-    const { name, value, files } = e.target;
-
-    if (files) {
-      setFormData((prev) => ({ ...prev, [name]: files[0] }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
-    if (name === "phone") {
-      // allow only numbers
-      const onlyNums = value.replace(/\D/g, "");
-      setFormData((prev) => ({ ...prev, [name]: onlyNums }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
-  };
-
-  const validate = () => {
-    let tempErrors = {};
-
-    if (!formData.fullName.trim())
-      tempErrors.fullName = "Full Name is required.";
-    if (!formData.email.trim()) tempErrors.email = "Email is required.";
-    else if (!/\S+@\S+\.\S+/.test(formData.email))
-      tempErrors.email = "Email is invalid.";
-
-    if (!formData.phone.trim()) {
-      tempErrors.phone = "Phone Number is required.";
-    } else if (!/^\d{10}$/.test(formData.phone)) {
-      tempErrors.phone = "Phone Number must be exactly 10 digits.";
-    }
-
-    if (!formData.location.trim())
-      tempErrors.location = "Location is required.";
-    if (!formData.experience.trim())
-      tempErrors.experience = "Experience is required.";
-    else if (!/^\d+$/.test(formData.experience))
-      tempErrors.experience = "Experience must be a number.";
-
-    if (!formData.skills.trim()) tempErrors.skills = "Skills are required.";
-
-    if (!formData.profilePhoto)
-      tempErrors.profilePhoto = "Profile photo is required.";
-
-    if (!formData.resume) tempErrors.resume = "Resume is required.";
-
-    if (!formData.registrationDate)
-      tempErrors.registrationDate = "Registration date is required.";
-
-    if (!formData.appliedJobsCount)
-      tempErrors.appliedJobsCount = "Applied Jobs Count is required.";
-    else if (!/^\d+$/.test(formData.appliedJobsCount))
-      tempErrors.appliedJobsCount = "Must be a number.";
-
-    setErrors(tempErrors);
-
-    return Object.keys(tempErrors).length === 0;
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (validate()) {
-      console.log("Form submitted successfully", formData);
-      // Submit the form data to backend here
-    }
+  const onSubmit = (data) => {
+    console.log("User Saved:", data);
+    alert("User Saved Successfully!");
   };
 
   return (
@@ -144,8 +147,8 @@ function Candidates() {
         </div>
         <div className="ms-auto py-2 py-md-0">
           {/* <a href="#" className="btn btn-label-info btn-round me-2">
-            Manage
-          </a> */}
+              Manage
+            </a> */}
           <a
             data-bs-toggle="modal"
             data-bs-target="#exampleModal"
@@ -215,90 +218,103 @@ function Candidates() {
             </thead>
 
             <tbody>
-              {/* Example Row (same style as your screenshot) */}
-              <tr>
-                <td className="text-center fw-bold">1</td>
+              {records.length > 0 ? (
+                records.map((candidate, index) => (
+                  <tr key={candidate.can_id}>
+                    <td className="text-center fw-bold">
+                      {firstIndex + index + 1}
+                    </td>
 
-                {/* Candidate Info */}
-                <td className=" text-start w-auto">
-                  <div className="fw-bold">
-                    Name:
-                    <div className="dropdown d-inline ms-2">
-                      <span
-                        className="fw-bold text-primary"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                      >
-                        Harshal Mahajan
-                      </span>
-                      <ul className="dropdown-menu shadow">
-                        <li>
-                          <button className="dropdown-item">
-                            <i className="fas fa-edit me-2"></i>Edit
-                          </button>
-                        </li>
-                        <li>
-                          <button
-                            className="dropdown-item text-danger"
-                            onClick={() => handleDeleteClick()}
+                    {/* Candidate Info */}
+                    <td className="text-start w-auto">
+                      <div className="fw-bold">
+                        Name:
+                        <div className="dropdown d-inline ms-2">
+                          <span
+                            className="fw-bold text-primary"
+                            role="button"
+                            data-bs-toggle="dropdown"
                           >
-                            <i className="fas fa-trash me-2"></i>Delete
-                          </button>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
+                            {candidate.can_name}
+                          </span>
+                          <ul className="dropdown-menu shadow">
+                            <li>
+                              <button className="dropdown-item">
+                                <i className="fas fa-edit me-2"></i>Edit
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                className="dropdown-item text-danger"
+                                onClick={() =>
+                                  handleDeleteClick(candidate.can_id)
+                                }
+                              >
+                                <i className="fas fa-trash me-2"></i>Delete
+                              </button>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
 
-                  <div className="fw-bold">
-                    Email:{"  "}
-                    <span className="text-dark fw-normal">
-                      harshal@gmail.com
-                    </span>
-                  </div>
-                  <div className="fw-bold">
-                    Mobile No:{"  "}
-                    <span className="text-dark fw-normal">9999999999</span>
-                  </div>
-                  <div className="fw-bold">
-                    Registar Date:{"  "}
-                    <span className="text-dark fw-normal">12/10/2025</span>
-                  </div>
-                </td>
+                      <div className="fw-bold">
+                        Email:{" "}
+                        <span className="text-dark fw-normal">
+                          {candidate.can_email}
+                        </span>
+                      </div>
 
-                {/* Profile Image */}
-                <td className="text-center">
-                  <div className="avatar avatar-xl">
-                    <img
-                      src={image}
-                      alt="No Image"
-                      className="avatar-img rounded-circle"
-                    />
-                  </div>
-                </td>
+                      <div className="fw-bold">
+                        Mobile No:{" "}
+                        <span className="text-dark fw-normal">
+                          {candidate.can_mobile}
+                        </span>
+                      </div>
 
-                {/* Experience */}
-                <td className="text-start">
-                  <div className="fw-bold">
-                    Experience:{"  "}
-                    <span className="text-dark fw-normal">1 Year</span>
-                  </div>
-                  <div className="fw-bold">
-                    Skills:{"  "}
-                    <span className="text-dark fw-normal">Php,React.js,</span>
-                  </div>
-                  <div className="fw-bold">
-                    Applied Jobs:{"  "}
-                    <span className="text-dark fw-normal">5</span>
-                  </div>
-                </td>
+                      <div className="fw-bold">
+                        Registar Date:{" "}
+                        <span className="text-dark fw-normal">
+                          {candidate.register_date}
+                        </span>
+                      </div>
+                    </td>
 
-                {/* Resume Button */}
-                <td className="text-center">
-                  <a className="btn btn-sm  px-3 w-100 btn-success" href="#">
-                    View / Download
-                  </a>
-                </td>
-              </tr>
+                    {/* Profile Image */}
+                    <td className="text-center">
+                      <div className="avatar avatar-xl">
+                        <img
+                          src={candidate.profile_photo || image}
+                          alt="No Image"
+                          className="avatar-img rounded-circle"
+                        />
+                      </div>
+                    </td>
+
+                    {/* Experience */}
+                    <td className="text-start">
+                      <div className="fw-bold">
+                        Experience:{" "}
+                        <span className="text-dark fw-normal">
+                          {candidate.can_experience} Year
+                        </span>
+                      </div>
+                      <div className="fw-bold">
+                        Skills:{" "}
+                        <span className="text-dark fw-normal">
+                          {candidate.can_skill}
+                        </span>
+                      </div>
+                    </td>
+                    <td></td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" className="text-center text-muted">
+                    No Candidates Found
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
           {/* Pagination */}
@@ -336,21 +352,21 @@ function Candidates() {
                 style={{ cursor: "pointer", color: "white", fontSize: "25px" }}
               ></i>
             </div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <div className="modal-body row">
                 {/* Full Name */}
                 <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">Full Name</label>
                   <input
                     type="text"
-                    name="fullName"
-                    value={formData.fullName}
-                    onChange={handleChange}
-                    className="form-control form-control-md rounded-3"
-                    placeholder="Enter Full Name"
+                    className="form-control"
+                    placeholder="Enter full name"
+                    {...register("fullname")}
                   />
-                  {errors.fullName && (
-                    <span className="text-danger">{errors.fullName}</span>
+                  {errors.fullname && (
+                    <span className="text-danger">
+                      {errors.fullname.message}
+                    </span>
                   )}
                 </div>
 
@@ -359,31 +375,29 @@ function Candidates() {
                   <label className="form-label fw-semibold">Email</label>
                   <input
                     type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="form-control form-control-md rounded-3"
-                    placeholder="Enter Email Address"
+                    className="form-control"
+                    placeholder="Enter email address"
+                    {...register("email")}
                   />
                   {errors.email && (
-                    <span className="text-danger">{errors.email}</span>
+                    <span className="text-danger">{errors.email.message}</span>
                   )}
                 </div>
 
                 {/* Phone Number */}
                 <div className="col-md-4 mb-2">
-                  <label className="form-label fw-semibold">Phone Number</label>
+                  <label className="form-label fw-semibold">
+                    Mobile Number
+                  </label>
                   <input
                     type="text"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    maxLength={10} // allow max 10 digits
-                    className="form-control form-control-md rounded-3"
-                    placeholder="Enter Phone Number"
+                    maxLength={10}
+                    className="form-control"
+                    placeholder="Enter 10-digit mobile number"
+                    {...register("mobile")}
                   />
-                  {errors.phone && (
-                    <span className="text-danger">{errors.phone}</span>
+                  {errors.mobile && (
+                    <span className="text-danger">{errors.mobile.message}</span>
                   )}
                 </div>
 
@@ -394,14 +408,14 @@ function Candidates() {
                   </label>
                   <input
                     type="text"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleChange}
-                    className="form-control form-control-md rounded-3"
-                    placeholder="Enter City / Location"
+                    className="form-control"
+                    placeholder="Enter city or location"
+                    {...register("location")}
                   />
                   {errors.location && (
-                    <span className="text-danger">{errors.location}</span>
+                    <span className="text-danger">
+                      {errors.location.message}
+                    </span>
                   )}
                 </div>
 
@@ -412,14 +426,14 @@ function Candidates() {
                   </label>
                   <input
                     type="text"
-                    name="experience"
-                    value={formData.experience}
-                    onChange={handleChange}
-                    className="form-control form-control-md rounded-3"
-                    placeholder="Enter Years of Experience"
+                    className="form-control"
+                    placeholder="Enter experience in years"
+                    {...register("experience")}
                   />
                   {errors.experience && (
-                    <span className="text-danger">{errors.experience}</span>
+                    <span className="text-danger">
+                      {errors.experience.message}
+                    </span>
                   )}
                 </div>
 
@@ -428,14 +442,12 @@ function Candidates() {
                   <label className="form-label fw-semibold">Skills</label>
                   <input
                     type="text"
-                    name="skills"
-                    value={formData.skills}
-                    onChange={handleChange}
-                    className="form-control form-control-md rounded-3"
-                    placeholder="Enter Your Skills"
+                    className="form-control"
+                    placeholder="Eg: React, Node, PHP"
+                    {...register("skill")}
                   />
-                  {errors.skills && (
-                    <span className="text-danger">{errors.skills}</span>
+                  {errors.skill && (
+                    <span className="text-danger">{errors.skill.message}</span>
                   )}
                 </div>
 
@@ -446,13 +458,14 @@ function Candidates() {
                   </label>
                   <input
                     type="file"
-                    name="profilePhoto"
-                    onChange={handleChange}
+                    className="form-control"
                     accept="image/*"
-                    className="form-control form-control-md rounded-3"
+                    {...register("profilePhoto")}
                   />
                   {errors.profilePhoto && (
-                    <span className="text-danger">{errors.profilePhoto}</span>
+                    <span className="text-danger">
+                      {errors.profilePhoto.message}
+                    </span>
                   )}
                 </div>
 
@@ -463,13 +476,12 @@ function Candidates() {
                   </label>
                   <input
                     type="file"
-                    name="resume"
-                    onChange={handleChange}
+                    className="form-control"
                     accept=".pdf,.doc,.docx"
-                    className="form-control form-control-md rounded-3"
+                    {...register("resume")}
                   />
                   {errors.resume && (
-                    <span className="text-danger">{errors.resume}</span>
+                    <span className="text-danger">{errors.resume.message}</span>
                   )}
                 </div>
 
@@ -480,14 +492,12 @@ function Candidates() {
                   </label>
                   <input
                     type="date"
-                    name="registrationDate"
-                    value={formData.registrationDate}
-                    onChange={handleChange}
-                    className="form-control form-control-md rounded-3"
+                    className="form-control"
+                    {...register("registrationDate")}
                   />
                   {errors.registrationDate && (
                     <span className="text-danger">
-                      {errors.registrationDate}
+                      {errors.registrationDate.message}
                     </span>
                   )}
                 </div>
@@ -499,15 +509,13 @@ function Candidates() {
                   </label>
                   <input
                     type="number"
-                    name="appliedJobsCount"
-                    value={formData.appliedJobsCount}
-                    onChange={handleChange}
-                    className="form-control form-control-md rounded-3"
-                    placeholder="Enter Number of Applied Jobs"
+                    className="form-control"
+                    placeholder="Enter applied jobs count"
+                    {...register("appliedJobsCount")}
                   />
                   {errors.appliedJobsCount && (
                     <span className="text-danger">
-                      {errors.appliedJobsCount}
+                      {errors.appliedJobsCount.message}
                     </span>
                   )}
                 </div>

@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import Pagination from "./commenuse/Pagination";
@@ -11,33 +12,55 @@ function Jobs() {
     document.title = "Hirelink | Jobs";
   }, []);
 
-  const [search, setSearch] = useState("");
-  const [users, setUsers] = useState([
-    {
-      id: 1,
-      name: "Harshal Mahajan",
-      email: "harshal1@gmail.com",
-      mobile: "9876543201",
-      business: "1 year",
-      category: "2024-01-05",
-      location: "",
-      city: "Mumbai",
-      state: "Maharashtra",
-      website: "1111 2222 3333",
-      facebook: "ABCDE1234F",
-      linkedin: "Maharashtra",
-      instagram: "1111 2222 3333",
-      youtube: "ABCDE1234F",
-    },
-  ]);
+  // Login ckeck and role
+  const auth = JSON.parse(localStorage.getItem("auth"));
+  const role = auth?.role;
+  const employerId = auth?.emp_id;
+  //=================
 
+  const [search, setSearch] = useState("");
+  const [jobs, setJobs] = useState([]);
+
+  //============================= Get Data Code ============================
+
+  useEffect(() => {
+    fetchJobs();
+  }, []);
+
+  const fetchJobs = async () => {
+    try {
+      let res;
+
+      // ADMIN / SUBADMIN / BACKEND → ALL DATA
+      if (["1", "2", "3", "4"].includes(role)) {
+        res = await axios.get(
+          "https://norealtor.in/hirelink_apis/admin/getdata/tbl_job"
+        );
+      }
+
+      // EMPLOYER → ONLY HIS DATA
+      if (role === "employer") {
+        res = await axios.get(
+          `https://norealtor.in/hirelink_apis/employer/getdatawhere/tbl_job/job_employer/${employerId}`
+        );
+      }
+
+      if (res?.data?.status) {
+        setJobs(res.data.data);
+      }
+    } catch (error) {
+      console.error("Jobs fetch error:", error);
+    }
+  };
+
+  //==========Pagination=========================
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 5;
-
   const lastIndex = currentPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
-  const records = users.slice(firstIndex, lastIndex);
-  const nPages = Math.ceil(users.length / recordsPerPage);
+  const records = jobs.slice(firstIndex, lastIndex);
+  const nPages = Math.ceil(jobs.length / recordsPerPage);
+  //===================================================
 
   // Delete modal state
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -50,11 +73,27 @@ function Jobs() {
   };
 
   // DELETE CONFIRM
-  const confirmDelete = () => {
-    const filtered = users.filter((u) => u.id !== deleteId);
-    setUsers(filtered);
-    setShowDeleteModal(false);
+  const confirmDelete = async () => {
+    try {
+      const res = await axios.get(
+        `https://norealtor.in/hirelink_apis/admin/deletedata/tbl_job/job_id/${deleteId}`
+      );
+
+      if (res.data.status === true) {
+        setShowDeleteModal(false);
+        setDeleteId(null);
+
+        fetchJobs();
+      } else {
+        alert("Delete failed");
+      }
+    } catch (error) {
+      console.error("Delete error:", error);
+      alert("Something went wrong while deleting");
+    }
   };
+
+  //=======================================================
 
   // Validation Schema (NO if/else)
   const validationSchema = Yup.object({
@@ -162,71 +201,97 @@ function Jobs() {
             </thead>
 
             <tbody>
-              {/* Example Row */}
-              <tr>
-                <td>1</td>
-                <td className="text-start fw-bold">
-                  {" "}
-                  <div className="fw-bold">
-                    Title:
-                    <div className="dropdown d-inline ms-2">
-                      <span
-                        className="fw-bold text-primary"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                      >
-                        Frontend Developer
-                      </span>
-                      <ul className="dropdown-menu shadow">
-                        <li>
-                          <button className="dropdown-item">
-                            <i className="fas fa-edit me-2"></i>Edit
-                          </button>
-                        </li>
-                        <li>
-                          <button
-                            className="dropdown-item text-danger"
-                            onClick={() => handleDeleteClick()}
+              {records.length > 0 ? (
+                records.map((job, index) => (
+                  <tr key={job.job_id}>
+                    <td>{firstIndex + index + 1}</td>
+                    <td className="text-start fw-bold">
+                      {" "}
+                      <div className="fw-bold">
+                        Title:
+                        <div className="dropdown d-inline ms-2">
+                          <span
+                            className="fw-bold text-primary"
+                            role="button"
+                            data-bs-toggle="dropdown"
                           >
-                            <i className="fas fa-trash me-2"></i>Delete
-                          </button>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div className="fw-bold ">
-                    Category:{" "}
-                    <span className="text-dark fw-normal">IT / Software</span>
-                  </div>
-                  <div className="fw-bold ">
-                    Type: <span className="text-dark fw-normal">Full-time</span>
-                  </div>
-                </td>
+                            {job.job_title}
+                          </span>
+                          <ul className="dropdown-menu shadow">
+                            <li>
+                              <button className="dropdown-item">
+                                <i className="fas fa-edit me-2"></i>Edit
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                className="dropdown-item text-danger"
+                                onClick={() => handleDeleteClick(job.job_id)}
+                              >
+                                <i className="fas fa-trash me-2"></i>Delete
+                              </button>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div className="fw-bold ">
+                        Category:{" "}
+                        <span className="text-dark fw-normal">
+                          {job.job_category}
+                        </span>
+                      </div>
+                      <div className="fw-bold ">
+                        Type:{" "}
+                        <span className="text-dark fw-normal">
+                          {job.job_type}
+                        </span>
+                      </div>
+                    </td>
 
-                <td className="text-start">
-                  <div className="fw-bold ">
-                    Company Name:{" "}
-                    <span className="text-dark fw-normal">Esenceweb IT</span>
-                  </div>
-                  <div className="fw-bold ">
-                    Exp. Required:{" "}
-                    <span className="text-dark fw-normal">3 Years</span>
-                  </div>
-                </td>
-                <td className="text-start">
-                  <div className="fw-bold ">
-                    Posted Date:{" "}
-                    <span className="text-dark fw-normal">2025-12-09</span>
-                  </div>
-                  <div className="fw-bold ">
-                    Applications:{" "}
-                    <span className="text-dark fw-normal">29</span>
-                  </div>
-                </td>
-                <td className="text-center">
-                  <span className="badge bg-success">Active</span>
-                </td>
-              </tr>
+                    <td className="text-start">
+                      <div className="fw-bold ">
+                        Company Name:{" "}
+                        <span className="text-dark fw-normal">
+                          {job.job_company}
+                        </span>
+                      </div>
+                      <div className="fw-bold ">
+                        Exp. Required:{" "}
+                        <span className="text-dark fw-normal">
+                          {job.job_experience}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="text-start">
+                      <div className="fw-bold ">
+                        Posted Date:{" "}
+                        <span className="text-dark fw-normal">
+                          {job.job_date}
+                        </span>
+                      </div>
+                      <div className="fw-bold ">
+                        Applications:{" "}
+                        <span className="text-dark fw-normal">
+                          {job.job_applications}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="text-center">
+                      {job.job_status === "1" ? (
+                        <span className="badge bg-success">Active</span>
+                      ) : (
+                        <span className="badge bg-danger">Inactive</span>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" className="text-center text-muted">
+                    No jobs found
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
           {/* Pagination */}

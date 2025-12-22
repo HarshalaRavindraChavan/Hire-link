@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Pagination from "./commenuse/Pagination";
+import axios from "axios";
 
 function Contact() {
   // Correct way: set tab title
@@ -7,21 +8,7 @@ function Contact() {
     document.title = "Hirelink | Contact";
   }, []);
 
-  // Dummy contact data (तू backend ने replace करू शकतो)
-  const [contacts] = useState([
-    {
-      id: 1,
-      name: "Harshal Mahajan",
-      email: "harshal@email.com",
-      mobile: "9999999999",
-      subject: "Job Application",
-      message:
-        "Include every Bootstrap JavaScript plugin and dependency with one of our bundle files.",
-      added_by: "Admin",
-      added_date: "18/07/2025",
-    },
-    
-  ]);
+  const [contacts, setContact] = useState([]);
 
   // Pagination start
   const [currentPage, setCurrentPage] = useState(1);
@@ -32,6 +19,26 @@ function Contact() {
   const records = contacts.slice(firstIndex, lastIndex);
   const nPages = Math.ceil(contacts.length / recordsPerPage);
   // Pagination End
+
+  //===================== Get All contact =================
+
+  useEffect(() => {
+    fetchContact();
+  }, []);
+
+  const fetchContact = async () => {
+    try {
+      const res = await axios.get(
+        "https://norealtor.in/hirelink_apis/admin/getdata/tbl_contact"
+      );
+
+      if (res.data.status === true) {
+        setContact(res.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching Contact", error);
+    }
+  };
 
   return (
     <>
@@ -44,7 +51,7 @@ function Contact() {
       <div className="card shadow-sm p-3 border">
         <div className="row g-2 align-items-center mb-3">
           <div className="col-md-2">
-            <input className="form-control" placeholder="Enter Subject...."/>
+            <input className="form-control" placeholder="Enter Subject...." />
           </div>
 
           <div className="col-6 col-md-2">
@@ -85,39 +92,43 @@ function Contact() {
           </thead>
 
           <tbody>
-            {records.length > 0 ? (
-              records.map((c) => (
-                <tr key={c.id} className="text-center align-middle">
-                  <td>{c.id}</td>
+            {contacts.length > 0 ? (
+              contacts.map((c) => (
+                <tr key={c.con_id} className="text-center align-middle">
+                  <td>{c.con_id}</td>
 
                   <td className="text-start">
                     <div className="fw-bold">
                       Name:{" "}
-                      <span className="text-dark fw-normal">{c.name}</span>
+                      <span className="text-dark fw-normal">{c.con_name}</span>
                     </div>
                     <div className="fw-bold">
                       Email:{" "}
-                      <span className="text-dark fw-normal">{c.email}</span>
+                      <span className="text-dark fw-normal">{c.con_email}</span>
                     </div>
                     <div className="fw-bold">
                       Mobile:{" "}
-                      <span className="text-dark fw-normal">{c.mobile}</span>
+                      <span className="text-dark fw-normal">
+                        {c.con_mobile}
+                      </span>
                     </div>
                   </td>
 
-                  <td className="text-start">{c.subject}</td>
+                  <td className="text-start">{c.con_subject}</td>
 
-                  <td className="text-start w-25">{c.message}</td>
+                  <td className="text-start w-25">{c.con_message}</td>
 
                   <td className="text-start">
                     <div className="fw-bold">
                       Added By:{" "}
-                      <span className="text-dark fw-normal">{c.added_by}</span>
+                      <span className="text-dark fw-normal">
+                        {c.con_added_by}
+                      </span>
                     </div>
                     <div className="fw-bold">
                       Added Date:{" "}
                       <span className="text-dark fw-normal">
-                        {c.added_date}
+                        {c.con_added_date}
                       </span>
                     </div>
                   </td>

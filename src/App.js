@@ -16,6 +16,7 @@ import Login from "./Component/Login";
 import Registar from "./Component/Registar";
 import Verify from "./Component/Verify";
 import Interview from "./Component/Interview";
+import Applieds from "./Component/Applieds";
 
 // User Components
 import Header2 from "./Component2/Header";
@@ -50,6 +51,7 @@ const AdminLayout = () => {
               <Route path="condidate" element={<Condidates />} />
               <Route path="interview" element={<Interview />} />
               <Route path="employe" element={<Employes />} />
+              <Route path="applied" element={<Applieds />} />
               <Route path="package" element={<Packages />} />
               <Route path="offer" element={<Offer />} />
               <Route path="contact" element={<Contact />} />
@@ -129,6 +131,7 @@ function App() {
           <Route path="/condidate" element={<Condidates />} />
           <Route path="/interview" element={<Interview />} />
           <Route path="/employe" element={<Employes />} />
+          <Route path="/applied" element={<Applieds />} />
           <Route path="/package" element={<Packages />} />
           <Route path="/offer" element={<Offer />} />
           <Route path="/contact" element={<Contact />} />

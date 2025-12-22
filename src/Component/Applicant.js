@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Pagination from "./commenuse/Pagination";
 
-function Applieds() {
+function Applicant() {
   // tital of tab
   useState(() => {
     document.title = "Hirelink | Applieds";
@@ -206,4 +206,4 @@ function Applieds() {
   );
 }
 
-export default Applieds;
+export default Applicant;

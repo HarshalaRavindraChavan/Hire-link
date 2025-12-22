@@ -63,6 +63,16 @@ function Sidebar() {
 
             <li className="nav-item">
               <NavLink
+                to="/applicant"
+                className={({ isActive }) => (isActive ? "active" : "")}
+              >
+                <i className="fa-brands fa-wpforms"></i>
+                <p>Applieds</p>
+              </NavLink>
+            </li>
+
+            <li className="nav-item">
+              <NavLink
                 to="/interview"
                 className={({ isActive }) => (isActive ? "active" : "")}
               >
@@ -78,16 +88,6 @@ function Sidebar() {
               >
                 <i className="fa fa-user-tie"></i>
                 <p>Employers</p>
-              </NavLink>
-            </li>
-
-            <li className="nav-item">
-              <NavLink
-                to="/applied"
-                className={({ isActive }) => (isActive ? "active" : "")}
-              >
-                <i className="fa-brands fa-wpforms"></i>
-                <p>Applieds</p>
               </NavLink>
             </li>
 

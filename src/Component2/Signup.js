@@ -15,6 +15,7 @@ const Signup = () => {
 
   // ✅ FIX 1: activeRole state
   const [activeRole, setActiveRole] = useState("Candidate");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     document.title = "Hirelink | Signup";

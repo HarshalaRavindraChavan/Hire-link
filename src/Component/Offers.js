@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Pagination from "./commenuse/Pagination";
+import { toast, ToastContainer } from "react-toastify";
 
 function Offer() {
   // tital of tab
@@ -77,21 +78,43 @@ function Offer() {
   // Delete modal End
 
   // Define validation schema using Yup
-  const schema = yup.object().shape({
-    title: yup.string().required("Offer title is required"),
-    code: yup.string().required("Coupon code is required"),
-    offerin: yup.string().required("Please select offer type"),
-    startDate: yup.date().required("Start date is required"),
-    endDate: yup.date().required("End date is required"),
-    usageLimit: yup
-      .number()
-      .typeError("Usage limit must be a number")
-      .required("Usage limit is required")
-      .positive("Usage limit must be positive")
-      .integer("Usage limit must be an integer"),
-    status: yup.string().required("Status is required"),
-    description: yup.string().required("Description is required"),
-  });
+ const schema = yup.object().shape({
+  offer_title: yup
+    .string()
+    .required("Offer title is required"),
+
+  offer_coupon_code: yup
+    .string()
+    .required("Coupon code is required"),
+
+  offer_in: yup
+    .string()
+    .required("Please select offer type"),
+
+  offer_start_date: yup
+    .date()
+    .required("Start date is required"),
+
+  offer_end_date: yup
+    .date()
+    .required("End date is required"),
+
+  offer_usage_limit: yup
+    .number()
+    .typeError("Usage limit must be a number")
+    .required("Usage limit is required")
+    .positive("Usage limit must be positive")
+    .integer("Usage limit must be an integer"),
+
+  offer_status: yup
+    .string()
+    .required("Status is required"),
+
+  offer_description: yup
+    .string()
+    .required("Description is required"),
+});
+
 
   const {
     register,
@@ -102,14 +125,47 @@ function Offer() {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = (data) => {
-    console.log("Form Data:", data);
-    // call your handleAddOffer API here
-    reset(); // reset form after submission
-  };
+
+const onSubmit = async (data) => {
+  try {
+    const payload = {
+      offer_title: data.offer_title,
+      offer_coupon_code: data.offer_coupon_code,
+      offer_in: data.offer_in,
+      offer_start_date: data.offer_start_date,
+      offer_end_date: data.offer_end_date,
+      offer_usage_limit: Number(data.offer_usage_limit),
+      offer_status: data.offer_status,
+      offer_description: data.offer_description,
+    };
+
+    const res = await axios.post(
+      "https://norealtor.in/hirelink_apis/admin/insert/tbl_offer",
+      payload
+    );
+
+    if (res.data.status === true) {
+      reset();
+      toast.success("Offer Added Successfully 🎉", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      fetchOffers();
+    } else {
+      toast.warning(res.data.message || "Something went wrong ⚠️");
+    }
+  } catch (error) {
+    console.error("Add offer error:", error);
+    toast.error("Failed to add offer. Please try again ❌", {
+      position: "top-right",
+      autoClose: 3000,
+    });
+  }
+};
 
   return (
     <>
+      <ToastContainer position="top-right" autoClose={3000} />
       <div className="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
         <div>
           <h3 className="fw-bold mb-3">Offers</h3>
@@ -311,90 +367,90 @@ function Offer() {
                   <label>Offer Title</label>
                   <input
                     type="text"
-                    {...register("title")}
+                    {...register("offer_title")}
                     className="form-control"
                     placeholder="Enter Offer Name"
                   />
-                  <p className="text-danger">{errors.title?.message}</p>
+                  <p className="text-danger">{errors.offer_title?.message}</p>
                 </div>
 
                 <div className="col-md-4">
                   <label>Coupon Code</label>
                   <input
                     type="text"
-                    {...register("code")}
+                    {...register("offer_coupon_code")}
                     className="form-control"
                     placeholder="Enter Coupon Code"
                   />
-                  <p className="text-danger">{errors.code?.message}</p>
+                  <p className="text-danger">{errors.offer_coupon_code?.message}</p>
                 </div>
 
                 <div className="col-md-4 ">
                   <label>Offer In</label>
                   <select
-                    {...register("offerin")}
+                    {...register("offer_in")}
                     className="form-select form-control"
                   >
                     <option value="">Select</option>
                     <option value="Percentage">Percentage</option>
                     <option value="Flat Amount">Flat Amount</option>
                   </select>
-                  <p className="text-danger">{errors.offerin?.message}</p>
+                  <p className="text-danger">{errors.offer_in?.message}</p>
                 </div>
 
                 <div className="col-md-4">
                   <label>Start Date</label>
                   <input
                     type="date"
-                    {...register("startDate")}
+                    {...register("offer_start_date")}
                     className="form-control"
                   />
-                  <p className="text-danger">{errors.startDate?.message}</p>
+                  <p className="text-danger">{errors.offer_start_date?.message}</p>
                 </div>
 
                 <div className="col-md-4">
                   <label>End Date</label>
                   <input
                     type="date"
-                    {...register("endDate")}
+                    {...register("offer_end_date")}
                     className="form-control"
                   />
-                  <p className="text-danger">{errors.endDate?.message}</p>
+                  <p className="text-danger">{errors.offer_end_date?.message}</p>
                 </div>
 
                 <div className="col-md-4">
                   <label>Usage Limit</label>
                   <input
                     type="number"
-                    {...register("usageLimit")}
+                    {...register("offer_usage_limit")}
                     className="form-control"
                     placeholder="Number of User Limit"
                   />
-                  <p className="text-danger">{errors.usageLimit?.message}</p>
+                  <p className="text-danger">{errors.offer_usage_limit?.message}</p>
                 </div>
 
                 <div className="col-md-4">
                   <label>Status</label>
                   <select
-                    {...register("status")}
+                    {...register("offer_status")}
                     className="form-select form-control"
                   >
                     <option value="">Select Status</option>
                     <option value="Active">Active</option>
                     <option value="Inactive">Inactive</option>
                   </select>
-                  <p className="text-danger">{errors.status?.message}</p>
+                  <p className="text-danger">{errors.offer_status?.message}</p>
                 </div>
 
                 <div className="col-12">
                   <label>Description</label>
                   <textarea
-                    {...register("description")}
+                    {...register("offer_description")}
                     className="form-control"
                     rows={4}
                     placeholder="Details about offer"
                   ></textarea>
-                  <p className="text-danger">{errors.description?.message}</p>
+                  <p className="text-danger">{errors.offer_description?.message}</p>
                 </div>
               </div>
 

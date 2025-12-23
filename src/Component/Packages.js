@@ -18,17 +18,6 @@ function Packages() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
-  const handleDeleteClick = (id) => {
-    setDeleteId(id);
-    setShowDeleteModal(true);
-  };
-
-  const confirmDelete = () => {
-    const filtered = packages.filter((p) => p.id !== deleteId);
-    setPackages(filtered);
-    setShowDeleteModal(false);
-  };
-
   // ---------------- Pagination Fix ----------------
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 5;
@@ -131,7 +120,7 @@ function Packages() {
       );
 
       if (res.data.status === true) {
-        setPackages(res.data.data); // make sure you have useState
+        setPackages(res.data.data);
       }
     } catch (error) {
       console.error("Fetch packages error:", error);
@@ -160,11 +149,38 @@ function Packages() {
       if (res.data.status === true) {
         reset();
         toast.success("Package Added Successfully 🎉");
-        fetchPackages(); // package list reload
+        fetchPackages();
       }
     } catch (error) {
       console.error("Add package error:", error);
       toast.error("Failed to add package. Please try again ❌");
+    }
+  };
+
+  const confirmDelete = async (pack_id) => {
+    try {
+      const res = await axios.get(
+        `https://norealtor.in/hirelink_apis/admin/deletedata/tbl_package/pack_id/${pack_id}`
+      );
+
+      if (res.data.status === true) {
+        toast.success("Package deleted successfully ✅");
+        fetchPackages(); // reload list from backend
+      } else {
+        toast.error("Failed to delete package ❌");
+      }
+    } catch (error) {
+      console.error("Delete error:", error);
+      toast.error("Server error, please try again ⚠️");
+    } finally {
+      setShowDeleteModal(false);
+      setDeleteId(null);
+    }
+  };
+
+  const handleDeleteClick = (pack_id) => {
+    if (window.confirm("Do you want to delete this package?")) {
+      confirmDelete(pack_id);
     }
   };
 

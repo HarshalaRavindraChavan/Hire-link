@@ -3,12 +3,12 @@ import logo from "./logo/admin-logo.png";
 
 function Sidebar() {
   const auth = JSON.parse(localStorage.getItem("auth"));
-  const role = auth?.user?.role;
+
+  const role = auth?.role;
   const assignedMenuIds = auth?.menu_ids || [];
 
-  const employerDefaultMenuIds = [1, 2, 3, 4, 5];
-  // Dashboard, Jobs, Applieds, Interview
-
+  // Employer fixed menus
+  const employerMenuIds = [1, 2, 3, 4, 5];
   const allMenus = [
     { id: 1, label: "Dashboard", path: "/dashboard", icon: "fas fa-home" },
     { id: 2, label: "Jobs", path: "/job", icon: "fa fa-briefcase" },
@@ -32,21 +32,18 @@ function Sidebar() {
     { id: 10, label: "Users", path: "/user", icon: "fa fa-user" },
   ];
 
-  //============== Menu Show logic=================
+  // ================= MENU LOGIC =================
+
   let finalMenus = [];
 
-  if (role === "admin") {
-    //Admin → all menus
+  if (role === "1") {
+    // 🔓 Admin → ALL menus
     finalMenus = allMenus;
   } else if (role === "employer") {
-    // Employer → default + assigned
-    const mergedMenuIds = [
-      ...new Set([...employerDefaultMenuIds, ...assignedMenuIds]),
-    ];
-
-    finalMenus = allMenus.filter((menu) => mergedMenuIds.includes(menu.id));
+    // 📌 Employer → FIXED menus
+    finalMenus = allMenus.filter((menu) => employerMenuIds.includes(menu.id));
   } else {
-    // 👤 Normal user → only assigned
+    // 👤 User → ASSIGNED menus only
     finalMenus = allMenus.filter((menu) => assignedMenuIds.includes(menu.id));
   }
 

@@ -6,7 +6,7 @@ import Header from "./Component/Header";
 import Footer from "./Component/Footer";
 import Dashboard from "./Component/Dashboard";
 import Job from "./Component/Jobs";
-import Condidates from "./Component/Candidates";
+import Candidates from "./Component/Candidates";
 import Employes from "./Component/Employes";
 import Packages from "./Component/Packages";
 import Offer from "./Component/Offers";
@@ -48,7 +48,7 @@ const AdminLayout = () => {
             <Routes>
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="job" element={<Job />} />
-              <Route path="condidate" element={<Condidates />} />
+              <Route path="candidate" element={<Candidates />} />
               <Route path="interview" element={<Interview />} />
               <Route path="employe" element={<Employes />} />
               <Route path="applicant" element={<Applicant />} />
@@ -128,7 +128,7 @@ function App() {
         <Route element={<AdminLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/job" element={<Job />} />
-          <Route path="/condidate" element={<Condidates />} />
+          <Route path="/candidate" element={<Candidates />} />
           <Route path="/interview" element={<Interview />} />
           <Route path="/employe" element={<Employes />} />
           <Route path="/applicant" element={<Applicant />} />

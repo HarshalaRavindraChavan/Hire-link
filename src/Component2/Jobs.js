@@ -265,7 +265,7 @@ function Jobs() {
           {/* ========== RIGHT JOB DETAILS ========== */}
           {selectedJob && (
             <div className="col-12 col-md-8 job-detail mb-5">
-              <div className="job-header">
+              <div className="job-header pt-3 pb-3">
                 <button className="save-btn">
                   <i className="fa-regular fa-bookmark"></i>
                 </button>
@@ -276,11 +276,11 @@ function Jobs() {
                   {selectedJob.state_name}
                 </p>
 
-                <p className="m-0 fw-semibold text-success">
+                <p className="mb-3 fw-semibold text-success">
                   ₹{selectedJob.job_salary} a month
                 </p>
 
-                <NavLink to="/apply" className="apply-btn mt-3 mb-3">
+                <NavLink to="/apply" className="apply-btn mt-0 mb-5">
                   Apply Now
                 </NavLink>
               </div>

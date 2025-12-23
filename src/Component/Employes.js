@@ -105,46 +105,110 @@ function Employes() {
       .notRequired(),
   });
 
-  
   // 2. React Hook Form
   const {
     register,
     handleSubmit,
     reset,
+    setValue, // ✅ MUST ADD
+    watch,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
-    mode: "onSubmit", 
+    mode: "onSubmit",
   });
+
+  const empLogo = watch("emp_logo");
 
   // Submit form as JSON
   const onSubmit = async (data) => {
     try {
       setLoading(true);
 
-      // Send JSON data to backend
+      const payload = {
+        emp_name: data.emp_name,
+        emp_email: data.emp_email,
+        emp_password: data.emp_password,
+        emp_companyname: data.emp_companyname,
+        emp_location: data.emp_location,
+        emp_city: data.emp_city,
+        emp_state: data.emp_state,
+        emp_website: data.emp_website,
+        emp_linkedin: data.emp_linkedin,
+        emp_facebook: data.emp_Facebook,
+        emp_instagram: data.emp_Instagram,
+        emp_youtube: data.emp_YouTube,
+        emp_logo: data.emp_logo, // ✅ FILE NAME
+      };
+
       const res = await axios.post(
-        "https://norealtor.in/hirelink_apis/employer/insert/tbl_employer",
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+        "https://norealtor.in/hirelink_apis/admin/insert/tbl_employer",
+        payload
       );
 
-      if (res.data.status) {
-        toast.success("Employer added successfully!");
-        reset(); 
-        fetchEmployers(); 
-      } else {
-        toast.error(res.data.message || "Failed to add employer");
+      if (res.data.status === true) {
+        toast.success("Employer added successfully");
+
+        // ✅ 1. reset form
+        reset();
+
+        // ✅ 2. refresh table
+        fetchEmployers();
+
+        // ✅ 3. close modal
+        const modal = document.getElementById("exampleModal");
+        const bsModal = window.bootstrap.Modal.getInstance(modal);
+        bsModal.hide();
       }
     } catch (err) {
-      console.error("Add employer error:", err);
+      console.error(err);
       toast.error("Failed to add employer");
     } finally {
       setLoading(false);
+    }
+  };
+
+  // ============ File Upload API ============
+  const uploadFile = async (e, fieldName) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+    const minSize = 30 * 1024; // 30 KB
+    const maxSize = 50 * 1024; // 50 KB
+
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Only JPG, JPEG, PNG files allowed");
+      return;
+    }
+
+    if (file.size < minSize || file.size > maxSize) {
+      toast.error("File size must be 30KB to 50KB");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append(fieldName, file);
+
+    try {
+      const res = await axios.post(
+        "https://norealtor.in/hirelink_apis/candidate/fileupload",
+        formData
+      );
+
+      if (res.data.status === true) {
+        const filename = res.data.files[fieldName];
+
+        // ✅ SET VALUE INTO REACT HOOK FORM
+        setValue(fieldName, filename);
+
+        toast.success("File uploaded successfully ✅");
+      } else {
+        toast.error("Upload failed ❌");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Upload error ❌");
     }
   };
 
@@ -395,6 +459,26 @@ function Employes() {
                   <span className="text-danger">
                     {errors.emp_companyname?.message}
                   </span>
+                </div>
+
+                {/* Company Logo */}
+                <div className="col-12 col-sm-6 col-md-4 mb-2">
+                  <label className="fw-semibold">
+                    Company Logo
+                    {empLogo && (
+                      <i className="fa-solid fa-circle-check text-success ms-2"></i>
+                    )}
+                  </label>
+
+                  {/* FILE INPUT */}
+                  <input
+                    type="file"
+                    className="form-control"
+                    onChange={(e) => uploadFile(e, "emp_logo")}
+                  />
+
+                  {/* HIDDEN INPUT (IMPORTANT) */}
+                  <input type="hidden" {...register("emp_logo")} />
                 </div>
 
                 {/* Location */}

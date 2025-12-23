@@ -118,7 +118,7 @@ function Interview() {
         setShowDeleteModal(false);
         setDeleteId(null);
 
-        fetchCandidates();
+        // fetchCandidates();
       }
     } catch (error) {
       console.error("Delete failed", error);

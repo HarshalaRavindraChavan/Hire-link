@@ -134,8 +134,9 @@ function Users() {
       .string()
       .matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/)
       .required(),
-    adharupload: yup.mixed().required(),
-    panupload: yup.mixed().required(),
+    adharupload: yup.string().required("Aadhar upload required"),
+    panupload: yup.string().required("PAN upload required"),
+
     bankpassbook: yup.string().required(),
     experience: yup.string().required(),
     role: yup.string().required(),
@@ -147,12 +148,11 @@ function Users() {
     handleSubmit,
     watch,
     reset,
+    setValue, // ✅ ADD THIS
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
   });
-
-  const watchState = watch("state");
 
   /* ================= SUBMIT ================= */
   const onSubmit = async (data) => {
@@ -164,7 +164,7 @@ function Users() {
       user_address: data.address,
       user_state: data.state,
       user_city: data.city,
-      user_joindate: new Date(data.joindate).toISOString().split("T")[0],
+      user_joindate: data.joindate,
       user_adhar: data.adhar,
       user_pan: data.pan,
       user_bank: data.bankpassbook,
@@ -183,10 +183,17 @@ function Users() {
 
       if (res.data.status) {
         toast.success("User added successfully");
-        reset();
-        setUser({ user_aadhar_image: "", user_pan_image: "" });
-        fetchUsers();
-        document.getElementById("exampleModal").click();
+
+        reset(); // form reset
+        setUser({ user_aadhar_image: "", user_pan_image: "" }); // reset file state
+        fetchUsers(); // refresh table
+
+        const modal = document.getElementById("exampleModal");
+        const bsModal =
+          window.bootstrap.Modal.getInstance(modal) ||
+          new window.bootstrap.Modal(modal);
+
+        bsModal.hide(); // close modal
       } else {
         toast.error("User not added");
       }
@@ -217,10 +224,23 @@ function Users() {
       );
 
       if (res.data.status) {
+        const filename = res.data.files[field];
+
+        // UI state (✔ icon)
         setUser((prev) => ({
           ...prev,
-          [field]: res.data.files[field],
+          [field]: filename,
         }));
+
+        // 🔥 React Hook Form ला सांग
+        if (field === "user_aadhar_image") {
+          setValue("adharupload", filename, { shouldValidate: true });
+        }
+
+        if (field === "user_pan_image") {
+          setValue("panupload", filename, { shouldValidate: true });
+        }
+
         toast.success("File uploaded");
       }
     } catch {
@@ -515,6 +535,7 @@ function Users() {
                     onChange={(e) => {
                       const stateId = e.target.value;
                       fetchCities(stateId);
+                      setValue("city", ""); // ✅ RESET CITY
                     }}
                   >
                     <option value="">Select State</option>
@@ -532,7 +553,7 @@ function Users() {
                   <label className="fw-semibold">City</label>
                   <select
                     className="form-select form-control"
-                    {...register("city")}
+                    {...register("city")} // ✅ CORRECT
                     disabled={!cities.length}
                   >
                     <option value="">Select City</option>
@@ -542,6 +563,7 @@ function Users() {
                       </option>
                     ))}
                   </select>
+
                   <p className="text-danger">{errors.city?.message}</p>
                 </div>
 
@@ -593,11 +615,8 @@ function Users() {
                     className="form-control"
                     onChange={(e) => uploadFile(e, "user_aadhar_image")}
                   />
-                  <input
-                    type="hidden"
-                    {...register("adharupload")}
-                    value={User.user_aadhar_image}
-                  />
+                  <input type="hidden" {...register("adharupload")} />
+
                   <p className="text-danger">{errors.adharupload?.message}</p>
                 </div>
 
@@ -614,11 +633,7 @@ function Users() {
                     className="form-control"
                     onChange={(e) => uploadFile(e, "user_pan_image")}
                   />
-                  <input
-                    type="hidden"
-                    {...register("panupload")}
-                    value={User.user_pan_image}
-                  />
+                  <input type="hidden" {...register("panupload")} />
                   <p className="text-danger">{errors.panupload?.message}</p>
                 </div>
 

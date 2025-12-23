@@ -108,10 +108,21 @@ function Interview() {
     setShowDeleteModal(true);
   };
 
-  const confirmDelete = () => {
-    const filtered = users.filter((u) => u.id !== deleteId);
-    setUsers(filtered);
-    setShowDeleteModal(false);
+   const confirmDelete = async () => {
+    try {
+      const res = await axios.get(
+        `https://norealtor.in/hirelink_apis/admin/deletedata/tbl_interview/itv_id/${deleteId}`
+      );
+
+      if (res.data.status === true) {
+        setShowDeleteModal(false);
+        setDeleteId(null);
+
+        fetchCandidates();
+      }
+    } catch (error) {
+      console.error("Delete failed", error);
+    }
   };
 
   //========================================

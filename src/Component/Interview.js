@@ -328,7 +328,7 @@ function Interview() {
                             role="button"
                             data-bs-toggle="dropdown"
                           >
-                            {i.candidate_name || "N/A"}
+                            {i.candidate_name}
                           </span>
                           <ul className="dropdown-menu shadow">
                             <li>
@@ -354,21 +354,21 @@ function Interview() {
 
                     {/* Job Details */}
                     <td className="text-start">
-                      <b>Job Title:</b> {i.job_title || "N/A"} <br />
-                      <b>Company:</b> {i.company_name || "N/A"}
+                      <b>Job Title:</b> {i.job_title} <br />
+                      <b>Company:</b> {i.company_name}
                     </td>
 
                     {/* Interview Info */}
                     <td className="text-start">
-                      <b>Interviewer:</b> {i.interviewer || "N/A"} <br />
-                      <b>Type:</b> {i.interview_type || "N/A"} <br />
-                      <b>Date:</b> {i.interview_date || "N/A"} <br />
-                      <b>Time:</b> {i.interview_time || "N/A"}
+                      <b>Interviewer:</b> {i.interviewer} <br />
+                      <b>Type:</b> {i.interview_type} <br />
+                      <b>Date:</b> {i.interview_date} <br />
+                      <b>Time:</b> {i.interview_time }
                     </td>
 
                     {/* Created & Meeting Info */}
                     <td className="text-start">
-                      <b>Created:</b> {i.created_date || "N/A"} <br />
+                      <b>Created:</b> {i.created_date} <br />
                       <b>Meeting:</b>{" "}
                       {i.meeting_details ? (
                         <a

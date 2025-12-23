@@ -58,11 +58,16 @@ function Login() {
         const data = response.data;
 
         if (data.status === true) {
+          const menuIds = response.data.data.user_menu_id
+            ? response.data.data.user_menu_id.toString().split(",").map(Number)
+            : [];
+
           localStorage.setItem(
             "auth",
             JSON.stringify({
               role: response.data.data.user_role,
               user_id: response.data.data.user_id,
+              menu_ids: menuIds, // 👈 STANDARD NAME
             })
           );
 

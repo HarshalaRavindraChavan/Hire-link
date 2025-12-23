@@ -81,6 +81,7 @@ function Signin() {
               JSON.stringify({
                 role: "employer",
                 emp_id: response.data.data.emp_id,
+                menu_ids: [],
               })
             );
 

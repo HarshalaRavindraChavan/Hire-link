@@ -5,6 +5,7 @@ import axios from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import Pagination from "./commenuse/Pagination";
+import { toast } from "react-toastify";
 
 function Employes() {
   // tital of tab
@@ -14,6 +15,7 @@ function Employes() {
 
   const [search, setSearch] = useState("");
   const [employer, setEmployer] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchEmployers();
@@ -95,24 +97,6 @@ function Employes() {
       .url("Enter a valid LinkedIn link")
       .matches(/linkedin\.com/, "Link must be a LinkedIn profile URL")
       .required("LinkedIn link is required"),
-
-    facebook: Yup.string()
-      .url("Enter a valid Facebook link")
-      .matches(/facebook\.com/, "Link must be a Facebook profile URL")
-      .required("Facebook link is required"),
-
-    instagram: Yup.string()
-      .url("Enter a valid Instagram link")
-      .matches(/instagram\.com/, "Link must be an Instagram profile URL")
-      .required("Instagram link is required"),
-
-    youtube: Yup.string()
-      .url("Enter a valid YouTube link")
-      .matches(
-        /(youtube\.com|youtu\.be)/,
-        "Link must be a YouTube channel/video URL"
-      )
-      .required("YouTube link is required"),
   });
 
   // ---------------------------
@@ -121,17 +105,41 @@ function Employes() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
 
-  // ---------------------------
-  // 3. Submit Handler
-  // ---------------------------
-  const onSubmit = (data) => {
-    console.log("User Saved:", data);
-    alert("User Saved Successfully!");
+  // Submit form as JSON
+  const onSubmit = async (data) => {
+    try {
+      setLoading(true);
+
+      // Send JSON data to backend
+      const res = await axios.post(
+        "https://norealtor.in/hirelink_apis/employer/insert/tbl_employer",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (res.data.status) {
+        toast.success("Employer added successfully!");
+        reset(); // clear form
+        fetchEmployers(); // refresh the employer list
+      } else {
+        toast.error(res.data.message || "Failed to add employer");
+      }
+    } catch (err) {
+      console.error("Add employer error:", err);
+      toast.error("Failed to add employer");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -312,208 +320,137 @@ function Employes() {
                 style={{ cursor: "pointer", color: "white", fontSize: "25px" }}
               ></i>
             </div>
-
             <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="modal-body row">
-                {/* Full Name */}
-                <div className="col-md-4">
-                  <label className="fw-semibold">Full Name</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Enter Full Name"
-                    {...register("fullname")}
-                  />
-                  <span className="text-danger">
-                    {errors.fullname?.message}
-                  </span>
-                </div>
+      <div className="modal-body row">
+        {/* Full Name */}
+        <div className="col-md-6 mb-2">
+          <label className="fw-semibold">Full Name</label>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Enter Full Name"
+            {...register("emp_name", { required: "Full Name is required" })}
+          />
+          <span className="text-danger">{errors.emp_name?.message}</span>
+        </div>
 
-                {/* Email */}
-                <div className="col-md-4">
-                  <label className="fw-semibold">Email</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Enter Email"
-                    {...register("email")}
-                  />
-                  <span className="text-danger">{errors.email?.message}</span>
-                </div>
+        {/* Email */}
+        <div className="col-md-6 mb-2">
+          <label className="fw-semibold">Email</label>
+          <input
+            type="email"
+            className="form-control"
+            placeholder="Enter Email"
+            {...register("emp_email", {
+              required: "Email is required",
+              pattern: {
+                value: /^\S+@\S+$/i,
+                message: "Invalid email format",
+              },
+            })}
+          />
+          <span className="text-danger">{errors.emp_email?.message}</span>
+        </div>
 
-                {/* Mobile */}
-                <div className="col-md-4">
-                  <label className="fw-semibold">Mobile</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Enter Mobile Number"
-                    {...register("mobile")}
-                  />
-                  <span className="text-danger">{errors.mobile?.message}</span>
-                </div>
+        {/* Password */}
+        <div className="col-md-6 mb-2">
+          <label className="fw-semibold">Password</label>
+          <input
+            type="password"
+            className="form-control"
+            placeholder="Enter Password"
+            {...register("emp_password", {
+              required: "Password is required",
+              minLength: { value: 6, message: "Minimum 6 characters" },
+            })}
+          />
+          <span className="text-danger">{errors.emp_password?.message}</span>
+        </div>
 
-                {/* Company Name */}
-                <div className="col-md-4">
-                  <label className="fw-semibold">Company Name</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Enter Company Name"
-                    {...register("companyname")}
-                  />
-                  <span className="text-danger">
-                    {errors.companyname?.message}
-                  </span>
-                </div>
+        {/* Company Name */}
+        <div className="col-md-6 mb-2">
+          <label className="fw-semibold">Company Name</label>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Enter Company Name"
+            {...register("emp_companyname", { required: "Company Name is required" })}
+          />
+          <span className="text-danger">{errors.emp_companyname?.message}</span>
+        </div>
 
-                {/* Category */}
-                <div className="col-md-4">
-                  <label className="fw-semibold">Category</label>
-                  <select
-                    className="form-select form-control"
-                    {...register("Category")}
-                  >
-                    <option value="">Select Category</option>
-                    <option value="Percentage">Percentage</option>
-                    <option value="Flat Amount">Flat Amount</option>
-                  </select>
-                  <span className="text-danger">
-                    {errors.Category?.message}
-                  </span>
-                </div>
+        {/* Location */}
+        <div className="col-md-4 mb-2">
+          <label className="fw-semibold">Location</label>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Enter Location"
+            {...register("emp_location", { required: "Location is required" })}
+          />
+          <span className="text-danger">{errors.emp_location?.message}</span>
+        </div>
 
-                {/* Password */}
-                <div className="col-md-4">
-                  <label className="fw-semibold">Password</label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    placeholder="Enter Password"
-                    {...register("password")}
-                  />
-                  <span className="text-danger">
-                    {errors.password?.message}
-                  </span>
-                </div>
+        {/* City */}
+        <div className="col-md-4 mb-2">
+          <label className="fw-semibold">City</label>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Enter City"
+            {...register("emp_city", { required: "City is required" })}
+          />
+          <span className="text-danger">{errors.emp_city?.message}</span>
+        </div>
 
-                {/* Location */}
-                <div className="col-md-4">
-                  <label className="fw-semibold">Location</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Enter Location"
-                    {...register("location")}
-                  />
-                  <span className="text-danger">
-                    {errors.location?.message}
-                  </span>
-                </div>
+        {/* State */}
+        <div className="col-md-4 mb-2">
+          <label className="fw-semibold">State</label>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Enter State"
+            {...register("emp_state", { required: "State is required" })}
+          />
+          <span className="text-danger">{errors.emp_state?.message}</span>
+        </div>
 
-                {/* City */}
-                <div className="col-md-4">
-                  <label className="fw-semibold">City</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Enter City"
-                    {...register("city")}
-                  />
-                  <span className="text-danger">{errors.city?.message}</span>
-                </div>
+        {/* Website */}
+        <div className="col-md-6 mb-2">
+          <label className="fw-semibold">Website</label>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Enter Website"
+            {...register("emp_website")}
+          />
+        </div>
 
-                {/* State */}
-                <div className="col-md-4">
-                  <label className="fw-semibold">State</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Enter State"
-                    {...register("state")}
-                  />
-                  <span className="text-danger">{errors.state?.message}</span>
-                </div>
+        {/* LinkedIn */}
+        <div className="col-md-6 mb-2">
+          <label className="fw-semibold">LinkedIn</label>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Enter LinkedIn"
+            {...register("emp_linkedin")}
+          />
+        </div>
+      </div>
 
-                {/* Website */}
-                <div className="col-md-4">
-                  <label className="fw-semibold">Website</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Enter Website Link"
-                    {...register("website")}
-                  />
-                  <span className="text-danger">{errors.website?.message}</span>
-                </div>
-
-                <div className="col-md-4">
-                  <label className="fw-semibold">LinkedIn</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Enter LinkedIn Link"
-                    {...register("linkedin")}
-                  />
-                  <span className="text-danger">
-                    {errors.linkedin?.message}
-                  </span>
-                </div>
-
-                <div className="col-md-4">
-                  <label className="fw-semibold">Facebook</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Enter Facebook Link"
-                    {...register("facebook")}
-                  />
-                  <span className="text-danger">
-                    {errors.facebook?.message}
-                  </span>
-                </div>
-
-                <div className="col-md-4">
-                  <label className="fw-semibold">Instagram</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Enter Instagram Link"
-                    {...register("instagram")}
-                  />
-                  <span className="text-danger">
-                    {errors.instagram?.message}
-                  </span>
-                </div>
-
-                <div className="col-md-4">
-                  <label className="fw-semibold">YouTube</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Enter YouTube Link"
-                    {...register("youtube")}
-                  />
-                  <span className="text-danger">{errors.youtube?.message}</span>
-                </div>
-              </div>
-
-              {/* Submit */}
-
-              <div className="modal-footer bg-light rounded-bottom-4 d-flex">
-                <button
-                  type="button"
-                  className="btn btn-outline-secondary rounded-3"
-                  data-bs-dismiss="modal"
-                >
-                  Cancel
-                </button>
-
-                <button type="submit" className="btn btn-success px-4 ms-auto">
-                  Submit
-                </button>
-              </div>
-            </form>
+      <div className="modal-footer bg-light rounded-bottom-4 d-flex">
+        <button
+          type="button"
+          className="btn btn-outline-secondary rounded-3"
+          data-bs-dismiss="modal"
+        >
+          Cancel
+        </button>
+        <button type="submit" className="btn btn-success px-4 ms-auto">
+          {loading ? "Processing..." : "Submit"}
+        </button>
+      </div>
+    </form>
           </div>
         </div>
       </div>

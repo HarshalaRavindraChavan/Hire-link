@@ -165,7 +165,7 @@ function Packages() {
 
       if (res.data.status === true) {
         toast.success("Package deleted successfully ✅");
-        fetchPackages(); // reload list from backend
+        fetchPackages(); 
       } else {
         toast.error("Failed to delete package ❌");
       }

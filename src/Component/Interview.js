@@ -1,80 +1,65 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Pagination from "./commenuse/Pagination";
+import { toast, ToastContainer } from "react-toastify";
+import axios from "axios";
 
 function Interview() {
   // Tab Title
-  useState(() => {
+  useEffect(() => {
     document.title = "Hirelink | Interview";
   }, []);
 
-  //================= Candidate Search =======================
   const [candiName, setCandiName] = useState("");
   const [showCandi, setShowCandi] = useState(false);
 
-  const candidateSuggestions = [
-    "Harshal Mahajan",
-    "Rohit Sharma",
-    "Akash Patil",
-    "Priya Deshmukh",
-    "Sneha Joshi",
-    "Amit Shinde",
-  ];
-
-  const filteredCandidate = candidateSuggestions.filter((name) =>
-    name.toLowerCase().includes(candiName.toLowerCase())
-  );
-
-  const selectCandidate = (value) => {
-    setCandiName(value);
-    setShowCandi(false);
-  };
-
-  //================= Job Search =======================
   const [jobName, setJobName] = useState("");
   const [showJob, setShowJob] = useState(false);
 
-  const jobSuggestions = [
-    "Frontend Developer",
-    "Backend Developer",
-    "React Developer",
-    "UI/UX Designer",
-    "HR Manager",
-    "PHP Developer",
-  ];
-
-  const filteredJob = jobSuggestions.filter((name) =>
-    name.toLowerCase().includes(jobName.toLowerCase())
-  );
-
-  const selectJob = (value) => {
-    setJobName(value);
-    setShowJob(false);
-  };
-
-  //================= Company Search =======================
   const [companyName, setCompanyName] = useState("");
   const [showCompany, setShowCompany] = useState(false);
 
-  const companySuggestions = [
-    "Tata Consultancy Services (TCS)",
-    "Infosys",
-    "Wipro",
-    "Tech Mahindra",
-    "HCL Technologies",
-    "Accenture",
-    "Capgemini",
-    "Cognizant",
-    "L&T Infotech",
-    "IBM",
-    "Amazon",
-    "Google",
-    "Microsoft",
-    "Flipkart",
+  const [selectedCandidate, setSelectedCandidate] = useState(null);
+  const [selectedJob, setSelectedJob] = useState(null);
+
+  const candidateSuggestions = [
+    { can_id: 1, can_name: "Harshal Mahajan" },
+    { can_id: 2, can_name: "Rohit Sharma" },
+    { can_id: 3, can_name: "Akash Patil" },
   ];
+
+  const jobSuggestions = [
+    { job_id: 1, job_title: "Frontend Developer" },
+    { job_id: 2, job_title: "Backend Developer" },
+    { job_id: 3, job_title: "React Developer" },
+  ];
+
+  const filteredCandidate = candidateSuggestions.filter((item) =>
+    item.can_name.toLowerCase().includes(candiName.toLowerCase())
+  );
+
+  const filteredJob = jobSuggestions.filter((item) =>
+    item.job_title.toLowerCase().includes(jobName.toLowerCase())
+  );
+
+  const selectCandidate = (item) => {
+    setCandiName(item.can_name);
+    setSelectedCandidate(item);
+    setValue("candidateName", item.can_name); // 👈 IMPORTANT
+    setShowCandi(false);
+  };
+
+  const selectJob = (item) => {
+    setJobName(item.job_title);
+    setSelectedJob(item);
+    setValue("jobTitle", item.job_title); // 👈 IMPORTANT
+    setShowJob(false);
+  };
+
+  const companySuggestions = ["TCS", "Infosys", "Wipro", "Accenture", "Google"];
 
   const filteredCompany = companySuggestions.filter((name) =>
     name.toLowerCase().includes(companyName.toLowerCase())
@@ -82,6 +67,7 @@ function Interview() {
 
   const selectCompany = (value) => {
     setCompanyName(value);
+    setValue("companyName", value);
     setShowCompany(false);
   };
 
@@ -138,13 +124,9 @@ function Interview() {
     interviewType: yup.string().required("Interview type is required"),
     interviewDate: yup.string().required("Interview date is required"),
     interviewTime: yup.string().required("Interview time is required"),
-    interviewer: yup.string().required("Interviewer name is required"),
-    phone: yup
-      .string()
-      .matches(/^[0-9]{10}$/, "Phone must be 10 digits")
-      .required("Phone number is required"),
+    // interviewer: yup.string().required("Interviewer name is required"),
     status: yup.string().required("Status is required"),
-    createdDate: yup.string().required("Created date is required"),
+    // createdDate: yup.string().required("Created date is required"),
   });
 
   // React Hook Form Initialization
@@ -152,6 +134,8 @@ function Interview() {
     register,
     handleSubmit,
     watch,
+    setValue,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -161,33 +145,96 @@ function Interview() {
   const watchInterviewType = watch("interviewType");
 
   // Submit Handler
-  const onSubmit = (data) => {
-    console.log("FORM SUBMITTED:", data);
-    alert("Form submitted successfully!");
+  const onSubmit = async (data) => {
+    if (!selectedCandidate || !selectedJob) {
+      toast.error("Please select candidate and job");
+      return;
+    }
+
+    const payload = {
+      itv_candidate_id: selectedCandidate.can_id,
+      itv_job_id: selectedJob.job_id,
+      itv_company_name: companyName,
+      itv_type: data.interviewType,
+      itv_date: data.interviewDate,
+      itv_status: data.status,
+    };
+
+    try {
+      const res = await axios.post(
+        "https://norealtor.in/hirelink_apis/admin/insert/tbl_interview",
+        payload
+      );
+
+      if (res.data.status) {
+        toast.success("Interview added successfully");
+
+        setCandiName("");
+        setJobName("");
+        setCompanyName("");
+        setSelectedCandidate(null);
+        setSelectedJob(null);
+      } else {
+        toast.error("Insert failed");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong");
+    }
   };
 
   const [search, setSearch] = useState("");
 
-  const interviews = [
-    {
-      id: 1,
-      candidate_name: "Harshala Chavan",
-      candidate_email: "harshala@gmail.com",
-      job_title: "Frontend Developer",
-      company_name: "Tech Solutions",
-      interview_type: "Online",
-      interview_date: "2025-06-15",
-      interview_time: "11:00 AM",
-      interview_status: "Scheduled",
-      interviewer: "Rahul Patil",
-      meeting_details: "https://meet.google.com/xyz",
-      created_date: "2025-05-25",
-    },
-  ];
+  // get api state and api
+  const [interviews, setInterviews] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const fetchInterviews = async (showSuccessToast = false) => {
+    try {
+      setLoading(true);
+
+      const res = await axios.get(
+        "https://norealtor.in/hirelink_apis/admin/getdata/tbl_interview"
+      );
+
+      if (res.data.status) {
+        setInterviews(res.data.data);
+
+        // ✅ Show toast ONLY when needed
+        if (showSuccessToast) {
+          toast.success("Interview added successfully");
+        }
+      } else {
+        toast.error("Failed to load interview data");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong while fetching interviews");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchInterviews();
+  }, []);
 
   //======================================== UI RETURN
   return (
     <>
+      {/* Your Routes / Layout */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
       <div className="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
         <div>
           <h3 className="fw-bold mb-3">Interview Details</h3>
@@ -257,71 +304,109 @@ function Interview() {
                 <th>Created</th>
               </tr>
             </thead>
-
             <tbody>
-              {interviews.map((i) => (
-                <tr key={i.id}>
-                  <td>{i.id}</td>
-
-                  <td className="text-start">
-                    <div className="fw-bold ">
-                      Name:
-                      <div className="dropdown d-inline ms-2">
-                        <span
-                          className="fw-bold text-primary"
-                          role="button"
-                          data-bs-toggle="dropdown"
-                        >
-                          {i.candidate_name}
-                        </span>
-                        <ul className="dropdown-menu shadow">
-                          <li>
-                            <button className="dropdown-item">
-                              <i className="fas fa-edit me-2"></i>Edit
-                            </button>
-                          </li>
-                          <li>
-                            <button
-                              className="dropdown-item text-danger"
-                              onClick={() => handleDeleteClick(i.id)}
-                            >
-                              <i className="fas fa-trash me-2"></i>Delete
-                            </button>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <div className="fw-bold">
-                      Email: <span>{i.candidate_email}</span>
-                    </div>
-                  </td>
-
-                  <td className="text-start">
-                    <b>Job Title:</b> {i.job_title} <br />
-                    <b>Company:</b> {i.company_name}
-                  </td>
-
-                  <td className="text-start">
-                    <b>Interviewer:</b> {i.interviewer} <br />
-                    <b>Type:</b> {i.interview_type} <br />
-                    <b>Date:</b> {i.interview_date} <br />
-                    <b>Time:</b> {i.interview_time}
-                  </td>
-
-                  <td className="text-start">
-                    <b>Created:</b> {i.created_date} <br />
-                    <b>Meeting:</b>{" "}
-                    <a href={i.meeting_details} target="_blank">
-                      Open Link
-                    </a>{" "}
-                    <br />
-                    <b>Status:</b>{" "}
-                    <span className="badge bg-success">
-                      {i.interview_status}
+              {loading ? (
+                <tr>
+                  <td colSpan="5" className="text-center">
+                    <span className="text-primary fw-bold">
+                      Loading interviews...
                     </span>
                   </td>
                 </tr>
-              ))}
+              ) : interviews.length > 0 ? (
+                interviews.map((i) => (
+                  <tr key={i.id}>
+                    {/* ID */}
+                    <td>{i.id}</td>
+
+                    {/* Candidate Info */}
+                    <td className="text-start">
+                      <div className="fw-bold">
+                        Name:
+                        <div className="dropdown d-inline ms-2">
+                          <span
+                            className="fw-bold text-primary"
+                            role="button"
+                            data-bs-toggle="dropdown"
+                          >
+                            {i.candidate_name || "N/A"}
+                          </span>
+                          <ul className="dropdown-menu shadow">
+                            <li>
+                              <button className="dropdown-item">
+                                <i className="fas fa-edit me-2"></i>Edit
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                className="dropdown-item text-danger"
+                                onClick={() => handleDeleteClick(i.id)}
+                              >
+                                <i className="fas fa-trash me-2"></i>Delete
+                              </button>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div className="fw-bold">
+                        Email: <span>{i.candidate_email || "N/A"}</span>
+                      </div>
+                    </td>
+
+                    {/* Job Details */}
+                    <td className="text-start">
+                      <b>Job Title:</b> {i.job_title || "N/A"} <br />
+                      <b>Company:</b> {i.company_name || "N/A"}
+                    </td>
+
+                    {/* Interview Info */}
+                    <td className="text-start">
+                      <b>Interviewer:</b> {i.interviewer || "N/A"} <br />
+                      <b>Type:</b> {i.interview_type || "N/A"} <br />
+                      <b>Date:</b> {i.interview_date || "N/A"} <br />
+                      <b>Time:</b> {i.interview_time || "N/A"}
+                    </td>
+
+                    {/* Created & Meeting Info */}
+                    <td className="text-start">
+                      <b>Created:</b> {i.created_date || "N/A"} <br />
+                      <b>Meeting:</b>{" "}
+                      {i.meeting_details ? (
+                        <a
+                          href={i.meeting_details}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Open Link
+                        </a>
+                      ) : (
+                        <span className="text-muted">No link</span>
+                      )}
+                      <br />
+                      <b>Status:</b>{" "}
+                      <span
+                        className={`badge ${
+                          i.interview_status === "Scheduled"
+                            ? "bg-primary"
+                            : i.interview_status === "Completed"
+                            ? "bg-success"
+                            : i.interview_status === "Cancelled"
+                            ? "bg-danger"
+                            : "bg-warning"
+                        }`}
+                      >
+                        {i.interview_status || "N/A"}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" className="text-center">
+                    No interviews found.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
 
@@ -387,7 +472,7 @@ function Interview() {
                         top: "100%",
                       }}
                     >
-                      {filteredCandidate.length > 0 ? (
+                      {/* {filteredCandidate.length > 0 ? (
                         filteredCandidate.map((name, i) => (
                           <li
                             key={i}
@@ -403,7 +488,17 @@ function Interview() {
                         ))
                       ) : (
                         <li className="list-group-item">No results found</li>
-                      )}
+                      )} */}
+
+                      {filteredCandidate.map((item) => (
+                        <li
+                          key={item.can_id}
+                          className="list-group-item"
+                          onClick={() => selectCandidate(item)}
+                        >
+                          {item.can_name}
+                        </li>
+                      ))}
                     </ul>
                   )}
                 </div>

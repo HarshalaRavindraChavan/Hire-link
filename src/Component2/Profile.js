@@ -552,11 +552,6 @@ function Profile() {
               <div className="modal-body px-4 py-2">
                 {/* PROFILE IMAGE SECTION */}
                 <div className="d-flex align-items-center gap-3 mb-3">
-                  <input
-                    type="hidden"
-                    name="can_aadhar"
-                    value={candidate.can_aadhar}
-                  />
                   <img
                     src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
                     className="rounded-circle border"

@@ -8,27 +8,50 @@ import Pagination from "./commenuse/Pagination";
 import { toast } from "react-toastify";
 
 function Users() {
-
-  const [User, setUser] = useState({
-  user_aadhar_image: "",
-  user_pan_image: "",
-});
-  // tital of tab
-  useState(() => {
+  useEffect(() => {
     document.title = "Hirelink | Users";
   }, []);
 
-  // Example data: States and their cities
-  const stateCityData = {
-    Maharashtra: ["Mumbai", "Pune", "Nagpur", "Nashik"],
-    Karnataka: ["Bengaluru", "Mysore", "Mangalore"],
-    Gujarat: ["Ahmedabad", "Surat", "Vadodara"],
-    TamilNadu: ["Chennai", "Coimbatore", "Madurai"],
+  const [users, setUsers] = useState([]);
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
+
+  useEffect(() => {
+    fetchStates();
+  }, []);
+
+  const fetchStates = async () => {
+    try {
+      const res = await axios.get(
+        "https://norealtor.in/hirelink_apis/admin/getdata/tbl_states"
+      );
+
+      if (res.data.status) {
+        setStates(res.data.data);
+      }
+    } catch (err) {
+      console.error("State fetch error", err);
+    }
   };
 
-  const [users, setUsers] = useState([]);
+  //=========all city
 
-  //=============== all Data Disply=============
+  const fetchCities = async (stateId) => {
+    try {
+      const res = await axios.get(
+        `https://norealtor.in/hirelink_apis/admin/getdata/tbl_city/state_id/${stateId}`
+      );
+
+      if (res.data.status) {
+        setCities(res.data.data);
+      }
+    } catch (err) {
+      console.error("City fetch error", err);
+    }
+  };
+
+  //========user add============
+
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -38,77 +61,26 @@ function Users() {
       const res = await axios.get(
         "https://norealtor.in/hirelink_apis/admin/getdata/tbl_user"
       );
-
       if (res.data.status === true) {
         setUsers(res.data.data);
       }
-    } catch (error) {
-      console.error("Error fetching users", error);
+    } catch (err) {
+      console.error(err);
     }
   };
 
-  const [formData, setFormData] = useState({
-    fullname: "",
-    email: "",
-    mobile: "",
-    location: "",
-    address: "",
-    city: "",
-    state: "",
-    joindate: "",
-    adhar: "",
-    pan: "",
-    bankpassbook: "",
-    experience: "",
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    // If state changes, reset city
-    if (name === "state") {
-      setFormData((prev) => ({ ...prev, state: value, city: "" }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
-  };
-
-  const handleAddUser = (e) => {
-    e.preventDefault();
-
-    const newUser = { id: Date.now(), ...formData };
-    setUsers([...users, newUser]);
-
-    setFormData({
-      fullname: "",
-      email: "",
-      mobile: "",
-      location: "",
-      address: "",
-      city: "",
-      state: "",
-      joindate: "",
-      adhar: "",
-      pan: "",
-      bankpassbook: "",
-      experience: "",
-    });
-
-    const modal = window.bootstrap.Modal.getInstance(
-      document.getElementById("exampleModal")
-    );
-    modal.hide();
-  };
-
-  // PAGINATION
+  /* ================= PAGINATION ================= */
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 10;
+
+  const filteredUsers = users.filter((u) => String(u.user_id) !== "1");
+
   const lastIndex = currentPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
-  const records = users.slice(firstIndex, lastIndex);
-  const nPages = Math.ceil(users.length / recordsPerPage);
+  const records = filteredUsers.slice(firstIndex, lastIndex);
+  const nPages = Math.ceil(filteredUsers.length / recordsPerPage);
 
-  // DELETE
+  /* ================= DELETE ================= */
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
@@ -126,153 +98,133 @@ function Users() {
       if (res.data.status === true) {
         setShowDeleteModal(false);
         setDeleteId(null);
-
         fetchUsers();
       } else {
-        alert("Delete failed");
+        toast.error("Delete failed");
       }
-    } catch (error) {
-      console.error("Delete error", error);
-      alert("Something went wrong while deleting");
+    } catch (err) {
+      toast.error("Delete error");
     }
   };
 
-  // Validation schema using Yup
-  const schema = yup.object().shape({
-    fullname: yup.string().required("Full name is required"),
-    email: yup.string().email("Invalid email").required("Email is required"),
+  /* ================= FILE STATE ================= */
+  const [User, setUser] = useState({
+    user_aadhar_image: "",
+    user_pan_image: "",
+  });
+
+  /* ================= VALIDATION ================= */
+  const schema = yup.object({
+    fullname: yup.string().required(),
+    email: yup.string().email().required(),
     mobile: yup
       .string()
-      .matches(/^\d{10}$/, "Mobile number must be 10 digits")
-      .required("Mobile is required"),
-    location: yup.string().required("Location is required"),
-    address: yup.string().required("Address is required"),
-    state: yup.string().required("State is required"),
-    city: yup.string().required("City is required"),
-    joindate: yup
-      .date()
-      .typeError("Please select a valid date")
-      .required("Join Date is required"),
-
+      .matches(/^\d{10}$/)
+      .required(),
+    location: yup.string().required(),
+    address: yup.string().required(),
+    state: yup.string().required(),
+    city: yup.string().required(),
+    joindate: yup.date().required(),
     adhar: yup
       .string()
-      .matches(/^\d{12}$/, "Adhar number must be 12 digits")
-      .required("Adhar number is required"),
+      .matches(/^\d{12}$/)
+      .required(),
     pan: yup
       .string()
-      .matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN number")
-      .required("PAN number is required"),
-    adharupload: yup
-      .mixed()
-      .required("Aadhar Card is required")
-      .test(
-        "fileSize",
-        "File size is too large (max 500kb)",
-        (value) => value && value[0] && value[0].size <= 2 * 500 * 1024
-      )
-      .test(
-        "fileType",
-        "Only JPG, PNG or PDF allowed",
-        (value) =>
-          value &&
-          value[0] &&
-          ["image/jpeg", "image/png", "application/pdf"].includes(value[0].type)
-      ),
-
-    panupload: yup
-      .mixed()
-      .required("PAN Card is required")
-      .test(
-        "fileSize",
-        "File size is too large (max 500kb)",
-        (value) => value && value[0] && value[0].size <= 2 * 500 * 1024
-      )
-      .test(
-        "fileType",
-        "Only JPG, PNG or PDF allowed",
-        (value) =>
-          value &&
-          value[0] &&
-          ["image/jpeg", "image/png", "application/pdf"].includes(value[0].type)
-      ),
-    bankpassbook: yup.string().required("Bank passbook details are required"),
-    experience: yup.string().required("Experience is required"),
-    role: yup.string().required("Please select a role"),
-    menus: yup
-      .array()
-      .min(1, "Select at least one menu")
-      .required("Select the menus"),
+      .matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/)
+      .required(),
+    adharupload: yup.mixed().required(),
+    panupload: yup.mixed().required(),
+    bankpassbook: yup.string().required(),
+    experience: yup.string().required(),
+    role: yup.string().required(),
+    menus: yup.array().min(1).required(),
   });
 
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
     reset,
+    formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
   });
 
-  const watchState = watch("state"); // watch state for city dropdown
+  const watchState = watch("state");
 
-  const onSubmit = (data) => {
-    console.log("Form Data:", data);
-    // call your API here
-    reset(); // reset form after submission
+  /* ================= SUBMIT ================= */
+  const onSubmit = async (data) => {
+    const payload = {
+      user_name: data.fullname,
+      user_email: data.email,
+      user_mobile: data.mobile,
+      user_location: data.location,
+      user_address: data.address,
+      user_state: data.state,
+      user_city: data.city,
+      user_joindate: new Date(data.joindate).toISOString().split("T")[0],
+      user_adhar: data.adhar,
+      user_pan: data.pan,
+      user_bank: data.bankpassbook,
+      user_experience: data.experience,
+      user_role: data.role,
+      user_menus: data.menus.join(","),
+      user_aadhar_image: User.user_aadhar_image,
+      user_pan_image: User.user_pan_image,
+    };
+
+    try {
+      const res = await axios.post(
+        "https://norealtor.in/hirelink_apis/admin/insert/tbl_user",
+        payload
+      );
+
+      if (res.data.status) {
+        toast.success("User added successfully");
+        reset();
+        setUser({ user_aadhar_image: "", user_pan_image: "" });
+        fetchUsers();
+        document.getElementById("exampleModal").click();
+      } else {
+        toast.error("User not added");
+      }
+    } catch {
+      toast.error("Something went wrong");
+    }
   };
 
-  const uploadFile = async (e, fieldName) => {
+  /* ================= FILE UPLOAD ================= */
+  const uploadFile = async (e, field) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
-    const minSize = 30 * 1024; // 30 KB
-    const maxSize = 50 * 1024; // 50 KB
-
-    // TYPE CHECK
-    if (!allowedTypes.includes(file.type)) {
-      toast.error("Only JPG, JPEG, PNG files are allowed");
-      e.target.value = "";
-      return;
-    }
-
-    // SIZE CHECK
-    if (file.size < minSize || file.size > maxSize) {
-      toast.error("File size must be between 30 KB and 50 KB");
-      e.target.value = "";
+    const min = 30 * 1024;
+    const max = 50 * 1024;
+    if (file.size < min || file.size > max) {
+      toast.error("File size must be 30KB–50KB");
       return;
     }
 
     const formData = new FormData();
-    formData.append(fieldName, file); // 🔥 KEY MUST MATCH BACKEND
+    formData.append(field, file);
 
     try {
       const res = await axios.post(
         "https://norealtor.in/hirelink_apis/admin/fileupload",
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
+        formData
       );
 
       if (res.data.status) {
-        const filename = res.data.files[fieldName];
-
         setUser((prev) => ({
           ...prev,
-          [fieldName]: filename, // save file name
+          [field]: res.data.files[field],
         }));
-
-        toast.success(
-          `${
-            fieldName === "user_aadhar_image" ? "Aadhar" : "PAN"
-          } uploaded successfully ✅`
-        );
-      } else {
-        toast.error("File upload failed ❌");
+        toast.success("File uploaded");
       }
-    } catch (err) {
-      toast.error("File upload failed ❌");
-      console.error(err);
+    } catch {
+      toast.error("Upload failed");
     }
   };
 
@@ -435,13 +387,13 @@ function Users() {
                       <div className="fw-bold">
                         City:{"  "}
                         <span className="text-dark fw-normal">
-                          {u.user_city}
+                          {u.city_name}
                         </span>
                       </div>
                       <div className="fw-bold">
                         State:{"  "}
                         <span className="text-dark fw-normal">
-                          {u.user_state}
+                          {u.state_name}
                         </span>
                       </div>
                     </td>
@@ -558,13 +510,17 @@ function Users() {
                 <div className="col-md-4">
                   <label className="fw-semibold">State</label>
                   <select
-                    {...register("state")}
                     className="form-select form-control"
+                    {...register("state")}
+                    onChange={(e) => {
+                      const stateId = e.target.value;
+                      fetchCities(stateId);
+                    }}
                   >
                     <option value="">Select State</option>
-                    {Object.keys(stateCityData).map((state) => (
-                      <option key={state} value={state}>
-                        {state}
+                    {states.map((s) => (
+                      <option key={s.state_id} value={s.state_id}>
+                        {s.state_name}
                       </option>
                     ))}
                   </select>
@@ -575,17 +531,16 @@ function Users() {
                 <div className="col-md-4">
                   <label className="fw-semibold">City</label>
                   <select
-                    {...register("city")}
                     className="form-select form-control"
-                    disabled={!watchState}
+                    {...register("city")}
+                    disabled={!cities.length}
                   >
                     <option value="">Select City</option>
-                    {watchState &&
-                      stateCityData[watchState].map((city) => (
-                        <option key={city} value={city}>
-                          {city}
-                        </option>
-                      ))}
+                    {cities.map((c) => (
+                      <option key={c.city_id} value={c.city_id}>
+                        {c.city_name}
+                      </option>
+                    ))}
                   </select>
                   <p className="text-danger">{errors.city?.message}</p>
                 </div>
@@ -601,7 +556,7 @@ function Users() {
                   <p className="text-danger">{errors.joindate?.message}</p>
                 </div>
 
-                {/* Adhar */}
+                {/* Aadhaar */}
                 <div className="col-md-4">
                   <label className="fw-semibold">Adhar Number</label>
                   <input
@@ -625,33 +580,49 @@ function Users() {
                   <p className="text-danger">{errors.pan?.message}</p>
                 </div>
 
-                {/* adhar Upload */}
+                {/* Aadhaar Upload */}
                 <div className="col-md-4">
-                  <label className="fw-semibold">Aadhar Card Upload</label>
+                  <label className="fw-semibold">
+                    Aadhar Card Upload
+                    {User.user_aadhar_image && (
+                      <i className="fa-solid fa-circle-check text-success ms-2"></i>
+                    )}
+                  </label>
                   <input
                     type="file"
                     className="form-control"
-                    accept="image/png, image/jpeg"
-                    {...register("adharupload")}
                     onChange={(e) => uploadFile(e, "user_aadhar_image")}
+                  />
+                  <input
+                    type="hidden"
+                    {...register("adharupload")}
+                    value={User.user_aadhar_image}
                   />
                   <p className="text-danger">{errors.adharupload?.message}</p>
                 </div>
 
                 {/* PAN Upload */}
                 <div className="col-md-4">
-                  <label className="fw-semibold">PAN Card Upload</label>
+                  <label className="fw-semibold">
+                    PAN Card Upload
+                    {User.user_pan_image && (
+                      <i className="fa-solid fa-circle-check text-success ms-2"></i>
+                    )}
+                  </label>
                   <input
                     type="file"
                     className="form-control"
-                    accept="image/png, image/jpeg"
-                    {...register("panupload")}
                     onChange={(e) => uploadFile(e, "user_pan_image")}
+                  />
+                  <input
+                    type="hidden"
+                    {...register("panupload")}
+                    value={User.user_pan_image}
                   />
                   <p className="text-danger">{errors.panupload?.message}</p>
                 </div>
 
-                {/* Bank Passbook */}
+                {/* Bank */}
                 <div className="col-md-4">
                   <label className="fw-semibold">Bank Passbook</label>
                   <input
@@ -664,7 +635,7 @@ function Users() {
                 </div>
 
                 {/* Experience */}
-                <div className="col-md-4 ">
+                <div className="col-md-4">
                   <label className="fw-semibold">Experience</label>
                   <input
                     type="text"
@@ -679,8 +650,8 @@ function Users() {
                 <div className="col-md-4">
                   <label className="fw-semibold">Role</label>
                   <select
-                    className="form-select form-control"
                     {...register("role")}
+                    className="form-select form-control"
                   >
                     <option value="">Selete Role</option>
                     <option>Super Admin</option>
@@ -691,36 +662,27 @@ function Users() {
                   <p className="text-danger">{errors.role?.message}</p>
                 </div>
 
-                {/* menus */}
-                {/* <div className="col-md-4">
+                {/* Menus */}
+                <div className="col-md-4">
                   <label className="fw-semibold">Menus</label>
                   <select
                     className="form-select form-control"
                     multiple
-                    {...register("menus", {
-                      onChange: (e) => {
-                        const values = Array.from(
-                          e.target.selectedOptions,
-                          (option) => option.value
-                        );
-                        // React Hook Form ला array value द्या
-                        e.target.value = values;
-                      },
-                    })}
+                    {...register("menus")}
                   >
-                    <option value="Dashboard">Dashboard</option>
-                    <option value="Job">Job</option>
-                    <option value="Candidate">Candidate</option>
-                    <option value="Interview">Interview</option>
-                    <option value="Employer">Employer</option>
-                    <option value="Packages">Packages</option>
-                    <option value="Offers">Offers</option>
-                    <option value="Contact">Contact</option>
-                    <option value="User">User</option>
+                    <option value="1">Dashboard</option>
+                    <option value="2">Job</option>
+                    <option value="3">Candidate</option>
+                    <option value="4">Applicant</option>
+                    <option value="5">Interview</option>
+                    <option value="6">Employer</option>
+                    <option value="7">Packages</option>
+                    <option value="8">Offers</option>
+                    <option value="9">Contact</option>
+                    <option value="10">User</option>
                   </select>
-
                   <p className="text-danger">{errors.menus?.message}</p>
-                </div> */}
+                </div>
               </div>
 
               <div className="modal-footer bg-light rounded-bottom-4 d-flex">

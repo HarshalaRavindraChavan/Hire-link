@@ -105,8 +105,8 @@ function Employes() {
       .notRequired(),
   });
 
+  
   // 2. React Hook Form
-
   const {
     register,
     handleSubmit,
@@ -114,7 +114,7 @@ function Employes() {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
-    mode: "onSubmit", // validation triggers on submit
+    mode: "onSubmit", 
   });
 
   // Submit form as JSON
@@ -135,8 +135,8 @@ function Employes() {
 
       if (res.data.status) {
         toast.success("Employer added successfully!");
-        reset(); // clear form
-        fetchEmployers(); // refresh the employer list
+        reset(); 
+        fetchEmployers(); 
       } else {
         toast.error(res.data.message || "Failed to add employer");
       }

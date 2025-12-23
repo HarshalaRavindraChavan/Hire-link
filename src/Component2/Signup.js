@@ -11,7 +11,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 const Signup = () => {
   const navigate = useNavigate();
-  const [role, setRole] = useState("Candidate");
 
   // ✅ FIX 1: activeRole state
   const [activeRole, setActiveRole] = useState("Candidate");
@@ -29,7 +28,7 @@ const Signup = () => {
       .email("Invalid email")
       .required("Work email is required"),
 
-    can_mobile: Yup.string()
+    mobile: Yup.string()
       .required("Mobile number is required")
       .matches(/^[6-9]\d{9}$/, "Mobile number must be exactly 10 digits"),
 
@@ -48,7 +47,7 @@ const Signup = () => {
   });
 
   /* ---------------- SUBMIT ---------------- */
-  const onSubmit = async (values, { resetForm }) => {
+  const onSubmit = async (values) => {
     setLoading(true);
 
     try {
@@ -56,7 +55,7 @@ const Signup = () => {
       let payload = {};
 
       if (activeRole === "Candidate") {
-        // 🔹 Candidate Signup
+        // 🔹 Candidate Signup API
         url =
           "https://norealtor.in/hirelink_apis/candidate/signup/tbl_candidate";
 
@@ -64,18 +63,17 @@ const Signup = () => {
           can_name: values.fullname,
           can_email: values.email,
           can_password: values.password,
-          can_mobile: values.can_mobile,
+          can_mobile: values.mobile,
         };
       } else {
-        // 🔹 Employer Signup
-        url =
-          "https://norealtor.in/hirelink_apis/candidate/signup/tbl_employer";
+        // 🔹 Employer Signup API
+        url = "https://norealtor.in/hirelink_apis/employer/signup/tbl_employer";
 
         payload = {
           emp_name: values.fullname,
           emp_email: values.email,
           emp_password: values.password,
-          emp_mobile: values.can_mobile,
+          emp_mobile: values.mobile,
         };
       }
 
@@ -85,13 +83,10 @@ const Signup = () => {
       if (data.status === true) {
         toast.success(`${activeRole} account created successfully!`);
 
-        // 🔹 Store based on role
+        // 🔹 Store & Redirect based on role
         if (activeRole === "Candidate") {
           localStorage.setItem("candidate", JSON.stringify(data.data));
-
-          setTimeout(() => {
-            navigate("/profile");
-          }, 1200);
+          setTimeout(() => navigate("/profile"), 1200);
         } else {
           localStorage.setItem(
             "auth",
@@ -100,13 +95,10 @@ const Signup = () => {
               emp_id: data.data.emp_id,
             })
           );
-
-          setTimeout(() => {
-            navigate("/job");
-          }, 1200);
+          setTimeout(() => navigate("/job"), 1200);
         }
 
-        resetForm();
+        reset(); // ✅ react-hook-form correct reset
       } else {
         toast.error(data.message || "Signup failed");
       }
@@ -229,20 +221,20 @@ const Signup = () => {
                   <input
                     type="tel"
                     className={`form-control ${
-                      errors.can_mobile ? "is-invalid" : ""
+                      errors.mobile ? "is-invalid" : ""
                     }`}
                     placeholder="Enter yor mobile number"
                     maxLength={10}
-                    {...register("can_mobile")}
+                    {...register("mobile")}
                     onInput={(e) => {
                       e.target.value = e.target.value
                         .replace(/\D/g, "")
                         .slice(0, 10);
                     }}
                   />
-                  {errors.can_mobile && (
+                  {errors.mobile && (
                     <div className="invalid-feedback">
-                      {errors.can_mobile.message}
+                      {errors.mobile.message}
                     </div>
                   )}
                 </div>

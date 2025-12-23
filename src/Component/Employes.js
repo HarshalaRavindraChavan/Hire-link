@@ -75,33 +75,38 @@ function Employes() {
   };
 
   const validationSchema = Yup.object().shape({
-    fullname: Yup.string().required("Full name is required"),
-    email: Yup.string().email("Invalid email").required("Email is required"),
-    mobile: Yup.string()
-      .matches(/^[0-9]{10}$/, "Enter valid 10-digit mobile number")
-      .required("Mobile number is required"),
-    companyname: Yup.string().required("Company name is required"),
-    Category: Yup.string().required("Please select a category"),
-    password: Yup.string()
-      .min(6, "Password must be 6 characters")
+    emp_name: Yup.string().required("Full name is required"),
+
+    emp_email: Yup.string()
+      .email("Invalid email")
+      .required("Email is required"),
+
+    emp_password: Yup.string()
+      .min(6, "Password must be at least 6 characters")
       .required("Password is required"),
-    location: Yup.string().required("Location is required"),
-    city: Yup.string().required("City is required"),
-    state: Yup.string().required("State is required"),
 
-    website: Yup.string()
-      .url("Please enter a valid website link (https://...)")
-      .required("Website is required"),
+    emp_companyname: Yup.string().required("Company name is required"),
 
-    linkedin: Yup.string()
-      .url("Enter a valid LinkedIn link")
-      .matches(/linkedin\.com/, "Link must be a LinkedIn profile URL")
-      .required("LinkedIn link is required"),
+    emp_location: Yup.string().required("Location is required"),
+
+    emp_city: Yup.string().required("City is required"),
+
+    emp_state: Yup.string().required("State is required"),
+
+    emp_website: Yup.string()
+      .url("Enter a valid website URL (https://...)")
+      .nullable()
+      .notRequired(),
+
+    emp_linkedin: Yup.string()
+      .url("Enter a valid LinkedIn URL")
+      .matches(/linkedin\.com/i, "Must be a LinkedIn profile link")
+      .nullable()
+      .notRequired(),
   });
 
-  // ---------------------------
   // 2. React Hook Form
-  // ---------------------------
+
   const {
     register,
     handleSubmit,
@@ -109,6 +114,7 @@ function Employes() {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
+    mode: "onSubmit", // validation triggers on submit
   });
 
   // Submit form as JSON
@@ -321,136 +327,191 @@ function Employes() {
               ></i>
             </div>
             <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="modal-body row">
-        {/* Full Name */}
-        <div className="col-md-6 mb-2">
-          <label className="fw-semibold">Full Name</label>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Enter Full Name"
-            {...register("emp_name", { required: "Full Name is required" })}
-          />
-          <span className="text-danger">{errors.emp_name?.message}</span>
-        </div>
+              <div className="modal-body row">
+                {/* Full Name */}
+                <div className="col-12 col-sm-6 col-md-4 mb-2">
+                  <label className="fw-semibold">Full Name</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter Full Name"
+                    {...register("emp_name", {
+                      required: "Full Name is required",
+                    })}
+                  />
+                  <span className="text-danger">
+                    {errors.emp_name?.message}
+                  </span>
+                </div>
 
-        {/* Email */}
-        <div className="col-md-6 mb-2">
-          <label className="fw-semibold">Email</label>
-          <input
-            type="email"
-            className="form-control"
-            placeholder="Enter Email"
-            {...register("emp_email", {
-              required: "Email is required",
-              pattern: {
-                value: /^\S+@\S+$/i,
-                message: "Invalid email format",
-              },
-            })}
-          />
-          <span className="text-danger">{errors.emp_email?.message}</span>
-        </div>
+                {/* Email */}
+                <div className="col-12 col-sm-6 col-md-4 mb-2">
+                  <label className="fw-semibold">Email</label>
+                  <input
+                    type="email"
+                    className="form-control"
+                    placeholder="Enter Email"
+                    {...register("emp_email", {
+                      required: "Email is required",
+                      pattern: {
+                        value: /^\S+@\S+$/i,
+                        message: "Invalid email format",
+                      },
+                    })}
+                  />
+                  <span className="text-danger">
+                    {errors.emp_email?.message}
+                  </span>
+                </div>
 
-        {/* Password */}
-        <div className="col-md-6 mb-2">
-          <label className="fw-semibold">Password</label>
-          <input
-            type="password"
-            className="form-control"
-            placeholder="Enter Password"
-            {...register("emp_password", {
-              required: "Password is required",
-              minLength: { value: 6, message: "Minimum 6 characters" },
-            })}
-          />
-          <span className="text-danger">{errors.emp_password?.message}</span>
-        </div>
+                {/* Password */}
+                <div className="col-12 col-sm-6 col-md-4 mb-2">
+                  <label className="fw-semibold">Password</label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    placeholder="Enter Password"
+                    {...register("emp_password", {
+                      required: "Password is required",
+                      minLength: { value: 6, message: "Minimum 6 characters" },
+                    })}
+                  />
+                  <span className="text-danger">
+                    {errors.emp_password?.message}
+                  </span>
+                </div>
 
-        {/* Company Name */}
-        <div className="col-md-6 mb-2">
-          <label className="fw-semibold">Company Name</label>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Enter Company Name"
-            {...register("emp_companyname", { required: "Company Name is required" })}
-          />
-          <span className="text-danger">{errors.emp_companyname?.message}</span>
-        </div>
+                {/* Company Name */}
+                <div className="col-12 col-sm-6 col-md-4 mb-2">
+                  <label className="fw-semibold">Company Name</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter Company Name"
+                    {...register("emp_companyname", {
+                      required: "Company Name is required",
+                    })}
+                  />
+                  <span className="text-danger">
+                    {errors.emp_companyname?.message}
+                  </span>
+                </div>
 
-        {/* Location */}
-        <div className="col-md-4 mb-2">
-          <label className="fw-semibold">Location</label>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Enter Location"
-            {...register("emp_location", { required: "Location is required" })}
-          />
-          <span className="text-danger">{errors.emp_location?.message}</span>
-        </div>
+                {/* Location */}
+                <div className="col-12 col-sm-6 col-md-4 mb-2">
+                  <label className="fw-semibold">Location</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter Location"
+                    {...register("emp_location", {
+                      required: "Location is required",
+                    })}
+                  />
+                  <span className="text-danger">
+                    {errors.emp_location?.message}
+                  </span>
+                </div>
 
-        {/* City */}
-        <div className="col-md-4 mb-2">
-          <label className="fw-semibold">City</label>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Enter City"
-            {...register("emp_city", { required: "City is required" })}
-          />
-          <span className="text-danger">{errors.emp_city?.message}</span>
-        </div>
+                {/* City */}
+                <div className="col-12 col-sm-6 col-md-4 mb-2">
+                  <label className="fw-semibold">City</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter City"
+                    {...register("emp_city", { required: "City is required" })}
+                  />
+                  <span className="text-danger">
+                    {errors.emp_city?.message}
+                  </span>
+                </div>
 
-        {/* State */}
-        <div className="col-md-4 mb-2">
-          <label className="fw-semibold">State</label>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Enter State"
-            {...register("emp_state", { required: "State is required" })}
-          />
-          <span className="text-danger">{errors.emp_state?.message}</span>
-        </div>
+                {/* State */}
+                <div className="col-12 col-sm-6 col-md-4 mb-2">
+                  <label className="fw-semibold">State</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter State"
+                    {...register("emp_state", {
+                      required: "State is required",
+                    })}
+                  />
+                  <span className="text-danger">
+                    {errors.emp_state?.message}
+                  </span>
+                </div>
 
-        {/* Website */}
-        <div className="col-md-6 mb-2">
-          <label className="fw-semibold">Website</label>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Enter Website"
-            {...register("emp_website")}
-          />
-        </div>
+                {/* Website */}
+                <div className="col-12 col-sm-6 col-md-4 mb-2">
+                  <label className="fw-semibold">Website</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter Website"
+                    {...register("emp_website")}
+                  />
+                </div>
 
-        {/* LinkedIn */}
-        <div className="col-md-6 mb-2">
-          <label className="fw-semibold">LinkedIn</label>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Enter LinkedIn"
-            {...register("emp_linkedin")}
-          />
-        </div>
-      </div>
+                {/* LinkedIn */}
+                <div className="col-12 col-sm-6 col-md-4 mb-2">
+                  <label className="fw-semibold">LinkedIn</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter LinkedIn"
+                    {...register("emp_linkedin")}
+                  />
+                </div>
 
-      <div className="modal-footer bg-light rounded-bottom-4 d-flex">
-        <button
-          type="button"
-          className="btn btn-outline-secondary rounded-3"
-          data-bs-dismiss="modal"
-        >
-          Cancel
-        </button>
-        <button type="submit" className="btn btn-success px-4 ms-auto">
-          {loading ? "Processing..." : "Submit"}
-        </button>
-      </div>
-    </form>
+                {/* Facebook */}
+                <div className="col-12 col-sm-6 col-md-4 mb-2">
+                  <label className="fw-semibold">Facebook</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter Facebook"
+                    {...register("emp_Facebook")}
+                  />
+                </div>
+
+                {/* Instagram */}
+                <div className="col-12 col-sm-6 col-md-4 mb-2">
+                  <label className="fw-semibold">Instagram</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter Instagram"
+                    {...register("emp_Instagram")}
+                  />
+                </div>
+
+                {/* YouTube */}
+                <div className="col-12 col-sm-6 col-md-4 mb-2">
+                  <label className="fw-semibold">YouTube</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter YouTube"
+                    {...register("emp_YouTube")}
+                  />
+                </div>
+              </div>
+
+              <div className="modal-footer bg-light rounded-bottom-4 d-flex">
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary rounded-3"
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="btn btn-success px-4 ms-auto">
+                  {loading ? "Processing..." : "Submit"}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>

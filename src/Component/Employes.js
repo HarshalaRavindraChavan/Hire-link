@@ -80,9 +80,12 @@ function Employes() {
     emp_email: Yup.string()
       .email("Invalid email")
       .required("Email is required"),
+    emp_mobile: Yup.string()
+      .matches(/^[0-9]{10}$/, "Enter valid 10-digit mobile number")
+      .required("Mobile number is required"),
 
     emp_password: Yup.string()
-      .min(6, "Password must be at least 6 characters")
+      .min(6, "Password must be 6 characters")
       .required("Password is required"),
 
     emp_companyname: Yup.string().required("Company name is required"),
@@ -117,6 +120,7 @@ function Employes() {
       const payload = {
         emp_name: data.emp_name,
         emp_email: data.emp_email,
+        emp_mobile: data.emp_mobile,
         emp_password: data.emp_password,
         emp_companyname: data.emp_companyname,
         emp_location: data.emp_location,
@@ -127,7 +131,7 @@ function Employes() {
         emp_facebook: data.emp_Facebook,
         emp_instagram: data.emp_Instagram,
         emp_youtube: data.emp_YouTube,
-        emp_cam_logo: data.emp_logo, // ✅ FILE NAME
+        emp_com_logo: data.emp_logo, // ✅ FILE NAME
       };
 
       const res = await axios.post(
@@ -430,6 +434,20 @@ function Employes() {
                   />
                   <span className="text-danger">
                     {errors.emp_email?.message}
+                  </span>
+                </div>
+
+                {/* Mobile No */}
+                <div className="col-12 col-sm-6 col-md-4 mb-2">
+                  <label className="fw-semibold">Mobile No</label>
+                  <input
+                    type="email"
+                    className="form-control"
+                    placeholder="Enter Email"
+                    {...register("emp_mobile")}
+                  />
+                  <span className="text-danger">
+                    {errors.emp_mobile?.message}
                   </span>
                 </div>
 

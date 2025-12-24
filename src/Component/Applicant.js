@@ -66,19 +66,6 @@ function Applicant() {
 
   //candidate interview Schdul Code
 
-  useEffect(() => {
-    if (selectedApplicant) {
-      reset({
-        candidate_id: selectedApplicant.can_id,
-        job_id: selectedApplicant.job_id,
-        interviewType: "",
-        interviewDate: "",
-        interviewTime: "",
-        status: "",
-      });
-    }
-  }, [selectedApplicant, reset]);
-
   // Yup Validation Schema
   const schema = yup.object().shape({
     candidate_id: yup.string().required("Candidate id is required"),
@@ -86,6 +73,12 @@ function Applicant() {
     interviewType: yup.string().required("Interview type is required"),
     interviewDate: yup.string().required("Interview date is required"),
     interviewTime: yup.string().required("Interview time is required"),
+    meetingLink: yup.string().when("interviewType", {
+      is: "Virtual Interview",
+      then: (schema) =>
+        schema.required("Meeting link is required").url("Invalid URL"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
     // interviewer: yup.string().required("Interviewer name is required"),
     status: yup.string().required("Status is required"),
     // createdDate: yup.string().required("Created date is required"),
@@ -109,13 +102,13 @@ function Applicant() {
   const onSubmit = async (data) => {
     try {
       const payload = {
-        candidate_id: data.candidate_id,
-        job_id: data.job_id,
-        company_name: data.companyName,
-        interview_type: data.interviewType,
-        interview_date: data.interviewDate,
-        interview_time: data.interviewTime,
-        status: data.status,
+        itv_candidate_id: data.candidate_id,
+        itv_job_id: data.job_id,
+        itv_type: data.interviewType,
+        itv_date: data.interviewDate,
+        itv_meeting_link: data.meetingLink || "",
+        itv_time: data.interviewTime,
+        itv_status: data.status,
       };
 
       const res = await axios.post(
@@ -137,6 +130,19 @@ function Applicant() {
     }
   };
 
+  useEffect(() => {
+    if (selectedApplicant) {
+      reset({
+        candidate_id: selectedApplicant.can_id,
+        job_id: selectedApplicant.job_id,
+        interviewType: "",
+        interviewDate: "",
+        interviewTime: "",
+        meetingLink: "",
+        status: "",
+      });
+    }
+  }, [selectedApplicant, reset]);
   return (
     <>
       <div className="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
@@ -392,9 +398,12 @@ function Applicant() {
                         type="text"
                         className="form-control rounded-3"
                         placeholder="Enter Meeting Link"
+                        {...register("meetingLink")}
                       />
                     </div>
-                    <span className="text-danger"></span>
+                    <span className="text-danger">
+                      {errors.meetingLink?.message}
+                    </span>
                   </div>
                 )}
 

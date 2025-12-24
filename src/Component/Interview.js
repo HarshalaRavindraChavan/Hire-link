@@ -157,7 +157,7 @@ function Interview() {
                 </tr>
               ) : records.length > 0 ? (
                 records.map((i, index) => (
-                  <tr key={i.id}>
+                  <tr key={i.itv_id}>
                     {/* ID */}
                     <td>{firstIndex + index + 1}</td>
                     {/* Candidate Info */}
@@ -181,7 +181,7 @@ function Interview() {
                             <li>
                               <button
                                 className="dropdown-item text-danger"
-                                onClick={() => handleDeleteClick(i.id)}
+                                onClick={() => handleDeleteClick(i.itv_id)}
                               >
                                 <i className="fas fa-trash me-2"></i>Delete
                               </button>

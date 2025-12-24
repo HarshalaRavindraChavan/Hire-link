@@ -167,10 +167,10 @@ function Users() {
       user_joindate: data.joindate,
       user_adhar: data.adhar,
       user_pan: data.pan,
-      user_bank: data.bankpassbook,
+      user_bankpassbook: data.bankpassbook,
       user_experience: data.experience,
       user_role: data.role,
-      user_menus: data.menus.join(","),
+      user_menu_id: data.menus.join(","),
       user_aadhar_image: User.user_aadhar_image,
       user_pan_image: User.user_pan_image,
     };
@@ -207,13 +207,40 @@ function Users() {
     const file = e.target.files[0];
     if (!file) return;
 
-    const min = 30 * 1024;
-    const max = 50 * 1024;
-    if (file.size < min || file.size > max) {
-      toast.error("File size must be 30KB–50KB");
+    const minSize = 30 * 1024; // 30KB
+    const maxSize = 50 * 1024; // 50KB
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+
+    // ❌ file type check
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Invalid file type ❌ Only JPG / JPEG / PNG allowed");
+      e.target.value = ""; // reset input
       return;
     }
 
+    // ❌ file too small
+    if (file.size < minSize) {
+      toast.error(
+        `File too small ❌ (${Math.round(
+          file.size / 1024
+        )}KB). Minimum 30KB required`
+      );
+      e.target.value = ""; // reset input
+      return;
+    }
+
+    // ❌ file too large
+    if (file.size > maxSize) {
+      toast.error(
+        `File too large ❌ (${Math.round(
+          file.size / 1024
+        )}KB). Maximum 50KB allowed`
+      );
+      e.target.value = ""; // reset input
+      return;
+    }
+
+    // ✅ valid file → upload
     const formData = new FormData();
     formData.append(field, file);
 
@@ -226,13 +253,13 @@ function Users() {
       if (res.data.status) {
         const filename = res.data.files[field];
 
-        // UI state (✔ icon)
+        // ✔ icon UI state
         setUser((prev) => ({
           ...prev,
           [field]: filename,
         }));
 
-        // 🔥 React Hook Form ला सांग
+        // React Hook Form hidden field
         if (field === "user_aadhar_image") {
           setValue("adharupload", filename, { shouldValidate: true });
         }
@@ -241,10 +268,12 @@ function Users() {
           setValue("panupload", filename, { shouldValidate: true });
         }
 
-        toast.success("File uploaded");
+        toast.success("File uploaded successfully ✅");
+      } else {
+        toast.error("Upload failed ❌");
       }
-    } catch {
-      toast.error("Upload failed");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "File upload error ❌");
     }
   };
 

@@ -11,6 +11,7 @@ function Packages() {
   // Correct: useEffect for title
   useEffect(() => {
     document.title = "Hirelink | Packages";
+    fetchPackages(); // ✅ REQUIRED
   }, []);
 
   const [packages, setPackages] = useState([]);
@@ -39,7 +40,7 @@ function Packages() {
 
     pack_duration: Yup.string().required("Duration is required"),
 
-    pack_iplimit: Yup.number()
+    pack_jplimit: Yup.number()
       .typeError("Job post limit must be a number")
       .required("Job post limit is required")
       .integer("Job post limit must be an integer")
@@ -75,7 +76,7 @@ function Packages() {
       pack_name: "",
       pack_price: "",
       pack_duration: "",
-      pack_iplimit: "",
+      pack_jplimit: "",
       pack_rvlimit: "",
       pack_support: "",
       pack_description: "",
@@ -84,49 +85,6 @@ function Packages() {
   });
 
   // // Ensure first input always appears
-  useEffect(() => {
-    if (fields.length === 0) {
-      append("");
-    }
-  }, [fields.length, append]);
-
-  const { fields, append } = useFieldArray({
-    control,
-    name: "pack_benefits",
-  });
-
-  const handleAddBenefit = () => {
-    const values = getValues("pack_benefits");
-    const lastIndex = values.length - 1;
-    const lastValue = values[lastIndex];
-
-    if (!lastValue || lastValue.trim() === "") {
-      setError(`pack_benefits.${lastIndex}`, {
-        type: "manual",
-        message: "Benefit is required",
-      });
-      return;
-    }
-
-    clearErrors(`pack_benefits.${lastIndex}`);
-    append("");
-  };
-
-  // getdata API
-  const fetchPackages = async () => {
-    try {
-      const res = await axios.get(
-        "https://norealtor.in/hirelink_apis/admin/getdata/package "
-      );
-
-      if (res.data.status === true) {
-        setPackages(res.data.data);
-      }
-    } catch (error) {
-      console.error("Fetch packages error:", error);
-      toast.error("Failed to load packages");
-    }
-  };
 
   const onSubmit = async (data) => {
     try {
@@ -134,7 +92,7 @@ function Packages() {
         pack_name: data.pack_name,
         pack_price: Number(data.pack_price),
         pack_duration: data.pack_duration,
-        pack_iplimit: Number(data.pack_iplimit),
+        pack_jplimit: Number(data.pack_jplimit),
         pack_rvlimit: Number(data.pack_rvlimit),
         pack_support: data.pack_support,
         pack_description: data.pack_description,
@@ -157,6 +115,51 @@ function Packages() {
     }
   };
 
+  const { fields, append } = useFieldArray({
+    control,
+    name: "pack_benefits",
+  });
+
+  // ✅ NOW it is safe to use fields
+  useEffect(() => {
+    if (fields.length === 0) {
+      append("");
+    }
+  }, [fields.length, append]);
+
+  const handleAddBenefit = () => {
+    const values = getValues("pack_benefits");
+    const lastIndex = values.length - 1;
+    const lastValue = values[lastIndex];
+
+    if (!lastValue || lastValue.trim() === "") {
+      setError(`pack_benefits.${lastIndex}`, {
+        type: "manual",
+        message: "Benefit is required",
+      });
+      return;
+    }
+
+    clearErrors(`pack_benefits.${lastIndex}`);
+    append("");
+  };
+
+  // getdata API
+  const fetchPackages = async () => {
+    try {
+      const res = await axios.get(
+        "https://norealtor.in/hirelink_apis/admin/getdata/tbl_package"
+      );
+
+      if (res.data.status === true) {
+        setPackages(res.data.data);
+      }
+    } catch (error) {
+      console.error("Fetch packages error:", error);
+      toast.error("Failed to load packages");
+    }
+  };
+
   const confirmDelete = async (pack_id) => {
     try {
       const res = await axios.get(
@@ -165,7 +168,7 @@ function Packages() {
 
       if (res.data.status === true) {
         toast.success("Package deleted successfully ✅");
-        fetchPackages(); 
+        fetchPackages();
       } else {
         toast.error("Failed to delete package ❌");
       }
@@ -218,7 +221,6 @@ function Packages() {
                 <th className="fs-6 fw-bold">Package</th>
                 <th className="fs-6 fw-bold">Package Detail</th>
                 <th className="fs-6 fw-bold">Benefits</th>
-                <th className="fs-6 fw-bold">Status</th>
                 <th className="fs-6 fw-bold">Activity Detail</th>
               </tr>
             </thead>
@@ -269,13 +271,20 @@ function Packages() {
                         Duration:{" "}
                         <span className="fw-normal">{pkg.pack_duration}</span>
                       </div>
+                      <div className="fw-bold">
+                        {pkg.pack_status === "1" ? (
+                          <span className="badge bg-success">Active</span>
+                        ) : (
+                          <span className="badge bg-danger">Inactive</span>
+                        )}
+                      </div>
                     </td>
 
                     {/* LIMITS */}
                     <td className="text-start">
                       <div className="fw-bold">
                         Job Post Limit:{" "}
-                        <span className="fw-normal">{pkg.pack_iplimit}</span>
+                        <span className="fw-normal">{pkg.pack_jplimit}</span>
                       </div>
                       <div className="fw-bold">
                         Resume View Limit:{" "}
@@ -289,21 +298,25 @@ function Packages() {
 
                     {/* BENEFITS */}
                     <td className="text-start">
-                      {Array.isArray(pkg.pack_benefits) ? (
-                        pkg.pack_benefits.map((b, i) => (
-                          <div key={i}>• {b}</div>
-                        ))
+                      {pkg.pack_benefits ? (
+                        (() => {
+                          try {
+                            const benefits = JSON.parse(pkg.pack_benefits); // ✅ FIX
+                            return benefits.length > 0 ? (
+                              benefits.map((b, i) => <div key={i}>• {b}</div>)
+                            ) : (
+                              <div className="text-muted">No benefits</div>
+                            );
+                          } catch (err) {
+                            return (
+                              <div className="text-danger">
+                                Invalid benefits data
+                              </div>
+                            );
+                          }
+                        })()
                       ) : (
                         <div className="text-muted">No benefits</div>
-                      )}
-                    </td>
-
-                    {/* STATUS */}
-                    <td>
-                      {pkg.pack_status === "1" ? (
-                        <span className="badge bg-success">Active</span>
-                      ) : (
-                        <span className="badge bg-danger">Inactive</span>
                       )}
                     </td>
 
@@ -384,7 +397,7 @@ function Packages() {
                 <div className="col-md-4">
                   <label>Duration</label>
                   <select
-                    className="form-select"
+                    className="form-select form-control"
                     {...register("pack_duration")}
                   >
                     <option value="">Select</option>
@@ -404,11 +417,11 @@ function Packages() {
                   <input
                     type="number"
                     className="form-control"
-                    {...register("pack_iplimit")}
+                    {...register("pack_jplimit")}
                     placeholder="Number of Post Limit"
                   />
                   <span className="text-danger">
-                    {errors.pack_iplimit?.message}
+                    {errors.pack_jplimit?.message}
                   </span>
                 </div>
 
@@ -429,7 +442,10 @@ function Packages() {
                 {/* SUPPORT */}
                 <div className="col-md-4">
                   <label>Support</label>
-                  <select className="form-select" {...register("pack_support")}>
+                  <select
+                    className="form-select form-control"
+                    {...register("pack_support")}
+                  >
                     <option value="">Select</option>
                     <option value="Email">Email</option>
                     <option value="Chat">Chat</option>

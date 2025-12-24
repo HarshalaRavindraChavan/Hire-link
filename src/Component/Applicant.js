@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from "react";
+import { useRef } from "react";
 import axios from "axios";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
+import { toast, ToastContainer } from "react-toastify";
 import Pagination from "./commenuse/Pagination";
 
 function Applicant() {
   // tital of tab
-  useState(() => {
-    document.title = "Hirelink | Applieds";
+  useEffect(() => {
+    document.title = "Hirelink | Applicant";
   }, []);
+  const modalRef = useRef(null);
+  const [selectedApplicant, setSelectedApplicant] = useState(null);
 
   // Login ckeck and role
   const auth = JSON.parse(localStorage.getItem("auth"));
@@ -57,6 +64,85 @@ function Applicant() {
     }
   };
 
+  //candidate interview Schdul Code
+
+  // Yup Validation Schema
+  const schema = yup.object().shape({
+    candidate_id: yup.string().required("Candidate id is required"),
+    job_id: yup.string().required("Job Id is required"),
+    interviewType: yup.string().required("Interview type is required"),
+    interviewDate: yup.string().required("Interview date is required"),
+    interviewTime: yup.string().required("Interview time is required"),
+    meetingLink: yup.string().when("interviewType", {
+      is: "Virtual Interview",
+      then: (schema) =>
+        schema.required("Meeting link is required").url("Invalid URL"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    // interviewer: yup.string().required("Interviewer name is required"),
+    status: yup.string().required("Status is required"),
+    // createdDate: yup.string().required("Created date is required"),
+  });
+
+  // React Hook Form Initialization
+  const {
+    register,
+    handleSubmit,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  // Watch interview type
+  const watchInterviewType = watch("interviewType");
+
+  // Submit Handler
+  const onSubmit = async (data) => {
+    try {
+      const payload = {
+        itv_candidate_id: data.candidate_id,
+        itv_job_id: data.job_id,
+        itv_type: data.interviewType,
+        itv_date: data.interviewDate,
+        itv_meeting_link: data.meetingLink || "",
+        itv_time: data.interviewTime,
+        itv_status: data.status,
+      };
+
+      const res = await axios.post(
+        "https://norealtor.in/hirelink_apis/admin/insert/tbl_interview",
+        payload
+      );
+
+      if (res.data.status) {
+        toast.success("Interview scheduled successfully");
+
+        const modal = window.bootstrap.Modal.getInstance(modalRef.current);
+        modal.hide();
+      } else {
+        toast.error("Insert failed");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong");
+    }
+  };
+
+  useEffect(() => {
+    if (selectedApplicant) {
+      reset({
+        candidate_id: selectedApplicant.can_id,
+        job_id: selectedApplicant.job_id,
+        interviewType: "",
+        interviewDate: "",
+        interviewTime: "",
+        meetingLink: "",
+        status: "",
+      });
+    }
+  }, [selectedApplicant, reset]);
   return (
     <>
       <div className="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
@@ -131,7 +217,15 @@ function Applicant() {
                     <td className="text-start fw-bold">
                       <div className="fw-bold ">
                         Name:{" "}
-                        <span className="text-dark fw-normal">
+                        <span
+                          className="text-primary fw-semibold"
+                          style={{ cursor: "pointer" }}
+                          data-bs-toggle="modal"
+                          data-bs-target="#exampleModal"
+                          onClick={() => {
+                            setSelectedApplicant(app);
+                          }}
+                        >
                           {app.can_name}
                         </span>
                       </div>
@@ -200,6 +294,152 @@ function Applicant() {
             totalPages={nPages}
             onPageChange={(page) => setCurrentPage(page)}
           />
+        </div>
+      </div>
+
+      <div
+        className="modal fade"
+        id="exampleModal"
+        tabIndex="-1"
+        aria-hidden="true"
+        ref={modalRef}
+      >
+        <div className="modal-dialog modal-dialog-centered modal-lg">
+          <div className="modal-content shadow-lg rounded-4">
+            <div className="modal-header bg-success text-white rounded-top-4">
+              <h5 className="modal-title fw-bold">Interview Details</h5>
+
+              <i
+                className="fa-regular fa-circle-xmark"
+                data-bs-dismiss="modal"
+                style={{ cursor: "pointer", fontSize: "25px" }}
+              ></i>
+            </div>
+
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="modal-body row">
+                <input type="hidden" {...register("candidate_id")} />
+                <input type="hidden" {...register("job_id")} />
+
+                {/* Interview Type */}
+                <div className="col-md-4 mb-2">
+                  <label className="form-label fw-semibold">
+                    Interview Type
+                  </label>
+
+                  <select
+                    className="form-control rounded-3"
+                    {...register("interviewType")}
+                  >
+                    <option value="">Select Interview Type</option>
+                    <option>Virtual Interview</option>
+                    <option>In-Person</option>
+                  </select>
+
+                  <span className="text-danger">
+                    {errors.interviewType?.message}
+                  </span>
+                </div>
+
+                {/* Interview Date */}
+                <div className="col-md-4 mb-2">
+                  <label className="form-label fw-semibold">
+                    Interview Date
+                  </label>
+                  <input
+                    type="date"
+                    className="form-control rounded-3"
+                    {...register("interviewDate")}
+                  />
+                  <span className="text-danger">
+                    {errors.interviewDate?.message}
+                  </span>
+                </div>
+
+                {/* Interview Time */}
+                <div className="col-md-4 mb-2">
+                  <label className="form-label fw-semibold">
+                    Interview Date
+                  </label>
+                  <input
+                    type="time"
+                    className="form-control rounded-3"
+                    {...register("interviewTime")}
+                  />
+                  <span className="text-danger">
+                    {errors.interviewTime?.message}
+                  </span>
+                </div>
+
+                {/* Interviewer */}
+                {/* <div className="col-md-4 mb-2">
+                  <label className="form-label fw-semibold">
+                    Assigned Interviewer
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control rounded-3"
+                    placeholder="Enter Interviewer Name"
+                    {...register("interviewer")}
+                  />
+                  <span className="text-danger">
+                    {errors.interviewer?.message}
+                  </span>
+                </div> */}
+
+                {/* Meeting Link - Conditional Rendering */}
+                {watchInterviewType === "Virtual Interview" && (
+                  <div className="col-md-4 mb-2">
+                    <label className="form-label fw-semibold">
+                      Meeting Link
+                    </label>
+                    <div className="input-group">
+                      <input
+                        type="text"
+                        className="form-control rounded-3"
+                        placeholder="Enter Meeting Link"
+                        {...register("meetingLink")}
+                      />
+                    </div>
+                    <span className="text-danger">
+                      {errors.meetingLink?.message}
+                    </span>
+                  </div>
+                )}
+
+                {/* Status */}
+                <div className="col-md-4 mb-2">
+                  <label className="form-label fw-semibold">Status</label>
+
+                  <select
+                    className="form-control rounded-3"
+                    {...register("status")}
+                  >
+                    <option value="">Select Status</option>
+                    <option value="Scheduled">Scheduled</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Cancelled">Cancelled</option>
+                  </select>
+
+                  <span className="text-danger">{errors.status?.message}</span>
+                </div>
+              </div>
+
+              <div className="modal-footer bg-light rounded-bottom-4 d-flex">
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary rounded-3"
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+
+                <button type="submit" className="btn btn-success px-4 ms-auto">
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </>

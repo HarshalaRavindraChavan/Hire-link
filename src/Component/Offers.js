@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
 import axios from "axios";
+import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -13,6 +14,7 @@ function Offer() {
     document.title = "Hirelink | Offers";
   }, []);
 
+  const modalRef = useRef(null);
   const [offers, setOffers] = useState([]);
 
   //============All Offer Disply==================================
@@ -32,6 +34,10 @@ function Offer() {
       }
     } catch (error) {
       console.error("Error fetching offers", error);
+      toast.error("Failed to load offers ❌", {
+        position: "top-right",
+        autoClose: 3000,
+      });
     }
   };
 
@@ -65,56 +71,53 @@ function Offer() {
       if (res.data.status === true) {
         setShowDeleteModal(false);
         setDeleteId(null);
+        toast.success("Offer deleted successfully 🗑️", {
+          position: "top-right",
+          autoClose: 3000,
+        });
 
         fetchOffers();
       } else {
-        alert("Delete failed");
+        toast.success("Offer deleted successfully 🗑️", {
+          position: "top-right",
+          autoClose: 3000,
+        });
       }
     } catch (error) {
       console.error("Delete error:", error);
+
+      toast.error("Server error while deleting offer ⚠️", {
+        position: "top-right",
+        autoClose: 3000,
+      });
     }
   };
 
   // Delete modal End
 
   // Define validation schema using Yup
- const schema = yup.object().shape({
-  offer_title: yup
-    .string()
-    .required("Offer title is required"),
+  const schema = yup.object().shape({
+    offer_title: yup.string().required("Offer title is required"),
 
-  offer_coupon_code: yup
-    .string()
-    .required("Coupon code is required"),
+    offer_coupon_code: yup.string().required("Coupon code is required"),
 
-  offer_in: yup
-    .string()
-    .required("Please select offer type"),
+    offer_in: yup.string().required("Please select offer type"),
 
-  offer_start_date: yup
-    .date()
-    .required("Start date is required"),
+    offer_start_date: yup.date().required("Start date is required"),
 
-  offer_end_date: yup
-    .date()
-    .required("End date is required"),
+    offer_end_date: yup.date().required("End date is required"),
 
-  offer_usage_limit: yup
-    .number()
-    .typeError("Usage limit must be a number")
-    .required("Usage limit is required")
-    .positive("Usage limit must be positive")
-    .integer("Usage limit must be an integer"),
+    offer_usage_limit: yup
+      .number()
+      .typeError("Usage limit must be a number")
+      .required("Usage limit is required")
+      .positive("Usage limit must be positive")
+      .integer("Usage limit must be an integer"),
 
-  offer_status: yup
-    .string()
-    .required("Status is required"),
+    offer_status: yup.string().required("Status is required"),
 
-  offer_description: yup
-    .string()
-    .required("Description is required"),
-});
-
+    offer_description: yup.string().required("Description is required"),
+  });
 
   const {
     register,
@@ -125,43 +128,46 @@ function Offer() {
     resolver: yupResolver(schema),
   });
 
+  const onSubmit = async (data) => {
+    try {
+      const payload = {
+        offer_title: data.offer_title,
+        offer_coupon_code: data.offer_coupon_code,
+        offer_in: data.offer_in,
+        offer_start_date: data.offer_start_date,
+        offer_end_date: data.offer_end_date,
+        offer_usage_limit: Number(data.offer_usage_limit),
+        offer_status: data.offer_status,
+        offer_description: data.offer_description,
+      };
 
-const onSubmit = async (data) => {
-  try {
-    const payload = {
-      offer_title: data.offer_title,
-      offer_coupon_code: data.offer_coupon_code,
-      offer_in: data.offer_in,
-      offer_start_date: data.offer_start_date,
-      offer_end_date: data.offer_end_date,
-      offer_usage_limit: Number(data.offer_usage_limit),
-      offer_status: data.offer_status,
-      offer_description: data.offer_description,
-    };
+      const res = await axios.post(
+        "https://norealtor.in/hirelink_apis/admin/insert/tbl_offer",
+        payload
+      );
 
-    const res = await axios.post(
-      "https://norealtor.in/hirelink_apis/admin/insert/tbl_offer",
-      payload
-    );
+      if (res.data.status === true) {
+        reset();
 
-    if (res.data.status === true) {
-      reset();
-      toast.success("Offer Added Successfully 🎉", {
+        const modal = window.bootstrap.Modal.getInstance(modalRef.current);
+        modal.hide();
+
+        toast.success("Offer Added Successfully 🎉", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+        fetchOffers();
+      } else {
+        toast.warning(res.data.message || "Something went wrong ⚠️");
+      }
+    } catch (error) {
+      console.error("Add offer error:", error);
+      toast.error("Failed to add offer. Please try again ❌", {
         position: "top-right",
         autoClose: 3000,
       });
-      fetchOffers();
-    } else {
-      toast.warning(res.data.message || "Something went wrong ⚠️");
     }
-  } catch (error) {
-    console.error("Add offer error:", error);
-    toast.error("Failed to add offer. Please try again ❌", {
-      position: "top-right",
-      autoClose: 3000,
-    });
-  }
-};
+  };
 
   return (
     <>
@@ -349,7 +355,12 @@ const onSubmit = async (data) => {
       </div>
 
       {/* OFFER ADD MODAL */}
-      <div className="modal fade" id="exampleModal" tabIndex="-1">
+      <div
+        className="modal fade"
+        id="exampleModal"
+        tabIndex="-1"
+        ref={modalRef}
+      >
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content rounded-4">
             <div className="modal-header bg-success text-white rounded-top-4">
@@ -382,7 +393,9 @@ const onSubmit = async (data) => {
                     className="form-control"
                     placeholder="Enter Coupon Code"
                   />
-                  <p className="text-danger">{errors.offer_coupon_code?.message}</p>
+                  <p className="text-danger">
+                    {errors.offer_coupon_code?.message}
+                  </p>
                 </div>
 
                 <div className="col-md-4 ">
@@ -405,7 +418,9 @@ const onSubmit = async (data) => {
                     {...register("offer_start_date")}
                     className="form-control"
                   />
-                  <p className="text-danger">{errors.offer_start_date?.message}</p>
+                  <p className="text-danger">
+                    {errors.offer_start_date?.message}
+                  </p>
                 </div>
 
                 <div className="col-md-4">
@@ -415,7 +430,9 @@ const onSubmit = async (data) => {
                     {...register("offer_end_date")}
                     className="form-control"
                   />
-                  <p className="text-danger">{errors.offer_end_date?.message}</p>
+                  <p className="text-danger">
+                    {errors.offer_end_date?.message}
+                  </p>
                 </div>
 
                 <div className="col-md-4">
@@ -426,7 +443,9 @@ const onSubmit = async (data) => {
                     className="form-control"
                     placeholder="Number of User Limit"
                   />
-                  <p className="text-danger">{errors.offer_usage_limit?.message}</p>
+                  <p className="text-danger">
+                    {errors.offer_usage_limit?.message}
+                  </p>
                 </div>
 
                 <div className="col-md-4">
@@ -450,7 +469,9 @@ const onSubmit = async (data) => {
                     rows={4}
                     placeholder="Details about offer"
                   ></textarea>
-                  <p className="text-danger">{errors.offer_description?.message}</p>
+                  <p className="text-danger">
+                    {errors.offer_description?.message}
+                  </p>
                 </div>
               </div>
 

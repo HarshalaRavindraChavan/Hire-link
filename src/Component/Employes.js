@@ -66,11 +66,11 @@ function Employes() {
 
         fetchEmployers();
       } else {
-        alert("Delete failed");
+        toast.error("Employer delete failed");
       }
     } catch (error) {
       console.error("Delete Error:", error);
-      alert("Server error while deleting employer");
+      toast.error("Server error while deleting employer");
     }
   };
 
@@ -80,9 +80,12 @@ function Employes() {
     emp_email: Yup.string()
       .email("Invalid email")
       .required("Email is required"),
+    emp_mobile: Yup.string()
+      .matches(/^[0-9]{10}$/, "Enter valid 10-digit mobile number")
+      .required("Mobile number is required"),
 
     emp_password: Yup.string()
-      .min(6, "Password must be at least 6 characters")
+      .min(6, "Password must be 6 characters")
       .required("Password is required"),
 
     emp_companyname: Yup.string().required("Company name is required"),
@@ -92,17 +95,6 @@ function Employes() {
     emp_city: Yup.string().required("City is required"),
 
     emp_state: Yup.string().required("State is required"),
-
-    emp_website: Yup.string()
-      .url("Enter a valid website URL (https://...)")
-      .nullable()
-      .notRequired(),
-
-    emp_linkedin: Yup.string()
-      .url("Enter a valid LinkedIn URL")
-      .matches(/linkedin\.com/i, "Must be a LinkedIn profile link")
-      .nullable()
-      .notRequired(),
   });
 
   // 2. React Hook Form
@@ -128,6 +120,7 @@ function Employes() {
       const payload = {
         emp_name: data.emp_name,
         emp_email: data.emp_email,
+        emp_mobile: data.emp_mobile,
         emp_password: data.emp_password,
         emp_companyname: data.emp_companyname,
         emp_location: data.emp_location,
@@ -138,7 +131,7 @@ function Employes() {
         emp_facebook: data.emp_Facebook,
         emp_instagram: data.emp_Instagram,
         emp_youtube: data.emp_YouTube,
-        emp_logo: data.emp_logo, // ✅ FILE NAME
+        emp_com_logo: data.emp_logo, // ✅ FILE NAME
       };
 
       const res = await axios.post(
@@ -161,8 +154,12 @@ function Employes() {
         bsModal.hide();
       }
     } catch (err) {
-      console.error(err);
-      toast.error("Failed to add employer");
+      const msg =
+        err.response?.data?.message ||
+        err.message ||
+        "Something went wrong while adding employer";
+
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -174,16 +171,32 @@ function Employes() {
     if (!file) return;
 
     const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
-    const minSize = 30 * 1024; // 30 KB
-    const maxSize = 50 * 1024; // 50 KB
+    const minSize = 30 * 1024;
+    const maxSize = 50 * 1024;
 
     if (!allowedTypes.includes(file.type)) {
-      toast.error("Only JPG, JPEG, PNG files allowed");
+      toast.error("Invalid file type ❌ Only JPG / JPEG / PNG allowed");
+      e.target.value = "";
       return;
     }
 
-    if (file.size < minSize || file.size > maxSize) {
-      toast.error("File size must be 30KB to 50KB");
+    if (file.size < minSize) {
+      toast.error(
+        `File too small ❌ (${Math.round(
+          file.size / 1024
+        )}KB). Minimum 30KB required`
+      );
+      e.target.value = "";
+      return;
+    }
+
+    if (file.size > maxSize) {
+      toast.error(
+        `File too large ❌ (${Math.round(
+          file.size / 1024
+        )}KB). Maximum 50KB allowed`
+      );
+      e.target.value = "";
       return;
     }
 
@@ -198,17 +211,13 @@ function Employes() {
 
       if (res.data.status === true) {
         const filename = res.data.files[fieldName];
-
-        // ✅ SET VALUE INTO REACT HOOK FORM
         setValue(fieldName, filename);
-
         toast.success("File uploaded successfully ✅");
       } else {
         toast.error("Upload failed ❌");
       }
     } catch (error) {
-      console.error(error);
-      toast.error("Upload error ❌");
+      toast.error(error.response?.data?.message || "File upload error ❌");
     }
   };
 
@@ -425,6 +434,20 @@ function Employes() {
                   />
                   <span className="text-danger">
                     {errors.emp_email?.message}
+                  </span>
+                </div>
+
+                {/* Mobile No */}
+                <div className="col-12 col-sm-6 col-md-4 mb-2">
+                  <label className="fw-semibold">Mobile No</label>
+                  <input
+                    type="email"
+                    className="form-control"
+                    placeholder="Enter Email"
+                    {...register("emp_mobile")}
+                  />
+                  <span className="text-danger">
+                    {errors.emp_mobile?.message}
                   </span>
                 </div>
 

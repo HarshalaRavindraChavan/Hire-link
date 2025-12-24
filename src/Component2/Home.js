@@ -1,6 +1,7 @@
 import "../Component2/css/Home.css";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 function Home() {
   const [jobs, setJobs] = useState([]);
@@ -8,6 +9,18 @@ function Home() {
 
   useState(() => {
     document.title = "Welcome To Hirelink";
+    
+    axios
+      .get("https://norealtor.in/hirelink_apis/candidate/getdata/tbl_job")
+      .then((res) => {
+        if (res.data.status === "success") {
+          setJobs(res.data.data);
+          setSelectedJob(res.data.data[0]);
+        }
+      })
+      .catch((error) => {
+        console.error("API Error:", error);
+      });
   }, []);
 
   const [isLogin, setIsLogin] = useState(false);
@@ -159,22 +172,20 @@ function Home() {
   }, [appliedKeyword, appliedPlace]);
 
   useEffect(() => {
-    
     if (!searchKeyword && !searchPlace) {
       setHasSearched(false);
     }
   }, [searchKeyword, searchPlace]);
 
-
   useEffect(() => {
-  const closeSuggestions = () => {
-    setShowKeywordSug(false);
-    setShowPlaceSug(false);
-  };
+    const closeSuggestions = () => {
+      setShowKeywordSug(false);
+      setShowPlaceSug(false);
+    };
 
-  document.addEventListener("click", closeSuggestions);
-  return () => document.removeEventListener("click", closeSuggestions);
-}, []);
+    document.addEventListener("click", closeSuggestions);
+    return () => document.removeEventListener("click", closeSuggestions);
+  }, []);
 
   return (
     <section className="flex-grow-1 text-center mt-5 mb-4 container">
@@ -271,50 +282,49 @@ function Home() {
             />
           </div>
         </div> */}
-       <div className="col-12 col-md-3 position-relative">
-  <div className="search-input">
-    <div className="d-flex align-items-center">
-      <i className="fa fa-location-dot me-2"></i>
-      <input
-        type="text"
-        placeholder="City, state, zip code, or remote"
-        className="form-control border-0"
-        value={searchPlace}
-        onChange={(e) => {
-          setSearchPlace(e.target.value);
-          setAppliedPlace("");
-        }}
-        onFocus={() => searchPlace && setShowPlaceSug(true)}
-        onClick={(e) => e.stopPropagation()}
-        style={{ boxShadow: "none" }}
-      />
-    </div>
+        <div className="col-12 col-md-3 position-relative">
+          <div className="search-input">
+            <div className="d-flex align-items-center">
+              <i className="fa fa-location-dot me-2"></i>
+              <input
+                type="text"
+                placeholder="City, state, zip code, or remote"
+                className="form-control border-0"
+                value={searchPlace}
+                onChange={(e) => {
+                  setSearchPlace(e.target.value);
+                  setAppliedPlace("");
+                }}
+                onFocus={() => searchPlace && setShowPlaceSug(true)}
+                onClick={(e) => e.stopPropagation()}
+                style={{ boxShadow: "none" }}
+              />
+            </div>
 
-    {showPlaceSug && placeSug.length > 0 && (
-      <ul
-        className="list-group position-absolute w-100 shadow"
-        style={{ zIndex: 1000 }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {placeSug.map((place, index) => (
-          <li
-            key={index}
-            className="list-group-item list-group-item-action"
-            onClick={() => {
-              setSearchPlace(place);
-              setAppliedPlace(place);
-              setShowPlaceSug(false);
-              setHasSearched(true);
-            }}
-          >
-            {place}
-          </li>
-        ))}
-      </ul>
-    )}
-  </div>
-</div>
-
+            {showPlaceSug && placeSug.length > 0 && (
+              <ul
+                className="list-group position-absolute w-100 shadow"
+                style={{ zIndex: 1000 }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {placeSug.map((place, index) => (
+                  <li
+                    key={index}
+                    className="list-group-item list-group-item-action"
+                    onClick={() => {
+                      setSearchPlace(place);
+                      setAppliedPlace(place);
+                      setShowPlaceSug(false);
+                      setHasSearched(true);
+                    }}
+                  >
+                    {place}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
 
         {/* SEARCH BUTTON */}
         <div className="col-12 col-md-2">

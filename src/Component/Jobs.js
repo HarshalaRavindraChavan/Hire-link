@@ -43,7 +43,7 @@ function Jobs() {
       // EMPLOYER → ONLY HIS DATA
       if (role === "employer") {
         res = await axios.get(
-          `https://norealtor.in/hirelink_apis/employer/getdatawhere/tbl_job/job_employer/${employerId}`
+          `https://norealtor.in/hirelink_apis/employer/getdatawhere/tbl_job/job_employer_id/${employerId}`
         );
       }
 

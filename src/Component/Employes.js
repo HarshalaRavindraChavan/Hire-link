@@ -285,7 +285,7 @@ function Employes() {
         </div>
 
         {/* TABLE */}
-        <div className="table-responsive" style={{ overflowX: "hidden" }}>
+        <div className="table-responsive">
           <table className="table table-bordered align-middle mb-0">
             <thead className="table-light text-center">
               <tr>

@@ -80,77 +80,83 @@ function Contact() {
         </div>
 
         {/* TABLE START */}
-        <table className="table table-bordered">
-          <thead className="table-light text-center">
-            <tr>
-              <th className="fs-6 fw-bold">ID</th>
-              <th className="fs-6 fw-bold">Contact Detail</th>
-              <th className="fs-6 fw-bold">Subject</th>
-              <th className="fs-6 fw-bold">Message</th>
-              <th className="fs-6 fw-bold">Activity Detail</th>
-            </tr>
-          </thead>
+        <div className="table-responsive">
+          <table className="table table-bordered">
+            <thead className="table-light text-center">
+              <tr>
+                <th className="fs-6 fw-bold">ID</th>
+                <th className="fs-6 fw-bold">Contact Detail</th>
+                <th className="fs-6 fw-bold">Subject</th>
+                <th className="fs-6 fw-bold">Message</th>
+                <th className="fs-6 fw-bold">Activity Detail</th>
+              </tr>
+            </thead>
 
-          <tbody>
-            {contacts.length > 0 ? (
-              contacts.map((c) => (
-                <tr key={c.con_id} className="text-center align-middle">
-                  <td>{c.con_id}</td>
+            <tbody>
+              {contacts.length > 0 ? (
+                contacts.map((c) => (
+                  <tr key={c.con_id} className="text-center align-middle">
+                    <td>{c.con_id}</td>
 
-                  <td className="text-start">
-                    <div className="fw-bold">
-                      Name:{" "}
-                      <span className="text-dark fw-normal">{c.con_name}</span>
-                    </div>
-                    <div className="fw-bold">
-                      Email:{" "}
-                      <span className="text-dark fw-normal">{c.con_email}</span>
-                    </div>
-                    <div className="fw-bold">
-                      Mobile:{" "}
-                      <span className="text-dark fw-normal">
-                        {c.con_mobile}
-                      </span>
-                    </div>
-                  </td>
+                    <td className="text-start">
+                      <div className="fw-bold">
+                        Name:{" "}
+                        <span className="text-dark fw-normal">
+                          {c.con_name}
+                        </span>
+                      </div>
+                      <div className="fw-bold">
+                        Email:{" "}
+                        <span className="text-dark fw-normal">
+                          {c.con_email}
+                        </span>
+                      </div>
+                      <div className="fw-bold">
+                        Mobile:{" "}
+                        <span className="text-dark fw-normal">
+                          {c.con_mobile}
+                        </span>
+                      </div>
+                    </td>
 
-                  <td className="text-start">{c.con_subject}</td>
+                    <td className="text-start">{c.con_subject}</td>
 
-                  <td className="text-start w-25">{c.con_message}</td>
+                    <td className="text-start w-25">{c.con_message}</td>
 
-                  <td className="text-start">
-                    <div className="fw-bold">
-                      Added By:{" "}
-                      <span className="text-dark fw-normal">
-                        {c.con_added_by}
-                      </span>
-                    </div>
-                    <div className="fw-bold">
-                      Added Date:{" "}
-                      <span className="text-dark fw-normal">
-                        {c.con_added_date}
-                      </span>
-                    </div>
+                    <td className="text-start">
+                      <div className="fw-bold">
+                        Added By:{" "}
+                        <span className="text-dark fw-normal">
+                          {c.con_added_by}
+                        </span>
+                      </div>
+                      <div className="fw-bold">
+                        Added Date:{" "}
+                        <span className="text-dark fw-normal">
+                          {c.con_added_date}
+                        </span>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" className="text-center text-muted py-3">
+                    No data available
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="5" className="text-center text-muted py-3">
-                  No data available
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-        {/* TABLE END */}
+              )}
+            </tbody>
+          </table>
+          {/* TABLE END */}
 
-        {/* Pagination */}
-        <Pagination
-          currentPage={currentPage}
-          totalPages={nPages}
-          onPageChange={(page) => setCurrentPage(page)}
-        />
+          {/* Pagination */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={nPages}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
+        </div>
       </div>
     </>
   );

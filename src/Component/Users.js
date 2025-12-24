@@ -330,154 +330,155 @@ function Users() {
             />
           </div>
         </div>
-
-        <table className="table table-bordered">
-          <thead className="table-light text-center">
-            <tr className="text-center">
-              <th className="fs-6 fw-bold">ID</th>
-              <th className="fs-6 fw-bold">User Detail</th>
-              <th className="fs-6 fw-bold">User ID Proof</th>
-              <th className="fs-6 fw-bold">User Address</th>
-              <th className="fs-6 fw-bold">Activity Detail</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {records.length > 0 ? (
-              records
-                .filter((u) => String(u.user_id) !== "1")
-                .map((u) => (
-                  <tr key={u.user_id} className="text-center align-middle">
-                    <td>{u.user_id}</td>
-                    <td className="text-start">
-                      <div className="fw-bold">
-                        Name:
-                        <div className="dropdown d-inline ms-2">
-                          <span
-                            className="fw-bold text-primary"
-                            role="button"
-                            data-bs-toggle="dropdown"
-                          >
-                            {u.user_name}
-                          </span>
-                          <ul className="dropdown-menu shadow">
-                            <li>
-                              <button className="dropdown-item">
-                                <i className="fas fa-edit me-2"></i>Edit
-                              </button>
-                            </li>
-                            <li>
-                              <button
-                                className="dropdown-item text-danger"
-                                onClick={() => handleDeleteClick(u.user_id)}
-                              >
-                                <i className="fas fa-trash me-2"></i>Delete
-                              </button>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-
-                      <div className="fw-bold">
-                        Email:{"  "}
-                        <span className="text-dark fw-normal">
-                          {u.user_email}
-                        </span>
-                      </div>
-                      <div className="fw-bold">
-                        Mobile No:{"  "}
-                        <span className="text-dark fw-normal">
-                          {u.user_mobile}
-                        </span>
-                      </div>
-                      <div className="fw-bold">
-                        Experience:{"  "}
-                        <span className="text-dark fw-normal">
-                          {u.user_experience}
-                        </span>
-                      </div>
-                    </td>
-
-                    {/* User Id Proof */}
-                    <td className="text-start">
-                      <div className="fw-bold">
-                        Aadhar No:{"  "}
-                        <span className="text-dark fw-normal">
-                          {u.user_adhar}
-                        </span>
-                      </div>
-                      <div className="fw-bold">
-                        Pan Card No:{"  "}
-                        <span className="text-dark fw-normal">
-                          {u.user_pan}
-                        </span>
-                      </div>
-                      <div className="fw-bold">
-                        Join Date:{"  "}
-                        <span className="text-dark fw-normal">
-                          {u.user_joindate}
-                        </span>
-                      </div>
-                    </td>
-                    {/* Address */}
-                    <td className="text-start">
-                      <div className="fw-bold">
-                        Location:{"  "}
-                        <span className="text-dark fw-normal">
-                          {u.user_location}
-                        </span>
-                      </div>
-                      <div className="fw-bold">
-                        Address:{"  "}
-                        <span className="text-dark fw-normal">
-                          {u.user_address}
-                        </span>
-                      </div>
-                      <div className="fw-bold">
-                        City:{"  "}
-                        <span className="text-dark fw-normal">
-                          {u.city_name}
-                        </span>
-                      </div>
-                      <div className="fw-bold">
-                        State:{"  "}
-                        <span className="text-dark fw-normal">
-                          {u.state_name}
-                        </span>
-                      </div>
-                    </td>
-                    {/* Activity Detail */}
-                    <td className="text-start">
-                      <div className="fw-bold ">
-                        Added By:{"  "}
-                        <span className="text-dark fw-normal">
-                          {u.user_added_by}
-                        </span>
-                      </div>
-                      <div className="fw-bold ">
-                        Added Date:{"  "}
-                        <span className="text-dark fw-normal">
-                          {u.user_added_date}
-                        </span>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-            ) : (
-              <tr>
-                <td colSpan="6" className="text-center text-muted py-3">
-                  No data available
-                </td>
+        <div className="table-responsive">
+          <table className="table table-bordered align-middle">
+            <thead className="table-light text-center">
+              <tr className="text-center">
+                <th className="fs-6 fw-bold">ID</th>
+                <th className="fs-6 fw-bold">User Detail</th>
+                <th className="fs-6 fw-bold">User ID Proof</th>
+                <th className="fs-6 fw-bold">User Address</th>
+                <th className="fs-6 fw-bold">Activity Detail</th>
               </tr>
-            )}
-          </tbody>
-        </table>
-        {/* Pagination */}
-        <Pagination
-          currentPage={currentPage}
-          totalPages={nPages}
-          onPageChange={(page) => setCurrentPage(page)}
-        />
+            </thead>
+
+            <tbody>
+              {records.length > 0 ? (
+                records
+                  .filter((u) => String(u.user_id) !== "1")
+                  .map((u) => (
+                    <tr key={u.user_id} className="text-center align-middle">
+                      <td>{u.user_id}</td>
+                      <td className="text-start">
+                        <div className="fw-bold">
+                          Name:
+                          <div className="dropdown d-inline ms-2">
+                            <span
+                              className="fw-bold text-primary"
+                              role="button"
+                              data-bs-toggle="dropdown"
+                            >
+                              {u.user_name}
+                            </span>
+                            <ul className="dropdown-menu shadow">
+                              <li>
+                                <button className="dropdown-item">
+                                  <i className="fas fa-edit me-2"></i>Edit
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  className="dropdown-item text-danger"
+                                  onClick={() => handleDeleteClick(u.user_id)}
+                                >
+                                  <i className="fas fa-trash me-2"></i>Delete
+                                </button>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+
+                        <div className="fw-bold">
+                          Email:{"  "}
+                          <span className="text-dark fw-normal">
+                            {u.user_email}
+                          </span>
+                        </div>
+                        <div className="fw-bold">
+                          Mobile No:{"  "}
+                          <span className="text-dark fw-normal">
+                            {u.user_mobile}
+                          </span>
+                        </div>
+                        <div className="fw-bold">
+                          Experience:{"  "}
+                          <span className="text-dark fw-normal">
+                            {u.user_experience}
+                          </span>
+                        </div>
+                      </td>
+
+                      {/* User Id Proof */}
+                      <td className="text-start">
+                        <div className="fw-bold">
+                          Aadhar No:{"  "}
+                          <span className="text-dark fw-normal">
+                            {u.user_adhar}
+                          </span>
+                        </div>
+                        <div className="fw-bold">
+                          Pan Card No:{"  "}
+                          <span className="text-dark fw-normal">
+                            {u.user_pan}
+                          </span>
+                        </div>
+                        <div className="fw-bold">
+                          Join Date:{"  "}
+                          <span className="text-dark fw-normal">
+                            {u.user_joindate}
+                          </span>
+                        </div>
+                      </td>
+                      {/* Address */}
+                      <td className="text-start">
+                        <div className="fw-bold">
+                          Location:{"  "}
+                          <span className="text-dark fw-normal">
+                            {u.user_location}
+                          </span>
+                        </div>
+                        <div className="fw-bold">
+                          Address:{"  "}
+                          <span className="text-dark fw-normal">
+                            {u.user_address}
+                          </span>
+                        </div>
+                        <div className="fw-bold">
+                          City:{"  "}
+                          <span className="text-dark fw-normal">
+                            {u.city_name}
+                          </span>
+                        </div>
+                        <div className="fw-bold">
+                          State:{"  "}
+                          <span className="text-dark fw-normal">
+                            {u.state_name}
+                          </span>
+                        </div>
+                      </td>
+                      {/* Activity Detail */}
+                      <td className="text-start">
+                        <div className="fw-bold ">
+                          Added By:{"  "}
+                          <span className="text-dark fw-normal">
+                            {u.user_added_by}
+                          </span>
+                        </div>
+                        <div className="fw-bold ">
+                          Added Date:{"  "}
+                          <span className="text-dark fw-normal">
+                            {u.user_added_date}
+                          </span>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+              ) : (
+                <tr>
+                  <td colSpan="6" className="text-center text-muted py-3">
+                    No data available
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+          {/* Pagination */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={nPages}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
+        </div>
       </div>
 
       {/* ADD USER MODAL */}

@@ -298,10 +298,23 @@ function Packages() {
 
                     {/* BENEFITS */}
                     <td className="text-start">
-                      {Array.isArray(pkg.pack_benefits) ? (
-                        pkg.pack_benefits.map((b, i) => (
-                          <div key={i}>• {b}</div>
-                        ))
+                      {pkg.pack_benefits ? (
+                        (() => {
+                          try {
+                            const benefits = JSON.parse(pkg.pack_benefits); // ✅ FIX
+                            return benefits.length > 0 ? (
+                              benefits.map((b, i) => <div key={i}>• {b}</div>)
+                            ) : (
+                              <div className="text-muted">No benefits</div>
+                            );
+                          } catch (err) {
+                            return (
+                              <div className="text-danger">
+                                Invalid benefits data
+                              </div>
+                            );
+                          }
+                        })()
                       ) : (
                         <div className="text-muted">No benefits</div>
                       )}
@@ -384,7 +397,7 @@ function Packages() {
                 <div className="col-md-4">
                   <label>Duration</label>
                   <select
-                    className="form-select"
+                    className="form-select form-control"
                     {...register("pack_duration")}
                   >
                     <option value="">Select</option>
@@ -429,7 +442,10 @@ function Packages() {
                 {/* SUPPORT */}
                 <div className="col-md-4">
                   <label>Support</label>
-                  <select className="form-select" {...register("pack_support")}>
+                  <select
+                    className="form-select form-control"
+                    {...register("pack_support")}
+                  >
                     <option value="">Select</option>
                     <option value="Email">Email</option>
                     <option value="Chat">Chat</option>

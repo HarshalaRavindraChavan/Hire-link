@@ -78,7 +78,6 @@ const UserLayout = () => {
         <Route path="contacts" element={<Contacts />} />
         <Route path="profile" element={<Profile />} />
         <Route path="apply" element={<Apply />} />
-        <Route path="EmpProfile" element={<EmpProfile />} />
       </Routes>
       <Footer2 />
     </>
@@ -119,6 +118,7 @@ function App() {
           <Route path="/contacts" element={<Contacts />} />
           <Route path="/apply" element={<Apply />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/EmpProfile" element={<EmpProfile />} />
         </Route>
 
         {/* Employer ROUTES */}

@@ -6,6 +6,8 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 
 const EmpProfile = () => {
+  const [showNewPwd, setShowNewPwd] = useState(false);
+  const [showCurrentPwd, setShowCurrentPwd] = useState(false);
   const location = useLocation();
 
   const { emp_name, emp_email, emp_mobile } = location.state || {};
@@ -14,7 +16,6 @@ const EmpProfile = () => {
       fullname: emp_name || "",
       email: emp_email || "",
       mobile: emp_mobile || "",
-      status: "",
       currentPassword: "",
       newPassword: "",
       confirmPassword: "",
@@ -31,7 +32,6 @@ const EmpProfile = () => {
         .trim()
         .required("Mobile number is required")
         .matches(/^[6-9][0-9]{9}$/, "Enter a valid 10-digit mobile number"),
-      status: Yup.string().required("Status is required"),
       newPassword: Yup.string()
         .min(6, "Minimum 6 characters")
         .required("New password is required"),

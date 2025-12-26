@@ -15,7 +15,7 @@ function Profile() {
   // Main
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
-
+  
   // Sub Category
   const [subCategories, setSubCategories] = useState([]);
   const [selectedSubCategory, setSelectedSubCategory] = useState("");

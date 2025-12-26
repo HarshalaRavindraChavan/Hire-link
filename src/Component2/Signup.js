@@ -95,7 +95,7 @@ const Signup = () => {
               emp_id: data.data.emp_id,
             })
           );
-          setTimeout(() => navigate("/job"), 1200);
+          setTimeout(() => navigate("/EmpProfile"), 1200);
         }
 
         reset(); // ✅ react-hook-form correct reset

@@ -1,7 +1,9 @@
 import logo from "./logo/admin-logo.png";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
-function Sidebar() {
+function Sidebar(props) {
+  const { emp_name, emp_email } = props;
+
   return (
     <div className="main-header">
       <div className="main-header-logo">
@@ -319,49 +321,74 @@ function Sidebar() {
                 </div>
                 <span className="profile-username">
                   {/* <span className="op-7">Hi,</span> */}
-                  <span className="fw-bold">Hizrian</span>
+                  <span className="fw-bold">{emp_name}</span>
                 </span>
               </a>
-              <ul className="dropdown-menu dropdown-user animated fadeIn">
-                <div className="dropdown-user-scroll scrollbar-outer">
-                  <li>
-                    <div className="user-box">
-                      <div className="avatar-lg">
-                        <img
-                          src="https://media.istockphoto.com/id/1553217327/vector/user-profile-icon-avatar-person-sign-profile-picture-portrait-symbol-easily-editable-line.jpg?s=170667a&w=0&k=20&c=xUuHLFaa94WIFdV-XBgxX9SSsaJJgGQhE1Tmevqrytg="
-                          alt=""
-                          className="avatar-img rounded"
-                        />
-                      </div>
+              <ul className="dropdown-menu dropdown-user animated fadeIn shadow-lg">
+                <div className="dropdown-user-scroll">
+                  {/* USER INFO */}
+                  {/* <li className="px-3 py-3 user-header">
+                    <div className="d-flex align-items-center gap-3">
                       <div className="u-text">
-                        <h4>Hizrian</h4>
-                        <p className="text-muted">hello@example.com</p>
-                        {/* <a
-                          href="profile.html"
-                          className="btn btn-xs btn-secondary btn-sm"
-                        >
-                          View Profile
-                        </a> */}
+                        <h5 className="mb-0 fw-semibold">
+                          {employee?.emp_name
+                            ?.split(" ")
+                            .map(
+                              (word) =>
+                                word.charAt(0).toUpperCase() + word.slice(1)
+                            )
+                            .join(" ")}
+                        </h5>
+
+                        <small className="text-muted">
+                          {employee?.emp_email}
+                        </small>
+                      </div>
+                    </div>
+                  </li> */}
+                  <li className="px-3 py-3 user-header">
+                    <div className="d-flex align-items-center gap-3">
+                      <div className="u-text">
+                        <h5 className="mb-0 fw-semibold">
+                          {emp_name
+                            ?.split(" ")
+                            .map(
+                              (word) =>
+                                word.charAt(0).toUpperCase() + word.slice(1)
+                            )
+                            .join(" ")}
+                        </h5>
+
+                        <small className="text-muted">{emp_email}</small>
                       </div>
                     </div>
                   </li>
+
                   <li>
-                    <div className="dropdown-divider"></div>
-                    <a className="dropdown-item" href="#">
+                    <hr className="dropdown-divider" />
+                  </li>
+
+                  {/* MENU ITEMS */}
+                  <li>
+                    <Link
+                      to="/EmpProfile"
+                      className="dropdown-item d-flex align-items-center gap-2"
+                    >
+                      <i className="fa fa-user text-primary"></i>
                       My Profile
-                    </a>
-                    {/* <a className="dropdown-item" href="#">
-                      My Balance
-                    </a>
-                    <a className="dropdown-item" href="#">
-                      Inbox
-                    </a> */}
-                    <div className="dropdown-divider"></div>
-                    {/* <a className="dropdown-item" href="#">
-                      Account Setting
-                    </a> */}
-                    {/* <div className="dropdown-divider"></div> */}
-                    <a className="dropdown-item" href="#">
+                    </Link>
+                  </li>
+
+                  <li>
+                    <hr className="dropdown-divider" />
+                  </li>
+
+                  <li>
+                    <a
+                      className="dropdown-item d-flex align-items-center gap-2 text-danger"
+                      href="#"
+                    >
+                      <i className="fa fa-sign-out-alt"></i>
                       Logout
                     </a>
                   </li>

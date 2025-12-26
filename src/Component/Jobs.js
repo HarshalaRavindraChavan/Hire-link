@@ -118,6 +118,7 @@ function Jobs() {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
@@ -307,6 +308,28 @@ function Jobs() {
     }
   };
 
+  const [isEdit, setIsEdit] = useState(false);
+
+  const handleEdit = (job) => {
+    setValue("job_title", job.job_title);
+    setValue("job_company", job.job_company);
+    setValue("job_no_hiring", job.job_no_hiring);
+    setValue("job_type", job.job_type);
+    setValue("job_salary", job.job_salary);
+    setValue("job_status", job.job_status);
+    setValue("job_date", job.job_date);
+    setValue("job_location", job.job_location);
+    setValue("job_experience", job.job_experience);
+    setValue("job_skills", job.job_skills);
+
+    // category dropdowns (if needed)
+    setSelectedCategory(job.job_mc);
+    setSelectedSubCategory(job.job_sc);
+    setSelectedSubCat1(job.job_sc1);
+    setSelectedSubCat2(job.job_sc2);
+    setSelectedSubCat3(job.job_sc3);
+  };
+
   return (
     <>
       {/* TOAST */}
@@ -411,6 +434,199 @@ function Jobs() {
                           </span>
                           <ul className="dropdown-menu shadow">
                             <li>
+                              <button
+                                className="dropdown-item"
+                                data-bs-toggle="modal"
+                                data-bs-target="#exampleModal"
+                                onClick={() => {
+                                  setIsEdit(true);
+
+                                  setValue("job_title", "Frontend Developer");
+                                  setValue("job_company", "Tech Solutions");
+                                  setValue("job_type", "Full-time");
+                                  setValue("job_location", "Pune");
+                                }}
+                              >
+                                <i className="fas fa-edit me-2"></i>Edit
+                              </button>
+                            </li>
+
+                            <li>
+                              <button
+                                className="dropdown-item text-danger"
+                                onClick={() => handleDeleteClick(job.job_id)}
+                              >
+                                <i className="fas fa-trash me-2"></i>Delete
+                              </button>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div className="fw-bold ">
+                        Category:{" "}
+                        <span className="text-dark fw-normal">
+                          {job.job_category}
+                        </span>
+                      </div>
+                      <div className="fw-bold ">
+                        Type:{" "}
+                        <span className="text-dark fw-normal">
+                          {job.job_type}
+                        </span>
+                      </div>
+                    </td>
+
+                    <td className="text-start">
+                      <div className="fw-bold ">
+                        Company Name:{" "}
+                        <span className="text-dark fw-normal">
+                          {job.job_company}
+                        </span>
+                      </div>
+                      <div className="fw-bold ">
+                        Exp. Required:{" "}
+                        <span className="text-dark fw-normal">
+                          {job.job_experience}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="text-start">
+                      <div className="fw-bold ">
+                        Posted Date:{" "}
+                        <span className="text-dark fw-normal">
+                          {job.job_date}
+                        </span>
+                      </div>
+                      <div className="fw-bold ">
+                        Applications:{" "}
+                        <span className="text-dark fw-normal">
+                          {job.job_applications}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="text-center">
+                      {job.job_status === "1" ? (
+                        <span className="badge bg-success">Active</span>
+                      ) : (
+                        <span className="badge bg-warning">Pending</span>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" className="text-center text-muted">
+                    No jobs found
+                  </td>
+                </tr>
+              )}
+            </tbody>
+            <tbody>
+              <tr>
+                <td>1</td>
+
+                <td className="text-start fw-bold">
+                  <div className="fw-bold">
+                    Title:
+                    <div className="dropdown d-inline ms-2">
+                      <span
+                        className="fw-bold text-primary"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                      >
+                        Frontend Developer
+                      </span>
+
+                      <ul className="dropdown-menu shadow">
+                        <li>
+                          <button
+                            className="dropdown-item"
+                            data-bs-toggle="modal"
+                            data-bs-target="#exampleModal"
+                            onClick={() =>
+                              handleEdit({
+                                job_title: "Frontend Developer",
+                                job_company: "Tech Solutions Pvt Ltd",
+                                job_no_hiring: 3,
+                                job_type: "Full-time",
+                                job_salary: "5–7 LPA",
+                                job_status: "1",
+                                job_date: "2025-12-12",
+                                job_location: "Pune",
+                                job_experience: "2–4 Years",
+                                job_skills: "React, JavaScript",
+                              })
+                            }
+                          >
+                            <i className="fas fa-edit me-2"></i>Edit
+                          </button>
+                        </li>
+
+                        <li>
+                          <button className="dropdown-item text-danger">
+                            <i className="fas fa-trash me-2"></i>Delete
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div className="fw-bold">
+                    Category: <span className="fw-normal">IT / Software</span>
+                  </div>
+
+                  <div className="fw-bold">
+                    Type: <span className="fw-normal">Full Time</span>
+                  </div>
+                </td>
+
+                <td className="text-start">
+                  <div className="fw-bold">
+                    Company Name:{" "}
+                    <span className="fw-normal">Tech Solutions Pvt Ltd</span>
+                  </div>
+
+                  <div className="fw-bold">
+                    Exp. Required:{" "}
+                    <span className="fw-normal">2 – 4 Years</span>
+                  </div>
+                </td>
+
+                <td className="text-start">
+                  <div className="fw-bold">
+                    Posted Date: <span className="fw-normal">12/12/2025</span>
+                  </div>
+
+                  <div className="fw-bold">
+                    Applications: <span className="fw-normal">25</span>
+                  </div>
+                </td>
+
+                <td className="text-center">
+                  <span className="badge bg-success">Active</span>
+                </td>
+              </tr>
+
+            </tbody>
+
+            {/* {records.length > 0 ? (
+                records.map((job, index) => (
+                  <tr key={job.job_id}>
+                    <td>{firstIndex + index + 1}</td>
+                    <td className="text-start fw-bold">
+                      {" "}
+                      <div className="fw-bold">
+                        Title:
+                        <div className="dropdown d-inline ms-2">
+                          <span
+                            className="fw-bold text-primary"
+                            role="button"
+                            data-bs-toggle="dropdown"
+                          >
+                            {job.job_title}
+                          </span>
+                          <ul className="dropdown-menu shadow">
+                            <li>
                               <button className="dropdown-item">
                                 <i className="fas fa-edit me-2"></i>Edit
                               </button>
@@ -484,7 +700,7 @@ function Jobs() {
                   </td>
                 </tr>
               )}
-            </tbody>
+            </tbody> */}
           </table>
           {/* Pagination */}
           <Pagination

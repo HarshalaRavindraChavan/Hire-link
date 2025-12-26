@@ -86,7 +86,7 @@ function Signin() {
             );
 
             setTimeout(() => {
-              navigate("/job");
+              navigate("/EmpProfile");
             }, 1200);
           }
 

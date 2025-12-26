@@ -7,9 +7,11 @@ function Home() {
   const [jobs, setJobs] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
 
+  const navigate = useNavigate();
+
   useState(() => {
     document.title = "Welcome To Hirelink";
-    
+
     axios
       .get("https://norealtor.in/hirelink_apis/candidate/getdata/tbl_job")
       .then((res) => {
@@ -95,24 +97,23 @@ function Home() {
     let suggestions = [];
 
     jobs.forEach((job) => {
-      // 🔹 Job Title suggestion (startsWith)
-      if (job.job_title && job.job_title.toLowerCase().startsWith(keyword)) {
-        suggestions.push({
-          text: job.job_title,
-          type: "Job Title",
-        });
-      }
+      const searchableFields = [
+        job.job_title,
+        job.job_company,
+        job.job_skills,
+        job.city_name,
+        job.state_name,
+        job.job_description,
+      ];
 
-      // 🔹 Company Name suggestion (startsWith)
-      if (
-        job.job_company &&
-        job.job_company.toLowerCase().startsWith(keyword)
-      ) {
-        suggestions.push({
-          text: job.job_company,
-          type: "Company",
-        });
-      }
+      searchableFields.forEach((field) => {
+        if (field && field.toLowerCase().includes(keyword)) {
+          suggestions.push({
+            text: field,
+            type: "Related",
+          });
+        }
+      });
     });
 
     // 🔹 Remove duplicates
@@ -120,7 +121,7 @@ function Home() {
       (v, i, a) => a.findIndex((t) => t.text === v.text) === i
     );
 
-    setKeywordSug(uniqueSuggestions.slice(0, 6));
+    setKeywordSug(uniqueSuggestions.slice(0, 8));
     setShowKeywordSug(true);
   }, [searchKeyword, jobs]);
 
@@ -192,156 +193,106 @@ function Home() {
       {/* SEARCH BAR ROW */}
       <div className="row justify-content-center g-2 mt-4 home-serch ps-4 pe-4">
         {/* JOB INPUT */}
-        {/* <div className="col-12 col-md-3 search-input-wrapper position-relative">
+        <div className="col-12 col-md-3 position-relative">
           <div className="search-input d-flex align-items-center">
             <i className="fa fa-search me-2"></i>
             <input
               type="text"
               className="form-control border-0"
               placeholder="Job title, keywords, or company"
-              value={query}
-              onChange={(e) => handleSearch(e.target.value)}
+              value={searchKeyword}
+              onChange={(e) => {
+                setSearchKeyword(e.target.value);
+                setAppliedKeyword("");
+              }}
+              onFocus={() => searchKeyword && setShowKeywordSug(true)}
+              onClick={(e) => e.stopPropagation()}
               style={{ boxShadow: "none" }}
             />
           </div>
 
-          
-          {showDropdown && filteredJobs.length > 0 && (
-            <ul className="list-group position-absolute w-100 mt-1 shadow">
-              {filteredJobs.map((job, index) => (
+          {showKeywordSug && keywordSug.length > 0 && (
+            <ul
+              className="list-group position-absolute w-100 shadow"
+              style={{ zIndex: 1000, background: "#dfdcdcff" }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {keywordSug.map((item, index) => (
                 <li
                   key={index}
-                  className="list-group-item list-group-item-action"
+                  className="list-group-item list-group-item-action d-flex justify-content-between"
                   onClick={() => {
-                    setQuery(job.title);
-                    setShowDropdown(false);
+                    setSearchKeyword(item.text);
+                    setAppliedKeyword(item.text);
+                    setShowKeywordSug(false);
+                    setHasSearched(true);
                   }}
                 >
-                  <strong>{job.title}</strong>
-                  <br />
-                  <small className="text-muted">{job.company}</small>
+                  <strong>{item.text}</strong>
+                  <small className="text-muted">({item.type})</small>
                 </li>
               ))}
             </ul>
           )}
-        </div> */}
-        <div className="col-12 col-md-3 position-relative">
-          <div className="search-input">
-            <div className="d-flex align-items-center">
-              <i className="fa fa-search me-2"></i>
-              <input
-                type="text"
-                className="form-control border-0"
-                placeholder="Job title, keywords, or company"
-                value={searchKeyword}
-                onChange={(e) => {
-                  setSearchKeyword(e.target.value);
-                  setAppliedKeyword("");
-                }}
-                onFocus={() => searchKeyword && setShowKeywordSug(true)}
-                onClick={(e) => e.stopPropagation()}
-                style={{ boxShadow: "none" }}
-              />
-            </div>
-
-            {showKeywordSug && keywordSug.length > 0 && (
-              <ul
-                className="list-group position-absolute w-100 shadow"
-                style={{ zIndex: 1000 }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                {keywordSug.map((item, index) => (
-                  <li
-                    key={index}
-                    className="list-group-item list-group-item-action d-flex justify-content-between"
-                    onClick={() => {
-                      setSearchKeyword(item.text);
-                      setAppliedKeyword(item.text);
-                      setShowKeywordSug(false);
-                      setHasSearched(true);
-                    }}
-                  >
-                    <strong>{item.text}</strong>
-                    <small className="text-muted">({item.type})</small>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
         </div>
 
         {/* LOCATION INPUT */}
-        {/* <div className="col-12 col-md-3 search-input-wrapper position-relative">
+        <div className="col-12 col-md-3 position-relative">
           <div className="search-input d-flex align-items-center">
-            <i className="fa fa-location-dot"></i>
+            <i className="fa fa-location-dot me-2"></i>
             <input
               type="text"
               placeholder="City, state, zip code, or remote"
               className="form-control border-0"
+              value={searchPlace}
+              onChange={(e) => {
+                setSearchPlace(e.target.value);
+                setAppliedPlace("");
+              }}
+              onFocus={() => searchPlace && setShowPlaceSug(true)}
+              onClick={(e) => e.stopPropagation()}
               style={{ boxShadow: "none" }}
             />
           </div>
-        </div> */}
-        <div className="col-12 col-md-3 position-relative">
-          <div className="search-input">
-            <div className="d-flex align-items-center">
-              <i className="fa fa-location-dot me-2"></i>
-              <input
-                type="text"
-                placeholder="City, state, zip code, or remote"
-                className="form-control border-0"
-                value={searchPlace}
-                onChange={(e) => {
-                  setSearchPlace(e.target.value);
-                  setAppliedPlace("");
-                }}
-                onFocus={() => searchPlace && setShowPlaceSug(true)}
-                onClick={(e) => e.stopPropagation()}
-                style={{ boxShadow: "none" }}
-              />
-            </div>
 
-            {showPlaceSug && placeSug.length > 0 && (
-              <ul
-                className="list-group position-absolute w-100 shadow"
-                style={{ zIndex: 1000 }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                {placeSug.map((place, index) => (
-                  <li
-                    key={index}
-                    className="list-group-item list-group-item-action"
-                    onClick={() => {
-                      setSearchPlace(place);
-                      setAppliedPlace(place);
-                      setShowPlaceSug(false);
-                      setHasSearched(true);
-                    }}
-                  >
-                    {place}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+          {showPlaceSug && placeSug.length > 0 && (
+            <ul
+              className="list-group position-absolute w-100 shadow"
+              style={{ zIndex: 1000, background: "#dfdcdcff" }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {placeSug.map((place, index) => (
+                <li
+                  key={index}
+                  className="list-group-item list-group-item-action"
+                  onClick={() => {
+                    setSearchPlace(place);
+                    setAppliedPlace(place);
+                    setShowPlaceSug(false);
+                    setHasSearched(true);
+                  }}
+                >
+                  {place}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
         {/* SEARCH BUTTON */}
         <div className="col-12 col-md-2">
-          <NavLink
-            to="/jobs"
-            type="button"
+          <button
             className="btn find-btn w-100 pt-4 pb-5"
             onClick={() => {
-              setAppliedKeyword(searchKeyword);
-              setAppliedPlace(searchPlace);
-              setHasSearched(true);
-              setShowKeywordSug(false);
-              setShowPlaceSug(false);
+              navigate(
+                `/jobs?keyword=${encodeURIComponent(
+                  searchKeyword.trim()
+                )}&place=${encodeURIComponent(searchPlace.trim())}`
+              );
             }}
           >
             Find jobs
-          </NavLink>
+          </button>
         </div>
       </div>
 

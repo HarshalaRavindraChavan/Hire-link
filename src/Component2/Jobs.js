@@ -1,11 +1,25 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../Component2/css/Jobs.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 function Jobs() {
   const [jobs, setJobs] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
+  const location = useLocation();
+
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchPlace, setSearchPlace] = useState("");
+
+  const [keywordSug, setKeywordSug] = useState([]);
+  const [placeSug, setPlaceSug] = useState([]);
+
+  const [showKeywordSug, setShowKeywordSug] = useState(false);
+  const [showPlaceSug, setShowPlaceSug] = useState(false);
+  const [appliedKeyword, setAppliedKeyword] = useState("");
+  const [appliedPlace, setAppliedPlace] = useState("");
+
+  const [hasSearched, setHasSearched] = useState(false);
 
   useEffect(() => {
     document.title = "Hirelink | Jobs";
@@ -24,19 +38,21 @@ function Jobs() {
   }, []);
 
   //============ auto Suggestion
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const keyword = params.get("keyword") || "";
+    const place = params.get("place") || "";
 
-  const [searchKeyword, setSearchKeyword] = useState("");
-  const [searchPlace, setSearchPlace] = useState("");
+    setSearchKeyword(keyword);
+    setSearchPlace(place);
 
-  const [keywordSug, setKeywordSug] = useState([]);
-  const [placeSug, setPlaceSug] = useState([]);
+    setAppliedKeyword(keyword);
+    setAppliedPlace(place);
 
-  const [showKeywordSug, setShowKeywordSug] = useState(false);
-  const [showPlaceSug, setShowPlaceSug] = useState(false);
-  const [appliedKeyword, setAppliedKeyword] = useState("");
-  const [appliedPlace, setAppliedPlace] = useState("");
-
-  const [hasSearched, setHasSearched] = useState(false);
+    if (keyword || place) {
+      setHasSearched(true);
+    }
+  }, [location.search]);
 
   useEffect(() => {
     if (!searchKeyword.trim()) {
@@ -49,32 +65,31 @@ function Jobs() {
     let suggestions = [];
 
     jobs.forEach((job) => {
-      // 🔹 Job Title suggestion (startsWith)
-      if (job.job_title && job.job_title.toLowerCase().startsWith(keyword)) {
-        suggestions.push({
-          text: job.job_title,
-          type: "Job Title",
-        });
-      }
+      const fields = [
+        { value: job.job_title, type: "Job Title" },
+        { value: job.job_company, type: "Company" },
+        { value: job.job_skills, type: "Skills" },
+        { value: job.job_description, type: "Description" },
+        { value: job.job_type, type: "Job Type" },
+        { value: job.job_salary?.toString(), type: "Salary" },
+      ];
 
-      // 🔹 Company Name suggestion (startsWith)
-      if (
-        job.job_company &&
-        job.job_company.toLowerCase().startsWith(keyword)
-      ) {
-        suggestions.push({
-          text: job.job_company,
-          type: "Company",
-        });
-      }
+      fields.forEach((field) => {
+        if (field.value && field.value.toLowerCase().includes(keyword)) {
+          suggestions.push({
+            text: field.value,
+            type: field.type,
+          });
+        }
+      });
     });
 
-    // 🔹 Remove duplicates
+    // 🔹 Remove duplicate suggestions
     const uniqueSuggestions = suggestions.filter(
       (v, i, a) => a.findIndex((t) => t.text === v.text) === i
     );
 
-    setKeywordSug(uniqueSuggestions.slice(0, 6));
+    setKeywordSug(uniqueSuggestions.slice(0, 8));
     setShowKeywordSug(true);
   }, [searchKeyword, jobs]);
 
@@ -135,6 +150,7 @@ function Jobs() {
       {/* ================= SEARCH SECTION ================= */}
       <section className="flex-grow-1 text-center mt-5 mb-4 container">
         <div className="row justify-content-center g-2 mt-4 home-serch ps-3 pe-3">
+          {/* JOB INPUT */}
           <div className="col-12 col-md-3 position-relative">
             <div className="search-input d-flex align-items-center">
               <i className="fa fa-search"></i>
@@ -170,6 +186,7 @@ function Jobs() {
             )}
           </div>
 
+          {/* LOCATION INPUT */}
           <div className="col-12 col-md-3 position-relative">
             <div className="search-input d-flex align-items-center">
               <i className="fa fa-location-dot"></i>
@@ -186,7 +203,7 @@ function Jobs() {
             {showPlaceSug && (
               <ul
                 className="list-group position-absolute w-100"
-                style={{ zIndex: 1000 }}
+                style={{ zIndex: 1000, background: "#dfdcdcff" }}
               >
                 {placeSug.map((item, i) => (
                   <li

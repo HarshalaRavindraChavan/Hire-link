@@ -1,64 +1,100 @@
-
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { useLocation } from "react-router-dom";
 
 const EmpProfile = () => {
   const [showNewPwd, setShowNewPwd] = useState(false);
   const [showCurrentPwd, setShowCurrentPwd] = useState(false);
-  const location = useLocation();
 
-  const { emp_name, emp_email, emp_mobile } = location.state || {};
-   const formik = useFormik({
+  const employer = JSON.parse(localStorage.getItem("employer"));
+  const auth = JSON.parse(localStorage.getItem("auth"));
+
+  const formik = useFormik({
     initialValues: {
-      fullname: emp_name || "",
-      email: emp_email || "",
-      mobile: emp_mobile || "",
-      currentPassword: "",
+      fullname: employer?.emp_name || "",
+      email: employer?.emp_email || "",
+      mobile: employer?.emp_mobile || "",
       newPassword: "",
       confirmPassword: "",
     },
-
-    enableReinitialize: true, // 🔥 VERY IMPORTANT
+    enableReinitialize: true,
 
     validationSchema: Yup.object({
       fullname: Yup.string().required("Full name is required"),
-      email: Yup.string()
-        .email("Invalid email address")
-        .required("Email is required"),
       mobile: Yup.string()
         .trim()
         .required("Mobile number is required")
         .matches(/^[6-9][0-9]{9}$/, "Enter a valid 10-digit mobile number"),
-      newPassword: Yup.string()
-        .min(6, "Minimum 6 characters")
-        .required("New password is required"),
-      confirmPassword: Yup.string()
-        .min(6, "Minimum 6 characters")
-        .required("Confirm password is required"),
+      newPassword: Yup.string().min(6, "Minimum 6 characters"),
+      confirmPassword: Yup.string().oneOf(
+        [Yup.ref("newPassword")],
+        "Passwords must match"
+      ),
     }),
 
-    onSubmit: (values) => {
-      console.log("Form Data:", values);
-      alert("Profile Updated Successfully!");
+    onSubmit: async (values) => {
+      try {
+        const payload = {
+          emp_name: values.fullname,
+          emp_email: values.email,
+          emp_mobile: values.mobile,
+        };
+
+        // 🔐 Password दिला असेल तरच पाठव
+        if (values.newPassword) {
+          payload.emp_password = values.newPassword;
+        }
+
+        const res = await axios.post(
+          `https://norealtor.in/hirelink_apis/employer/updatedata/tbl_employer/emp_id/${auth.emp_id}`,
+          payload
+        );
+
+        if (res.data.status === true) {
+          toast.success("Profile updated successfully");
+
+          // ✅ STEP 6: localStorage update
+          localStorage.setItem("employer", JSON.stringify(res.data.data));
+
+          // ✅ STEP 7: form inputs instantly update
+          formik.setValues({
+            fullname: res.data.data.emp_name,
+            email: res.data.data.emp_email,
+            mobile: res.data.data.emp_mobile,
+            newPassword: "",
+            confirmPassword: "",
+          });
+        } else {
+          toast.error(res.data.message || "Update failed");
+        }
+      } catch (error) {
+        toast.error("Server error");
+      }
     },
   });
 
-
   return (
-    <div className="container-fluid py-4 bg-light">
-      <div className="container">
-        {/* Page Title */}
-        <div className="mb-4">
-          <h5 className="fw-bold">My Profile</h5>
-        </div>
+    <>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        pauseOnHover
+        theme="colored"
+      />
+      <div className="container-fluid py-4">
+        <div className="container">
+          {/* Page Title */}
+          <div className="mb-4">
+            <h5 className="fw-bold">My Profile</h5>
+          </div>
 
-        {/* Card */}
-        <div className="card shadow-sm border-0">
-          <div className="card-body p-4">
-            <form onSubmit={formik.handleSubmit}>
+          {/* Card */}
+          <div className="card shadow-sm border-0">
+            <div className="card-body p-4">
+              <form onSubmit={formik.handleSubmit}>
                 <div className="row g-3">
                   {/* Full Name */}
                   <div className="col-md-6 col-12">
@@ -85,6 +121,7 @@ const EmpProfile = () => {
                     <input
                       type="email"
                       name="email"
+                      readOnly
                       className={`form-control ${
                         formik.touched.email && formik.errors.email
                           ? "is-invalid"
@@ -93,7 +130,9 @@ const EmpProfile = () => {
                       placeholder="Enter your email"
                       {...formik.getFieldProps("email")}
                     />
-                    <div className="invalid-feedback">{formik.errors.email}</div>
+                    <div className="invalid-feedback">
+                      {formik.errors.email}
+                    </div>
                   </div>
 
                   {/* Mobile */}
@@ -110,18 +149,23 @@ const EmpProfile = () => {
                       placeholder="Enter mobile number"
                       {...formik.getFieldProps("mobile")}
                     />
-                    <div className="invalid-feedback">{formik.errors.mobile}</div>
+                    <div className="invalid-feedback">
+                      {formik.errors.mobile}
+                    </div>
                   </div>
 
                   {/* New Password */}
                   <div className="col-md-6 col-12">
-                    <label className="form-label fw-semibold">New Password</label>
+                    <label className="form-label fw-semibold">
+                      New Password
+                    </label>
                     <div className="input-group">
                       <input
                         type={showNewPwd ? "text" : "password"}
                         name="newPassword"
                         className={`form-control ${
-                          formik.touched.newPassword && formik.errors.newPassword
+                          formik.touched.newPassword &&
+                          formik.errors.newPassword
                             ? "is-invalid"
                             : ""
                         }`}
@@ -140,7 +184,7 @@ const EmpProfile = () => {
                     </div>
                   </div>
 
-                    {/* Confirm Password */}
+                  {/* Confirm Password */}
                   <div className="col-md-6 col-12">
                     <label className="form-label fw-semibold">
                       Confirm Password
@@ -171,17 +215,18 @@ const EmpProfile = () => {
                   </div>
                 </div>
 
-              {/* Save Button */}
-              <div className="text-center mt-4">
-                <button type="submit" className="btn btn-success px-5">
-                  Submit
-                </button>
-              </div>
-            </form>
+                {/* Save Button */}
+                <div className="text-center mt-4">
+                  <button type="submit" className="btn btn-success px-5">
+                    Submit
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -1,8 +1,44 @@
 import logo from "./logo/admin-logo.png";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
-function Sidebar(props) {
-  const { emp_name, emp_email } = props;
+function Sidebar() {
+  const navigate = useNavigate();
+
+  const auth = JSON.parse(localStorage.getItem("auth"));
+  const employer = JSON.parse(localStorage.getItem("employer"));
+
+  const role = auth?.role;
+  let displayName = "";
+  // let displayEmail = "";
+
+  if (role === "employer") {
+    displayName = employer?.emp_name || "Employer";
+    // displayEmail = employer?.emp_email || "";
+  } else if (role === "1") {
+    displayName = "Admin";
+    // displayEmail = "";
+  }
+
+  const handleLogout = () => {
+    const auth = JSON.parse(localStorage.getItem("auth"));
+    const role = auth?.role;
+
+    // 🔥 Clear storage
+    localStorage.removeItem("auth");
+    localStorage.removeItem("employer");
+    localStorage.removeItem("candidate"); // safe (असला तरी)
+
+    // 🔁 Role-wise redirect
+    if (role === "1") {
+      // Admin logout
+      navigate("/admin");
+    } else if (role === "employer") {
+      // Employer logout
+      navigate("/signin");
+    } else {
+      navigate("/admin");
+    }
+  };
 
   return (
     <div className="main-header">
@@ -319,9 +355,11 @@ function Sidebar(props) {
                     className="avatar-img rounded-circle"
                   />
                 </div>
-                <span className="profile-username">
-                  {/* <span className="op-7">Hi,</span> */}
-                  <span className="fw-bold">{emp_name}</span>
+                <span className="fw-bold">
+                  {displayName
+                    ?.split(" ")
+                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(" ")}
                 </span>
               </a>
               <ul className="dropdown-menu dropdown-user animated fadeIn shadow-lg">
@@ -350,7 +388,7 @@ function Sidebar(props) {
                     <div className="d-flex align-items-center gap-3">
                       <div className="u-text">
                         <h5 className="mb-0 fw-semibold">
-                          {emp_name
+                          {displayName
                             ?.split(" ")
                             .map(
                               (word) =>
@@ -358,8 +396,6 @@ function Sidebar(props) {
                             )
                             .join(" ")}
                         </h5>
-
-                        <small className="text-muted">{emp_email}</small>
                       </div>
                     </div>
                   </li>
@@ -371,7 +407,7 @@ function Sidebar(props) {
                   {/* MENU ITEMS */}
                   <li>
                     <Link
-                      to="/EmpProfile"
+                      to={role === "employer" ? "/emp-profile" : "/profile"}
                       className="dropdown-item d-flex align-items-center gap-2"
                     >
                       <i className="fa fa-user text-primary"></i>
@@ -384,13 +420,14 @@ function Sidebar(props) {
                   </li>
 
                   <li>
-                    <a
-                      className="dropdown-item d-flex align-items-center gap-2 text-danger"
-                      href="#"
+                    <button
+                      type="button"
+                      onClick={handleLogout}
+                      className="dropdown-item d-flex align-items-center gap-2 text-danger border-0 bg-transparent"
                     >
                       <i className="fa fa-sign-out-alt"></i>
                       Logout
-                    </a>
+                    </button>
                   </li>
                 </div>
               </ul>

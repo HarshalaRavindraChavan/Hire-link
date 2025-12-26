@@ -80,13 +80,18 @@ function Signin() {
               "auth",
               JSON.stringify({
                 role: "employer",
-                emp_id: response.data.data.emp_id,
-                menu_ids: [],
+                emp_id: data.data.emp_id,
               })
             );
 
+            // 🔹 FULL employer table data
+            localStorage.setItem(
+              "employer",
+              JSON.stringify(data.data) // 🔥 full row
+            );
+
             setTimeout(() => {
-              navigate("/EmpProfile");
+              navigate("/emp-profile");
             }, 1200);
           }
 

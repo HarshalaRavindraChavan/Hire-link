@@ -88,6 +88,7 @@ const Signup = () => {
           localStorage.setItem("candidate", JSON.stringify(data.data));
           setTimeout(() => navigate("/profile"), 1200);
         } else {
+          // 🔹 Auth (role & permission)
           localStorage.setItem(
             "auth",
             JSON.stringify({
@@ -95,6 +96,13 @@ const Signup = () => {
               emp_id: data.data.emp_id,
             })
           );
+
+          // 🔹 FULL employer table data
+          localStorage.setItem(
+            "employer",
+            JSON.stringify(data.data) // 🔥 full row
+          );
+
           setTimeout(() => navigate("/EmpProfile"), 1200);
         }
 

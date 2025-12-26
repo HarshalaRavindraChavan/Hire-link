@@ -10,6 +10,7 @@ import Candidates from "./Component/Candidates";
 import Employes from "./Component/Employes";
 import Packages from "./Component/Packages";
 import Offer from "./Component/Offers";
+import EmpProfile from "./Component/EmpProfile";
 import Contact from "./Component/Contact";
 import Users from "./Component/Users";
 import Login from "./Component/Login";
@@ -35,7 +36,6 @@ import Forgot from "./Component2/Forgot";
 import Header3 from "./Component3/Header";
 import Footer3 from "./Component3/Footer";
 import Employer from "./Component3/Employer";
-import EmpProfile from "./Component3/EmpProfile";
 
 // ---------------- ADMIN LAYOUT ----------------
 const AdminLayout = () => {
@@ -53,6 +53,7 @@ const AdminLayout = () => {
               <Route path="interview" element={<Interview />} />
               <Route path="employe" element={<Employes />} />
               <Route path="applicant" element={<Applicant />} />
+              <Route path="emp-profile" element={<EmpProfile />} />
               <Route path="package" element={<Packages />} />
               <Route path="offer" element={<Offer />} />
               <Route path="contact" element={<Contact />} />
@@ -78,7 +79,6 @@ const UserLayout = () => {
         <Route path="contacts" element={<Contacts />} />
         <Route path="profile" element={<Profile />} />
         <Route path="apply" element={<Apply />} />
-        <Route path="EmpProfile" element={<EmpProfile />} />
       </Routes>
       <Footer2 />
     </>
@@ -119,13 +119,11 @@ function App() {
           <Route path="/contacts" element={<Contacts />} />
           <Route path="/apply" element={<Apply />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/EmpProfile" element={<EmpProfile />} />
         </Route>
 
         {/* Employer ROUTES */}
         <Route element={<EmployerLayout />}>
           <Route path="/employer" element={<Employer />} />
-          {/* <Route path="/EmpProfile" element={<EmpProfile />} /> */}
         </Route>
 
         {/* ADMIN ROUTES (NO /admin PREFIX) */}
@@ -136,6 +134,7 @@ function App() {
           <Route path="/interview" element={<Interview />} />
           <Route path="/employe" element={<Employes />} />
           <Route path="/applicant" element={<Applicant />} />
+          <Route path="/emp-profile" element={<EmpProfile />} />
           <Route path="/package" element={<Packages />} />
           <Route path="/offer" element={<Offer />} />
           <Route path="/contact" element={<Contact />} />

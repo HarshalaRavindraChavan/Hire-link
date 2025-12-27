@@ -18,7 +18,6 @@ function Jobs() {
   const [showPlaceSug, setShowPlaceSug] = useState(false);
   const [appliedKeyword, setAppliedKeyword] = useState("");
   const [appliedPlace, setAppliedPlace] = useState("");
-
   const [hasSearched, setHasSearched] = useState(false);
 
   useEffect(() => {

@@ -124,6 +124,47 @@ function Jobs() {
     resolver: yupResolver(validationSchema),
   });
 
+  // const onSubmit = async (data) => {
+  //   if (role !== "employer") {
+  //     toast.error("Only employer can add jobs");
+  //     return;
+  //   }
+
+  //   try {
+  //     const payload = {
+  //       job_title: data.job_title,
+  //       job_company: data.job_company,
+  //       job_mc: selectedCategory,
+  //       job_sc: selectedSubCategory,
+  //       job_sc1: selectedSubCat1,
+  //       job_sc2: selectedSubCat2,
+  //       job_sc3: selectedSubCat3,
+  //       job_no_hiring: Number(data.job_no_hiring),
+  //       job_type: data.job_type,
+  //       job_salary: data.job_salary,
+  //       job_status: data.job_status, // 1 or 0
+  //       job_date: data.job_date,
+  //       job_skills: data.job_skills,
+  //       job_location: data.job_location,
+  //       job_experience: data.job_experience,
+  //       job_employer: employerId,
+  //     };
+  //     const res = await axios.post(
+  //       "https://norealtor.in/hirelink_apis/admin/insert/tbl_job",
+  //       payload
+  //     );
+
+  //     if (res.data.status === true) {
+  //       reset();
+  //       toast.success("Job Added Successfully");
+  //       fetchJobs();
+  //     }
+  //   } catch (error) {
+  //     console.error("Add job error:", error);
+  //     toast.error("Failed to add job. Please try again.");
+  //   }
+  // };
+
   const onSubmit = async (data) => {
     if (role !== "employer") {
       toast.error("Only employer can add jobs");
@@ -142,31 +183,40 @@ function Jobs() {
         job_no_hiring: Number(data.job_no_hiring),
         job_type: data.job_type,
         job_salary: data.job_salary,
-        job_status: data.job_status, // 1 or 0
+        job_status: data.job_status,
         job_date: data.job_date,
         job_skills: data.job_skills,
         job_location: data.job_location,
         job_experience: data.job_experience,
         job_employer: employerId,
       };
+
       const res = await axios.post(
         "https://norealtor.in/hirelink_apis/admin/insert/tbl_job",
         payload
       );
 
-      if (res.data.status === true) {
+      if (res.data?.status === true) {
         reset();
         toast.success("Job Added Successfully");
         fetchJobs();
+      } else {
+        // ✅ THIS WAS MISSING
+        toast.error(
+          res.data?.message || "Failed to add job. Please try again."
+        );
       }
     } catch (error) {
       console.error("Add job error:", error);
-      toast.error("Failed to add job. Please try again.");
+
+      // ✅ show backend / network error properly
+      toast.error(
+        error.response?.data?.message || "Failed to add job. Please try again."
+      );
     }
   };
 
   // ================= CATEGORY STATES =================
-
   // Main
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -606,7 +656,6 @@ function Jobs() {
                   <span className="badge bg-success">Active</span>
                 </td>
               </tr>
-
             </tbody>
 
             {/* {records.length > 0 ? (

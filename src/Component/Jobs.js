@@ -188,7 +188,7 @@ function Jobs() {
         job_skills: data.job_skills,
         job_location: data.job_location,
         job_experience: data.job_experience,
-        job_employer: employerId,
+        job_employer_id: employerId,
       };
 
       const res = await axios.post(
@@ -207,7 +207,7 @@ function Jobs() {
       }
     } catch (error) {
       console.error("Add job error:", error);
-      
+
       toast.error(
         error.response?.data?.message || "Failed to add job. Please try again."
       );

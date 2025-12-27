@@ -201,15 +201,13 @@ function Jobs() {
         toast.success("Job Added Successfully");
         fetchJobs();
       } else {
-        // ✅ THIS WAS MISSING
         toast.error(
           res.data?.message || "Failed to add job. Please try again."
         );
       }
     } catch (error) {
       console.error("Add job error:", error);
-
-      // ✅ show backend / network error properly
+      
       toast.error(
         error.response?.data?.message || "Failed to add job. Please try again."
       );

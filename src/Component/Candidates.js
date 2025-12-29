@@ -6,6 +6,7 @@ import axios from "axios";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { toast } from "react-toastify";
 
 function Candidates() {
   // tital of tab
@@ -129,16 +130,51 @@ function Candidates() {
   const {
     register,
     handleSubmit,
+     reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
 
-  const onSubmit = (data) => {
-    console.log("User Saved:", data);
-    alert("User Saved Successfully!");
-  };
+   const onSubmit = async (data) => {
+    const payload = {
+      can_name: data.fullname,
+      can_email: data.email,
+      can_mobile: data.mobile,
+      // can_city: data.location,
+      // can_experience: data.experience,
+      // can_skil: data.skill,
+      // can_added_date: data.registrationDate,
+      // can_photo: User.user_aadhar_image,
+      // can_resume: User.user_pan_image,
+    };
 
+    try {
+      const res = await axios.post(
+        "https://norealtor.in/hirelink_apis/admin/insert/tbl_candidate",
+        payload
+      );
+
+      if (res.data.status) {
+        toast.success("Candidate added successfully");
+
+        reset(); // form reset
+        fetchCandidates(); // refresh table
+
+        const modal = document.getElementById("exampleModal");
+        const bsModal =
+          window.bootstrap.Modal.getInstance(modal) ||
+          new window.bootstrap.Modal(modal);
+
+        bsModal.hide(); // close modal
+      } else {
+        toast.error("Candidate not added");
+      }
+    } catch {
+      toast.error("Something went wrong");
+    }
+  };
+  
   return (
     <>
       <div className="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
@@ -402,7 +438,7 @@ function Candidates() {
                 </div>
 
                 {/* Location / City */}
-                <div className="col-md-4 mb-2">
+                {/* <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">
                     Location / City
                   </label>
@@ -417,10 +453,10 @@ function Candidates() {
                       {errors.location.message}
                     </span>
                   )}
-                </div>
+                </div> */}
 
                 {/* Experience */}
-                <div className="col-md-4 mb-2">
+                {/* <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">
                     Experience (Years)
                   </label>
@@ -435,10 +471,10 @@ function Candidates() {
                       {errors.experience.message}
                     </span>
                   )}
-                </div>
+                </div> */}
 
                 {/* Skills */}
-                <div className="col-md-4 mb-2">
+                {/* <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">Skills</label>
                   <input
                     type="text"
@@ -449,10 +485,10 @@ function Candidates() {
                   {errors.skill && (
                     <span className="text-danger">{errors.skill.message}</span>
                   )}
-                </div>
+                </div> */}
 
                 {/* Profile Photo */}
-                <div className="col-md-4 mb-2">
+                {/* <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">
                     Profile Photo
                   </label>
@@ -467,10 +503,10 @@ function Candidates() {
                       {errors.profilePhoto.message}
                     </span>
                   )}
-                </div>
+                </div> */}
 
                 {/* Resume */}
-                <div className="col-md-4 mb-2">
+                {/* <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">
                     Upload Resume
                   </label>
@@ -483,10 +519,10 @@ function Candidates() {
                   {errors.resume && (
                     <span className="text-danger">{errors.resume.message}</span>
                   )}
-                </div>
+                </div> */}
 
                 {/* Registration Date */}
-                <div className="col-md-4 mb-2">
+                {/* <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">
                     Registration Date
                   </label>
@@ -500,10 +536,10 @@ function Candidates() {
                       {errors.registrationDate.message}
                     </span>
                   )}
-                </div>
+                </div> */}
 
                 {/* Applied Jobs Count */}
-                <div className="col-md-4 mb-2">
+                {/* <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">
                     Applied Jobs Count
                   </label>
@@ -518,7 +554,7 @@ function Candidates() {
                       {errors.appliedJobsCount.message}
                     </span>
                   )}
-                </div>
+                </div> */}
               </div>
 
               <div className="modal-footer bg-light rounded-bottom-4 d-flex">

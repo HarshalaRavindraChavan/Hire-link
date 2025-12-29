@@ -135,7 +135,7 @@ function Employes() {
       };
 
       const res = await axios.post(
-        "https://norealtor.in/hirelink_apis/admin/insert/tbl_employer",
+        "https://norealtor.in/hirelink_apis/employer/insert/tbl_employer",
         payload
       );
 
@@ -441,7 +441,7 @@ function Employes() {
                 <div className="col-12 col-sm-6 col-md-4 mb-2">
                   <label className="fw-semibold">Mobile No</label>
                   <input
-                    type="email"
+                    type="number"
                     className="form-control"
                     placeholder="Enter Email"
                     {...register("emp_mobile")}

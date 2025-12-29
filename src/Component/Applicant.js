@@ -282,7 +282,7 @@ function Applicant() {
               ) : (
                 <tr>
                   <td colSpan="5" className="text-center text-muted">
-                    No jobs found
+                    No Applicant found
                   </td>
                 </tr>
               )}

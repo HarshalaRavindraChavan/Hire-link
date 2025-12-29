@@ -346,9 +346,15 @@ function Users() {
               {records.length > 0 ? (
                 records
                   .filter((u) => String(u.user_id) !== "1")
-                  .map((u) => (
-                    <tr key={u.user_id} className="text-center align-middle">
-                      <td>{u.user_id}</td>
+                  .map((u,index) => (
+                    <tr
+                      key={u.user_id || index}
+                      className="text-center align-middle"
+                    >
+                      <td className="text-center fw-bold">
+                        {firstIndex + index + 1}
+                      </td>
+                      <td className="text-center">{u.user_id}</td>
                       <td className="text-start">
                         <div className="fw-bold">
                           Name:
@@ -583,7 +589,7 @@ function Users() {
                   <label className="fw-semibold">City</label>
                   <select
                     className="form-select form-control"
-                    {...register("city")} // ✅ CORRECT
+                    {...register("city")} 
                     disabled={!cities.length}
                   >
                     <option value="">Select City</option>

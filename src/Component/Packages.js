@@ -243,9 +243,16 @@ function Packages() {
             </thead>
             <tbody>
               {records.length > 0 ? (
-                records.map((pkg) => (
-                  <tr key={pkg.pack_id} className="text-center align-middle">
-                    <td>{pkg.pack_id}</td>
+                records.map((pkg, index) => (
+                  <tr
+                    key={pkg.pack_id || index}
+                    className="text-center align-middle"
+                  >
+                    <td className="text-center fw-bold">
+                      {firstIndex + index + 1}
+                    </td>
+
+                    <td className="text-center">{pkg.pack_id}</td>
 
                     {/* PACKAGE INFO */}
                     <td className="text-start">

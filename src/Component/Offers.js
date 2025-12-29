@@ -236,9 +236,13 @@ function Offer() {
             <tbody>
               {/* Example Row (same style as your screenshot) */}
               {records.length > 0 ? (
-                records.map((item) => (
-                  <tr key={item.offer_id}>
-                    <td>{item.offer_id}</td>
+                records.map((item, index) => (
+                  <tr key={item.offer_id || index}>
+                    <td className="text-center fw-bold">
+                      {firstIndex + index + 1}
+                    </td>
+                    <td className="text-center">{item.offer_id}</td>
+
                     <td className="text-start">
                       <div className="fw-bold">
                         Offer Tital:
@@ -455,8 +459,8 @@ function Offer() {
                     className="form-select form-control"
                   >
                     <option value="">Select Status</option>
-                    <option value="Active">Active</option>
-                    <option value="Inactive">Inactive</option>
+                    <option value="1">Active</option>
+                    <option value="0">Inactive</option>
                   </select>
                   <p className="text-danger">{errors.offer_status?.message}</p>
                 </div>

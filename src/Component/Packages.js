@@ -221,7 +221,7 @@ function Packages() {
         <div className="ms-auto">
           <button
             data-bs-toggle="modal"
-            data-bs-target="#exampleModal"
+            data-bs-target="#packageModal"
             className="btn btn-success"
           >
             <i className="fa fa-plus"></i> Add Package

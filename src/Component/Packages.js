@@ -221,7 +221,7 @@ function Packages() {
         <div className="ms-auto">
           <button
             data-bs-toggle="modal"
-            data-bs-target="#packageModal"
+            data-bs-target="#exampleModal"
             className="btn btn-success"
           >
             <i className="fa fa-plus"></i> Add Package
@@ -378,7 +378,7 @@ function Packages() {
       {/* Modal */}
       <div
         className="modal fade"
-        id="#exampleModal"
+        id="exampleModal"
         tabIndex="-1"
         // ref={modalRef}
       >

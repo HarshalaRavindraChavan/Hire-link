@@ -27,8 +27,7 @@ function Jobs() {
       .get("https://norealtor.in/hirelink_apis/candidate/getdata/tbl_job")
       .then((res) => {
         if (res.data.status === "success") {
-          setJobs(res.data.data);
-          setSelectedJob(res.data.data[0]);
+          setJobs(res.data.data); // ✅ THIS WAS MISSING
         }
       })
       .catch((error) => {
@@ -39,6 +38,7 @@ function Jobs() {
   //============ auto Suggestion
   useEffect(() => {
     const params = new URLSearchParams(location.search);
+
     const keyword = params.get("keyword") || "";
     const place = params.get("place") || "";
 
@@ -48,9 +48,7 @@ function Jobs() {
     setAppliedKeyword(keyword);
     setAppliedPlace(place);
 
-    if (keyword || place) {
-      setHasSearched(true);
-    }
+    setHasSearched(!!(keyword || place));
   }, [location.search]);
 
   useEffect(() => {
@@ -59,22 +57,36 @@ function Jobs() {
       setShowKeywordSug(false);
       return;
     }
-
-    const keyword = searchKeyword.toLowerCase();
     let suggestions = [];
 
     jobs.forEach((job) => {
-      const fields = [
+      // ===== HANDLE SKILLS SEPARATELY =====
+      if (job.job_skills) {
+        job.job_skills
+          .split(",") // html, css, js -> ["html", " css", " js"]
+          .map((skill) => skill.trim())
+          .forEach((skill) => {
+            if (skill.toLowerCase().startsWith(searchKeyword.toLowerCase())) {
+              suggestions.push({
+                text: skill,
+                type: "Skill",
+              });
+            }
+          });
+      }
+
+      // ===== OTHER FIELDS (title, company) =====
+      const otherFields = [
         { value: job.job_title, type: "Job Title" },
         { value: job.job_company, type: "Company" },
-        { value: job.job_skills, type: "Skills" },
-        { value: job.job_description, type: "Description" },
-        { value: job.job_type, type: "Job Type" },
-        { value: job.job_salary?.toString(), type: "Salary" },
+        { value: job.city_name, type: "City" },
       ];
 
-      fields.forEach((field) => {
-        if (field.value && field.value.toLowerCase().includes(keyword)) {
+      otherFields.forEach((field) => {
+        if (
+          field.value &&
+          field.value.toLowerCase().startsWith(searchKeyword.toLowerCase())
+        ) {
           suggestions.push({
             text: field.value,
             type: field.type,
@@ -114,30 +126,27 @@ function Jobs() {
   }, [searchPlace, jobs]);
 
   const filteredJobs = jobs.filter((job) => {
+    const keyword = appliedKeyword.toLowerCase();
+    const place = appliedPlace.toLowerCase();
+
     const keywordMatch =
-      appliedKeyword === "" ||
-      job.job_title?.toLowerCase().includes(appliedKeyword.toLowerCase()) ||
-      job.job_company?.toLowerCase().includes(appliedKeyword.toLowerCase()) ||
-      job.job_skills?.toLowerCase().includes(appliedKeyword.toLowerCase());
+      !keyword ||
+      job.job_title?.toLowerCase().includes(keyword) ||
+      job.job_company?.toLowerCase().includes(keyword) ||
+      job.job_skills?.toLowerCase().includes(keyword);
 
     const placeMatch =
-      appliedPlace === "" ||
-      job.city_name?.toLowerCase().includes(appliedPlace.toLowerCase()) ||
-      job.state_name?.toLowerCase().includes(appliedPlace.toLowerCase()) ||
-      `${job.city_name}, ${job.state_name}`
-        .toLowerCase()
-        .includes(appliedPlace.toLowerCase());
+      !place ||
+      job.city_name?.toLowerCase().includes(place) ||
+      job.state_name?.toLowerCase().includes(place) ||
+      `${job.city_name}, ${job.state_name}`.toLowerCase().includes(place);
 
     return keywordMatch && placeMatch;
   });
 
   useEffect(() => {
-    if (filteredJobs.length > 0) {
-      setSelectedJob(filteredJobs[0]);
-    } else {
-      setSelectedJob(null);
-    }
-  }, [appliedKeyword, appliedPlace]);
+    setSelectedJob(filteredJobs[0] || null);
+  }, [filteredJobs]);
 
   useEffect(() => {
     if (!searchKeyword && !searchPlace) {
@@ -174,7 +183,9 @@ function Jobs() {
                     className="list-group-item list-group-item-action d-flex justify-content-between border-0"
                     onClick={() => {
                       setSearchKeyword(item.text);
+                      setAppliedKeyword(item.text); // ⭐ ADD THIS
                       setShowKeywordSug(false);
+                      setHasSearched(true);
                     }}
                   >
                     <span>{item.text}</span>
@@ -209,8 +220,10 @@ function Jobs() {
                     key={i}
                     className="list-group-item list-group-item-action"
                     onClick={() => {
-                      setSearchPlace(item); // 👈 "Pune, Maharashtra"
+                      setSearchPlace(item);
+                      setAppliedPlace(item); // ⭐ ADD THIS
                       setShowPlaceSug(false);
+                      setHasSearched(true);
                     }}
                   >
                     {item}
@@ -222,13 +235,11 @@ function Jobs() {
 
           <div className="col-12 col-md-2">
             <button
-              className="btn find-btn w-100 pt-4 pb-5"
+              className="btn find-btn w-100"
               onClick={() => {
                 setAppliedKeyword(searchKeyword.trim());
                 setAppliedPlace(searchPlace.trim());
-
-                setHasSearched(true); // 👈 IMPORTANT
-
+                setHasSearched(true);
                 setShowKeywordSug(false);
                 setShowPlaceSug(false);
               }}

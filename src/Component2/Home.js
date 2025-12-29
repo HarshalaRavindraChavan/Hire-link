@@ -5,11 +5,9 @@ import axios from "axios";
 
 function Home() {
   const [jobs, setJobs] = useState([]);
-  const [selectedJob, setSelectedJob] = useState(null);
 
   const navigate = useNavigate();
-
-  useState(() => {
+  useEffect(() => {
     document.title = "Welcome To Hirelink";
 
     axios
@@ -17,7 +15,6 @@ function Home() {
       .then((res) => {
         if (res.data.status === "success") {
           setJobs(res.data.data);
-          setSelectedJob(res.data.data[0]);
         }
       })
       .catch((error) => {
@@ -36,43 +33,6 @@ function Home() {
     }
   }, []);
 
-  const jobList = [
-    { title: "React Developer" },
-    { title: "Frontend Developer" },
-    { title: "Backend Developer" },
-    { title: "Full Stack Developer" },
-    { title: "UI/UX Designer" },
-    { title: "Software Engineer" },
-    { title: "Java Developer" },
-    { title: "Angular Developer" },
-  ];
-
-  const [query, setQuery] = useState("");
-  // const [filteredJobs, setFilteredJobs] = useState([]);
-  const [showDropdown, setShowDropdown] = useState(false);
-
-  // 🔹 Handle typing
-  // const handleSearch = (value) => {
-  //   setQuery(value);
-
-  //   if (value.length < 1) {
-  //     setFilteredJobs([]);
-  //     setShowDropdown(false);
-  //     return;
-  //   }
-
-  //   const results = jobList.filter(
-  //     (job) =>
-  //       job.title.toLowerCase().includes(value.toLowerCase()) ||
-  //       job.company.toLowerCase().includes(value.toLowerCase())
-  //   );
-
-  //   setFilteredJobs(results);
-  //   setShowDropdown(true);
-  // };
-
-  //============ auto Suggestion
-
   const [searchKeyword, setSearchKeyword] = useState("");
   const [searchPlace, setSearchPlace] = useState("");
 
@@ -83,8 +43,6 @@ function Home() {
   const [showPlaceSug, setShowPlaceSug] = useState(false);
   const [appliedKeyword, setAppliedKeyword] = useState("");
   const [appliedPlace, setAppliedPlace] = useState("");
-
-  const [hasSearched, setHasSearched] = useState(false);
 
   useEffect(() => {
     if (!searchKeyword.trim()) {
@@ -97,20 +55,36 @@ function Home() {
     let suggestions = [];
 
     jobs.forEach((job) => {
-      const searchableFields = [
-        job.job_title,
-        job.job_company,
-        job.job_skills,
-        job.city_name,
-        job.state_name,
-        job.job_description,
+      // ===== HANDLE SKILLS SEPARATELY =====
+      if (job.job_skills) {
+        job.job_skills
+          .split(",") // html, css, js -> ["html", " css", " js"]
+          .map((skill) => skill.trim())
+          .forEach((skill) => {
+            if (skill.toLowerCase().startsWith(searchKeyword.toLowerCase())) {
+              suggestions.push({
+                text: skill,
+                type: "Skill",
+              });
+            }
+          });
+      }
+
+      // ===== OTHER FIELDS (title, company) =====
+      const otherFields = [
+        { value: job.job_title, type: "Job Title" },
+        { value: job.job_company, type: "Company" },
+        { value: job.city_name, type: "City" },
       ];
 
-      searchableFields.forEach((field) => {
-        if (field && field.toLowerCase().includes(keyword)) {
+      otherFields.forEach((field) => {
+        if (
+          field.value &&
+          field.value.toLowerCase().startsWith(searchKeyword.toLowerCase())
+        ) {
           suggestions.push({
-            text: field,
-            type: "Related",
+            text: field.value,
+            type: field.type,
           });
         }
       });
@@ -145,38 +119,6 @@ function Home() {
     setPlaceSug(suggestions);
     setShowPlaceSug(true);
   }, [searchPlace, jobs]);
-
-  const filteredJobs = jobs.filter((job) => {
-    const keywordMatch =
-      appliedKeyword === "" ||
-      job.job_title?.toLowerCase().includes(appliedKeyword.toLowerCase()) ||
-      job.job_company?.toLowerCase().includes(appliedKeyword.toLowerCase()) ||
-      job.job_skills?.toLowerCase().includes(appliedKeyword.toLowerCase());
-
-    const placeMatch =
-      appliedPlace === "" ||
-      job.city_name?.toLowerCase().includes(appliedPlace.toLowerCase()) ||
-      job.state_name?.toLowerCase().includes(appliedPlace.toLowerCase()) ||
-      `${job.city_name}, ${job.state_name}`
-        .toLowerCase()
-        .includes(appliedPlace.toLowerCase());
-
-    return keywordMatch && placeMatch;
-  });
-
-  useEffect(() => {
-    if (filteredJobs.length > 0) {
-      setSelectedJob(filteredJobs[0]);
-    } else {
-      setSelectedJob(null);
-    }
-  }, [appliedKeyword, appliedPlace]);
-
-  useEffect(() => {
-    if (!searchKeyword && !searchPlace) {
-      setHasSearched(false);
-    }
-  }, [searchKeyword, searchPlace]);
 
   useEffect(() => {
     const closeSuggestions = () => {
@@ -225,7 +167,6 @@ function Home() {
                     setSearchKeyword(item.text);
                     setAppliedKeyword(item.text);
                     setShowKeywordSug(false);
-                    setHasSearched(true);
                   }}
                 >
                   <strong>{item.text}</strong>
@@ -269,7 +210,6 @@ function Home() {
                     setSearchPlace(place);
                     setAppliedPlace(place);
                     setShowPlaceSug(false);
-                    setHasSearched(true);
                   }}
                 >
                   {place}
@@ -282,12 +222,12 @@ function Home() {
         {/* SEARCH BUTTON */}
         <div className="col-12 col-md-2">
           <button
-            className="btn find-btn w-100 pt-4 pb-5"
+            className="btn find-btn w-100"
             onClick={() => {
               navigate(
                 `/jobs?keyword=${encodeURIComponent(
-                  searchKeyword.trim()
-                )}&place=${encodeURIComponent(searchPlace.trim())}`
+                  appliedKeyword || searchKeyword
+                )}&place=${encodeURIComponent(appliedPlace || searchPlace)}`
               );
             }}
           >

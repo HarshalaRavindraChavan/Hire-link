@@ -103,7 +103,7 @@ const Signup = () => {
             JSON.stringify(data.data) // 🔥 full row
           );
 
-          setTimeout(() => navigate("/EmpProfile"), 1200);
+          setTimeout(() => navigate("/emp-profile"), 1200);
         }
 
         reset(); // ✅ react-hook-form correct reset

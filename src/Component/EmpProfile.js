@@ -154,6 +154,8 @@ const EmpProfile = () => {
                     </div>
                   </div>
 
+                  
+
                   {/* New Password */}
                   <div className="col-md-6 col-12">
                     <label className="form-label fw-semibold">

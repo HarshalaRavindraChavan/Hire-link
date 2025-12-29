@@ -699,10 +699,10 @@ function Users() {
                     className="form-select form-control"
                   >
                     <option value="">Selete Role</option>
-                    <option>Super Admin</option>
-                    <option>Sub Admin</option>
-                    <option>Backend</option>
-                    <option>Accountant</option>
+                    <option value="1">Super Admin</option>
+                    <option value="2">Sub Admin</option>
+                    <option value="3">Backend</option>
+                    <option value="4">Accountant</option>
                   </select>
                   <p className="text-danger">{errors.role?.message}</p>
                 </div>

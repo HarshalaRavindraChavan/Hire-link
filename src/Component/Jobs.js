@@ -470,15 +470,15 @@ function Jobs() {
                         </div>
                       </div>
                       <div className="fw-bold ">
-                        Category:{" "}
-                        <span className="text-dark fw-normal">
-                          {job.job_category}
-                        </span>
-                      </div>
-                      <div className="fw-bold ">
                         Type:{" "}
                         <span className="text-dark fw-normal">
                           {job.job_type}
+                        </span>
+                      </div>
+                      <div className="fw-bold ">
+                        Exp. Required:{" "}
+                        <span className="text-dark fw-normal">
+                          {job.job_experience}
                         </span>
                       </div>
                     </td>
@@ -491,9 +491,33 @@ function Jobs() {
                         </span>
                       </div>
                       <div className="fw-bold ">
-                        Exp. Required:{" "}
+                        Main cate:{" "}
                         <span className="text-dark fw-normal">
-                          {job.job_experience}
+                          {job.mc_name}
+                        </span>
+                      </div>
+                      <div className="fw-bold ">
+                        Subcate :{" "}
+                        <span className="text-dark fw-normal">
+                          {job.sc_name ?? null}
+                        </span>
+                      </div>
+                      <div className="fw-bold ">
+                        Subcate 1 :{" "}
+                        <span className="text-dark fw-normal">
+                          {job.sc1_name ?? null}
+                        </span>
+                      </div>
+                      <div className="fw-bold ">
+                        subcate 2 :{" "}
+                        <span className="text-dark fw-normal">
+                          {job.sc2_name ?? null}
+                        </span>
+                      </div>
+                      <div className="fw-bold ">
+                        subcate 3 :{" "}
+                        <span className="text-dark fw-normal">
+                          {job.sc3_name ?? null}
                         </span>
                       </div>
                     </td>
@@ -528,185 +552,6 @@ function Jobs() {
                 </tr>
               )}
             </tbody>
-            <tbody>
-              <tr>
-                <td>1</td>
-
-                <td className="text-start fw-bold">
-                  <div className="fw-bold">
-                    Title:
-                    <div className="dropdown d-inline ms-2">
-                      <span
-                        className="fw-bold text-primary"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                      >
-                        Frontend Developer
-                      </span>
-
-                      <ul className="dropdown-menu shadow">
-                        <li>
-                          <button
-                            className="dropdown-item"
-                            data-bs-toggle="modal"
-                            data-bs-target="#exampleModal"
-                            onClick={() =>
-                              handleEdit({
-                                job_title: "Frontend Developer",
-                                job_company: "Tech Solutions Pvt Ltd",
-                                job_no_hiring: 3,
-                                job_type: "Full-time",
-                                job_salary: "5–7 LPA",
-                                job_status: "1",
-                                job_date: "2025-12-12",
-                                job_location: "Pune",
-                                job_experience: "2–4 Years",
-                                job_skills: "React, JavaScript",
-                              })
-                            }
-                          >
-                            <i className="fas fa-edit me-2"></i>Edit
-                          </button>
-                        </li>
-
-                        <li>
-                          <button className="dropdown-item text-danger">
-                            <i className="fas fa-trash me-2"></i>Delete
-                          </button>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-
-                  <div className="fw-bold">
-                    Category: <span className="fw-normal">IT / Software</span>
-                  </div>
-
-                  <div className="fw-bold">
-                    Type: <span className="fw-normal">Full Time</span>
-                  </div>
-                </td>
-
-                <td className="text-start">
-                  <div className="fw-bold">
-                    Company Name:{" "}
-                    <span className="fw-normal">Tech Solutions Pvt Ltd</span>
-                  </div>
-
-                  <div className="fw-bold">
-                    Exp. Required:{" "}
-                    <span className="fw-normal">2 – 4 Years</span>
-                  </div>
-                </td>
-
-                <td className="text-start">
-                  <div className="fw-bold">
-                    Posted Date: <span className="fw-normal">12/12/2025</span>
-                  </div>
-
-                  <div className="fw-bold">
-                    Applications: <span className="fw-normal">25</span>
-                  </div>
-                </td>
-
-                <td className="text-center">
-                  <span className="badge bg-success">Active</span>
-                </td>
-              </tr>
-            </tbody>
-
-            {/* {records.length > 0 ? (
-                records.map((job, index) => (
-                  <tr key={job.job_id}>
-                    <td>{firstIndex + index + 1}</td>
-                    <td className="text-start fw-bold">
-                      {" "}
-                      <div className="fw-bold">
-                        Title:
-                        <div className="dropdown d-inline ms-2">
-                          <span
-                            className="fw-bold text-primary"
-                            role="button"
-                            data-bs-toggle="dropdown"
-                          >
-                            {job.job_title}
-                          </span>
-                          <ul className="dropdown-menu shadow">
-                            <li>
-                              <button className="dropdown-item">
-                                <i className="fas fa-edit me-2"></i>Edit
-                              </button>
-                            </li>
-                            <li>
-                              <button
-                                className="dropdown-item text-danger"
-                                onClick={() => handleDeleteClick(job.job_id)}
-                              >
-                                <i className="fas fa-trash me-2"></i>Delete
-                              </button>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                      <div className="fw-bold ">
-                        Category:{" "}
-                        <span className="text-dark fw-normal">
-                          {job.job_category}
-                        </span>
-                      </div>
-                      <div className="fw-bold ">
-                        Type:{" "}
-                        <span className="text-dark fw-normal">
-                          {job.job_type}
-                        </span>
-                      </div>
-                    </td>
-
-                    <td className="text-start">
-                      <div className="fw-bold ">
-                        Company Name:{" "}
-                        <span className="text-dark fw-normal">
-                          {job.job_company}
-                        </span>
-                      </div>
-                      <div className="fw-bold ">
-                        Exp. Required:{" "}
-                        <span className="text-dark fw-normal">
-                          {job.job_experience}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="text-start">
-                      <div className="fw-bold ">
-                        Posted Date:{" "}
-                        <span className="text-dark fw-normal">
-                          {job.job_date}
-                        </span>
-                      </div>
-                      <div className="fw-bold ">
-                        Applications:{" "}
-                        <span className="text-dark fw-normal">
-                          {job.job_applications}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="text-center">
-                      {job.job_status === "1" ? (
-                        <span className="badge bg-success">Active</span>
-                      ) : (
-                        <span className="badge bg-warning">Pending</span>
-                      )}
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="5" className="text-center text-muted">
-                    No jobs found
-                  </td>
-                </tr>
-              )}
-            </tbody> */}
           </table>
           {/* Pagination */}
           <Pagination

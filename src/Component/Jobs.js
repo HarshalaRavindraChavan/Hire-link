@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
 import { useForm } from "react-hook-form";
 import axios from "axios";
@@ -22,6 +22,44 @@ function Jobs() {
 
   const [search, setSearch] = useState("");
   const [jobs, setJobs] = useState([]);
+
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
+
+  //==============status
+  useEffect(() => {
+    fetchStates();
+  }, []);
+
+  const fetchStates = async () => {
+    try {
+      const res = await axios.get(
+        "https://norealtor.in/hirelink_apis/admin/getdata/tbl_states"
+      );
+
+      if (res.data.status) {
+        setStates(res.data.data);
+      }
+    } catch (err) {
+      console.error("State fetch error", err);
+    }
+  };
+
+  //=========all city
+
+  const fetchCities = async (stateId) => {
+    try {
+      const res = await axios.get(
+        `https://norealtor.in/hirelink_apis/admin/getdata/tbl_city/state_id/${stateId}`
+      );
+
+      if (res.data.status) {
+        setCities(res.data.data);
+      }
+    } catch (err) {
+      console.error("City fetch error", err);
+    }
+  };
 
   //============================= Get Data Code ============================
 
@@ -98,6 +136,8 @@ function Jobs() {
 
   //=======================================================
 
+  const modalRef = useRef(null);
+
   // Validation Schema (NO if/else)
   const validationSchema = Yup.object({
     job_title: Yup.string().required("Job Title is required"),
@@ -110,6 +150,8 @@ function Jobs() {
     job_status: Yup.string().required("Status is required"),
     job_date: Yup.string().required("Posted Date is required"),
     job_location: Yup.string().required("Location is required"),
+    job_state: Yup.string().required(),
+    job_city: Yup.string().required(),
     job_skills: Yup.string().required("Skills is required"),
     job_experience: Yup.string().required("Experience is required"),
   });
@@ -134,11 +176,11 @@ function Jobs() {
       const payload = {
         job_title: data.job_title,
         job_company: data.job_company,
-        job_mc: selectedCategory,
-        job_sc: selectedSubCategory,
-        job_sc1: selectedSubCat1,
-        job_sc2: selectedSubCat2,
-        job_sc3: selectedSubCat3,
+        job_mc: selectedCategory || null,
+        job_sc: selectedSubCategory || null,
+        job_sc1: selectedSubCat1 || null,
+        job_sc2: selectedSubCat2 || null,
+        job_sc3: selectedSubCat3 || null,
         job_no_hiring: Number(data.job_no_hiring),
         job_type: data.job_type,
         job_salary: data.job_salary,
@@ -146,6 +188,8 @@ function Jobs() {
         job_date: data.job_date,
         job_skills: data.job_skills,
         job_location: data.job_location,
+        job_state: data.job_state,
+        job_city: data.job_city,
         job_experience: data.job_experience,
         job_employer_id: employerId,
       };
@@ -159,6 +203,9 @@ function Jobs() {
         reset();
         toast.success("Job Added Successfully");
         fetchJobs();
+
+        const modal = window.bootstrap.Modal.getInstance(modalRef.current);
+        modal.hide();
       } else {
         toast.error(
           res.data?.message || "Failed to add job. Please try again."
@@ -568,6 +615,7 @@ function Jobs() {
         id="exampleModal"
         tabIndex="-1"
         aria-hidden="true"
+        ref={modalRef}
       >
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content shadow-lg border-0 rounded-4">
@@ -831,6 +879,47 @@ function Jobs() {
                   <span className="text-danger">
                     {errors.job_location?.message}
                   </span>
+                </div>
+
+                {/* State */}
+                <div className="col-md-4">
+                  <label className="fw-semibold">State</label>
+                  <select
+                    className="form-select form-control"
+                    {...register("job_state")}
+                    onChange={(e) => {
+                      const stateId = e.target.value;
+                      fetchCities(stateId);
+                      setValue("city", ""); // ✅ RESET CITY
+                    }}
+                  >
+                    <option value="">Select State</option>
+                    {states.map((s) => (
+                      <option key={s.state_id} value={s.state_id}>
+                        {s.state_name}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-danger">{errors.state?.message}</p>
+                </div>
+
+                {/* City */}
+                <div className="col-md-4">
+                  <label className="fw-semibold">City</label>
+                  <select
+                    className="form-select form-control"
+                    {...register("job_city")} // ✅ CORRECT
+                    disabled={!cities.length}
+                  >
+                    <option value="">Select City</option>
+                    {cities.map((c) => (
+                      <option key={c.city_id} value={c.city_id}>
+                        {c.city_name}
+                      </option>
+                    ))}
+                  </select>
+
+                  <p className="text-danger">{errors.city?.message}</p>
                 </div>
 
                 {/* Experience Required */}

@@ -343,8 +343,7 @@ function Employes() {
 
                     {/* Company Details */}
                     <td style={{ width: "30%" }}>
-                      <b>Company Name:</b> {emp.emp_companyname} <br />
-                      <b>Category:</b> {emp.emp_category} <br />
+                      <b>Company:</b> {emp.emp_companyname} <br />
                       <b>Website:</b> {emp.emp_website}
                     </td>
 

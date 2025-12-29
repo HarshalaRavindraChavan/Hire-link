@@ -16,9 +16,6 @@ function Packages() {
 
   const [packages, setPackages] = useState([]);
 
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [deleteId, setDeleteId] = useState(null);
-
   // ---------------- Pagination Fix ----------------
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 5;
@@ -60,6 +57,8 @@ function Packages() {
       .of(Yup.string().required("Benefit is required"))
       .min(1, "At least one benefit is required"),
   });
+
+  const modalRef = useRef(null);
 
   const {
     register,
@@ -106,6 +105,10 @@ function Packages() {
 
       if (res.data.status === true) {
         reset();
+
+        const modal = window.bootstrap.Modal.getInstance(modalRef.current);
+        modal.hide();
+
         toast.success("Package Added Successfully 🎉");
         fetchPackages();
       }
@@ -160,31 +163,45 @@ function Packages() {
     }
   };
 
-  const confirmDelete = async (pack_id) => {
+  // delete model code
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deletePackageId, setDeletePackageId] = useState(null);
+
+  const confirmDelete = async () => {
     try {
       const res = await axios.get(
-        `https://norealtor.in/hirelink_apis/admin/deletedata/tbl_package/pack_id/${pack_id}`
+        `https://norealtor.in/hirelink_apis/admin/deletedata/tbl_package/pack_id/${deletePackageId}`
       );
 
       if (res.data.status === true) {
-        toast.success("Package deleted successfully ✅");
+        setShowDeleteModal(false);
+        setDeletePackageId(null);
+
+        toast.success("Package deleted successfully 🗑️", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+
         fetchPackages();
       } else {
-        toast.error("Failed to delete package ❌");
+        toast.error("Failed to delete package ❌", {
+          position: "top-right",
+          autoClose: 3000,
+        });
       }
     } catch (error) {
-      console.error("Delete error:", error);
-      toast.error("Server error, please try again ⚠️");
-    } finally {
-      setShowDeleteModal(false);
-      setDeleteId(null);
+      console.error("Package delete error:", error);
+
+      toast.error("Server error while deleting package ⚠️", {
+        position: "top-right",
+        autoClose: 3000,
+      });
     }
   };
 
   const handleDeleteClick = (pack_id) => {
-    if (window.confirm("Do you want to delete this package?")) {
-      confirmDelete(pack_id);
-    }
+    setDeletePackageId(pack_id);
+    setShowDeleteModal(true);
   };
 
   return (
@@ -352,7 +369,12 @@ function Packages() {
       </div>
 
       {/* Modal */}
-      <div className="modal fade" id="exampleModal">
+      <div
+        className="modal fade"
+        id="packageModal"
+        tabIndex="-1"
+        ref={modalRef}
+      >
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content">
             <div className="modal-header bg-success text-white">

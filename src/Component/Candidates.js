@@ -85,46 +85,46 @@ function Candidates() {
       .matches(/^[0-9]{10}$/, "Enter valid 10-digit mobile number")
       .required("Mobile number is required"),
 
-    location: Yup.string().required("Location / City is required"),
+    // location: Yup.string().required("Location / City is required"),
 
-    experience: Yup.number()
-      .typeError("Experience must be a number")
-      .min(0, "Experience cannot be negative")
-      .max(50, "Invalid experience")
-      .required("Experience is required"),
+    // experience: Yup.number()
+    //   .typeError("Experience must be a number")
+    //   .min(0, "Experience cannot be negative")
+    //   .max(50, "Invalid experience")
+    //   .required("Experience is required"),
 
-    skill: Yup.string().required("Skills are required"),
+    // skill: Yup.string().required("Skills are required"),
 
-    profilePhoto: Yup.mixed()
-      .required("Profile photo is required")
-      .test(
-        "fileType",
-        "Only JPG, JPEG, PNG allowed",
-        (value) =>
-          value &&
-          ["image/jpeg", "image/png", "image/jpg"].includes(value[0]?.type)
-      ),
+    // profilePhoto: Yup.mixed()
+    //   .required("Profile photo is required")
+    //   .test(
+    //     "fileType",
+    //     "Only JPG, JPEG, PNG allowed",
+    //     (value) =>
+    //       value &&
+    //       ["image/jpeg", "image/png", "image/jpg"].includes(value[0]?.type)
+    //   ),
 
-    resume: Yup.mixed()
-      .required("Resume is required")
-      .test(
-        "fileType",
-        "Only PDF, DOC, DOCX allowed",
-        (value) =>
-          value &&
-          [
-            "application/pdf",
-            "application/msword",
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-          ].includes(value[0]?.type)
-      ),
+    // resume: Yup.mixed()
+    //   .required("Resume is required")
+    //   .test(
+    //     "fileType",
+    //     "Only PDF, DOC, DOCX allowed",
+    //     (value) =>
+    //       value &&
+    //       [
+    //         "application/pdf",
+    //         "application/msword",
+    //         "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    //       ].includes(value[0]?.type)
+    //   ),
 
-    registrationDate: Yup.string().required("Registration date is required"),
+    // registrationDate: Yup.string().required("Registration date is required"),
 
-    appliedJobsCount: Yup.number()
-      .typeError("Must be a number")
-      .min(0, "Cannot be negative")
-      .required("Applied jobs count is required"),
+    // appliedJobsCount: Yup.number()
+    //   .typeError("Must be a number")
+    //   .min(0, "Cannot be negative")
+    //   .required("Applied jobs count is required"),
   });
 
   const {
@@ -174,7 +174,7 @@ function Candidates() {
       toast.error("Something went wrong");
     }
   };
-  
+
   return (
     <>
       <div className="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">

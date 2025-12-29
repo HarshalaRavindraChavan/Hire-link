@@ -241,7 +241,7 @@ function Offer() {
                     <td className="text-center fw-bold">
                       {firstIndex + index + 1}
                     </td>
-                    <td className="text-center">{item.offer_id}</td>
+                    {/* <td className="text-center">{item.offer_id}</td> */}
 
                     <td className="text-start">
                       <div className="fw-bold">

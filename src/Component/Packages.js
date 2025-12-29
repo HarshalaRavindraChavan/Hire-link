@@ -252,7 +252,7 @@ function Packages() {
                       {firstIndex + index + 1}
                     </td>
 
-                    <td className="text-center">{pkg.pack_id}</td>
+                    {/* <td className="text-center">{pkg.pack_id}</td> */}
 
                     {/* PACKAGE INFO */}
                     <td className="text-start">
@@ -378,9 +378,9 @@ function Packages() {
       {/* Modal */}
       <div
         className="modal fade"
-        id="packageModal"
+        id="#exampleModal"
         tabIndex="-1"
-        ref={modalRef}
+        // ref={modalRef}
       >
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content">

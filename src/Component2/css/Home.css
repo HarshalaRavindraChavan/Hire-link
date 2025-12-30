@@ -11,6 +11,12 @@ html {
   scrollbar-width: none;
 }
 
+.home-page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 body::-webkit-scrollbar,
 html::-webkit-scrollbar {
   display: none; /* Chrome, Edge, Safari साठी scrollbar hide */

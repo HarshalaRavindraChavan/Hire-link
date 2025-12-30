@@ -29,7 +29,7 @@ const EmpProfile = () => {
     }
   };
 
-  //=========all city
+  //=========all city==========
 
   const fetchCities = async (stateId) => {
     try {

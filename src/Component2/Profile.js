@@ -6,16 +6,12 @@ import { toast, ToastContainer } from "react-toastify";
 // import { resume } from "react-dom/server";
 
 function Profile() {
-  const [activeTab, setActiveTab] = useState("saved");
-  const [showModal, setShowModal] = useState(false);
-  const [showScheduleModal, setShowScheduleModal] = useState(false);
-
   // ================= CATEGORY STATES =================
 
   // Main
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
-  
+
   // Sub Category
   const [subCategories, setSubCategories] = useState([]);
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
@@ -176,173 +172,6 @@ function Profile() {
   //   setSelectedSubCat3(data.can_sc3 || "");
   // }, []);
 
-  function UpdateStatusModal({ show, onClose }) {
-    if (!show) return null;
-
-    return (
-      <div className="status-modal-overlay">
-        <div className="status-modal">
-          <div className="status-modal-header">
-            <div>
-              <h6 className="mb-0" style={{ fontWeight: "bold" }}>
-                Update your application status
-              </h6>
-              <small className="text-muted d-flex align-items-center gap-1">
-                <i
-                  className="fa fa-eye"
-                  style={{ textDecoration: "line-through" }}
-                ></i>
-                <span>Employers</span> won’t see this
-              </small>
-            </div>
-            <button className="close-btn" onClick={onClose}>
-              ×
-            </button>
-          </div>
-
-          <ul className="status-list">
-            <li className="status-item">
-              <span className="icon green">←</span>
-              Show the last Indeed update
-            </li>
-
-            <li className="status-item">
-              <span className="icon green">✔</span>
-              Offer received
-            </li>
-
-            <li className="status-item">
-              <span className="icon green">👤</span>
-              Hired
-            </li>
-
-            <li className="status-item">
-              <span className="icon red">✖</span>
-              Not selected by employer
-            </li>
-
-            <li className="status-item last">
-              <span className="icon red">👎</span>
-              No longer interested
-            </li>
-          </ul>
-        </div>
-      </div>
-    );
-  }
-
-  function ScheduleInterviewModal({ show, onClose }) {
-    if (!show) return null;
-
-    return (
-      <>
-        {/* BACKDROP */}
-        <div
-          className="modal fade show"
-          style={{
-            display: "block",
-            backgroundColor: "rgba(0,0,0,0.55)",
-          }}
-          onClick={onClose}
-        ></div>
-
-        {/* MODAL */}
-        <div className="modal fade show d-block" tabIndex="-1">
-          <div
-            className="modal-dialog modal-dialog-centered modal-sm modal-md"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div
-              className="modal-content border-0 shadow"
-              style={{ borderRadius: "12px" }}
-            >
-              {/* HEADER */}
-              <div className="modal-header border-0">
-                <div>
-                  <h5 className="fw-bold mb-1">Schedule your interview</h5>
-                  <small className="text-muted">Step 1 of 2</small>
-                </div>
-
-                <button className="btn-close" onClick={onClose}></button>
-              </div>
-
-              {/* PROGRESS BAR */}
-              <div className="px-3">
-                <div className="progress" style={{ height: "6px" }}>
-                  <div
-                    className="progress-bar bg-success"
-                    style={{ width: "50%" }}
-                  ></div>
-                </div>
-              </div>
-
-              {/* BODY */}
-              <div className="modal-body px-3 pt-3">
-                {/* INFO */}
-                <div className="mb-3">
-                  <p className="mb-1">
-                    📞 <strong>This will be a phone interview</strong>
-                  </p>
-
-                  <p className="mb-1">
-                    📝 <strong>A note from Esenceweb IT:</strong>
-                  </p>
-                </div>
-
-                <hr />
-
-                {/* CONFIRM TIME */}
-                <h6 className="fw-bold mb-1">Confirm your time</h6>
-                <small className="text-muted">
-                  All times in India Standard Time (UTC +5:30)
-                </small>
-
-                <div className="border rounded p-3 mt-3 text-center">
-                  <p className="fw-semibold mb-1">
-                    Thursday, December 17, 2025
-                  </p>
-
-                  <p className="mb-3">
-                    09:00 AM – 09:30 AM <br />
-                    <small className="text-muted">
-                      India Standard Time (UTC +5:30)
-                    </small>
-                  </p>
-
-                  <button
-                    className="btn btn-success w-100"
-                    style={{ borderRadius: "6px" }}
-                  >
-                    Continue
-                  </button>
-                </div>
-
-                {/* ACTIONS */}
-                <div className="text-center mt-4">
-                  <p className="mb-2">Can’t make it?</p>
-
-                  <button
-                    className="btn btn-outline-success w-100 mb-2"
-                    style={{ borderRadius: "6px" }}
-                  >
-                    Suggest a new time
-                  </button>
-
-                  <button
-                    className="btn btn-outline-danger w-100"
-                    style={{ borderRadius: "6px" }}
-                  >
-                    Decline interview
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </>
-    );
-  }
-
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -499,7 +328,7 @@ function Profile() {
 
       <main className="container my-5">
         {/* ================= PROFILE CARD ================= */}
-        <div className="card p-4 mb-4">
+        <div className="card p-4">
           <div className="d-flex flex-column flex-md-row align-items-center align-items-md-start gap-4 text-center text-md-start">
             {/* Profile Image */}
             <img
@@ -895,8 +724,6 @@ function Profile() {
             </div>
           </div>
         </div>
-
-       
       </main>
     </>
   );

@@ -3,7 +3,7 @@ import "../Component2/css/Footer.css";
 
 function Footer() {
   return (
-    <footer className="footer mt-5">
+    <footer className="footer">
       <div className="d-flex flex-wrap justify-content-center gap-3">
         <a href="#">Career advice</a>
         <a href="#">Browse jobs</a>

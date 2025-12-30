@@ -72,15 +72,18 @@ const AdminLayout = () => {
 const UserLayout = () => {
   return (
     <>
-      <Header2 />
-      <Routes>
-        <Route index element={<Home />} />
-        <Route path="companies" element={<Company />} />
-        <Route path="jobs" element={<Jobs />} />
-        <Route path="contacts" element={<Contacts />} />
-        <Route path="profile" element={<Profile />} />
-        <Route path="apply" element={<Apply />} />
-      </Routes>
+      <div className="home-page-wrapper">
+        <Header2 />
+        <Routes>
+          <Route index element={<Home />} />
+          <Route path="companies" element={<Company />} />
+          <Route path="jobs" element={<Jobs />} />
+          <Route path="contacts" element={<Contacts />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="apply" element={<Apply />} />
+          <Route path="jobsai" element={<JobsSAI />} />
+        </Routes>
+      </div>
       <Footer2 />
     </>
   );
@@ -120,8 +123,7 @@ function App() {
           <Route path="/contacts" element={<Contacts />} />
           <Route path="/apply" element={<Apply />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/jobsai" element={<JobsSAI/>}/>
-
+          <Route path="/jobsai" element={<JobsSAI />} />
         </Route>
 
         {/* Employer ROUTES */}

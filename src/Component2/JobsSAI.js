@@ -10,7 +10,7 @@ function JobsSAI() {
   const [showScheduleModal, setShowScheduleModal] = useState(false);
 
   function UpdateStatusModal({ show, onClose }) {
-    if (!show) return null;
+    if (!show) return null; 
 
     return (
       <div className="status-modal-overlay">

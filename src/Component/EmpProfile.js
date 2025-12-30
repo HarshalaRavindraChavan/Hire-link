@@ -1,17 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const EmpProfile = () => {
-  const [showCurrentPwd, setShowCurrentPwd] = useState(false);
-  const [showPwd, setShowPwd] = useState(false);
-  const [showConfirmPwd, setShowConfirmPwd] = useState(false);
-
   const employer = JSON.parse(localStorage.getItem("employer"));
   const auth = JSON.parse(localStorage.getItem("auth"));
+
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
+
+  useEffect(() => {
+    fetchStates();
+  }, []);
+
+  const fetchStates = async () => {
+    try {
+      const res = await axios.get(
+        "https://norealtor.in/hirelink_apis/admin/getdata/tbl_states"
+      );
+
+      if (res.data.status) {
+        setStates(res.data.data);
+      }
+    } catch (err) {
+      console.error("State fetch error", err);
+    }
+  };
+
+  //=========all city
+
+  const fetchCities = async (stateId) => {
+    try {
+      const res = await axios.get(
+        `https://norealtor.in/hirelink_apis/admin/getdata/tbl_city/state_id/${stateId}`
+      );
+
+      if (res.data.status) {
+        setCities(res.data.data);
+      }
+    } catch (err) {
+      console.error("City fetch error", err);
+    }
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -19,63 +51,44 @@ const EmpProfile = () => {
       email: employer?.emp_email || "",
       mobile: employer?.emp_mobile || "",
 
-      newPassword: "",
+      password: "",
       confirmPassword: "",
 
       emp_companyname: employer?.emp_companyname || "",
-      emp_location: employer?.emp_location || "",
-      emp_city: employer?.emp_city || "",
-      emp_state: employer?.emp_state || "",
+      location: employer?.emp_location || "",
+      city: employer?.emp_city || "",
+      state: employer?.emp_state || "",
 
-      emp_website: employer?.emp_website || "",
-      emp_linkedin: employer?.emp_linkedin || "",
-      emp_facebook: employer?.emp_facebook || "",
-      emp_instagram: employer?.emp_instagram || "",
-      emp_youtube: employer?.emp_youtube || "",
+      website: employer?.emp_website || "",
+      linkedin: employer?.emp_linkedin || "",
+      facebook: employer?.emp_facebook || "",
+      instagram: employer?.emp_instagram || "",
+      youtube: employer?.emp_youtube || "",
 
-      emp_logo: "",
+      emp_com_logo: employer?.emp_com_logo || "",
     },
 
     enableReinitialize: true,
 
     validationSchema: Yup.object({
-      fullname: Yup.string().trim().required("Full name is required"),
-
-      email: Yup.string()
-        .email("Invalid email address")
-        .required("Email is required"),
-
+      fullname: Yup.string().required("Full name is required"),
+      email: Yup.string().email("Invalid email").required("Email is required"),
       mobile: Yup.string()
-        .trim()
-        .required("Mobile number is required")
-        .matches(/^[6-9][0-9]{9}$/, "Enter valid 10-digit mobile number"),
+        .matches(/^[6-9][0-9]{9}$/, "Invalid mobile number")
+        .required("Mobile is required"),
 
-      newPassword: Yup.string()
-        .trim()
-        .min(6, "Minimum 6 characters")
-        .notRequired(),
+      emp_companyname: Yup.string().required("Company name is required"),
+      location: Yup.string().required("Location is required"),
+      city: Yup.string().required("City is required"),
+      state: Yup.string().required("State is required"),
 
-      confirmPassword: Yup.string().when("newPassword", {
-        is: (val) => val && val.length > 0,
-        then: (schema) =>
-          schema
-            .required("Confirm password is required")
-            .oneOf([Yup.ref("newPassword")], "Passwords must match"),
-        otherwise: (schema) => schema.notRequired(),
-      }),
+      website: Yup.string().url("Invalid URL").nullable(),
+      linkedin: Yup.string().url("Invalid URL").nullable(),
+      facebook: Yup.string().url("Invalid URL").nullable(),
+      instagram: Yup.string().url("Invalid URL").nullable(),
+      youtube: Yup.string().url("Invalid URL").nullable(),
 
-      companyname: Yup.string().trim().required("Company name is required"),
-      location: Yup.string().trim().required("Location is required"),
-      city: Yup.string().trim().required("City is required"),
-      state: Yup.string().trim().required("State is required"),
-
-      website: Yup.string().url("Enter valid website URL").nullable(),
-      linkedin: Yup.string().url("Enter valid LinkedIn URL").nullable(),
-      facebook: Yup.string().url("Enter valid Facebook URL").nullable(),
-      instagram: Yup.string().url("Enter valid Instagram URL").nullable(),
-      youtube: Yup.string().url("Enter valid YouTube URL").nullable(),
-
-      emp_logo: Yup.mixed().nullable(),
+      emp_com_logo: Yup.string().required("Company logo required"),
     }),
 
     onSubmit: async (values) => {
@@ -85,20 +98,19 @@ const EmpProfile = () => {
           emp_email: values.email,
           emp_mobile: values.mobile,
           emp_companyname: values.emp_companyname,
-          emp_location: values.emp_location,
-          emp_city: values.emp_city,
-          emp_state: values.emp_state,
-          emp_website: values.emp_website,
-          emp_linkedin: values.emp_linkedin,
-          emp_facebook: values.emp_facebook,
-          emp_instagram: values.emp_instagram,
-          emp_youtube: values.emp_youtube,
-          emp_com_logo: values.emp_logo,
+          emp_location: values.location,
+          emp_city: values.city,
+          emp_state: values.state,
+          emp_website: values.website,
+          emp_linkedin: values.linkedin,
+          emp_facebook: values.facebook,
+          emp_instagram: values.instagram,
+          emp_youtube: values.youtube,
+          emp_com_logo: values.emp_com_logo,
         };
 
-        // 🔐 Send password only if entered
-        if (values.newPassword && values.newPassword.trim() !== "") {
-          payload.emp_password = values.newPassword;
+        if (values.password) {
+          payload.emp_password = values.password;
         }
 
         const res = await axios.post(
@@ -106,71 +118,73 @@ const EmpProfile = () => {
           payload
         );
 
-        if (res.data.status === true) {
+        if (res.data.status) {
           toast.success("Profile updated successfully");
-
-          // ✅ Update localStorage
           localStorage.setItem("employer", JSON.stringify(res.data.data));
-
-          // ✅ Update ALL form fields instantly
-          formik.setValues({
-            fullname: res.data.data.emp_name || "",
-            email: res.data.data.emp_email || "",
-            mobile: res.data.data.emp_mobile || "",
-            newPassword: "",
-            confirmPassword: "",
-            emp_companyname: res.data.data.emp_companyname || "",
-            emp_location: res.data.data.emp_location || "",
-            emp_city: res.data.data.emp_city || "",
-            emp_state: res.data.data.emp_state || "",
-            emp_website: res.data.data.emp_website || "",
-            emp_linkedin: res.data.data.emp_linkedin || "",
-            emp_facebook: res.data.data.emp_facebook || "",
-            emp_instagram: res.data.data.emp_instagram || "",
-            emp_youtube: res.data.data.emp_youtube || "",
-
-            emp_logo: res.data.data.emp_com_logo || "",
-          });
         } else {
-          toast.error(res.data.message || "Update failed");
+          toast.error("Update failed");
         }
-      } catch (error) {
-        console.error(error);
+      } catch {
         toast.error("Server error");
       }
     },
   });
 
+  useEffect(() => {
+    if (formik.values.state) {
+      fetchCities(formik.values.state);
+    }
+  }, [formik.values.state]);
+
+  const uploadFile = async (e, field) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append(field, file);
+
+    try {
+      const res = await axios.post(
+        "https://norealtor.in/hirelink_apis/admin/fileupload",
+        formData
+      );
+
+      if (res.data.status) {
+        formik.setFieldValue(field, res.data.files[field]);
+        toast.success("File uploaded successfully");
+      } else {
+        toast.error("Upload failed");
+      }
+    } catch {
+      toast.error("Upload failed");
+    }
+  };
+
+  const fieldClass = (name) =>
+    `form-control ${
+      formik.touched[name] && formik.errors[name] ? "is-invalid" : ""
+    }`;
+
   return (
     <>
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        pauseOnHover
-        theme="colored"
-      />
+      <ToastContainer position="top-right" autoClose={3000} theme="colored" />
+
       <div className="container-fluid py-4">
         <div className="container">
-          {/* Page Title */}
           <div className="mb-4">
-            <h5 className="fw-bold">My Profile</h5>
+            {" "}
+            <h5 className="fw-bold">My Profile</h5>{" "}
           </div>
 
-          {/* Card */}
           <div className="card shadow-sm border-0">
             <div className="card-body p-4">
               <form onSubmit={formik.handleSubmit}>
                 <div className="row g-3">
-                  {/* Full Name */}
                   <div className="col-md-4">
                     <label className="fw-semibold">Full Name</label>
                     <input
                       type="text"
-                      className={`form-control ${
-                        formik.touched.fullname && formik.errors.fullname
-                          ? "is-invalid"
-                          : ""
-                      }`}
+                      className={fieldClass("fullname")}
                       placeholder="Enter full name"
                       {...formik.getFieldProps("fullname")}
                     />
@@ -179,17 +193,12 @@ const EmpProfile = () => {
                     </div>
                   </div>
 
-                  {/* Email */}
                   <div className="col-md-4">
                     <label className="fw-semibold">Email</label>
                     <input
                       type="email"
-                      className={`form-control ${
-                        formik.touched.email && formik.errors.email
-                          ? "is-invalid"
-                          : ""
-                      }`}
-                      placeholder="Enter email address"
+                      className={fieldClass("email")}
+                      placeholder="Enter email"
                       {...formik.getFieldProps("email")}
                     />
                     <div className="invalid-feedback">
@@ -197,17 +206,12 @@ const EmpProfile = () => {
                     </div>
                   </div>
 
-                  {/* Mobile */}
                   <div className="col-md-4">
                     <label className="fw-semibold">Mobile</label>
                     <input
                       type="text"
-                      className={`form-control ${
-                        formik.touched.mobile && formik.errors.mobile
-                          ? "is-invalid"
-                          : ""
-                      }`}
-                      placeholder="Enter 10 digit mobile number"
+                      className={fieldClass("mobile")}
+                      placeholder="Enter mobile"
                       {...formik.getFieldProps("mobile")}
                     />
                     <div className="invalid-feedback">
@@ -215,168 +219,175 @@ const EmpProfile = () => {
                     </div>
                   </div>
 
-                  {/* Password */}
-                  <div className="col-md-4">
-                    <label className="fw-semibold">Password</label>
-                    <div className="input-group">
-                      <input
-                        type={showPwd ? "text" : "password"}
-                        className={`form-control ${
-                          formik.touched.password && formik.errors.password
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                        placeholder="Enter password"
-                        {...formik.getFieldProps("password")}
-                      />
-                      <span
-                        className="input-group-text cursor-pointer"
-                        onClick={() => setShowPwd(!showPwd)}
-                      >
-                        {showPwd ? <FaEyeSlash /> : <FaEye />}
-                      </span>
-                      <div className="invalid-feedback">
-                        {formik.errors.password}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Confirm Password */}
-                  <div className="col-md-4">
-                    <label className="fw-semibold">Confirm Password</label>
-                    <div className="input-group">
-                      <input
-                        type={showConfirmPwd ? "text" : "password"}
-                        className={`form-control ${
-                          formik.touched.confirmPassword &&
-                          formik.errors.confirmPassword
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                        placeholder="Re-enter password"
-                        {...formik.getFieldProps("confirmPassword")}
-                      />
-                      <span
-                        className="input-group-text cursor-pointer"
-                        onClick={() => setShowConfirmPwd(!showConfirmPwd)}
-                      >
-                        {showConfirmPwd ? <FaEyeSlash /> : <FaEye />}
-                      </span>
-                      <div className="invalid-feedback">
-                        {formik.errors.confirmPassword}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Company Logo */}
-                  <div className="col-md-4">
-                    <label className="fw-semibold">Company Logo</label>
-                    <input
-                      type="file"
-                      className="form-control"
-                      onChange={(e) =>
-                        formik.setFieldValue("companyLogo", e.target.files[0])
-                      }
-                    />
-                  </div>
-
-                  {/* Company Name */}
                   <div className="col-md-4">
                     <label className="fw-semibold">Company Name</label>
                     <input
                       type="text"
-                      className="form-control"
+                      className={fieldClass("emp_companyname")}
                       placeholder="Enter company name"
-                      {...formik.getFieldProps("companyName")}
+                      {...formik.getFieldProps("emp_companyname")}
                     />
+                    <div className="invalid-feedback">
+                      {formik.errors.emp_companyname}
+                    </div>
                   </div>
 
-                  {/* Location */}
+                  <div className="col-md-4">
+                    <label className="fw-semibold">
+                      Company Logo
+                      {formik.values.emp_com_logo && (
+                        <i className="fa-solid fa-circle-check text-success ms-2"></i>
+                      )}
+                    </label>
+                    <input
+                      type="file"
+                      className="form-control"
+                      onChange={(e) => uploadFile(e, "emp_com_logo")}
+                    />
+                    <input
+                      type="hidden"
+                      {...formik.getFieldProps("emp_com_logo")}
+                    />
+                    <div className="invalid-feedback d-block">
+                      {formik.errors.emp_com_logo}
+                    </div>
+                  </div>
+
                   <div className="col-md-4">
                     <label className="fw-semibold">Location</label>
                     <input
                       type="text"
-                      className="form-control"
+                      className={fieldClass("location")}
                       placeholder="Enter location"
                       {...formik.getFieldProps("location")}
                     />
+                    <div className="invalid-feedback">
+                      {formik.errors.location}
+                    </div>
                   </div>
-
-                  {/* City */}
-                  <div className="col-md-4">
-                    <label className="fw-semibold">City</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Enter city"
-                      {...formik.getFieldProps("city")}
-                    />
-                  </div>
-
-                  {/* State */}
+                  {/* state */}
                   <div className="col-md-4">
                     <label className="fw-semibold">State</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Enter state"
-                      {...formik.getFieldProps("state")}
-                    />
+
+                    <select
+                      className={`form-select form-control ${
+                        formik.touched.state && formik.errors.state
+                          ? "is-invalid"
+                          : ""
+                      }`}
+                      name="state"
+                      value={formik.values.state}
+                      onChange={(e) => {
+                        const stateId = e.target.value;
+
+                        formik.setFieldValue("state", stateId);
+                        formik.setFieldValue("city", "");
+                        fetchCities(stateId);
+                      }}
+                      onBlur={formik.handleBlur}
+                    >
+                      <option value="">Select State</option>
+                      {states.map((s) => (
+                        <option key={s.state_id} value={s.state_id}>
+                          {s.state_name}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="invalid-feedback">
+                      {formik.errors.state}
+                    </div>
+                  </div>
+                  {/* citys */}
+                  <div className="col-md-4">
+                    <label className="fw-semibold">City</label>
+                    <select
+                      className={`form-select form-control ${
+                        formik.touched.city && formik.errors.city
+                          ? "is-invalid"
+                          : ""
+                      }`}
+                      name="city"
+                      value={formik.values.city}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      disabled={!cities.length}
+                    >
+                      <option value="">Select City</option>
+                      {cities.map((c) => (
+                        <option key={c.city_id} value={c.city_id}>
+                          {c.city_name}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="invalid-feedback">{formik.errors.city}</div>
                   </div>
 
-                  {/* Social Links */}
                   <div className="col-md-4">
                     <label className="fw-semibold">Website</label>
                     <input
                       type="text"
-                      className="form-control"
+                      className={fieldClass("website")}
                       placeholder="https://example.com"
                       {...formik.getFieldProps("website")}
                     />
+                    <div className="invalid-feedback">
+                      {formik.errors.website}
+                    </div>
                   </div>
 
                   <div className="col-md-4">
-                    <label className="fw-semibold">LinkedIn</label>
+                    <label className="fw-semibold">linkedin</label>
                     <input
                       type="text"
-                      className="form-control"
-                      placeholder="LinkedIn profile link"
+                      className={fieldClass("linkedin")}
+                      placeholder="https://example.com"
                       {...formik.getFieldProps("linkedin")}
                     />
+                    <div className="invalid-feedback">
+                      {formik.errors.linkedin}
+                    </div>
                   </div>
 
                   <div className="col-md-4">
-                    <label className="fw-semibold">Facebook</label>
+                    <label className="fw-semibold">instagram</label>
                     <input
                       type="text"
-                      className="form-control"
-                      placeholder="Facebook profile link"
-                      {...formik.getFieldProps("facebook")}
-                    />
-                  </div>
-
-                  <div className="col-md-4">
-                    <label className="fw-semibold">Instagram</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Instagram profile link"
+                      className={fieldClass("instagram")}
+                      placeholder="https://example.com"
                       {...formik.getFieldProps("instagram")}
                     />
+                    <div className="invalid-feedback">
+                      {formik.errors.instagram}
+                    </div>
                   </div>
 
                   <div className="col-md-4">
-                    <label className="fw-semibold">YouTube</label>
+                    <label className="fw-semibold">facebook</label>
                     <input
                       type="text"
-                      className="form-control"
-                      placeholder="YouTube channel link"
-                      {...formik.getFieldProps("youtube")}
+                      className={fieldClass("facebook")}
+                      placeholder="https://example.com"
+                      {...formik.getFieldProps("facebook")}
                     />
+                    <div className="invalid-feedback">
+                      {formik.errors.facebook}
+                    </div>
                   </div>
                 </div>
 
-                {/* Submit */}
+                <div className="col-md-4">
+                  <label className="fw-semibold">youtube</label>
+                  <input
+                    type="text"
+                    className={fieldClass("youtube")}
+                    placeholder="https://example.com"
+                    {...formik.getFieldProps("youtube")}
+                  />
+                  <div className="invalid-feedback">
+                    {formik.errors.youtube}
+                  </div>
+                </div>
+
                 <div className="text-center mt-4">
                   <button type="submit" className="btn btn-success px-5">
                     Submit

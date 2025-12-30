@@ -7,70 +7,71 @@ import { toast, ToastContainer } from "react-toastify";
 function Jobs() {
   //save jobs
   const [savedJobs, setSavedJobs] = useState([]);
-  const candidate = JSON.parse(localStorage.getItem("candidate"));
+  const [candidate, setCandidate] = useState(null);
 
   useEffect(() => {
-    if (!candidate) return;
-
-    axios
-      .get(
-        `https://norealtor.in/hirelink_apis/candidate/saved-jobs/${candidate.can_id}`
-      )
-      .then((res) => {
-        if (res.data.status) {
-          setSavedJobs(res.data.data.map((j) => j.job_id));
-        }
-      })
-      .catch(() => {
-        toast.error("Failed to load saved jobs");
-      });
+    const cand = JSON.parse(localStorage.getItem("candidate"));
+    setCandidate(cand);
   }, []);
 
+  const fetchSavedJobs = async (canId) => {
+    try {
+      const res = await axios.get(
+        `https://norealtor.in/hirelink_apis/candidate/saved-jobs/${canId}`
+      );
+
+      if (res.data.status) {
+        // 👇 IMPORTANT: Number conversion
+        setSavedJobs(res.data.data.map((j) => Number(j.job_id)));
+      }
+    } catch (err) {
+      toast.error("Failed to load saved jobs");
+    }
+  };
+
+  useEffect(() => {
+    if (candidate?.can_id) {
+      fetchSavedJobs(candidate.can_id);
+    }
+  }, [candidate]);
+
   const toggleSaveJob = async (jobId) => {
-    if (!candidate) {
-      toast.warn("Please login to save jobs");
+    // 🔴 MUST CHECK
+    if (!candidate || !candidate.can_id) {
+      toast.warn("Please login as Candidate to save jobs");
       return;
     }
 
-    const isSaved = savedJobs.includes(jobId);
+    if (!jobId) {
+      toast.error("Invalid job");
+      return;
+    }
+
+    const isSaved = savedJobs.includes(Number(jobId));
 
     try {
+      const payload = {
+        save_candidate_id: candidate.can_id,
+        save_job_id: Number(jobId),
+      };
+
       if (isSaved) {
-        // ================= UNSAVE =================
-        const res = await axios.post(
+        await axios.post(
           "https://norealtor.in/hirelink_apis/candidate/unsave-job",
-          {
-            save_candidate_id: candidate.can_id,
-            save_job_id: jobId,
-          }
+          payload
         );
-
-        if (res.data.status) {
-          setSavedJobs(savedJobs.filter((id) => id !== jobId));
-          toast.info("Job removed from saved");
-        } else {
-          toast.error("Unable to remove job");
-        }
+        await fetchSavedJobs(candidate.can_id);
+        toast.info("Job removed");
       } else {
-        // ================= SAVE =================
-        const res = await axios.post(
+        await axios.post(
           "https://norealtor.in/hirelink_apis/candidate/save-job",
-          {
-            save_candidate_id: candidate.can_id,
-            save_job_id: jobId,
-          }
+          payload
         );
-
-        if (res.data.status) {
-          setSavedJobs([...savedJobs, jobId]);
-          toast.success("Job saved successfully ❤️");
-        } else {
-          toast.warning(res.data.message || "Job already saved");
-        }
+        await fetchSavedJobs(candidate.can_id);
+        toast.success("Job saved ❤️");
       }
-    } catch (err) {
-      console.error("Save job error", err);
-      toast.error("Something went wrong");
+    } catch (e) {
+      toast.error("Server error");
     }
   };
 
@@ -355,7 +356,7 @@ function Jobs() {
                 >
                   <i
                     className={
-                      savedJobs.includes(job.job_id)
+                      savedJobs.includes(Number(job.job_id))
                         ? "fa-solid fa-bookmark text-primary"
                         : "fa-regular fa-bookmark"
                     }
@@ -391,7 +392,7 @@ function Jobs() {
                 >
                   <i
                     className={
-                      savedJobs.includes(selectedJob.job_id)
+                      savedJobs.includes(Number(selectedJob.job_id))
                         ? "fa-solid fa-bookmark text-primary"
                         : "fa-regular fa-bookmark"
                     }

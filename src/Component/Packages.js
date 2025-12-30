@@ -210,28 +210,36 @@ function Packages() {
   const [editPackId, setEditPackId] = useState(null);
   const [loading, setLoading] = useState(false);
 
-const openEditModal = (pkg) => {
-  setEditPackId(pkg.pack_id);
+  const safeParse = (value) => {
+    if (!value) return [];
+    if (Array.isArray(value)) return value;
 
-  reset({
-    pack_name: pkg.pack_name || "",
-    pack_price: pkg.pack_price || "",
-    pack_duration: pkg.pack_duration || "",
-    pack_jplimit: pkg.pack_jplimit || "",
-    pack_rvlimit: pkg.pack_rvlimit || "",
-    pack_support: pkg.pack_support || "",
-    pack_description: pkg.pack_description || "",
-    pack_benefits: pkg.pack_benefits?.length
-      ? pkg.pack_benefits
-      : [""],
-  });
+    try {
+      return JSON.parse(value);
+    } catch (e) {
+      return [value];
+    }
+  };
 
-  const modal = new window.bootstrap.Modal(
-    document.getElementById("exampleModal")
-  );
-  modal.show();
-};
+  const openEditModal = (pkg) => {
+    setEditPackId(pkg.pack_id);
 
+    reset({
+      pack_name: pkg.pack_name || "",
+      pack_price: pkg.pack_price || "",
+      pack_duration: pkg.pack_duration || "",
+      pack_jplimit: pkg.pack_jplimit || "",
+      pack_rvlimit: pkg.pack_rvlimit || "",
+      pack_support: pkg.pack_support || "",
+      pack_description: pkg.pack_description || "",
+      pack_benefits: safeParse(pkg.pack_benefits),
+    });
+
+    const modal = new window.bootstrap.Modal(
+      document.getElementById("editexampleModal")
+    );
+    modal.show();
+  };
 
   const handleUpdatePackage = async (data) => {
     if (!editPackId) {
@@ -243,7 +251,7 @@ const openEditModal = (pkg) => {
       setLoading(true);
 
       const response = await axios.post(
-        `https://norealtor.in/hirelink_apis/candidate/updatedata/tbl_packae/pack_id/${editPackId}`,
+        `https://norealtor.in/hirelink_apis/admin/updatedata/tbl_package/pack_id/${editPackId}`,
         {
           pack_name: data.pack_name,
           pack_price: data.pack_price,
@@ -253,32 +261,22 @@ const openEditModal = (pkg) => {
           pack_support: data.pack_support,
           pack_description: data.pack_description,
           pack_benefits: data.pack_benefits,
-        },
-        {
-          headers: { "Content-Type": "application/json" },
         }
       );
 
-      const result = response.data;
-
-      if (result?.status === true) {
+      if (response.data?.status === true) {
         toast.success("Package updated successfully ✅");
+        fetchPackages();
 
-        setTimeout(() => {
-          const modalEl = document.getElementById("exampleModal");
-          if (modalEl && window.bootstrap) {
-            const modalInstance =
-              window.bootstrap.Modal.getInstance(modalEl) ||
-              new window.bootstrap.Modal(modalEl);
-            modalInstance.hide();
-          }
-        }, 600);
+        const modalEl = document.getElementById("editexampleModal");
+        const modalInstance = window.bootstrap.Modal.getInstance(modalEl);
+        modalInstance.hide();
       } else {
-        toast.error(result?.message || "Package update failed");
+        toast.error("Package update failed");
       }
     } catch (error) {
-      console.error("PACKAGE UPDATE ERROR:", error);
-      toast.error(error.response?.data?.message || "Server error");
+      console.error(error);
+      toast.error("Server error");
     } finally {
       setLoading(false);
     }
@@ -409,7 +407,7 @@ const openEditModal = (pkg) => {
                       {pkg.pack_benefits ? (
                         (() => {
                           try {
-                            const benefits = JSON.parse(pkg.pack_benefits); // ✅ FIX
+                            const benefits = safeParse(pkg.pack_benefits);
                             return benefits.length > 0 ? (
                               benefits.map((b, i) => <div key={i}>• {b}</div>)
                             ) : (
@@ -464,7 +462,7 @@ const openEditModal = (pkg) => {
         className="modal fade"
         id="exampleModal"
         tabIndex="-1"
-        // ref={modalRef}
+        ref={modalRef}
       >
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content">
@@ -637,12 +635,7 @@ const openEditModal = (pkg) => {
       </div>
 
       {/* EDIT MODEL */}
-      <div
-        className="modal fade"
-        id="exampleModal"
-        tabIndex="-1"
-        // ref={modalRef}
-      >
+      <div className="modal fade" id="editexampleModal" tabIndex="-1">
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content">
             <div className="modal-header bg-success text-white">

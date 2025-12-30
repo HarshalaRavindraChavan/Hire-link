@@ -21,6 +21,15 @@ function Signin() {
     document.title = "Hirelink | Signin";
   }, []);
 
+  useEffect(() => {
+    if (activeRole === "Candidate") {
+      localStorage.removeItem("auth");
+      localStorage.removeItem("employer");
+    } else {
+      localStorage.removeItem("candidate");
+    }
+  }, [activeRole]);
+
   /* ================= FORMik ================= */
   const formik = useFormik({
     initialValues: {

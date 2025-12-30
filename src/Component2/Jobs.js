@@ -2,8 +2,78 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../Component2/css/Jobs.css";
 import { NavLink, useLocation } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 
 function Jobs() {
+  //save jobs
+  const [savedJobs, setSavedJobs] = useState([]);
+  const candidate = JSON.parse(localStorage.getItem("candidate"));
+
+  useEffect(() => {
+    if (!candidate) return;
+
+    axios
+      .get(
+        `https://norealtor.in/hirelink_apis/candidate/saved-jobs/${candidate.can_id}`
+      )
+      .then((res) => {
+        if (res.data.status) {
+          setSavedJobs(res.data.data.map((j) => j.job_id));
+        }
+      })
+      .catch(() => {
+        toast.error("Failed to load saved jobs");
+      });
+  }, []);
+
+  const toggleSaveJob = async (jobId) => {
+    if (!candidate) {
+      toast.warn("Please login to save jobs");
+      return;
+    }
+
+    const isSaved = savedJobs.includes(jobId);
+
+    try {
+      if (isSaved) {
+        // ================= UNSAVE =================
+        const res = await axios.post(
+          "https://norealtor.in/hirelink_apis/candidate/unsave-job",
+          {
+            save_candidate_id: candidate.can_id,
+            save_job_id: jobId,
+          }
+        );
+
+        if (res.data.status) {
+          setSavedJobs(savedJobs.filter((id) => id !== jobId));
+          toast.info("Job removed from saved");
+        } else {
+          toast.error("Unable to remove job");
+        }
+      } else {
+        // ================= SAVE =================
+        const res = await axios.post(
+          "https://norealtor.in/hirelink_apis/candidate/save-job",
+          {
+            save_candidate_id: candidate.can_id,
+            save_job_id: jobId,
+          }
+        );
+
+        if (res.data.status) {
+          setSavedJobs([...savedJobs, jobId]);
+          toast.success("Job saved successfully ❤️");
+        } else {
+          toast.warning(res.data.message || "Job already saved");
+        }
+      }
+    } catch (err) {
+      console.error("Save job error", err);
+      toast.error("Something went wrong");
+    }
+  };
+
   const [jobs, setJobs] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
   const location = useLocation();
@@ -155,6 +225,16 @@ function Jobs() {
   }, [searchKeyword, searchPlace]);
   return (
     <>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="colored"
+      />
+
       {/* ================= SEARCH SECTION ================= */}
       <section className="flex-grow-1 text-center mt-5 mb-4 container">
         <div className="row justify-content-center g-2 mt-4 home-serch ps-3 pe-3">
@@ -266,8 +346,20 @@ function Jobs() {
                 onClick={() => setSelectedJob(job)}
                 style={{ cursor: "pointer" }}
               >
-                <button className="save-btn">
-                  <i className="fa-regular fa-bookmark"></i>
+                <button
+                  className="save-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleSaveJob(job.job_id);
+                  }}
+                >
+                  <i
+                    className={
+                      savedJobs.includes(job.job_id)
+                        ? "fa-solid fa-bookmark text-primary"
+                        : "fa-regular fa-bookmark"
+                    }
+                  ></i>
                 </button>
 
                 <h5 className="fw-bold">{job.job_title}</h5>
@@ -293,8 +385,17 @@ function Jobs() {
           {selectedJob && (
             <div className="col-12 col-md-8 job-detail mb-5">
               <div className="job-header pt-3 pb-3">
-                <button className="save-btn">
-                  <i className="fa-regular fa-bookmark"></i>
+                <button
+                  className="save-btn"
+                  onClick={() => toggleSaveJob(selectedJob.job_id)}
+                >
+                  <i
+                    className={
+                      savedJobs.includes(selectedJob.job_id)
+                        ? "fa-solid fa-bookmark text-primary"
+                        : "fa-regular fa-bookmark"
+                    }
+                  ></i>
                 </button>
 
                 <h4 className="fw-bold">{selectedJob.job_title}</h4>

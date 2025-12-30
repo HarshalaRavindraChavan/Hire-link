@@ -362,26 +362,105 @@ function Jobs() {
     }
   };
 
-  const [isEdit, setIsEdit] = useState(false);
+  // Edit model code
+  const [editJobId, setEditJobId] = useState(null);
+  const [loading, setLoading] = useState(false);
+  // const modalRef = useRef(null);
 
-  const handleEdit = (job) => {
-    setValue("job_title", job.job_title);
-    setValue("job_company", job.job_company);
-    setValue("job_no_hiring", job.job_no_hiring);
-    setValue("job_type", job.job_type);
-    setValue("job_salary", job.job_salary);
-    setValue("job_status", job.job_status);
-    setValue("job_date", job.job_date);
-    setValue("job_location", job.job_location);
-    setValue("job_experience", job.job_experience);
-    setValue("job_skills", job.job_skills);
+  const openEditJobModal = (job) => {
+    if (!job) return;
 
-    // category dropdowns (if needed)
-    setSelectedCategory(job.job_mc);
-    setSelectedSubCategory(job.job_sc);
-    setSelectedSubCat1(job.job_sc1);
-    setSelectedSubCat2(job.job_sc2);
-    setSelectedSubCat3(job.job_sc3);
+    setEditJobId(job.job_id);
+
+    reset({
+      job_title: job.job_title ?? "",
+      job_company: job.job_company ?? "",
+      job_mc: job.job_mc ?? "",
+      job_sc: job.job_sc ?? "",
+      job_sc1: job.job_sc1 ?? "",
+      job_sc2: job.job_sc2 ?? "",
+      job_sc3: job.job_sc3 ?? "",
+      job_no_hiring: job.job_no_hiring ?? "",
+      job_type: job.job_type ?? "",
+      job_salary: job.job_salary ?? "",
+      job_status: job.job_status ?? "",
+      job_date: job.job_date ?? "",
+      job_location: job.job_location ?? "",
+      job_state: job.job_state ?? "",
+      job_city: job.job_city ?? "",
+      job_experience: job.job_experience ?? "",
+      job_skills: job.job_skills ?? "",
+    });
+
+    // set dropdown states
+    setSelectedCategory(job.job_mc ?? "");
+    setSelectedSubCategory(job.job_sc ?? "");
+    setSelectedSubCat1(job.job_sc1 ?? "");
+    setSelectedSubCat2(job.job_sc2 ?? "");
+    setSelectedSubCat3(job.job_sc3 ?? "");
+
+    if (job.job_state) fetchCities(job.job_state);
+
+    const modalEl = document.getElementById("editjobexampleModal");
+    if (!modalEl || !window.bootstrap) return;
+
+    const modal =
+      window.bootstrap.Modal.getInstance(modalEl) ||
+      new window.bootstrap.Modal(modalEl);
+
+    modal.show();
+  };
+
+  const handleUpdateJob = async (data) => {
+    if (!editJobId) {
+      toast.error("Job ID missing");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const payload = {
+        job_title: data.job_title,
+        job_company: data.job_company,
+        job_mc: selectedCategory,
+        job_sc: selectedSubCategory,
+        job_sc1: selectedSubCat1,
+        job_sc2: selectedSubCat2,
+        job_sc3: selectedSubCat3,
+        job_no_hiring: Number(data.job_no_hiring),
+        job_type: data.job_type,
+        job_salary: data.job_salary,
+        job_status: data.job_status,
+        job_date: data.job_date,
+        job_location: data.job_location,
+        job_state: data.job_state,
+        job_city: data.job_city,
+        job_experience: data.job_experience,
+        job_skills: data.job_skills,
+      };
+
+      const response = await axios.post(
+        `https://norealtor.in/hirelink_apis/admin/updatedata/tbl_job/job_id/${editJobId}`,
+        payload
+      );
+
+      if (response?.data?.status === true) {
+        toast.success("Job updated successfully ✅");
+        fetchJobs();
+
+        const modalEl = document.getElementById("editjobexampleModal");
+        const modalInstance = window.bootstrap.Modal.getInstance(modalEl);
+        modalInstance?.hide();
+      } else {
+        toast.error("Job update failed");
+      }
+    } catch (error) {
+      console.error("Job Update Error:", error);
+      toast.error("Server error");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -490,18 +569,9 @@ function Jobs() {
                             <li>
                               <button
                                 className="dropdown-item"
-                                data-bs-toggle="modal"
-                                data-bs-target="#exampleModal"
-                                onClick={() => {
-                                  setIsEdit(true);
-
-                                  setValue("job_title", "Frontend Developer");
-                                  setValue("job_company", "Tech Solutions");
-                                  setValue("job_type", "Full-time");
-                                  setValue("job_location", "Pune");
-                                }}
+                                onClick={() => openEditJobModal(job)}
                               >
-                                <i className="fas fa-edit me-2"></i>Edit
+                                <i className="fas fa-edit me-2"></i> Edit
                               </button>
                             </li>
 
@@ -631,6 +701,369 @@ function Jobs() {
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="modal-body row">
+                {/* Job Title */}
+                <div className="col-md-4 mb-2">
+                  <label className="form-label fw-semibold">Job Title</label>
+                  <input
+                    type="text"
+                    {...register("job_title")}
+                    className="form-control form-control-md rounded-3"
+                    placeholder="Enter Job Title"
+                  />
+                  <span className="text-danger">
+                    {errors.job_title?.message}
+                  </span>
+                </div>
+
+                {/* Company Name */}
+                <div className="col-md-4 mb-2">
+                  <label className="form-label fw-semibold">Company Name</label>
+                  <input
+                    type="text"
+                    {...register("job_company")}
+                    className="form-control form-control-md rounded-3"
+                    placeholder="Enter Company Name"
+                  />
+                  <span className="text-danger">
+                    {errors.job_company?.message}
+                  </span>
+                </div>
+
+                {/* Job Category */}
+                <div className="col-md-4 mb-2">
+                  <label className="form-label fw-semibold">
+                    Main Category
+                  </label>
+                  <select
+                    className="form-control form-select rounded-3"
+                    value={selectedCategory}
+                    onChange={(e) =>
+                      handleSelectChange(
+                        "job_mc",
+                        e.target.value,
+                        setSelectedCategory
+                      )
+                    }
+                  >
+                    <option value="">Select Category</option>
+                    {categories.map((cat) => (
+                      <option key={cat.mc_id} value={cat.mc_id}>
+                        {cat.mc_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="col-md-4 mb-2">
+                  <label className="form-label fw-semibold">Sub Category</label>
+                  <select
+                    className="form-control form-select rounded-3"
+                    value={selectedSubCategory}
+                    onChange={(e) =>
+                      handleSelectChange(
+                        "job_sc",
+                        e.target.value,
+                        setSelectedSubCategory
+                      )
+                    }
+                    disabled={!selectedCategory || subCategories.length === 0}
+                  >
+                    <option value="">Select</option>
+                    {subCategories.map((sub) => (
+                      <option key={sub.sc_id} value={sub.sc_id}>
+                        {sub.sc_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="col-md-4 mb-2">
+                  <label className="form-label fw-semibold">
+                    Sub Category 1
+                  </label>
+                  <select
+                    className="form-control form-select rounded-3"
+                    value={selectedSubCat1}
+                    onChange={(e) =>
+                      handleSelectChange(
+                        "job_sc1",
+                        e.target.value,
+                        setSelectedSubCat1
+                      )
+                    }
+                    disabled={!selectedSubCategory || subCat1.length === 0}
+                  >
+                    <option value="">Select</option>
+                    {subCat1.map((item) => (
+                      <option key={item.sc1_id} value={item.sc1_id}>
+                        {item.sc1_name}
+                      </option>
+                    ))}
+                  </select>
+
+                  {categoryErrors.job_sc1 && (
+                    <small className="text-danger">
+                      {categoryErrors.job_sc1}
+                    </small>
+                  )}
+                </div>
+
+                <div className="col-md-4 mb-2">
+                  <label className="form-label fw-semibold">
+                    Sub Category 2
+                  </label>
+                  <select
+                    className="form-control form-select rounded-3"
+                    value={selectedSubCat2}
+                    onChange={(e) =>
+                      handleSelectChange(
+                        "job_sc2",
+                        e.target.value,
+                        setSelectedSubCat2
+                      )
+                    }
+                    disabled={!selectedSubCat1 || subCat2.length === 0}
+                  >
+                    <option value="">Select</option>
+                    {subCat2.map((item) => (
+                      <option key={item.sc2_id} value={item.sc2_id}>
+                        {item.sc2_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="col-md-4 mb-2">
+                  <label className="form-label fw-semibold">
+                    Sub Category 3
+                  </label>
+                  <select
+                    className="form-control form-select rounded-3"
+                    value={selectedSubCat3}
+                    onChange={(e) =>
+                      handleSelectChange(
+                        "job_sc3",
+                        e.target.value,
+                        setSelectedSubCat3
+                      )
+                    }
+                    disabled={!selectedSubCat2 || subCat3.length === 0}
+                  >
+                    <option value="">Select</option>
+                    {subCat3.map((item) => (
+                      <option key={item.sc3_id} value={item.sc3_id}>
+                        {item.sc3_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Applications Count */}
+                <div className="col-md-4 mb-2">
+                  <label className="form-label fw-semibold">
+                    No of Candidates Hiring
+                  </label>
+                  <input
+                    type="number"
+                    {...register("job_no_hiring")}
+                    className="form-control form-control-md rounded-3"
+                    placeholder="Enter No of Candidates Hiring"
+                  />
+                  <span className="text-danger">
+                    {errors.job_no_hiring?.message}
+                  </span>
+                </div>
+
+                {/* Job Type */}
+                <div className="col-md-4 mb-2 position-relative">
+                  <label className="form-label fw-semibold">Job Type</label>
+                  <select
+                    {...register("job_type")}
+                    className="form-control form-control-md rounded-3"
+                  >
+                    <option value="">Select Job Type</option>
+                    <option value="Full-time">Full-time</option>
+                    <option value="Part-time">Part-time</option>
+                    <option value="Internship">Internship</option>
+                    <option value="Remote">Remote</option>
+                    <option value="Contract">Contract</option>
+                  </select>
+                  <span className="text-danger">
+                    {errors.job_type?.message}
+                  </span>
+                </div>
+
+                {/* Salary Range */}
+                <div className="col-md-4 mb-2">
+                  <label className="form-label fw-semibold">Salary Range</label>
+                  <input
+                    type="text"
+                    {...register("job_salary")}
+                    className="form-control form-control-md rounded-3"
+                    placeholder="Enter Salary Range"
+                  />
+                  <span className="text-danger">
+                    {errors.job_salary?.message}
+                  </span>
+                </div>
+
+                {/* Status */}
+                <div className="col-md-4 mb-2 position-relative">
+                  <label className="form-label fw-semibold">Status</label>
+                  <select
+                    {...register("job_status")}
+                    className="form-control form-control-md rounded-3"
+                  >
+                    <option value="">Select Status</option>
+                    <option value="1">Active</option>
+                    <option value="2">Pending</option>
+                  </select>
+                  <span className="text-danger">
+                    {errors.job_status?.message}
+                  </span>
+                </div>
+
+                {/* Posted Date */}
+                <div className="col-md-4 mb-2">
+                  <label className="form-label fw-semibold">Posted Date</label>
+                  <input
+                    type="date"
+                    {...register("job_date")}
+                    className="form-control form-control-md rounded-3"
+                  />
+                  <span className="text-danger">
+                    {errors.job_date?.message}
+                  </span>
+                </div>
+
+                {/* Location */}
+                <div className="col-md-4 mb-2">
+                  <label className="form-label fw-semibold">Location</label>
+                  <input
+                    type="text"
+                    {...register("job_location")}
+                    className="form-control form-control-md rounded-3"
+                    placeholder="Enter Location"
+                  />
+                  <span className="text-danger">
+                    {errors.job_location?.message}
+                  </span>
+                </div>
+
+                {/* State */}
+                <div className="col-md-4">
+                  <label className="fw-semibold">State</label>
+                  <select
+                    className="form-select form-control"
+                    {...register("job_state")}
+                    onChange={(e) => {
+                      const stateId = e.target.value;
+                      fetchCities(stateId);
+                      setValue("city", ""); // ✅ RESET CITY
+                    }}
+                  >
+                    <option value="">Select State</option>
+                    {states.map((s) => (
+                      <option key={s.state_id} value={s.state_id}>
+                        {s.state_name}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-danger">{errors.state?.message}</p>
+                </div>
+
+                {/* City */}
+                <div className="col-md-4">
+                  <label className="fw-semibold">City</label>
+                  <select
+                    className="form-select form-control"
+                    {...register("job_city")} // ✅ CORRECT
+                    disabled={!cities.length}
+                  >
+                    <option value="">Select City</option>
+                    {cities.map((c) => (
+                      <option key={c.city_id} value={c.city_id}>
+                        {c.city_name}
+                      </option>
+                    ))}
+                  </select>
+
+                  <p className="text-danger">{errors.city?.message}</p>
+                </div>
+
+                {/* Experience Required */}
+                <div className="col-md-4 mb-2">
+                  <label className="form-label fw-semibold">
+                    Experience Required
+                  </label>
+                  <input
+                    type="text"
+                    {...register("job_experience")}
+                    className="form-control form-control-md rounded-3"
+                    placeholder="Enter Experience Required"
+                  />
+                  <span className="text-danger">
+                    {errors.job_experience?.message}
+                  </span>
+                </div>
+
+                {/* Location */}
+                <div className="col-md-4 mb-2">
+                  <label className="form-label fw-semibold">Skills</label>
+                  <input
+                    type="text"
+                    {...register("job_skills")}
+                    className="form-control form-control-md rounded-3"
+                    placeholder="Enter Required Skills"
+                  />
+                  <span className="text-danger">
+                    {errors.job_skills?.message}
+                  </span>
+                </div>
+              </div>
+
+              {/* Submit Button */}
+              <div className="modal-footer bg-light rounded-bottom-4 d-flex">
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary rounded-3"
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+
+                <button type="submit" className="btn btn-success px-4 ms-auto">
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      {/* Edit Model Code  */}
+      <div
+        className="modal fade"
+        id="editjobexampleModal"
+        tabIndex="-1"
+        aria-hidden="true"
+        ref={modalRef}
+      >
+        <div className="modal-dialog modal-dialog-centered modal-lg">
+          <div className="modal-content shadow-lg border-0 rounded-4">
+            <div className="modal-header text-white rounded-top-4 bg-success">
+              <h5 className="modal-title fw-bold" style={{ color: "white" }}>
+                Job Edit
+              </h5>
+              <i
+                className="fa-regular fa-circle-xmark"
+                data-bs-dismiss="modal"
+                style={{ cursor: "pointer", color: "white", fontSize: "25px" }}
+              ></i>
+            </div>
+
+            <form onSubmit={handleSubmit(handleUpdateJob)}>
               <div className="modal-body row">
                 {/* Job Title */}
                 <div className="col-md-4 mb-2">

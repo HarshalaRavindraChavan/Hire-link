@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import JobSearchBar from "./JobSearchBar";
 import "../Component2/css/Jobs.css";
 import { NavLink, useLocation } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
@@ -11,12 +12,6 @@ function Jobs() {
 
   const [searchKeyword, setSearchKeyword] = useState("");
   const [searchPlace, setSearchPlace] = useState("");
-
-  const [keywordSug, setKeywordSug] = useState([]);
-  const [placeSug, setPlaceSug] = useState([]);
-
-  const [showKeywordSug, setShowKeywordSug] = useState(false);
-  const [showPlaceSug, setShowPlaceSug] = useState(false);
   const [appliedKeyword, setAppliedKeyword] = useState("");
   const [appliedPlace, setAppliedPlace] = useState("");
   const [hasSearched, setHasSearched] = useState(false);
@@ -89,7 +84,6 @@ function Jobs() {
     }
   };
 
-  /* ================= FETCH JOB LIST ================= */
   useEffect(() => {
     document.title = "Hirelink | Jobs";
 
@@ -97,25 +91,30 @@ function Jobs() {
       .get("https://norealtor.in/hirelink_apis/candidate/getdata/tbl_job")
       .then((res) => {
         if (res.data.status === "success") {
-          setJobs(res.data.data);
+          setJobs(res.data.data); // ✅ THIS WAS MISSING
         }
+      })
+      .catch((error) => {
+        console.error("API Error:", error);
       });
   }, []);
 
-  /* ================= URL SEARCH ================= */
+  //============ auto Suggestion
   useEffect(() => {
     const params = new URLSearchParams(location.search);
+
     const keyword = params.get("keyword") || "";
     const place = params.get("place") || "";
 
     setSearchKeyword(keyword);
     setSearchPlace(place);
+
     setAppliedKeyword(keyword);
     setAppliedPlace(place);
+
     setHasSearched(!!(keyword || place));
   }, [location.search]);
 
-  /* ================= FILTER JOBS ================= */
   const filteredJobs = jobs.filter((job) => {
     const keyword = appliedKeyword.toLowerCase();
     const place = appliedPlace.toLowerCase();
@@ -129,148 +128,37 @@ function Jobs() {
     const placeMatch =
       !place ||
       job.city_name?.toLowerCase().includes(place) ||
-      job.state_name?.toLowerCase().includes(place);
+      job.state_name?.toLowerCase().includes(place) ||
+      `${job.city_name}, ${job.state_name}`.toLowerCase().includes(place);
 
     return keywordMatch && placeMatch;
   });
 
   useEffect(() => {
-    setSelectedJob(filteredJobs[0] || null);
-  }, [filteredJobs]);
+    if (!searchKeyword && !searchPlace) {
+      setHasSearched(false);
+    }
+  }, [searchKeyword, searchPlace]);
 
-  // useEffect(() => {
-  //   document.title = "Hirelink | Jobs";
+  useEffect(() => {
+    if (selectedJob) return; // 👈 user already interacted
 
-  //   axios
-  //     .get("https://norealtor.in/hirelink_apis/candidate/getdata/tbl_job")
-  //     .then((res) => {
-  //       if (res.data.status === "success") {
-  //         setJobs(res.data.data); // ✅ THIS WAS MISSING
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error("API Error:", error);
-  //     });
-  // }, []);
+    if (jobs.length === 0) return;
 
-  // //============ auto Suggestion
-  // useEffect(() => {
-  //   const params = new URLSearchParams(location.search);
+    if (savedJobs.length > 0) {
+      const savedJobDetail = jobs.find(
+        (job) => Number(job.job_id) === Number(savedJobs[0])
+      );
 
-  //   const keyword = params.get("keyword") || "";
-  //   const place = params.get("place") || "";
+      if (savedJobDetail) {
+        setSelectedJob(savedJobDetail);
+        return;
+      }
+    }
 
-  //   setSearchKeyword(keyword);
-  //   setSearchPlace(place);
+    setSelectedJob(jobs[0]);
+  }, [jobs, savedJobs]);
 
-  //   setAppliedKeyword(keyword);
-  //   setAppliedPlace(place);
-
-  //   setHasSearched(!!(keyword || place));
-  // }, [location.search]);
-
-  // useEffect(() => {
-  //   if (!searchKeyword.trim()) {
-  //     setKeywordSug([]);
-  //     setShowKeywordSug(false);
-  //     return;
-  //   }
-  //   let suggestions = [];
-
-  //   jobs.forEach((job) => {
-  //     // ===== HANDLE SKILLS SEPARATELY =====
-  //     if (job.job_skills) {
-  //       job.job_skills
-  //         .split(",") // html, css, js -> ["html", " css", " js"]
-  //         .map((skill) => skill.trim())
-  //         .forEach((skill) => {
-  //           if (skill.toLowerCase().startsWith(searchKeyword.toLowerCase())) {
-  //             suggestions.push({
-  //               text: skill,
-  //               type: "Skill",
-  //             });
-  //           }
-  //         });
-  //     }
-
-  //     // ===== OTHER FIELDS (title, company) =====
-  //     const otherFields = [
-  //       { value: job.job_title, type: "Job Title" },
-  //       { value: job.job_company, type: "Company" },
-  //       { value: job.city_name, type: "City" },
-  //     ];
-
-  //     otherFields.forEach((field) => {
-  //       if (
-  //         field.value &&
-  //         field.value.toLowerCase().startsWith(searchKeyword.toLowerCase())
-  //       ) {
-  //         suggestions.push({
-  //           text: field.value,
-  //           type: field.type,
-  //         });
-  //       }
-  //     });
-  //   });
-
-  //   // 🔹 Remove duplicate suggestions
-  //   const uniqueSuggestions = suggestions.filter(
-  //     (v, i, a) => a.findIndex((t) => t.text === v.text) === i
-  //   );
-
-  //   setKeywordSug(uniqueSuggestions.slice(0, 8));
-  //   setShowKeywordSug(true);
-  // }, [searchKeyword, jobs]);
-
-  // useEffect(() => {
-  //   if (!searchPlace.trim()) {
-  //     setPlaceSug([]);
-  //     setShowPlaceSug(false);
-  //     return;
-  //   }
-
-  //   const suggestions = jobs
-  //     .filter(
-  //       (job) =>
-  //         job.city_name?.toLowerCase().includes(searchPlace.toLowerCase()) ||
-  //         job.state_name?.toLowerCase().includes(searchPlace.toLowerCase())
-  //     )
-  //     .map((job) => `${job.city_name}, ${job.state_name}`)
-  //     .filter((v, i, a) => a.indexOf(v) === i)
-  //     .slice(0, 6);
-
-  //   setPlaceSug(suggestions);
-  //   setShowPlaceSug(true);
-  // }, [searchPlace, jobs]);
-
-  // const filteredJobs = jobs.filter((job) => {
-  //   const keyword = appliedKeyword.toLowerCase();
-  //   const place = appliedPlace.toLowerCase();
-
-  //   const keywordMatch =
-  //     !keyword ||
-  //     job.job_title?.toLowerCase().includes(keyword) ||
-  //     job.job_company?.toLowerCase().includes(keyword) ||
-  //     job.job_skills?.toLowerCase().includes(keyword);
-
-  //   const placeMatch =
-  //     !place ||
-  //     job.city_name?.toLowerCase().includes(place) ||
-  //     job.state_name?.toLowerCase().includes(place) ||
-  //     `${job.city_name}, ${job.state_name}`.toLowerCase().includes(place);
-
-  //   return keywordMatch && placeMatch;
-  // });
-
-  // useEffect(() => {
-  //   setSelectedJob(filteredJobs[0] || null);
-  // }, [filteredJobs]);
-
-  // useEffect(() => {
-  //   if (!searchKeyword && !searchPlace) {
-  //     setHasSearched(false);
-  //   }
-  // }, [searchKeyword, searchPlace]);
   return (
     <>
       <ToastContainer
@@ -285,97 +173,22 @@ function Jobs() {
 
       {/* ================= SEARCH SECTION ================= */}
       <section className="flex-grow-1 text-center mt-5 mb-4 container">
-        <div className="row justify-content-center g-2 mt-4 home-serch ps-3 pe-3">
-          {/* JOB INPUT */}
-          <div className="col-12 col-md-3 position-relative">
-            <div className="search-input d-flex align-items-center">
-              <i className="fa fa-search"></i>
-              <input
-                type="text"
-                placeholder="Job title, keywords, or company"
-                className="form-control border-0"
-                value={searchKeyword}
-                onChange={(e) => setSearchKeyword(e.target.value)}
-                onFocus={() => searchKeyword && setShowKeywordSug(true)}
-              />
-            </div>
-
-            {showKeywordSug && (
-              <ul
-                className="list-group position-absolute w-100"
-                style={{ zIndex: 1000, background: "#dfdcdcff" }}
-              >
-                {keywordSug.map((item, i) => (
-                  <li
-                    key={i}
-                    className="list-group-item list-group-item-action d-flex justify-content-between border-0"
-                    onClick={() => {
-                      setSearchKeyword(item.text);
-                      setAppliedKeyword(item.text); // ⭐ ADD THIS
-                      setShowKeywordSug(false);
-                      setHasSearched(true);
-                    }}
-                  >
-                    <span>{item.text}</span>
-                    <small className="text-muted">{item.type}</small>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-
-          {/* LOCATION INPUT */}
-          <div className="col-12 col-md-3 position-relative">
-            <div className="search-input d-flex align-items-center">
-              <i className="fa fa-location-dot"></i>
-              <input
-                type="text"
-                placeholder="City, state, or remote"
-                className="form-control border-0"
-                value={searchPlace}
-                onChange={(e) => setSearchPlace(e.target.value)}
-                onFocus={() => searchPlace && setShowPlaceSug(true)}
-              />
-            </div>
-
-            {showPlaceSug && (
-              <ul
-                className="list-group position-absolute w-100"
-                style={{ zIndex: 1000, background: "#dfdcdcff" }}
-              >
-                {placeSug.map((item, i) => (
-                  <li
-                    key={i}
-                    className="list-group-item list-group-item-action"
-                    onClick={() => {
-                      setSearchPlace(item);
-                      setAppliedPlace(item); // ⭐ ADD THIS
-                      setShowPlaceSug(false);
-                      setHasSearched(true);
-                    }}
-                  >
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-
-          <div className="col-12 col-md-2">
-            <button
-              className="btn find-btn w-100"
-              onClick={() => {
-                setAppliedKeyword(searchKeyword.trim());
-                setAppliedPlace(searchPlace.trim());
-                setHasSearched(true);
-                setShowKeywordSug(false);
-                setShowPlaceSug(false);
-              }}
-            >
-              Find jobs
-            </button>
-          </div>
-        </div>
+        <JobSearchBar
+          jobs={jobs}
+          searchKeyword={searchKeyword}
+          setSearchKeyword={setSearchKeyword}
+          searchPlace={searchPlace}
+          setSearchPlace={setSearchPlace}
+          appliedKeyword={appliedKeyword}
+          setAppliedKeyword={setAppliedKeyword}
+          appliedPlace={appliedPlace}
+          setAppliedPlace={setAppliedPlace}
+          onSearch={() => {
+            setAppliedKeyword(searchKeyword.trim());
+            setAppliedPlace(searchPlace.trim());
+            setHasSearched(true);
+          }}
+        />
       </section>
 
       {/* ================= JOB LIST & DETAILS ================= */}

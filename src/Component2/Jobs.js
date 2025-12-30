@@ -5,76 +5,6 @@ import { NavLink, useLocation } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 
 function Jobs() {
-  //save jobs
-  const [savedJobs, setSavedJobs] = useState([]);
-  const [candidate, setCandidate] = useState(null);
-
-  useEffect(() => {
-    const cand = JSON.parse(localStorage.getItem("candidate"));
-    setCandidate(cand);
-  }, []);
-
-  const fetchSavedJobs = async (canId) => {
-    try {
-      const res = await axios.get(
-        `https://norealtor.in/hirelink_apis/candidate/saved-jobs/${canId}`
-      );
-
-      if (res.data.status) {
-        // 👇 IMPORTANT: Number conversion
-        setSavedJobs(res.data.data.map((j) => Number(j.job_id)));
-      }
-    } catch (err) {
-      toast.error("Failed to load saved jobs");
-    }
-  };
-
-  useEffect(() => {
-    if (candidate?.can_id) {
-      fetchSavedJobs(candidate.can_id);
-    }
-  }, [candidate]);
-
-  const toggleSaveJob = async (jobId) => {
-    // 🔴 MUST CHECK
-    if (!candidate || !candidate.can_id) {
-      toast.warn("Please login as Candidate to save jobs");
-      return;
-    }
-
-    if (!jobId) {
-      toast.error("Invalid job");
-      return;
-    }
-
-    const isSaved = savedJobs.includes(Number(jobId));
-
-    try {
-      const payload = {
-        save_candidate_id: candidate.can_id,
-        save_job_id: Number(jobId),
-      };
-
-      if (isSaved) {
-        await axios.post(
-          "https://norealtor.in/hirelink_apis/candidate/unsave-job",
-          payload
-        );
-        await fetchSavedJobs(candidate.can_id);
-        toast.info("Job removed");
-      } else {
-        await axios.post(
-          "https://norealtor.in/hirelink_apis/candidate/save-job",
-          payload
-        );
-        await fetchSavedJobs(candidate.can_id);
-        toast.success("Job saved ❤️");
-      }
-    } catch (e) {
-      toast.error("Server error");
-    }
-  };
-
   const [jobs, setJobs] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
   const location = useLocation();
@@ -90,7 +20,76 @@ function Jobs() {
   const [appliedKeyword, setAppliedKeyword] = useState("");
   const [appliedPlace, setAppliedPlace] = useState("");
   const [hasSearched, setHasSearched] = useState(false);
+  //save jobs
+  const [savedJobs, setSavedJobs] = useState([]);
+  const [candidate, setCandidate] = useState(null);
 
+  /* ================= LOAD CANDIDATE (REFRESH SAFE) ================= */
+  useEffect(() => {
+    const cand = JSON.parse(localStorage.getItem("candidate"));
+    if (cand?.can_id) {
+      setCandidate(cand);
+    }
+  }, []);
+
+  /* ================= FETCH SAVED JOBS ================= */
+  const fetchSavedJobs = async (canId) => {
+    try {
+      const res = await axios.get(
+        `https://norealtor.in/hirelink_apis/candidate/saved-jobs/${canId}`
+      );
+
+      if (res.data.status) {
+        setSavedJobs(res.data.data.map((j) => Number(j.save_job_id)));
+      }
+    } catch {
+      toast.error("Failed to load saved jobs");
+    }
+  };
+
+  /* ================= CALL SAVED JOBS AFTER REFRESH ================= */
+  useEffect(() => {
+    if (candidate?.can_id) {
+      fetchSavedJobs(candidate.can_id);
+    }
+  }, [candidate?.can_id]);
+
+  /* ================= SAVE / UNSAVE JOB ================= */
+  const toggleSaveJob = async (jobId) => {
+    if (!candidate?.can_id) {
+      toast.warn("Please login as Candidate to save jobs");
+      return;
+    }
+
+    const isSaved = savedJobs.includes(Number(jobId));
+
+    const payload = {
+      save_candidate_id: candidate.can_id,
+      save_job_id: Number(jobId),
+    };
+
+    try {
+      if (isSaved) {
+        await axios.post(
+          "https://norealtor.in/hirelink_apis/candidate/unsave-job",
+          payload
+        );
+        setSavedJobs((prev) => prev.filter((id) => id !== Number(jobId)));
+        toast.info("Job removed");
+      } else {
+        await axios.post(
+          "https://norealtor.in/hirelink_apis/candidate/save-job",
+          payload
+        );
+        setSavedJobs((prev) => [...prev, Number(jobId)]);
+        toast.success("Job saved ❤️");
+      }
+    } catch {
+      toast.error("Server error");
+    }
+  };
+
+  /* ================= FETCH JOB LIST ================= */
   useEffect(() => {
     document.title = "Hirelink | Jobs";
 
@@ -98,104 +97,25 @@ function Jobs() {
       .get("https://norealtor.in/hirelink_apis/candidate/getdata/tbl_job")
       .then((res) => {
         if (res.data.status === "success") {
-          setJobs(res.data.data); // ✅ THIS WAS MISSING
+          setJobs(res.data.data);
         }
-      })
-      .catch((error) => {
-        console.error("API Error:", error);
       });
   }, []);
 
-  //============ auto Suggestion
+  /* ================= URL SEARCH ================= */
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-
     const keyword = params.get("keyword") || "";
     const place = params.get("place") || "";
 
     setSearchKeyword(keyword);
     setSearchPlace(place);
-
     setAppliedKeyword(keyword);
     setAppliedPlace(place);
-
     setHasSearched(!!(keyword || place));
   }, [location.search]);
 
-  useEffect(() => {
-    if (!searchKeyword.trim()) {
-      setKeywordSug([]);
-      setShowKeywordSug(false);
-      return;
-    }
-    let suggestions = [];
-
-    jobs.forEach((job) => {
-      // ===== HANDLE SKILLS SEPARATELY =====
-      if (job.job_skills) {
-        job.job_skills
-          .split(",") // html, css, js -> ["html", " css", " js"]
-          .map((skill) => skill.trim())
-          .forEach((skill) => {
-            if (skill.toLowerCase().startsWith(searchKeyword.toLowerCase())) {
-              suggestions.push({
-                text: skill,
-                type: "Skill",
-              });
-            }
-          });
-      }
-
-      // ===== OTHER FIELDS (title, company) =====
-      const otherFields = [
-        { value: job.job_title, type: "Job Title" },
-        { value: job.job_company, type: "Company" },
-        { value: job.city_name, type: "City" },
-      ];
-
-      otherFields.forEach((field) => {
-        if (
-          field.value &&
-          field.value.toLowerCase().startsWith(searchKeyword.toLowerCase())
-        ) {
-          suggestions.push({
-            text: field.value,
-            type: field.type,
-          });
-        }
-      });
-    });
-
-    // 🔹 Remove duplicate suggestions
-    const uniqueSuggestions = suggestions.filter(
-      (v, i, a) => a.findIndex((t) => t.text === v.text) === i
-    );
-
-    setKeywordSug(uniqueSuggestions.slice(0, 8));
-    setShowKeywordSug(true);
-  }, [searchKeyword, jobs]);
-
-  useEffect(() => {
-    if (!searchPlace.trim()) {
-      setPlaceSug([]);
-      setShowPlaceSug(false);
-      return;
-    }
-
-    const suggestions = jobs
-      .filter(
-        (job) =>
-          job.city_name?.toLowerCase().includes(searchPlace.toLowerCase()) ||
-          job.state_name?.toLowerCase().includes(searchPlace.toLowerCase())
-      )
-      .map((job) => `${job.city_name}, ${job.state_name}`)
-      .filter((v, i, a) => a.indexOf(v) === i)
-      .slice(0, 6);
-
-    setPlaceSug(suggestions);
-    setShowPlaceSug(true);
-  }, [searchPlace, jobs]);
-
+  /* ================= FILTER JOBS ================= */
   const filteredJobs = jobs.filter((job) => {
     const keyword = appliedKeyword.toLowerCase();
     const place = appliedPlace.toLowerCase();
@@ -209,8 +129,7 @@ function Jobs() {
     const placeMatch =
       !place ||
       job.city_name?.toLowerCase().includes(place) ||
-      job.state_name?.toLowerCase().includes(place) ||
-      `${job.city_name}, ${job.state_name}`.toLowerCase().includes(place);
+      job.state_name?.toLowerCase().includes(place);
 
     return keywordMatch && placeMatch;
   });
@@ -219,11 +138,139 @@ function Jobs() {
     setSelectedJob(filteredJobs[0] || null);
   }, [filteredJobs]);
 
-  useEffect(() => {
-    if (!searchKeyword && !searchPlace) {
-      setHasSearched(false);
-    }
-  }, [searchKeyword, searchPlace]);
+  // useEffect(() => {
+  //   document.title = "Hirelink | Jobs";
+
+  //   axios
+  //     .get("https://norealtor.in/hirelink_apis/candidate/getdata/tbl_job")
+  //     .then((res) => {
+  //       if (res.data.status === "success") {
+  //         setJobs(res.data.data); // ✅ THIS WAS MISSING
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error("API Error:", error);
+  //     });
+  // }, []);
+
+  // //============ auto Suggestion
+  // useEffect(() => {
+  //   const params = new URLSearchParams(location.search);
+
+  //   const keyword = params.get("keyword") || "";
+  //   const place = params.get("place") || "";
+
+  //   setSearchKeyword(keyword);
+  //   setSearchPlace(place);
+
+  //   setAppliedKeyword(keyword);
+  //   setAppliedPlace(place);
+
+  //   setHasSearched(!!(keyword || place));
+  // }, [location.search]);
+
+  // useEffect(() => {
+  //   if (!searchKeyword.trim()) {
+  //     setKeywordSug([]);
+  //     setShowKeywordSug(false);
+  //     return;
+  //   }
+  //   let suggestions = [];
+
+  //   jobs.forEach((job) => {
+  //     // ===== HANDLE SKILLS SEPARATELY =====
+  //     if (job.job_skills) {
+  //       job.job_skills
+  //         .split(",") // html, css, js -> ["html", " css", " js"]
+  //         .map((skill) => skill.trim())
+  //         .forEach((skill) => {
+  //           if (skill.toLowerCase().startsWith(searchKeyword.toLowerCase())) {
+  //             suggestions.push({
+  //               text: skill,
+  //               type: "Skill",
+  //             });
+  //           }
+  //         });
+  //     }
+
+  //     // ===== OTHER FIELDS (title, company) =====
+  //     const otherFields = [
+  //       { value: job.job_title, type: "Job Title" },
+  //       { value: job.job_company, type: "Company" },
+  //       { value: job.city_name, type: "City" },
+  //     ];
+
+  //     otherFields.forEach((field) => {
+  //       if (
+  //         field.value &&
+  //         field.value.toLowerCase().startsWith(searchKeyword.toLowerCase())
+  //       ) {
+  //         suggestions.push({
+  //           text: field.value,
+  //           type: field.type,
+  //         });
+  //       }
+  //     });
+  //   });
+
+  //   // 🔹 Remove duplicate suggestions
+  //   const uniqueSuggestions = suggestions.filter(
+  //     (v, i, a) => a.findIndex((t) => t.text === v.text) === i
+  //   );
+
+  //   setKeywordSug(uniqueSuggestions.slice(0, 8));
+  //   setShowKeywordSug(true);
+  // }, [searchKeyword, jobs]);
+
+  // useEffect(() => {
+  //   if (!searchPlace.trim()) {
+  //     setPlaceSug([]);
+  //     setShowPlaceSug(false);
+  //     return;
+  //   }
+
+  //   const suggestions = jobs
+  //     .filter(
+  //       (job) =>
+  //         job.city_name?.toLowerCase().includes(searchPlace.toLowerCase()) ||
+  //         job.state_name?.toLowerCase().includes(searchPlace.toLowerCase())
+  //     )
+  //     .map((job) => `${job.city_name}, ${job.state_name}`)
+  //     .filter((v, i, a) => a.indexOf(v) === i)
+  //     .slice(0, 6);
+
+  //   setPlaceSug(suggestions);
+  //   setShowPlaceSug(true);
+  // }, [searchPlace, jobs]);
+
+  // const filteredJobs = jobs.filter((job) => {
+  //   const keyword = appliedKeyword.toLowerCase();
+  //   const place = appliedPlace.toLowerCase();
+
+  //   const keywordMatch =
+  //     !keyword ||
+  //     job.job_title?.toLowerCase().includes(keyword) ||
+  //     job.job_company?.toLowerCase().includes(keyword) ||
+  //     job.job_skills?.toLowerCase().includes(keyword);
+
+  //   const placeMatch =
+  //     !place ||
+  //     job.city_name?.toLowerCase().includes(place) ||
+  //     job.state_name?.toLowerCase().includes(place) ||
+  //     `${job.city_name}, ${job.state_name}`.toLowerCase().includes(place);
+
+  //   return keywordMatch && placeMatch;
+  // });
+
+  // useEffect(() => {
+  //   setSelectedJob(filteredJobs[0] || null);
+  // }, [filteredJobs]);
+
+  // useEffect(() => {
+  //   if (!searchKeyword && !searchPlace) {
+  //     setHasSearched(false);
+  //   }
+  // }, [searchKeyword, searchPlace]);
   return (
     <>
       <ToastContainer
@@ -360,7 +407,7 @@ function Jobs() {
                         ? "fa-solid fa-bookmark text-primary"
                         : "fa-regular fa-bookmark"
                     }
-                  ></i>
+                  />
                 </button>
 
                 <h5 className="fw-bold">{job.job_title}</h5>
@@ -396,7 +443,7 @@ function Jobs() {
                         ? "fa-solid fa-bookmark text-primary"
                         : "fa-regular fa-bookmark"
                     }
-                  ></i>
+                  />
                 </button>
 
                 <h4 className="fw-bold">{selectedJob.job_title}</h4>

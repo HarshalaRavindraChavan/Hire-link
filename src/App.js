@@ -36,6 +36,7 @@ import Forgot from "./Component2/Forgot";
 import Header3 from "./Component3/Header";
 import Footer3 from "./Component3/Footer";
 import Employer from "./Component3/Employer";
+import JobsSAI from "./Component2/JobsSAI";
 
 // ---------------- ADMIN LAYOUT ----------------
 const AdminLayout = () => {
@@ -119,6 +120,8 @@ function App() {
           <Route path="/contacts" element={<Contacts />} />
           <Route path="/apply" element={<Apply />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/jobsai" element={<JobsSAI/>}/>
+
         </Route>
 
         {/* Employer ROUTES */}

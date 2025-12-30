@@ -169,6 +169,70 @@ function Offer() {
     }
   };
 
+  // Edit Model Code
+  const [editOfferId, setEditOfferId] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const openEditOfferModal = (offer) => {
+    if (!offer) return;
+
+    setEditOfferId(offer.offer_id);
+
+    reset({
+      offer_title: offer.offer_title || "",
+      offer_price: offer.offer_price || "",
+      offer_duration: offer.offer_duration || "",
+      offer_discount: offer.offer_discount || "",
+      offer_description: offer.offer_description || "",
+    });
+
+    const modal = new window.bootstrap.Modal(
+      document.getElementById("editOfferModal")
+    );
+    modal.show();
+  };
+
+  const handleUpdateOffer = async (data) => {
+    if (!editOfferId) {
+      toast.error("Offer ID missing");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const response = await axios.post(
+        `https://norealtor.in/hirelink_apis/admin/updatedata/tbl_offer/offer_id/${editOfferId}`,
+        {
+          offer_title: data.offer_title,
+          offer_price: data.offer_price,
+          offer_duration: data.offer_duration,
+          offer_discount: data.offer_discount,
+          offer_description: data.offer_description,
+          offer_terms: data.offer_terms,
+        }
+      );
+
+      if (response?.data?.status === true) {
+        toast.success("Offer updated successfully ✅");
+        fetchOffers();
+
+        const modalEl = document.getElementById("editOfferModal");
+        if (modalEl && window.bootstrap) {
+          const modalInstance = window.bootstrap.Modal.getInstance(modalEl);
+          modalInstance?.hide();
+        }
+      } else {
+        toast.error("Offer update failed");
+      }
+    } catch (error) {
+      console.error("Update Offer Error:", error);
+      toast.error("Server error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <ToastContainer position="top-right" autoClose={3000} />
@@ -228,7 +292,7 @@ function Offer() {
                 <th className="fs-6 fw-bold">ID</th>
                 <th className="fs-6 fw-bold">Offer Detail</th>
                 <th className="fs-6 fw-bold">Offer Dates</th>
-                <th className="fs-6 fw-bold">Offer Image</th>
+                {/* <th className="fs-6 fw-bold">Offer Image</th> */}
                 <th className="fs-6 fw-bold">Activity Detail</th>
               </tr>
             </thead>
@@ -256,8 +320,11 @@ function Offer() {
                           </span>
                           <ul className="dropdown-menu shadow">
                             <li>
-                              <button className="dropdown-item">
-                                <i className="fas fa-edit me-2"></i>Edit
+                              <button
+                                className="dropdown-item"
+                                onClick={() => openEditOfferModal(item)}
+                              >
+                                <i className="fas fa-edit me-2"></i> Edit
                               </button>
                             </li>
                             <li>
@@ -314,16 +381,7 @@ function Offer() {
                         )}
                       </div>
                     </td>
-                    {/* Skills */}
-                    <td className="text-center">
-                      <div className="avatar avatar-xl">
-                        <img
-                          src="data:image/jpeg;base64,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"
-                          className="avatar-img rounded-circle"
-                          alt="Offer Image"
-                        ></img>
-                      </div>
-                    </td>
+
                     <td className="text-start">
                       <div className="fw-bold ">
                         Added By:{"  "}
@@ -377,6 +435,145 @@ function Offer() {
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="modal-body row">
+                <div className="col-md-4">
+                  <label>Offer Title</label>
+                  <input
+                    type="text"
+                    {...register("offer_title")}
+                    className="form-control"
+                    placeholder="Enter Offer Name"
+                  />
+                  <p className="text-danger">{errors.offer_title?.message}</p>
+                </div>
+
+                <div className="col-md-4">
+                  <label>Coupon Code</label>
+                  <input
+                    type="text"
+                    {...register("offer_coupon_code")}
+                    className="form-control"
+                    placeholder="Enter Coupon Code"
+                  />
+                  <p className="text-danger">
+                    {errors.offer_coupon_code?.message}
+                  </p>
+                </div>
+
+                <div className="col-md-4 ">
+                  <label>Offer In</label>
+                  <select
+                    {...register("offer_in")}
+                    className="form-select form-control"
+                  >
+                    <option value="">Select</option>
+                    <option value="Percentage">Percentage</option>
+                    <option value="Flat Amount">Flat Amount</option>
+                  </select>
+                  <p className="text-danger">{errors.offer_in?.message}</p>
+                </div>
+
+                <div className="col-md-4">
+                  <label>Start Date</label>
+                  <input
+                    type="date"
+                    {...register("offer_start_date")}
+                    className="form-control"
+                  />
+                  <p className="text-danger">
+                    {errors.offer_start_date?.message}
+                  </p>
+                </div>
+
+                <div className="col-md-4">
+                  <label>End Date</label>
+                  <input
+                    type="date"
+                    {...register("offer_end_date")}
+                    className="form-control"
+                  />
+                  <p className="text-danger">
+                    {errors.offer_end_date?.message}
+                  </p>
+                </div>
+
+                <div className="col-md-4">
+                  <label>Usage Limit</label>
+                  <input
+                    type="number"
+                    {...register("offer_usage_limit")}
+                    className="form-control"
+                    placeholder="Number of User Limit"
+                  />
+                  <p className="text-danger">
+                    {errors.offer_usage_limit?.message}
+                  </p>
+                </div>
+
+                <div className="col-md-4">
+                  <label>Status</label>
+                  <select
+                    {...register("offer_status")}
+                    className="form-select form-control"
+                  >
+                    <option value="">Select Status</option>
+                    <option value="1">Active</option>
+                    <option value="0">Inactive</option>
+                  </select>
+                  <p className="text-danger">{errors.offer_status?.message}</p>
+                </div>
+
+                <div className="col-12">
+                  <label>Description</label>
+                  <textarea
+                    {...register("offer_description")}
+                    className="form-control"
+                    rows={4}
+                    placeholder="Details about offer"
+                  ></textarea>
+                  <p className="text-danger">
+                    {errors.offer_description?.message}
+                  </p>
+                </div>
+              </div>
+
+              <div className="modal-footer bg-light rounded-bottom-4 d-flex">
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary rounded-3"
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+
+                <button type="submit" className="btn btn-success px-4 ms-auto">
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      {/* Edit Model */}
+      <div
+        className="modal fade"
+        id="editOfferModal"
+        tabIndex="-1"
+        ref={modalRef}
+      >
+        <div className="modal-dialog modal-dialog-centered modal-lg">
+          <div className="modal-content rounded-4">
+            <div className="modal-header bg-success text-white rounded-top-4">
+              <h5 className="modal-title fw-bold">Edit Offer</h5>
+              <i
+                className="fa-regular fa-circle-xmark"
+                data-bs-dismiss="modal"
+                style={{ cursor: "pointer", color: "white", fontSize: "25px" }}
+              ></i>
+            </div>
+
+            <form onSubmit={handleSubmit(handleUpdateOffer)}>
               <div className="modal-body row">
                 <div className="col-md-4">
                   <label>Offer Title</label>

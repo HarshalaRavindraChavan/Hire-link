@@ -575,6 +575,7 @@ function Offer() {
         </div>
       </div>
 
+
       {/* Edit Model */}
       <div
         className="modal fade"

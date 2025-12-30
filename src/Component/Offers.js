@@ -174,64 +174,78 @@ function Offer() {
   const [loading, setLoading] = useState(false);
 
   const openEditOfferModal = (offer) => {
-    if (!offer) return;
+  if (!offer) return;
 
-    setEditOfferId(offer.offer_id);
+  setEditOfferId(offer.offer_id);
 
-    reset({
-      offer_title: offer.offer_title || "",
-      offer_price: offer.offer_price || "",
-      offer_duration: offer.offer_duration || "",
-      offer_discount: offer.offer_discount || "",
-      offer_description: offer.offer_description || "",
-    });
+  reset({
+    offer_title: offer.offer_title ?? "",
+    offer_coupon_code: offer.offer_coupon_code ?? "",
+    offer_in: offer.offer_in ?? "",
+    offer_start_date: offer.offer_start_date ?? "",
+    offer_end_date: offer.offer_end_date ?? "",
+    offer_usage_limit: offer.offer_usage_limit ?? "",
+    offer_status: offer.offer_status ?? "",
+    offer_description: offer.offer_description ?? "",
+  });
 
-    const modal = new window.bootstrap.Modal(
-      document.getElementById("editOfferModal")
+  const modalEl = document.getElementById("editOfferModal");
+  if (!modalEl || !window.bootstrap) return;
+
+  const modalInstance =
+    window.bootstrap.Modal.getInstance(modalEl) ||
+    new window.bootstrap.Modal(modalEl);
+
+  modalInstance.show();
+};
+
+
+ const handleUpdateOffer = async (data) => {
+  if (!editOfferId) {
+    toast.error("Offer ID missing");
+    return;
+  }
+
+  try {
+    setLoading(true);
+
+    const payload = {
+      offer_title: data.offer_title,
+      offer_coupon_code: data.offer_coupon_code,
+      offer_in: data.offer_in,
+      offer_start_date: data.offer_start_date,
+      offer_end_date: data.offer_end_date,
+      offer_usage_limit: Number(data.offer_usage_limit),
+      offer_status: data.offer_status,
+      offer_description: data.offer_description,
+    };
+
+    const response = await axios.post(
+      `https://norealtor.in/hirelink_apis/admin/updatedata/tbl_offer/offer_id/${editOfferId}`,
+      payload
     );
-    modal.show();
-  };
 
-  const handleUpdateOffer = async (data) => {
-    if (!editOfferId) {
-      toast.error("Offer ID missing");
-      return;
-    }
+    if (response?.data?.status === true) {
+      toast.success("Offer updated successfully ✅");
+      fetchOffers();
 
-    try {
-      setLoading(true);
-
-      const response = await axios.post(
-        `https://norealtor.in/hirelink_apis/admin/updatedata/tbl_offer/offer_id/${editOfferId}`,
-        {
-          offer_title: data.offer_title,
-          offer_price: data.offer_price,
-          offer_duration: data.offer_duration,
-          offer_discount: data.offer_discount,
-          offer_description: data.offer_description,
-          offer_terms: data.offer_terms,
-        }
-      );
-
-      if (response?.data?.status === true) {
-        toast.success("Offer updated successfully ✅");
-        fetchOffers();
-
-        const modalEl = document.getElementById("editOfferModal");
-        if (modalEl && window.bootstrap) {
-          const modalInstance = window.bootstrap.Modal.getInstance(modalEl);
-          modalInstance?.hide();
-        }
-      } else {
-        toast.error("Offer update failed");
+      const modalEl = document.getElementById("editOfferModal");
+      if (modalEl && window.bootstrap) {
+        const modalInstance =
+          window.bootstrap.Modal.getInstance(modalEl);
+        modalInstance?.hide();
       }
-    } catch (error) {
-      console.error("Update Offer Error:", error);
-      toast.error("Server error");
-    } finally {
-      setLoading(false);
+    } else {
+      toast.error("Offer update failed");
     }
-  };
+  } catch (error) {
+    console.error("Update Offer Error:", error);
+    toast.error("Server error");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <>
@@ -355,6 +369,12 @@ function Offer() {
                         Usage Limit:{"  "}
                         <span className="text-dark fw-normal">
                           {item.offer_usage_limit}
+                        </span>
+                      </div>
+                       <div className="fw-bold">
+                        Description:{"  "}
+                        <span className="text-dark fw-normal">
+                          {item.offer_description}
                         </span>
                       </div>
                     </td>
@@ -640,7 +660,7 @@ function Offer() {
                   <label>Usage Limit</label>
                   <input
                     type="number"
-                    {...register("offer_usage_limit")}
+                      {...register("offer_usage_limit", { valueAsNumber: true })}
                     className="form-control"
                     placeholder="Number of User Limit"
                   />

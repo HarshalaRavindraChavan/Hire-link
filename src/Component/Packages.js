@@ -66,6 +66,7 @@ function Packages() {
     control,
     formState: { errors },
     reset,
+    setValue,
     getValues,
     setError,
     clearErrors,
@@ -83,7 +84,7 @@ function Packages() {
     },
   });
 
-  // // Ensure first input always appears
+  // Ensure first input always appears
 
   const onSubmit = async (data) => {
     try {
@@ -204,6 +205,85 @@ function Packages() {
     setShowDeleteModal(true);
   };
 
+  // edit model code
+  const [isEdit, setIsEdit] = useState(false);
+  const [editPackId, setEditPackId] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+const openEditModal = (pkg) => {
+  setEditPackId(pkg.pack_id);
+
+  reset({
+    pack_name: pkg.pack_name || "",
+    pack_price: pkg.pack_price || "",
+    pack_duration: pkg.pack_duration || "",
+    pack_jplimit: pkg.pack_jplimit || "",
+    pack_rvlimit: pkg.pack_rvlimit || "",
+    pack_support: pkg.pack_support || "",
+    pack_description: pkg.pack_description || "",
+    pack_benefits: pkg.pack_benefits?.length
+      ? pkg.pack_benefits
+      : [""],
+  });
+
+  const modal = new window.bootstrap.Modal(
+    document.getElementById("exampleModal")
+  );
+  modal.show();
+};
+
+
+  const handleUpdatePackage = async (data) => {
+    if (!editPackId) {
+      toast.error("Package ID missing");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const response = await axios.post(
+        `https://norealtor.in/hirelink_apis/candidate/updatedata/tbl_packae/pack_id/${editPackId}`,
+        {
+          pack_name: data.pack_name,
+          pack_price: data.pack_price,
+          pack_duration: data.pack_duration,
+          pack_jplimit: data.pack_jplimit,
+          pack_rvlimit: data.pack_rvlimit,
+          pack_support: data.pack_support,
+          pack_description: data.pack_description,
+          pack_benefits: data.pack_benefits,
+        },
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      const result = response.data;
+
+      if (result?.status === true) {
+        toast.success("Package updated successfully ✅");
+
+        setTimeout(() => {
+          const modalEl = document.getElementById("exampleModal");
+          if (modalEl && window.bootstrap) {
+            const modalInstance =
+              window.bootstrap.Modal.getInstance(modalEl) ||
+              new window.bootstrap.Modal(modalEl);
+            modalInstance.hide();
+          }
+        }, 600);
+      } else {
+        toast.error(result?.message || "Package update failed");
+      }
+    } catch (error) {
+      console.error("PACKAGE UPDATE ERROR:", error);
+      toast.error(error.response?.data?.message || "Server error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <ToastContainer
@@ -270,8 +350,12 @@ function Packages() {
 
                           <ul className="dropdown-menu shadow">
                             <li>
-                              <button className="dropdown-item">
-                                <i className="fas fa-edit me-2"></i>Edit
+                              <button
+                                className="dropdown-item"
+                                onClick={() => openEditModal(pkg)}
+                              >
+                                <i className="fas fa-edit me-2"></i>
+                                Edit
                               </button>
                             </li>
                             <li>
@@ -394,6 +478,183 @@ function Packages() {
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="modal-body row">
+                {/* PACKAGE NAME */}
+                <div className="col-md-4">
+                  <label>Package Name</label>
+                  <input
+                    className="form-control"
+                    {...register("pack_name")}
+                    placeholder="Enter Package Name"
+                  />
+                  <span className="text-danger">
+                    {errors.pack_name?.message}
+                  </span>
+                </div>
+
+                {/* PRICE */}
+                <div className="col-md-4">
+                  <label>Price</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    {...register("pack_price")}
+                    placeholder="Enter Package Price"
+                  />
+                  <span className="text-danger">
+                    {errors.pack_price?.message}
+                  </span>
+                </div>
+
+                {/* DURATION */}
+                <div className="col-md-4">
+                  <label>Duration</label>
+                  <select
+                    className="form-select form-control"
+                    {...register("pack_duration")}
+                  >
+                    <option value="">Select</option>
+                    <option value="30 Days">30 Days</option>
+                    <option value="60 Days">60 Days</option>
+                    <option value="90 Days">90 Days</option>
+                    <option value="1 Year">1 Year</option>
+                  </select>
+                  <span className="text-danger">
+                    {errors.pack_duration?.message}
+                  </span>
+                </div>
+
+                {/* JOB POST LIMIT */}
+                <div className="col-md-4">
+                  <label>Job Post Limit</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    {...register("pack_jplimit")}
+                    placeholder="Number of Post Limit"
+                  />
+                  <span className="text-danger">
+                    {errors.pack_jplimit?.message}
+                  </span>
+                </div>
+
+                {/* RESUME VIEW LIMIT */}
+                <div className="col-md-4">
+                  <label>Resume View Limit</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    {...register("pack_rvlimit")}
+                    placeholder="Number of View Limit"
+                  />
+                  <span className="text-danger">
+                    {errors.pack_rvlimit?.message}
+                  </span>
+                </div>
+
+                {/* SUPPORT */}
+                <div className="col-md-4">
+                  <label>Support</label>
+                  <select
+                    className="form-select form-control"
+                    {...register("pack_support")}
+                  >
+                    <option value="">Select</option>
+                    <option value="Email">Email</option>
+                    <option value="Chat">Chat</option>
+                    <option value="Phone">Phone</option>
+                  </select>
+                  <span className="text-danger">
+                    {errors.pack_support?.message}
+                  </span>
+                </div>
+
+                {/* DESCRIPTION */}
+                <div className="col-md-12">
+                  <label>Description</label>
+                  <textarea
+                    className="form-control"
+                    rows={3}
+                    {...register("pack_description")}
+                    placeholder="Enter Package Description"
+                  />
+                  <span className="text-danger">
+                    {errors.pack_description?.message}
+                  </span>
+                </div>
+
+                {/* BENEFITS */}
+                <div className="col-md-12">
+                  <label>Benefits / Features</label>
+
+                  {fields.map((field, index) => (
+                    <div key={field.id} className="mb-2">
+                      <div className="d-flex gap-2">
+                        <input
+                          type="text"
+                          className="form-control"
+                          {...register(`pack_benefits.${index}`)}
+                          placeholder={`Benefit ${index + 1}`}
+                        />
+
+                        {index === fields.length - 1 && (
+                          <button
+                            type="button"
+                            className="btn btn-success"
+                            onClick={handleAddBenefit}
+                          >
+                            Add
+                          </button>
+                        )}
+                      </div>
+
+                      {errors.pack_benefits?.[index] && (
+                        <span className="text-danger">
+                          {errors.pack_benefits[index]?.message}
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="modal-footer bg-light d-flex">
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+
+                <button type="submit" className="btn btn-success ms-auto">
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      {/* EDIT MODEL */}
+      <div
+        className="modal fade"
+        id="exampleModal"
+        tabIndex="-1"
+        // ref={modalRef}
+      >
+        <div className="modal-dialog modal-dialog-centered modal-lg">
+          <div className="modal-content">
+            <div className="modal-header bg-success text-white">
+              <h5 className="modal-title">Edit Model</h5>
+              <i
+                className="fa-regular fa-circle-xmark"
+                data-bs-dismiss="modal"
+                style={{ cursor: "pointer", fontSize: "25px" }}
+              ></i>
+            </div>
+
+            <form onSubmit={handleSubmit(handleUpdatePackage)}>
               <div className="modal-body row">
                 {/* PACKAGE NAME */}
                 <div className="col-md-4">

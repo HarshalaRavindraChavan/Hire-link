@@ -1,14 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Pagination from "./commenuse/Pagination";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
 import { toast, ToastContainer } from "react-toastify";
+import { useForm } from "react-hook-form";
 
 function Interview() {
   useEffect(() => {
     document.title = "Hirelink | Interview";
   }, []);
 
+  const {
+    register,
+    handleSubmit,
+    reset,
+    watch,
+    formState: { errors },
+  } = useForm();
+  
   const [search, setSearch] = useState("");
 
   const [interviews, setInterviews] = useState([]);
@@ -72,6 +81,73 @@ function Interview() {
   useEffect(() => {
     fetchInterviews();
   }, []);
+
+  // edit model code
+  const [editInterviewId, setEditInterviewId] = useState(null);
+  const modalRef = useRef(null);
+
+  const watchInterviewType = watch("interviewType");
+
+  const openEditInterviewModal = (interview) => {
+    if (!interview) return;
+
+    setEditInterviewId(interview.itv_id);
+
+    reset({
+      candidate_id: interview.candidate_id ?? "",
+      job_id: interview.job_id ?? "",
+      interviewType: interview.interview_type ?? "",
+      interviewDate: interview.interview_date ?? "",
+      interviewTime: interview.interview_time ?? "",
+      meetingLink: interview.meeting_link ?? "",
+      status: interview.status ?? "",
+    });
+
+    const modal =
+      window.bootstrap.Modal.getInstance(modalRef.current) ||
+      new window.bootstrap.Modal(modalRef.current);
+
+    modal.show();
+  };
+
+  const onSubmit = async (data) => {
+    if (!editInterviewId) {
+      alert("Interview ID missing");
+      return;
+    }
+
+    try {
+      const payload = {
+        candidate_id: data.candidate_id,
+        job_id: data.job_id,
+        interview_type: data.interviewType,
+        interview_date: data.interviewDate,
+        interview_time: data.interviewTime,
+        meeting_link:
+          data.interviewType === "Virtual Interview" ? data.meetingLink : "",
+        status: data.status,
+      };
+
+      const res = await axios.post(
+        `https://norealtor.in/hirelink_apis/admin/updatedata/tbl_interview/itv_id/${editInterviewId}`,
+        payload
+      );
+
+      if (res?.data?.status === true) {
+        alert("Interview updated successfully ✅");
+
+        fetchInterviews(); // 🔁 refresh list
+
+        const modal = window.bootstrap.Modal.getInstance(modalRef.current);
+        modal.hide();
+      } else {
+        alert("Update failed ❌");
+      }
+    } catch (error) {
+      console.error("Interview Update Error:", error);
+      alert("Server error");
+    }
+  };
 
   return (
     <>
@@ -174,8 +250,11 @@ function Interview() {
                           </span>
                           <ul className="dropdown-menu shadow">
                             <li>
-                              <button className="dropdown-item">
-                                <i className="fas fa-edit me-2"></i>Edit
+                              <button
+                                className="btn btn-sm btn-primary"
+                                onClick={() => openEditInterviewModal(i)}
+                              >
+                                Edit
                               </button>
                             </li>
                             <li>
@@ -255,6 +334,142 @@ function Interview() {
             totalPages={nPages}
             onPageChange={(page) => setCurrentPage(page)}
           />
+        </div>
+
+        {/* Interview Edit Model Code  */}
+        <div
+          className="modal fade"
+          id="interviewexampleModal"
+          tabIndex="-1"
+          aria-hidden="true"
+          ref={modalRef}
+        >
+          <div className="modal-dialog modal-dialog-centered modal-lg">
+            <div className="modal-content shadow-lg rounded-4">
+              <div className="modal-header bg-success text-white rounded-top-4">
+                <h5 className="modal-title fw-bold">Interview Details</h5>
+
+                <i
+                  className="fa-regular fa-circle-xmark"
+                  data-bs-dismiss="modal"
+                  style={{ cursor: "pointer", fontSize: "25px" }}
+                ></i>
+              </div>
+
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="modal-body row">
+                  <input type="hidden" {...register("candidate_id")} />
+                  <input type="hidden" {...register("job_id")} />
+
+                  {/* Interview Type */}
+                  <div className="col-md-4 mb-2">
+                    <label className="form-label fw-semibold">
+                      Interview Type
+                    </label>
+
+                    <select
+                      className="form-control rounded-3"
+                      {...register("interviewType")}
+                    >
+                      <option value="">Select Interview Type</option>
+                      <option>Virtual Interview</option>
+                      <option>In-Person</option>
+                    </select>
+
+                    <span className="text-danger">
+                      {errors.interviewType?.message}
+                    </span>
+                  </div>
+
+                  {/* Interview Date */}
+                  <div className="col-md-4 mb-2">
+                    <label className="form-label fw-semibold">
+                      Interview Date
+                    </label>
+                    <input
+                      type="date"
+                      className="form-control rounded-3"
+                      {...register("interviewDate")}
+                    />
+                    <span className="text-danger">
+                      {errors.interviewDate?.message}
+                    </span>
+                  </div>
+
+                  {/* Interview Time */}
+                  <div className="col-md-4 mb-2">
+                    <label className="form-label fw-semibold">
+                      Interview Time
+                    </label>
+                    <input
+                      type="time"
+                      className="form-control rounded-3"
+                      {...register("interviewTime")}
+                    />
+                    <span className="text-danger">
+                      {errors.interviewTime?.message}
+                    </span>
+                  </div>
+
+                  {/* Meeting Link - Conditional Rendering */}
+                  {watchInterviewType === "Virtual Interview" && (
+                    <div className="col-md-4 mb-2">
+                      <label className="form-label fw-semibold">
+                        Meeting Link
+                      </label>
+                      <div className="input-group">
+                        <input
+                          type="text"
+                          className="form-control rounded-3"
+                          placeholder="Enter Meeting Link"
+                          {...register("meetingLink")}
+                        />
+                      </div>
+                      <span className="text-danger">
+                        {errors.meetingLink?.message}
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Status */}
+                  <div className="col-md-4 mb-2">
+                    <label className="form-label fw-semibold">Status</label>
+
+                    <select
+                      className="form-control rounded-3"
+                      {...register("status")}
+                    >
+                      <option value="">Select Status</option>
+                      <option value="Scheduled">Scheduled</option>
+                      <option value="Completed">Completed</option>
+                      <option value="Cancelled">Cancelled</option>
+                    </select>
+
+                    <span className="text-danger">
+                      {errors.status?.message}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="modal-footer bg-light rounded-bottom-4 d-flex">
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary rounded-3"
+                    data-bs-dismiss="modal"
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    type="submit"
+                    className="btn btn-success px-4 ms-auto"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
       {/* DELETE MODAL */}

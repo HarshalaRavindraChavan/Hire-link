@@ -359,7 +359,7 @@ function Applicant() {
                 {/* Interview Time */}
                 <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">
-                    Interview Date
+                    Interview Time
                   </label>
                   <input
                     type="time"
@@ -370,22 +370,6 @@ function Applicant() {
                     {errors.interviewTime?.message}
                   </span>
                 </div>
-
-                {/* Interviewer */}
-                {/* <div className="col-md-4 mb-2">
-                  <label className="form-label fw-semibold">
-                    Assigned Interviewer
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control rounded-3"
-                    placeholder="Enter Interviewer Name"
-                    {...register("interviewer")}
-                  />
-                  <span className="text-danger">
-                    {errors.interviewer?.message}
-                  </span>
-                </div> */}
 
                 {/* Meeting Link - Conditional Rendering */}
                 {watchInterviewType === "Virtual Interview" && (
@@ -439,6 +423,7 @@ function Applicant() {
                 </button>
               </div>
             </form>
+            
           </div>
         </div>
       </div>

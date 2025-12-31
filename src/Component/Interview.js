@@ -17,7 +17,7 @@ function Interview() {
     watch,
     formState: { errors },
   } = useForm();
-  
+
   const [search, setSearch] = useState("");
 
   const [interviews, setInterviews] = useState([]);
@@ -88,24 +88,25 @@ function Interview() {
 
   const watchInterviewType = watch("interviewType");
 
-  const openEditInterviewModal = (interview) => {
-    if (!interview) return;
-
-    setEditInterviewId(interview.itv_id);
+  const openEditInterviewModal = (item) => {
+    setEditInterviewId(item.itv_id); // 👈 VERY IMPORTANT
 
     reset({
-      candidate_id: interview.candidate_id ?? "",
-      job_id: interview.job_id ?? "",
-      interviewType: interview.interview_type ?? "",
-      interviewDate: interview.interview_date ?? "",
-      interviewTime: interview.interview_time ?? "",
-      meetingLink: interview.meeting_link ?? "",
-      status: interview.status ?? "",
+      candidate_id: item.candidate_id,
+      job_id: item.job_id,
+      interviewType: item.interview_type,
+      interviewDate: item.interview_date,
+      interviewTime: item.interview_time,
+      meetingLink: item.meeting_link,
+      status: item.status,
     });
 
+    const modalEl = document.getElementById("interviewexampleModal");
+    if (!modalEl || !window.bootstrap) return;
+
     const modal =
-      window.bootstrap.Modal.getInstance(modalRef.current) ||
-      new window.bootstrap.Modal(modalRef.current);
+      window.bootstrap.Modal.getInstance(modalEl) ||
+      new window.bootstrap.Modal(modalEl);
 
     modal.show();
   };
@@ -118,34 +119,41 @@ function Interview() {
 
     try {
       const payload = {
-        candidate_id: data.candidate_id,
-        job_id: data.job_id,
+        candidate_id: Number(data.candidate_id),
+        job_id: Number(data.job_id),
         interview_type: data.interviewType,
         interview_date: data.interviewDate,
         interview_time: data.interviewTime,
         meeting_link:
-          data.interviewType === "Virtual Interview" ? data.meetingLink : "",
+          data.interviewType === "Virtual Interview"
+            ? data.meetingLink || ""
+            : "",
         status: data.status,
       };
 
       const res = await axios.post(
         `https://norealtor.in/hirelink_apis/admin/updatedata/tbl_interview/itv_id/${editInterviewId}`,
-        payload
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
 
       if (res?.data?.status === true) {
         alert("Interview updated successfully ✅");
 
-        fetchInterviews(); // 🔁 refresh list
-
-        const modal = window.bootstrap.Modal.getInstance(modalRef.current);
+        fetchInterviews();
+        const modalEl = document.getElementById("interviewexampleModal");
+        const modal = window.bootstrap.Modal.getInstance(modalEl);
         modal.hide();
       } else {
         alert("Update failed ❌");
       }
     } catch (error) {
-      console.error("Interview Update Error:", error);
-      alert("Server error");
+      console.error("Interview Update Error:", error.response || error);
+      alert("Server error ❌");
     }
   };
 
@@ -251,10 +259,10 @@ function Interview() {
                           <ul className="dropdown-menu shadow">
                             <li>
                               <button
-                                className="btn btn-sm btn-primary"
+                                className="dropdown-item"
                                 onClick={() => openEditInterviewModal(i)}
                               >
-                                Edit
+                                <i className="fas fa-edit me-2"></i> Edit
                               </button>
                             </li>
                             <li>

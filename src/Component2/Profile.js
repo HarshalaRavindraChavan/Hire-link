@@ -4,6 +4,7 @@ import "../Component2/css/Profile.css";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 // import { resume } from "react-dom/server";
+import JobsSAI from "./JobsSAI";
 
 function Profile() {
   // ================= CATEGORY STATES =================
@@ -149,28 +150,28 @@ function Profile() {
   // Login Check but not login to redirect Signin page
 
   const navigate = useNavigate();
-  React.useEffect(() => {
-    const stored = localStorage.getItem("candidate");
+  // React.useEffect(() => {
+  //   const stored = localStorage.getItem("candidate");
 
-    if (!stored) {
-      navigate("/signin");
-      return;
-    }
+  //   if (!stored) {
+  //     navigate("/signin");
+  //     return;
+  //   }
 
-    if (stored) {
-      setCandidate(JSON.parse(stored));
-    }
+  //   if (stored) {
+  //     setCandidate(JSON.parse(stored));
+  //   }
 
-    const data = JSON.parse(stored);
-    setCandidate(data);
+  //   const data = JSON.parse(stored);
+  //   setCandidate(data);
 
-    // ✅ SET SELECTED VALUES
-    setSelectedCategory(data.can_mc || "");
-    setSelectedSubCategory(data.can_sc || "");
-    setSelectedSubCat1(data.can_sc1 || "");
-    setSelectedSubCat2(data.can_sc2 || "");
-    setSelectedSubCat3(data.can_sc3 || "");
-  }, []);
+  //   // ✅ SET SELECTED VALUES
+  //   setSelectedCategory(data.can_mc || "");
+  //   setSelectedSubCategory(data.can_sc || "");
+  //   setSelectedSubCat1(data.can_sc1 || "");
+  //   setSelectedSubCat2(data.can_sc2 || "");
+  //   setSelectedSubCat3(data.can_sc3 || "");
+  // }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -367,6 +368,9 @@ function Profile() {
               Edit Profile
             </button>
           </div>
+        </div>
+        <div className="mt-4">
+          <JobsSAI />
         </div>
 
         <div className="modal fade" id="editProfileModal" tabIndex="-1">

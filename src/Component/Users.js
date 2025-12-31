@@ -277,6 +277,91 @@ function Users() {
     }
   };
 
+  //Edit model code
+  const [editUserId, setEditUserId] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const openEditUserModal = (user) => {
+    if (!user) return;
+
+    setEditUserId(user.user_id);
+
+    reset({
+      fullname: user.fullname ?? "",
+      email: user.email ?? "",
+      mobile: user.mobile ?? "",
+      location: user.location ?? "",
+      address: user.address ?? "",
+      state: user.state ?? "",
+      city: user.city ?? "",
+      joindate: user.joindate ?? "",
+      bankpassbook: user.bankpassbook ?? "",
+      experience: user.experience ?? "",
+      role: user.role ?? "",
+      menus: user.menus ? user.menus.split(",") : [], // ✅ IMPORTANT
+    });
+
+    if (user.state) fetchCities(user.state);
+
+    const modalEl = document.getElementById("editUserModal");
+    if (!modalEl || !window.bootstrap) return;
+
+    const modal =
+      window.bootstrap.Modal.getInstance(modalEl) ||
+      new window.bootstrap.Modal(modalEl);
+
+    modal.show();
+  };
+
+  const handleUpdateUser = async (data) => {
+    if (!editUserId) {
+      toast.error("User ID missing");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const payload = {
+        fullname: data.fullname,
+        email: data.email,
+        mobile: data.mobile,
+        location: data.location,
+        address: data.address,
+        state: data.state,
+        city: data.city,
+        joindate: data.joindate,
+        bankpassbook: data.bankpassbook,
+        experience: data.experience,
+        role: data.role,
+        menus: Array.isArray(data.menus)
+          ? data.menus.join(",") // ✅ FIX
+          : data.menus,
+      };
+
+      const response = await axios.post(
+        `https://norealtor.in/hirelink_apis/admin/updatedata/tbl_user/user_id/${editUserId}`,
+        payload
+      );
+
+      if (response?.data?.status === true) {
+        toast.success("User updated successfully ✅");
+        fetchUsers();
+
+        const modalEl = document.getElementById("editUserModal");
+        const modalInstance = window.bootstrap.Modal.getInstance(modalEl);
+        modalInstance?.hide();
+      } else {
+        toast.error("User update failed");
+      }
+    } catch (error) {
+      console.error("User Update Error:", error);
+      toast.error("Server error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       {/* HEADER */}
@@ -346,7 +431,7 @@ function Users() {
               {records.length > 0 ? (
                 records
                   .filter((u) => String(u.user_id) !== "1")
-                  .map((u,index) => (
+                  .map((u, index) => (
                     <tr
                       key={u.user_id || index}
                       className="text-center align-middle"
@@ -368,8 +453,11 @@ function Users() {
                             </span>
                             <ul className="dropdown-menu shadow">
                               <li>
-                                <button className="dropdown-item">
-                                  <i className="fas fa-edit me-2"></i>Edit
+                                <button
+                                  className="dropdown-item"
+                                  onClick={() => openEditUserModal(u)}
+                                >
+                                  <i className="fas fa-edit me-2"></i> Edit
                                 </button>
                               </li>
                               <li>
@@ -589,7 +677,7 @@ function Users() {
                   <label className="fw-semibold">City</label>
                   <select
                     className="form-select form-control"
-                    {...register("city")} 
+                    {...register("city")}
                     disabled={!cities.length}
                   >
                     <option value="">Select City</option>
@@ -671,6 +759,214 @@ function Users() {
                   />
                   <input type="hidden" {...register("panupload")} />
                   <p className="text-danger">{errors.panupload?.message}</p>
+                </div>
+
+                {/* Bank */}
+                <div className="col-md-4">
+                  <label className="fw-semibold">Bank Passbook</label>
+                  <input
+                    type="text"
+                    {...register("bankpassbook")}
+                    className="form-control"
+                    placeholder="Enter Bank Details"
+                  />
+                  <p className="text-danger">{errors.bankpassbook?.message}</p>
+                </div>
+
+                {/* Experience */}
+                <div className="col-md-4">
+                  <label className="fw-semibold">Experience</label>
+                  <input
+                    type="text"
+                    {...register("experience")}
+                    className="form-control"
+                    placeholder="Enter Experience"
+                  />
+                  <p className="text-danger">{errors.experience?.message}</p>
+                </div>
+
+                {/* Role */}
+                <div className="col-md-4">
+                  <label className="fw-semibold">Role</label>
+                  <select
+                    {...register("role")}
+                    className="form-select form-control"
+                  >
+                    <option value="">Selete Role</option>
+                    <option value="1">Super Admin</option>
+                    <option value="2">Sub Admin</option>
+                    <option value="3">Backend</option>
+                    <option value="4">Accountant</option>
+                  </select>
+                  <p className="text-danger">{errors.role?.message}</p>
+                </div>
+
+                {/* Menus */}
+                <div className="col-md-4">
+                  <label className="fw-semibold">Menus</label>
+                  <select
+                    className="form-select form-control"
+                    multiple
+                    {...register("menus")}
+                  >
+                    <option value="1">Dashboard</option>
+                    <option value="2">Job</option>
+                    <option value="3">Candidate</option>
+                    <option value="4">Applicant</option>
+                    <option value="5">Interview</option>
+                    <option value="6">Employer</option>
+                    <option value="7">Packages</option>
+                    <option value="8">Offers</option>
+                    <option value="9">Contact</option>
+                    <option value="10">User</option>
+                  </select>
+                  <p className="text-danger">{errors.menus?.message}</p>
+                </div>
+              </div>
+
+              <div className="modal-footer bg-light rounded-bottom-4 d-flex">
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary rounded-3"
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+
+                <button type="submit" className="btn btn-success px-4 ms-auto">
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      {/* Edit Model Code*/}
+      <div className="modal fade" id="editUserModal" tabIndex="-1">
+        <div className="modal-dialog modal-dialog-centered modal-lg">
+          <div className="modal-content rounded-4">
+            <div className="modal-header bg-success text-white">
+              <h5 className="modal-title fw-bold">Edit User</h5>
+              <i
+                className="fa-regular fa-circle-xmark"
+                data-bs-dismiss="modal"
+                style={{ cursor: "pointer", color: "white", fontSize: "25px" }}
+              ></i>
+            </div>
+
+            <form onSubmit={handleSubmit(handleUpdateUser)}>
+              <div className="modal-body row">
+                {/* Full Name */}
+                <div className="col-md-4">
+                  <label className="fw-semibold">Full Name</label>
+                  <input
+                    type="text"
+                    {...register("fullname")}
+                    className="form-control"
+                    placeholder="Enter Full Name"
+                  />
+                  <p className="text-danger">{errors.fullname?.message}</p>
+                </div>
+
+                {/* Email */}
+                <div className="col-md-4">
+                  <label className="fw-semibold">Email</label>
+                  <input
+                    type="text"
+                    {...register("email")}
+                    className="form-control"
+                    placeholder="Enter Email"
+                  />
+                  <p className="text-danger">{errors.email?.message}</p>
+                </div>
+
+                {/* Mobile */}
+                <div className="col-md-4">
+                  <label className="fw-semibold">Mobile</label>
+                  <input
+                    type="text"
+                    {...register("mobile")}
+                    className="form-control"
+                    placeholder="Enter Mobile Number"
+                  />
+                  <p className="text-danger">{errors.mobile?.message}</p>
+                </div>
+
+                {/* Location */}
+                <div className="col-md-4">
+                  <label className="fw-semibold">Location</label>
+                  <input
+                    type="text"
+                    {...register("location")}
+                    className="form-control"
+                    placeholder="Enter Location"
+                  />
+                  <p className="text-danger">{errors.location?.message}</p>
+                </div>
+
+                {/* Address */}
+                <div className="col-md-4">
+                  <label className="fw-semibold">Address</label>
+                  <input
+                    type="text"
+                    {...register("address")}
+                    className="form-control"
+                    placeholder="Enter Address"
+                  />
+                  <p className="text-danger">{errors.address?.message}</p>
+                </div>
+
+                {/* State */}
+                <div className="col-md-4">
+                  <label className="fw-semibold">State</label>
+                  <select
+                    className="form-select form-control"
+                    {...register("state")}
+                    onChange={(e) => {
+                      const stateId = e.target.value;
+                      fetchCities(stateId);
+                      setValue("city", ""); // ✅ RESET CITY
+                    }}
+                  >
+                    <option value="">Select State</option>
+                    {states.map((s) => (
+                      <option key={s.state_id} value={s.state_id}>
+                        {s.state_name}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-danger">{errors.state?.message}</p>
+                </div>
+
+                {/* City */}
+                <div className="col-md-4">
+                  <label className="fw-semibold">City</label>
+                  <select
+                    className="form-select form-control"
+                    {...register("city")}
+                    disabled={!cities.length}
+                  >
+                    <option value="">Select City</option>
+                    {cities.map((c) => (
+                      <option key={c.city_id} value={c.city_id}>
+                        {c.city_name}
+                      </option>
+                    ))}
+                  </select>
+
+                  <p className="text-danger">{errors.city?.message}</p>
+                </div>
+
+                {/* Join Date */}
+                <div className="col-md-4">
+                  <label className="fw-semibold">Join Date</label>
+                  <input
+                    type="date"
+                    {...register("joindate")}
+                    className="form-control"
+                  />
+                  <p className="text-danger">{errors.joindate?.message}</p>
                 </div>
 
                 {/* Bank */}

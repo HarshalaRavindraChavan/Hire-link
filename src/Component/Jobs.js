@@ -960,7 +960,7 @@ function Jobs() {
                     onChange={(e) => {
                       const stateId = e.target.value;
                       fetchCities(stateId);
-                      setValue("city", ""); // ✅ RESET CITY
+                      setValue("job_city", ""); // ✅ RESET CITY
                     }}
                   >
                     <option value="">Select State</option>
@@ -989,7 +989,7 @@ function Jobs() {
                     ))}
                   </select>
 
-                  <p className="text-danger">{errors.city?.message}</p>
+                  <p className="text-danger">{errors.job_city?.message}</p>
                 </div>
 
                 {/* Experience Required */}
@@ -1323,7 +1323,7 @@ function Jobs() {
                     onChange={(e) => {
                       const stateId = e.target.value;
                       fetchCities(stateId);
-                      setValue("city", ""); // ✅ RESET CITY
+                      setValue("job_city", ""); // ✅ RESET CITY
                     }}
                   >
                     <option value="">Select State</option>
@@ -1352,7 +1352,7 @@ function Jobs() {
                     ))}
                   </select>
 
-                  <p className="text-danger">{errors.city?.message}</p>
+                  <p className="text-danger">{errors.job_city?.message}</p>
                 </div>
 
                 {/* Experience Required */}

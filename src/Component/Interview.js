@@ -170,7 +170,7 @@ function Interview() {
           <table className="table table-bordered align-middle">
             <thead className="table-light text-center">
               <tr>
-                <th>#</th>
+                <th>ID</th>
                 <th>Candidate</th>
                 <th>Job</th>
                 <th>Interview</th>

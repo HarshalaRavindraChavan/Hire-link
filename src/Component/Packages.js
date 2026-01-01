@@ -27,7 +27,7 @@ function Packages() {
   // --------------------------------------------------
 
   // Validation Schema
-  const validationSchema = Yup.object().shape({
+  const schema = Yup.object().shape({
     pack_name: Yup.string().required("Package name is required"),
 
     pack_price: Yup.number()
@@ -71,7 +71,7 @@ function Packages() {
     setError,
     clearErrors,
   } = useForm({
-    resolver: yupResolver(validationSchema),
+    resolver: yupResolver(schema),
     defaultValues: {
       pack_name: "",
       pack_price: "",

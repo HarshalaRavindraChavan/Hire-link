@@ -183,7 +183,7 @@ function Users() {
       if (res.data.status) {
         toast.success("User added successfully");
 
-        reset(); // form reset
+        resetAdd(); // form reset
         setUser({ user_aadhar_image: "", user_pan_image: "" }); // reset file state
         fetchUsers(); // refresh table
 
@@ -285,7 +285,7 @@ function Users() {
 
     setEditUserId(user.user_id);
 
-    reset({
+    resetEdit({
       fullname: user.user_name ?? "",
       email: user.user_email ?? "",
       mobile: user.user_mobile ?? "",
@@ -360,6 +360,29 @@ function Users() {
       setLoading(false);
     }
   };
+
+   // ✅ ADD FORM
+      const addForm = useForm({
+        resolver: yupResolver(schema),
+      });
+     // ✅ EDIT FORM
+      const editForm = useForm({
+        resolver: yupResolver(schema),
+      });
+    
+      const {
+        register: addRegister,
+        handleSubmit: handleAddSubmit,
+        formState: { errors: addErrors },
+        reset: resetAdd,
+      } = addForm;
+    
+      const {
+        register: editRegister,
+        handleSubmit: handleEditSubmit,
+        formState: { errors: editErrors },
+        reset: resetEdit,
+      } = editForm;
 
   return (
     <>
@@ -587,18 +610,18 @@ function Users() {
               ></i>
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleAddSubmit(onSubmit)}>
               <div className="modal-body row">
                 {/* Full Name */}
                 <div className="col-md-4">
                   <label className="fw-semibold">Full Name</label>
                   <input
                     type="text"
-                    {...register("fullname")}
+                    {...addRegister("fullname")}
                     className="form-control"
                     placeholder="Enter Full Name"
                   />
-                  <p className="text-danger">{errors.fullname?.message}</p>
+                  <p className="text-danger">{addErrors.fullname?.message}</p>
                 </div>
 
                 {/* Email */}
@@ -606,11 +629,11 @@ function Users() {
                   <label className="fw-semibold">Email</label>
                   <input
                     type="text"
-                    {...register("email")}
+                    {...addRegister("email")}
                     className="form-control"
                     placeholder="Enter Email"
                   />
-                  <p className="text-danger">{errors.email?.message}</p>
+                  <p className="text-danger">{addErrors.email?.message}</p>
                 </div>
 
                 {/* Mobile */}
@@ -618,11 +641,11 @@ function Users() {
                   <label className="fw-semibold">Mobile</label>
                   <input
                     type="text"
-                    {...register("mobile")}
+                    {...addRegister("mobile")}
                     className="form-control"
                     placeholder="Enter Mobile Number"
                   />
-                  <p className="text-danger">{errors.mobile?.message}</p>
+                  <p className="text-danger">{addErrors.mobile?.message}</p>
                 </div>
 
                 {/* Location */}
@@ -630,11 +653,11 @@ function Users() {
                   <label className="fw-semibold">Location</label>
                   <input
                     type="text"
-                    {...register("location")}
+                    {...addRegister("location")}
                     className="form-control"
                     placeholder="Enter Location"
                   />
-                  <p className="text-danger">{errors.location?.message}</p>
+                  <p className="text-danger">{addErrors.location?.message}</p>
                 </div>
 
                 {/* Address */}
@@ -642,11 +665,11 @@ function Users() {
                   <label className="fw-semibold">Address</label>
                   <input
                     type="text"
-                    {...register("address")}
+                    {...addRegister("address")}
                     className="form-control"
                     placeholder="Enter Address"
                   />
-                  <p className="text-danger">{errors.address?.message}</p>
+                  <p className="text-danger">{addErrors.address?.message}</p>
                 </div>
 
                 {/* State */}
@@ -654,7 +677,7 @@ function Users() {
                   <label className="fw-semibold">State</label>
                   <select
                     className="form-select form-control"
-                    {...register("state")}
+                    {...addRegister("state")}
                     onChange={(e) => {
                       const stateId = e.target.value;
                       fetchCities(stateId);
@@ -668,7 +691,7 @@ function Users() {
                       </option>
                     ))}
                   </select>
-                  <p className="text-danger">{errors.state?.message}</p>
+                  <p className="text-danger">{addErrors.state?.message}</p>
                 </div>
 
                 {/* City */}
@@ -676,7 +699,7 @@ function Users() {
                   <label className="fw-semibold">City</label>
                   <select
                     className="form-select form-control"
-                    {...register("city")}
+                    {...addRegister("city")}
                     disabled={!cities.length}
                   >
                     <option value="">Select City</option>
@@ -687,7 +710,7 @@ function Users() {
                     ))}
                   </select>
 
-                  <p className="text-danger">{errors.city?.message}</p>
+                  <p className="text-danger">{addErrors.city?.message}</p>
                 </div>
 
                 {/* Join Date */}
@@ -695,10 +718,10 @@ function Users() {
                   <label className="fw-semibold">Join Date</label>
                   <input
                     type="date"
-                    {...register("joindate")}
+                    {...addRegister("joindate")}
                     className="form-control"
                   />
-                  <p className="text-danger">{errors.joindate?.message}</p>
+                  <p className="text-danger">{addErrors.joindate?.message}</p>
                 </div>
 
                 {/* Aadhaar */}
@@ -706,11 +729,11 @@ function Users() {
                   <label className="fw-semibold">Adhar Number</label>
                   <input
                     type="text"
-                    {...register("adhar")}
+                    {...addRegister("adhar")}
                     className="form-control"
                     placeholder="Enter Adhar Number"
                   />
-                  <p className="text-danger">{errors.adhar?.message}</p>
+                  <p className="text-danger">{addErrors.adhar?.message}</p>
                 </div>
 
                 {/* PAN */}
@@ -718,11 +741,11 @@ function Users() {
                   <label className="fw-semibold">PAN Number</label>
                   <input
                     type="text"
-                    {...register("pan")}
+                    {...addRegister("pan")}
                     className="form-control"
                     placeholder="Enter PAN Number"
                   />
-                  <p className="text-danger">{errors.pan?.message}</p>
+                  <p className="text-danger">{addErrors.pan?.message}</p>
                 </div>
 
                 {/* Aadhaar Upload */}
@@ -738,9 +761,9 @@ function Users() {
                     className="form-control"
                     onChange={(e) => uploadFile(e, "user_aadhar_image")}
                   />
-                  <input type="hidden" {...register("adharupload")} />
+                  <input type="hidden" {...addRegister("adharupload")} />
 
-                  <p className="text-danger">{errors.adharupload?.message}</p>
+                  <p className="text-danger">{addErrors.adharupload?.message}</p>
                 </div>
 
                 {/* PAN Upload */}
@@ -756,8 +779,8 @@ function Users() {
                     className="form-control"
                     onChange={(e) => uploadFile(e, "user_pan_image")}
                   />
-                  <input type="hidden" {...register("panupload")} />
-                  <p className="text-danger">{errors.panupload?.message}</p>
+                  <input type="hidden" {...addRegister("panupload")} />
+                  <p className="text-danger">{addErrors.panupload?.message}</p>
                 </div>
 
                 {/* Bank */}
@@ -765,11 +788,11 @@ function Users() {
                   <label className="fw-semibold">Bank Passbook</label>
                   <input
                     type="text"
-                    {...register("bankpassbook")}
+                    {...addRegister("bankpassbook")}
                     className="form-control"
                     placeholder="Enter Bank Details"
                   />
-                  <p className="text-danger">{errors.bankpassbook?.message}</p>
+                  <p className="text-danger">{addErrors.bankpassbook?.message}</p>
                 </div>
 
                 {/* Experience */}
@@ -777,18 +800,18 @@ function Users() {
                   <label className="fw-semibold">Experience</label>
                   <input
                     type="text"
-                    {...register("experience")}
+                    {...addRegister("experience")}
                     className="form-control"
                     placeholder="Enter Experience"
                   />
-                  <p className="text-danger">{errors.experience?.message}</p>
+                  <p className="text-danger">{addErrors.experience?.message}</p>
                 </div>
 
                 {/* Role */}
                 <div className="col-md-4">
                   <label className="fw-semibold">Role</label>
                   <select
-                    {...register("role")}
+                    {...addRegister("role")}
                     className="form-select form-control"
                   >
                     <option value="">Selete Role</option>
@@ -797,7 +820,7 @@ function Users() {
                     <option value="3">Backend</option>
                     <option value="4">Accountant</option>
                   </select>
-                  <p className="text-danger">{errors.role?.message}</p>
+                  <p className="text-danger">{addErrors.role?.message}</p>
                 </div>
 
                 {/* Menus */}
@@ -806,7 +829,7 @@ function Users() {
                   <select
                     className="form-select form-control"
                     multiple
-                    {...register("menus")}
+                    {...addRegister("menus")}
                   >
                     <option value="1">Dashboard</option>
                     <option value="2">Job</option>
@@ -819,7 +842,7 @@ function Users() {
                     <option value="9">Contact</option>
                     <option value="10">User</option>
                   </select>
-                  <p className="text-danger">{errors.menus?.message}</p>
+                  <p className="text-danger">{addErrors.menus?.message}</p>
                 </div>
               </div>
 
@@ -854,18 +877,18 @@ function Users() {
               ></i>
             </div>
 
-            <form onSubmit={handleSubmit(handleUpdateUser)}>
+            <form onSubmit={handleEditSubmit(handleUpdateUser)}>
               <div className="modal-body row">
                 {/* Full Name */}
                 <div className="col-md-4">
                   <label className="fw-semibold">Full Name</label>
                   <input
                     type="text"
-                    {...register("fullname")}
+                    {...editRegister("fullname")}
                     className="form-control"
                     placeholder="Enter Full Name"
                   />
-                  <p className="text-danger">{errors.fullname?.message}</p>
+                  <p className="text-danger">{editErrors.fullname?.message}</p>
                 </div>
 
                 {/* Email */}
@@ -873,11 +896,11 @@ function Users() {
                   <label className="fw-semibold">Email</label>
                   <input
                     type="text"
-                    {...register("email")}
+                    {...editRegister("email")}
                     className="form-control"
                     placeholder="Enter Email"
                   />
-                  <p className="text-danger">{errors.email?.message}</p>
+                  <p className="text-danger">{editErrors.email?.message}</p>
                 </div>
 
                 {/* Mobile */}
@@ -885,11 +908,11 @@ function Users() {
                   <label className="fw-semibold">Mobile</label>
                   <input
                     type="text"
-                    {...register("mobile")}
+                    {...editRegister("mobile")}
                     className="form-control"
                     placeholder="Enter Mobile Number"
                   />
-                  <p className="text-danger">{errors.mobile?.message}</p>
+                  <p className="text-danger">{editErrors.mobile?.message}</p>
                 </div>
 
                 {/* Location */}
@@ -897,11 +920,11 @@ function Users() {
                   <label className="fw-semibold">Location</label>
                   <input
                     type="text"
-                    {...register("location")}
+                    {...editRegister("location")}
                     className="form-control"
                     placeholder="Enter Location"
                   />
-                  <p className="text-danger">{errors.location?.message}</p>
+                  <p className="text-danger">{editErrors.location?.message}</p>
                 </div>
 
                 {/* Address */}
@@ -909,11 +932,11 @@ function Users() {
                   <label className="fw-semibold">Address</label>
                   <input
                     type="text"
-                    {...register("address")}
+                    {...editRegister("address")}
                     className="form-control"
                     placeholder="Enter Address"
                   />
-                  <p className="text-danger">{errors.address?.message}</p>
+                  <p className="text-danger">{editErrors.address?.message}</p>
                 </div>
 
                 {/* State */}
@@ -921,7 +944,7 @@ function Users() {
                   <label className="fw-semibold">State</label>
                   <select
                     className="form-select form-control"
-                    {...register("state")}
+                    {...editRegister("state")}
                     onChange={(e) => {
                       const stateId = e.target.value;
                       fetchCities(stateId);
@@ -935,7 +958,7 @@ function Users() {
                       </option>
                     ))}
                   </select>
-                  <p className="text-danger">{errors.state?.message}</p>
+                  <p className="text-danger">{editErrors.state?.message}</p>
                 </div>
 
                 {/* City */}
@@ -943,7 +966,7 @@ function Users() {
                   <label className="fw-semibold">City</label>
                   <select
                     className="form-select form-control"
-                    {...register("city")}
+                    {...editRegister("city")}
                     disabled={!cities.length}
                   >
                     <option value="">Select City</option>
@@ -954,7 +977,7 @@ function Users() {
                     ))}
                   </select>
 
-                  <p className="text-danger">{errors.city?.message}</p>
+                  <p className="text-danger">{editErrors.city?.message}</p>
                 </div>
 
                 {/* Join Date */}
@@ -962,10 +985,10 @@ function Users() {
                   <label className="fw-semibold">Join Date</label>
                   <input
                     type="date"
-                    {...register("joindate")}
+                    {...editRegister("joindate")}
                     className="form-control"
                   />
-                  <p className="text-danger">{errors.joindate?.message}</p>
+                  <p className="text-danger">{editErrors.joindate?.message}</p>
                 </div>
 
                 {/* Bank */}
@@ -973,11 +996,11 @@ function Users() {
                   <label className="fw-semibold">Bank Passbook</label>
                   <input
                     type="text"
-                    {...register("bankpassbook")}
+                    {...editRegister("bankpassbook")}
                     className="form-control"
                     placeholder="Enter Bank Details"
                   />
-                  <p className="text-danger">{errors.bankpassbook?.message}</p>
+                  <p className="text-danger">{editErrors.bankpassbook?.message}</p>
                 </div>
 
                 {/* Experience */}
@@ -985,18 +1008,18 @@ function Users() {
                   <label className="fw-semibold">Experience</label>
                   <input
                     type="text"
-                    {...register("experience")}
+                    {...editRegister("experience")}
                     className="form-control"
                     placeholder="Enter Experience"
                   />
-                  <p className="text-danger">{errors.experience?.message}</p>
+                  <p className="text-danger">{editErrors.experience?.message}</p>
                 </div>
 
                 {/* Role */}
                 <div className="col-md-4">
                   <label className="fw-semibold">Role</label>
                   <select
-                    {...register("role")}
+                    {...editRegister("role")}
                     className="form-select form-control"
                   >
                     <option value="">Selete Role</option>
@@ -1005,7 +1028,7 @@ function Users() {
                     <option value="3">Backend</option>
                     <option value="4">Accountant</option>
                   </select>
-                  <p className="text-danger">{errors.role?.message}</p>
+                  <p className="text-danger">{editErrors.role?.message}</p>
                 </div>
 
                 {/* Menus */}
@@ -1014,7 +1037,7 @@ function Users() {
                   <select
                     className="form-select form-control"
                     multiple
-                    {...register("menus")}
+                    {...editRegister("menus")}
                   >
                     <option value="1">Dashboard</option>
                     <option value="2">Job</option>
@@ -1027,7 +1050,7 @@ function Users() {
                     <option value="9">Contact</option>
                     <option value="10">User</option>
                   </select>
-                  <p className="text-danger">{errors.menus?.message}</p>
+                  <p className="text-danger">{editErrors.menus?.message}</p>
                 </div>
               </div>
 

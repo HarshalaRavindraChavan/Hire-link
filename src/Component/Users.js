@@ -687,7 +687,7 @@ function Users() {
                     <option value="">Select State</option>
                     {states.map((s) => (
                       <option key={s.state_id} value={s.state_id}>
-                        {s.state_name}
+                        {s.state_title}
                       </option>
                     ))}
                   </select>
@@ -704,8 +704,8 @@ function Users() {
                   >
                     <option value="">Select City</option>
                     {cities.map((c) => (
-                      <option key={c.city_id} value={c.city_id}>
-                        {c.city_name}
+                      <option key={c.districtid} value={c.districtid}>
+                        {c.city_title}
                       </option>
                     ))}
                   </select>

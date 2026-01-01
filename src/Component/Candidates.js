@@ -185,13 +185,13 @@ function Candidates() {
           {/* <a href="#" className="btn btn-label-info btn-round me-2">
               Manage
             </a> */}
-          <a
+          {/* <a
             data-bs-toggle="modal"
             data-bs-target="#exampleModal"
             className="btn btn-success"
           >
             <i className="fa fa-plus"></i> Add Candidates
-          </a>
+          </a> */}
         </div>
       </div>
 

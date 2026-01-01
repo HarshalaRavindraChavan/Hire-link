@@ -94,6 +94,7 @@ const Signup = () => {
             JSON.stringify({
               role: "employer",
               emp_id: data.data.emp_id,
+              emp_companyname: data.data.emp_companyname,
             })
           );
 

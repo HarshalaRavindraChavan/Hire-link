@@ -23,7 +23,7 @@ function Users() {
   const fetchStates = async () => {
     try {
       const res = await axios.get(
-        "https://norealtor.in/hirelink_apis/admin/getdata/tbl_states"
+        "https://norealtor.in/hirelink_apis/admin/getdata/state"
       );
 
       if (res.data.status) {
@@ -39,7 +39,7 @@ function Users() {
   const fetchCities = async (stateId) => {
     try {
       const res = await axios.get(
-        `https://norealtor.in/hirelink_apis/admin/getdata/tbl_city/state_id/${stateId}`
+        `https://norealtor.in/hirelink_apis/admin/getdatawhere/district/state_id/${stateId}`
       );
 
       if (res.data.status) {

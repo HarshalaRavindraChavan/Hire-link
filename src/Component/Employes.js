@@ -228,13 +228,13 @@ function Employes() {
         <h3 className="fw-bold mb-3">Employers</h3>
 
         <div className="ms-auto">
-          <button
+          {/* <button
             data-bs-toggle="modal"
             data-bs-target="#exampleModal"
             className="btn btn-success"
           >
             <i className="fa fa-plus"></i> Add Employer
-          </button>
+          </button> */}
         </div>
       </div>
 

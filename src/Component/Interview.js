@@ -89,7 +89,7 @@ function Interview() {
   const watchInterviewType = watch("interviewType");
 
   const openEditInterviewModal = (item) => {
-    setEditInterviewId(item.itv_id); // 👈 VERY IMPORTANT
+    setEditInterviewId(item.itv_id); 
 
     reset({
       candidate_id: item.candidate_id,

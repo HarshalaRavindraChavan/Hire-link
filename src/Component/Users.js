@@ -673,7 +673,7 @@ function Users() {
                 </div>
 
                 {/* State */}
-                <div className="col-md-4">
+                {/* <div className="col-md-4">
                   <label className="fw-semibold">State</label>
                   <select
                     className="form-select form-control"
@@ -692,10 +692,10 @@ function Users() {
                     ))}
                   </select>
                   <p className="text-danger">{addErrors.state?.message}</p>
-                </div>
+                </div> */}
 
                 {/* City */}
-                <div className="col-md-4">
+                {/* <div className="col-md-4">
                   <label className="fw-semibold">City</label>
                   <select
                     className="form-select form-control"
@@ -711,7 +711,7 @@ function Users() {
                   </select>
 
                   <p className="text-danger">{addErrors.city?.message}</p>
-                </div>
+                </div> */}
 
                 {/* Join Date */}
                 <div className="col-md-4">

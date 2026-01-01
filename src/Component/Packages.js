@@ -85,7 +85,6 @@ function Packages() {
   });
 
   // Ensure first input always appears
-
   const onSubmit = async (data) => {
     try {
       const payload = {
@@ -105,7 +104,7 @@ function Packages() {
       );
 
       if (res.data.status === true) {
-        reset();
+        resetAdd();
 
         const modal = window.bootstrap.Modal.getInstance(modalRef.current);
         modal.hide();
@@ -224,7 +223,7 @@ function Packages() {
   const openEditModal = (pkg) => {
     setEditPackId(pkg.pack_id);
 
-    reset({
+    resetEdit({
       pack_name: pkg.pack_name || "",
       pack_price: pkg.pack_price || "",
       pack_duration: pkg.pack_duration || "",
@@ -281,6 +280,31 @@ function Packages() {
       setLoading(false);
     }
   };
+
+
+   // ✅ ADD FORM
+    const addForm = useForm({
+      resolver: yupResolver(schema),
+    });
+   // ✅ EDIT FORM
+    const editForm = useForm({
+      resolver: yupResolver(schema),
+    });
+  
+    const {
+      register: addRegister,
+      handleSubmit: handleAddSubmit,
+      formState: { errors: addErrors },
+      reset: resetAdd,
+    } = addForm;
+  
+    const {
+      register: editRegister,
+      handleSubmit: handleEditSubmit,
+      formState: { errors: editErrors },
+      reset: resetEdit,
+    } = editForm;
+  
 
   return (
     <>
@@ -475,20 +499,20 @@ function Packages() {
               ></i>
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleAddSubmit(onSubmit)}>
               <div className="modal-body row">
                 {/* PACKAGE NAME */}
                 <div className="col-md-4">
                   <label>Package Name</label>
                   <input
                     className="form-control"
-                    {...register("pack_name", {
+                    {...addRegister("pack_name", {
                       required: "Package name is required",
                     })}
                     placeholder="Enter Package Name"
                   />
                   <span className="text-danger">
-                    {errors.pack_name?.message}
+                    {addErrors.pack_name?.message}
                   </span>
                 </div>
 
@@ -498,14 +522,14 @@ function Packages() {
                   <input
                     type="number"
                     className="form-control"
-                    {...register("pack_price", {
+                    {...addRegister("pack_price", {
                       required: "Price is required",
                     })}
                     placeholder="Enter Price"
                   />
 
                   <span className="text-danger">
-                    {errors.pack_price?.message}
+                    {addErrors.pack_price?.message}
                   </span>
                 </div>
 
@@ -514,7 +538,7 @@ function Packages() {
                   <label>Duration</label>
                   <select
                     className="form-select form-control"
-                    {...register("pack_duration", {
+                    {...addRegister("pack_duration", {
                       required: "Duration is required",
                     })}
                     placeholder="Enter Duration"
@@ -526,7 +550,7 @@ function Packages() {
                     <option value="1 Year">1 Year</option>
                   </select>
                   <span className="text-danger">
-                    {errors.pack_duration?.message}
+                    {addErrors.pack_duration?.message}
                   </span>
                 </div>
 
@@ -536,14 +560,14 @@ function Packages() {
                   <input
                     type="number"
                     className="form-control"
-                    {...register("pack_jplimit", {
+                    {...addRegister("pack_jplimit", {
                       required: "Job post limit is required",
                     })}
                     placeholder="Enter Job Limit"
                   />
 
                   <span className="text-danger">
-                    {errors.pack_jplimit?.message}
+                    {addErrors.pack_jplimit?.message}
                   </span>
                 </div>
 
@@ -553,14 +577,14 @@ function Packages() {
                   <input
                     type="number"
                     className="form-control"
-                    {...register("pack_rvlimit", {
+                    {...addRegister("pack_rvlimit", {
                       required: "Resume view limit is required",
                     })}
                     placeholder="Resume"
                   />
 
                   <span className="text-danger">
-                    {errors.pack_rvlimit?.message}
+                    {addErrors.pack_rvlimit?.message}
                   </span>
                 </div>
 
@@ -569,7 +593,7 @@ function Packages() {
                   <label>Support</label>
                   <select
                     className="form-select form-control"
-                    {...register("pack_support", {
+                    {...addRegister("pack_support", {
                       required: "Support type is required",
                     })}
                     placeholder="Enter Support"
@@ -580,7 +604,7 @@ function Packages() {
                     <option value="Phone">Phone</option>
                   </select>
                   <span className="text-danger">
-                    {errors.pack_support?.message}
+                    {addErrors.pack_support?.message}
                   </span>
                 </div>
 
@@ -589,13 +613,13 @@ function Packages() {
                   <label>Description</label>
                   <textarea
                     className="form-control"
-                    {...register("pack_description", {
+                    {...addRegister("pack_description", {
                       required: "Description is required",
                     })}
                     placeholder="Enter Description"
                   />
                   <span className="text-danger">
-                    {errors.pack_description?.message}
+                    {addErrors.pack_description?.message}
                   </span>
                 </div>
 
@@ -609,7 +633,7 @@ function Packages() {
                         <input
                           type="text"
                           className="form-control"
-                          {...register(`pack_benefits.${index}`, {
+                          {...addRegister(`pack_benefits.${index}`, {
                             required: "Benefit is required",
                           })}
                           placeholder={`Benefit ${index + 1}`}
@@ -626,9 +650,9 @@ function Packages() {
                         )}
                       </div>
 
-                      {errors.pack_benefits?.[index] && (
+                      {addErrors.pack_benefits?.[index] && (
                         <span className="text-danger">
-                          {errors.pack_benefits[index]?.message}
+                          {addErrors.pack_benefits[index]?.message}
                         </span>
                       )}
                     </div>
@@ -667,18 +691,18 @@ function Packages() {
               ></i>
             </div>
 
-            <form onSubmit={handleSubmit(handleUpdatePackage)}>
+            <form onSubmit={handleEditSubmit(handleUpdatePackage)}>
               <div className="modal-body row">
                 {/* PACKAGE NAME */}
                 <div className="col-md-4">
                   <label>Package Name</label>
                   <input
                     className="form-control"
-                    {...register("pack_name")}
+                    {...editRegister("pack_name")}
                     placeholder="Enter Package Name"
                   />
                   <span className="text-danger">
-                    {errors.pack_name?.message}
+                    {editErrors.pack_name?.message}
                   </span>
                 </div>
 
@@ -688,11 +712,11 @@ function Packages() {
                   <input
                     type="number"
                     className="form-control"
-                    {...register("pack_price")}
+                    {...editRegister("pack_price")}
                     placeholder="Enter Package Price"
                   />
                   <span className="text-danger">
-                    {errors.pack_price?.message}
+                    {editErrors.pack_price?.message}
                   </span>
                 </div>
 
@@ -701,7 +725,7 @@ function Packages() {
                   <label>Duration</label>
                   <select
                     className="form-select form-control"
-                    {...register("pack_duration")}
+                    {...editRegister("pack_duration")}
                   >
                     <option value="">Select</option>
                     <option value="30 Days">30 Days</option>
@@ -710,7 +734,7 @@ function Packages() {
                     <option value="1 Year">1 Year</option>
                   </select>
                   <span className="text-danger">
-                    {errors.pack_duration?.message}
+                    {editErrors.pack_duration?.message}
                   </span>
                 </div>
 
@@ -720,11 +744,11 @@ function Packages() {
                   <input
                     type="number"
                     className="form-control"
-                    {...register("pack_jplimit")}
+                    {...editRegister("pack_jplimit")}
                     placeholder="Number of Post Limit"
                   />
                   <span className="text-danger">
-                    {errors.pack_jplimit?.message}
+                    {editErrors.pack_jplimit?.message}
                   </span>
                 </div>
 
@@ -734,11 +758,11 @@ function Packages() {
                   <input
                     type="number"
                     className="form-control"
-                    {...register("pack_rvlimit")}
+                    {...editRegister("pack_rvlimit")}
                     placeholder="Number of View Limit"
                   />
                   <span className="text-danger">
-                    {errors.pack_rvlimit?.message}
+                    {editErrors.pack_rvlimit?.message}
                   </span>
                 </div>
 
@@ -747,7 +771,7 @@ function Packages() {
                   <label>Support</label>
                   <select
                     className="form-select form-control"
-                    {...register("pack_support")}
+                    {...editRegister("pack_support")}
                   >
                     <option value="">Select</option>
                     <option value="Email">Email</option>
@@ -755,7 +779,7 @@ function Packages() {
                     <option value="Phone">Phone</option>
                   </select>
                   <span className="text-danger">
-                    {errors.pack_support?.message}
+                    {editErrors.pack_support?.message}
                   </span>
                 </div>
 
@@ -765,11 +789,11 @@ function Packages() {
                   <textarea
                     className="form-control"
                     rows={3}
-                    {...register("pack_description")}
+                    {...editRegister("pack_description")}
                     placeholder="Enter Package Description"
                   />
                   <span className="text-danger">
-                    {errors.pack_description?.message}
+                    {editErrors.pack_description?.message}
                   </span>
                 </div>
 
@@ -783,7 +807,7 @@ function Packages() {
                         <input
                           type="text"
                           className="form-control"
-                          {...register(`pack_benefits.${index}`)}
+                          {...editRegister(`pack_benefits.${index}`)}
                           placeholder={`Benefit ${index + 1}`}
                         />
 
@@ -798,9 +822,9 @@ function Packages() {
                         )}
                       </div>
 
-                      {errors.pack_benefits?.[index] && (
+                      {editErrors.pack_benefits?.[index] && (
                         <span className="text-danger">
-                          {errors.pack_benefits[index]?.message}
+                          {editErrors.pack_benefits[index]?.message}
                         </span>
                       )}
                     </div>

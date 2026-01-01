@@ -202,7 +202,7 @@ function Packages() {
   const handleDeleteClick = (pack_id) => {
     setDeletePackageId(pack_id);
     setShowDeleteModal(true);
-  };
+  };  
 
   // edit model code
   const [isEdit, setIsEdit] = useState(false);

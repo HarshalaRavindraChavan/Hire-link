@@ -130,13 +130,13 @@ function Candidates() {
   const {
     register,
     handleSubmit,
-     reset,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
 
-   const onSubmit = async (data) => {
+  const onSubmit = async (data) => {
     const payload = {
       can_name: data.fullname,
       can_email: data.email,
@@ -342,6 +342,24 @@ function Candidates() {
                       </div>
                     </td>
                     <td></td>
+                    <td className="text-center">
+                      {candidate.can_resume ? (
+                        <a
+                          href={candidate.can_resume}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn btn-sm btn-outline-success"
+                          download
+                        >
+                          <i className="fas fa-download me-1"></i>
+                          Download
+                        </a>
+                      ) : (
+                        <span className="text-muted">No Resume</span>
+                      )}
+                    </td>
+   
+
                   </tr>
                 ))
               ) : (

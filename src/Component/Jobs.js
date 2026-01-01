@@ -151,16 +151,31 @@ function Jobs() {
     job_experience: Yup.string().required("Experience is required"),
   });
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    setValue,
-    watch,
-    formState: { errors },
-  } = useForm({
+  const addForm = useForm({
     resolver: yupResolver(validationSchema),
   });
+
+  const editForm = useForm({
+    resolver: yupResolver(validationSchema),
+  });
+
+  const {
+    register: addRegister,
+    handleSubmit: handleAddSubmit,
+    formState: { errors: addErrors },
+    reset: resetAdd,
+    setValue: setAddValue,
+    watch: addWatch,
+  } = addForm;
+
+  const {
+    register: editRegister,
+    handleSubmit: handleEditSubmit,
+    formState: { errors: editErrors },
+    reset: resetEdit,
+    setValue: setEditValue,
+    watch: editWatch,
+  } = editForm;
 
   const onSubmit = async (data) => {
     if (role !== "employer") {
@@ -200,7 +215,15 @@ function Jobs() {
       );
 
       if (res.data?.status === true) {
-        reset();
+        resetAdd();
+
+        setSelectedCategory("");
+        setSelectedSubCategory("");
+        setSelectedSubCat1("");
+        setSelectedSubCat2("");
+        setSelectedSubCat3("");
+        setCities([]);
+
         toast.success("Job Added Successfully");
         fetchJobs();
 
@@ -374,7 +397,7 @@ function Jobs() {
 
     setEditJobId(job.job_id);
 
-    reset({
+    resetEdit({
       job_title: job.job_title ?? "",
       job_company: auth?.emp_companyname ?? "",
       job_mc: job.job_mc ?? "",
@@ -702,19 +725,19 @@ function Jobs() {
               ></i>
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleAddSubmit(onSubmit)}>
               <div className="modal-body row">
                 {/* Job Title */}
                 <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">Job Title</label>
                   <input
                     type="text"
-                    {...register("job_title")}
+                    {...addRegister("job_title")}
                     className="form-control form-control-md rounded-3"
                     placeholder="Enter Job Title"
                   />
                   <span className="text-danger">
-                    {errors.job_title?.message}
+                    {addErrors.job_title?.message}
                   </span>
                 </div>
 
@@ -735,15 +758,14 @@ function Jobs() {
                     Main Category
                   </label>
                   <select
-                    className="form-control form-select rounded-3"
+                   className="form-control form-control-md rounded-3"
                     value={selectedCategory}
-                    onChange={(e) =>
-                      handleSelectChange(
-                        "job_mc",
-                        e.target.value,
-                        setSelectedCategory
-                      )
-                    }
+                    {...addRegister("job_mc")}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setSelectedCategory(val);
+                      setAddValue("job_mc", val);
+                    }}
                   >
                     <option value="">Select Category</option>
                     {categories.map((cat) => (
@@ -757,8 +779,9 @@ function Jobs() {
                 <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">Sub Category</label>
                   <select
-                    className="form-control form-select rounded-3"
+                   className="form-control form-control-md rounded-3"
                     value={selectedSubCategory}
+                    {...addRegister("job_sc")}
                     onChange={(e) =>
                       handleSelectChange(
                         "job_sc",
@@ -782,8 +805,9 @@ function Jobs() {
                     Sub Category 1
                   </label>
                   <select
-                    className="form-control form-select rounded-3"
+                  className="form-control form-control-md rounded-3"
                     value={selectedSubCat1}
+                    {...addRegister("job_sc1")}
                     onChange={(e) =>
                       handleSelectChange(
                         "job_sc1",
@@ -813,8 +837,9 @@ function Jobs() {
                     Sub Category 2
                   </label>
                   <select
-                    className="form-control form-select rounded-3"
+                    className="form-control form-control-md rounded-3"
                     value={selectedSubCat2}
+                    {...addRegister("job_sc2")}
                     onChange={(e) =>
                       handleSelectChange(
                         "job_sc2",
@@ -838,8 +863,9 @@ function Jobs() {
                     Sub Category 3
                   </label>
                   <select
-                    className="form-control form-select rounded-3"
+                  className="form-control form-control-md rounded-3"
                     value={selectedSubCat3}
+                    {...addRegister("job_sc3")}
                     onChange={(e) =>
                       handleSelectChange(
                         "job_sc3",
@@ -865,12 +891,12 @@ function Jobs() {
                   </label>
                   <input
                     type="number"
-                    {...register("job_no_hiring")}
+                    {...addRegister("job_no_hiring")}
                     className="form-control form-control-md rounded-3"
                     placeholder="Enter No of Candidates Hiring"
                   />
                   <span className="text-danger">
-                    {errors.job_no_hiring?.message}
+                    {addErrors.job_no_hiring?.message}
                   </span>
                 </div>
 
@@ -878,7 +904,7 @@ function Jobs() {
                 <div className="col-md-4 mb-2 position-relative">
                   <label className="form-label fw-semibold">Job Type</label>
                   <select
-                    {...register("job_type")}
+                    {...addRegister("job_type")}
                     className="form-control form-control-md rounded-3"
                   >
                     <option value="">Select Job Type</option>
@@ -889,7 +915,7 @@ function Jobs() {
                     <option value="Contract">Contract</option>
                   </select>
                   <span className="text-danger">
-                    {errors.job_type?.message}
+                    {addErrors.job_type?.message}
                   </span>
                 </div>
 
@@ -898,12 +924,12 @@ function Jobs() {
                   <label className="form-label fw-semibold">Salary Range</label>
                   <input
                     type="number"
-                    {...register("job_salary")}
+                    {...addRegister("job_salary")}
                     className="form-control form-control-md rounded-3"
                     placeholder="Enter Salary Range"
                   />
                   <span className="text-danger">
-                    {errors.job_salary?.message}
+                    {addErrors.job_salary?.message}
                   </span>
                 </div>
 
@@ -911,7 +937,7 @@ function Jobs() {
                 <div className="col-md-4 mb-2 position-relative">
                   <label className="form-label fw-semibold">Status</label>
                   <select
-                    {...register("job_status")}
+                    {...addRegister("job_status")}
                     className="form-control form-control-md rounded-3"
                   >
                     <option value="">Default (Processing)</option>
@@ -920,7 +946,7 @@ function Jobs() {
                   </select>
 
                   <span className="text-danger">
-                    {errors.job_status?.message}
+                    {addErrors.job_status?.message}
                   </span>
                 </div>
 
@@ -929,11 +955,12 @@ function Jobs() {
                   <label className="fw-semibold">State</label>
                   <select
                     className=" form-control form-select"
-                    value={watch("job_state") || ""}
+                    {...addRegister("job_state")}
                     onChange={(e) => {
                       const stateId = e.target.value;
-                      setValue("job_state", stateId);
-                      setValue("job_city", "");
+                      setAddValue("job_state", stateId);
+                      setAddValue("job_city", "");
+
                       fetchCities(stateId);
                     }}
                   >
@@ -944,7 +971,7 @@ function Jobs() {
                       </option>
                     ))}
                   </select>
-                  <p className="text-danger">{errors.job_state?.message}</p>
+                  <p className="text-danger">{addErrors.job_state?.message}</p>
                 </div>
 
                 {/* City */}
@@ -952,8 +979,8 @@ function Jobs() {
                   <label className="fw-semibold">City</label>
                   <select
                     className="form-control form-select"
-                    value={watch("job_city") || ""}
-                    onChange={(e) => setValue("job_city", e.target.value)}
+                    {...addRegister("job_city")}
+                    onChange={(e) => setAddValue("job_city", e.target.value)}
                     disabled={!cities.length}
                   >
                     <option value="">Select City</option>
@@ -964,7 +991,7 @@ function Jobs() {
                     ))}
                   </select>
 
-                  <p className="text-danger">{errors.job_city?.message}</p>
+                  <p className="text-danger">{addErrors.job_city?.message}</p>
                 </div>
 
                 {/* Location */}
@@ -972,12 +999,12 @@ function Jobs() {
                   <label className="form-label fw-semibold">Location</label>
                   <input
                     type="text"
-                    {...register("job_location")}
+                    {...addRegister("job_location")}
                     className="form-control form-control-md rounded-3"
                     placeholder="Enter Location"
                   />
                   <span className="text-danger">
-                    {errors.job_location?.message}
+                    {addErrors.job_location?.message}
                   </span>
                 </div>
 
@@ -988,26 +1015,26 @@ function Jobs() {
                   </label>
                   <input
                     type="number"
-                    {...register("job_experience")}
+                    {...addRegister("job_experience")}
                     className="form-control form-control-md rounded-3"
                     placeholder="Enter Experience Required"
                   />
                   <span className="text-danger">
-                    {errors.job_experience?.message}
+                    {addErrors.job_experience?.message}
                   </span>
                 </div>
 
-                {/* Location */}
+                {/* Skills */}
                 <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">Skills</label>
                   <input
                     type="text"
-                    {...register("job_skills")}
+                    {...addRegister("job_skills")}
                     className="form-control form-control-md rounded-3"
                     placeholder="Enter Required Skills"
                   />
                   <span className="text-danger">
-                    {errors.job_skills?.message}
+                    {addErrors.job_skills?.message}
                   </span>
                 </div>
               </div>
@@ -1052,19 +1079,19 @@ function Jobs() {
               ></i>
             </div>
 
-            <form onSubmit={handleSubmit(handleUpdateJob)}>
+            <form onSubmit={handleEditSubmit(handleUpdateJob)}>
               <div className="modal-body row">
                 {/* Job Title */}
                 <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">Job Title</label>
                   <input
                     type="text"
-                    {...register("job_title")}
+                    {...editRegister("job_title")}
                     className="form-control form-control-md rounded-3"
                     placeholder="Enter Job Title"
                   />
                   <span className="text-danger">
-                    {errors.job_title?.message}
+                    {editErrors.job_title?.message}
                   </span>
                 </div>
 
@@ -1073,7 +1100,7 @@ function Jobs() {
                   <label className="form-label fw-semibold">Company Name</label>
                   <input
                     type="text"
-                    value={auth?.emp_companyname || ""}
+                    value={auth?.emp_companyname}
                     className="form-control form-control-md rounded-3"
                     readOnly
                   />
@@ -1085,12 +1112,13 @@ function Jobs() {
                     Main Category
                   </label>
                   <select
-                    className="form-control form-select"
+                   className="form-control form-control-md rounded-3"
                     value={selectedCategory}
+                    {...editRegister("job_mc")}
                     onChange={(e) => {
                       const val = e.target.value;
                       setSelectedCategory(val);
-                      setValue("job_mc", val); // 🔥 RHF sync
+                      setEditValue("job_mc", val);
                     }}
                   >
                     <option value="">Select Category</option>
@@ -1107,6 +1135,7 @@ function Jobs() {
                   <select
                     className="form-control form-select rounded-3"
                     value={selectedSubCategory}
+                    {...editRegister("job_sc")}
                     onChange={(e) =>
                       handleSelectChange(
                         "job_sc",
@@ -1132,6 +1161,7 @@ function Jobs() {
                   <select
                     className="form-control form-select rounded-3"
                     value={selectedSubCat1}
+                    {...editRegister("job_sc1")}
                     onChange={(e) =>
                       handleSelectChange(
                         "job_sc1",
@@ -1163,6 +1193,7 @@ function Jobs() {
                   <select
                     className="form-control form-select rounded-3"
                     value={selectedSubCat2}
+                    {...editRegister("job_sc2")}
                     onChange={(e) =>
                       handleSelectChange(
                         "job_sc2",
@@ -1188,6 +1219,7 @@ function Jobs() {
                   <select
                     className="form-control form-select rounded-3"
                     value={selectedSubCat3}
+                    {...editRegister("job_sc3")}
                     onChange={(e) =>
                       handleSelectChange(
                         "job_sc3",
@@ -1213,12 +1245,12 @@ function Jobs() {
                   </label>
                   <input
                     type="number"
-                    {...register("job_no_hiring")}
+                    {...editRegister("job_no_hiring")}
                     className="form-control form-control-md rounded-3"
                     placeholder="Enter No of Candidates Hiring"
                   />
                   <span className="text-danger">
-                    {errors.job_no_hiring?.message}
+                    {editErrors.job_no_hiring?.message}
                   </span>
                 </div>
 
@@ -1226,7 +1258,7 @@ function Jobs() {
                 <div className="col-md-4 mb-2 position-relative">
                   <label className="form-label fw-semibold">Job Type</label>
                   <select
-                    {...register("job_type")}
+                    {...editRegister("job_type")}
                     className="form-control form-control-md rounded-3"
                   >
                     <option value="">Select Job Type</option>
@@ -1237,7 +1269,7 @@ function Jobs() {
                     <option value="Contract">Contract</option>
                   </select>
                   <span className="text-danger">
-                    {errors.job_type?.message}
+                    {editErrors.job_type?.message}
                   </span>
                 </div>
 
@@ -1246,12 +1278,12 @@ function Jobs() {
                   <label className="form-label fw-semibold">Salary Range</label>
                   <input
                     type="text"
-                    {...register("job_salary")}
+                    {...editRegister("job_salary")}
                     className="form-control form-control-md rounded-3"
                     placeholder="Enter Salary Range"
                   />
                   <span className="text-danger">
-                    {errors.job_salary?.message}
+                    {editErrors.job_salary?.message}
                   </span>
                 </div>
 
@@ -1259,7 +1291,7 @@ function Jobs() {
                 <div className="col-md-4 mb-2 position-relative">
                   <label className="form-label fw-semibold">Status</label>
                   <select
-                    {...register("job_status")}
+                    {...editRegister("job_status")}
                     className="form-control form-control-md rounded-3"
                   >
                     <option value="">Select Status</option>
@@ -1267,20 +1299,7 @@ function Jobs() {
                     <option value="2">Pending</option>
                   </select>
                   <span className="text-danger">
-                    {errors.job_status?.message}
-                  </span>
-                </div>
-
-                {/* Posted Date */}
-                <div className="col-md-4 mb-2">
-                  <label className="form-label fw-semibold">Posted Date</label>
-                  <input
-                    type="date"
-                    {...register("job_date")}
-                    className="form-control form-control-md rounded-3"
-                  />
-                  <span className="text-danger">
-                    {errors.job_date?.message}
+                    {editErrors.job_status?.message}
                   </span>
                 </div>
 
@@ -1289,12 +1308,12 @@ function Jobs() {
                   <label className="form-label fw-semibold">Location</label>
                   <input
                     type="text"
-                    {...register("job_location")}
+                    {...editRegister("job_location")}
                     className="form-control form-control-md rounded-3"
                     placeholder="Enter Location"
                   />
                   <span className="text-danger">
-                    {errors.job_location?.message}
+                    {editErrors.job_location?.message}
                   </span>
                 </div>
 
@@ -1303,11 +1322,12 @@ function Jobs() {
                   <label className="fw-semibold">State</label>
                   <select
                     className="form-select"
-                    value={watch("job_state") || ""}
+                    {...editRegister("job_state")}
                     onChange={(e) => {
                       const stateId = e.target.value;
-                      setValue("job_state", stateId);
-                      setValue("job_city", "");
+                      setEditValue("job_state", stateId);
+                      setEditValue("job_city", "");
+
                       fetchCities(stateId);
                     }}
                   >
@@ -1318,7 +1338,7 @@ function Jobs() {
                       </option>
                     ))}
                   </select>
-                  <p className="text-danger">{errors.job_state?.message}</p>
+                  <p className="text-danger">{editErrors.job_state?.message}</p>
                 </div>
 
                 {/* City */}
@@ -1326,8 +1346,8 @@ function Jobs() {
                   <label className="fw-semibold">City</label>
                   <select
                     className="form-select"
-                    value={watch("job_city") || ""}
-                    onChange={(e) => setValue("job_city", e.target.value)}
+                    {...editRegister("job_city")}
+                    onChange={(e) => setEditValue("job_city", e.target.value)}
                     disabled={!cities.length}
                   >
                     <option value="">Select City</option>
@@ -1338,7 +1358,7 @@ function Jobs() {
                     ))}
                   </select>
 
-                  <p className="text-danger">{errors.job_city?.message}</p>
+                  <p className="text-danger">{editErrors.job_city?.message}</p>
                 </div>
 
                 {/* Experience Required */}
@@ -1348,12 +1368,12 @@ function Jobs() {
                   </label>
                   <input
                     type="text"
-                    {...register("job_experience")}
+                    {...editRegister("job_experience")}
                     className="form-control form-control-md rounded-3"
                     placeholder="Enter Experience Required"
                   />
                   <span className="text-danger">
-                    {errors.job_experience?.message}
+                    {editErrors.job_experience?.message}
                   </span>
                 </div>
 
@@ -1362,12 +1382,12 @@ function Jobs() {
                   <label className="form-label fw-semibold">Skills</label>
                   <input
                     type="text"
-                    {...register("job_skills")}
+                    {...editRegister("job_skills")}
                     className="form-control form-control-md rounded-3"
                     placeholder="Enter Required Skills"
                   />
                   <span className="text-danger">
-                    {errors.job_skills?.message}
+                    {editErrors.job_skills?.message}
                   </span>
                 </div>
               </div>

@@ -281,6 +281,30 @@ function Packages() {
     }
   };
 
+<<<<<<< HEAD
+  // ✅ ADD FORM
+  const addForm = useForm({
+    resolver: yupResolver(schema),
+  });
+  // ✅ EDIT FORM
+  const editForm = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const {
+    register: addRegister,
+    handleSubmit: handleAddSubmit,
+    formState: { errors: addErrors },
+    reset: resetAdd,
+  } = addForm;
+
+  const {
+    register: editRegister,
+    handleSubmit: handleEditSubmit,
+    formState: { errors: editErrors },
+    reset: resetEdit,
+  } = editForm;
+=======
 
    // ✅ ADD FORM
     const addForm = useForm({
@@ -305,6 +329,7 @@ function Packages() {
       reset: resetEdit,
     } = editForm;
   
+>>>>>>> 3003cb528d6e5020db2101dfe579af036c4263ca
 
   return (
     <>

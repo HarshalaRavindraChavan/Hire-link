@@ -10,68 +10,62 @@ function Interview() {
     document.title = "Hirelink | Interview";
   }, []);
 
+  /* ================= FORM ================= */
   const {
     register,
     handleSubmit,
     reset,
     watch,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    shouldUnregister: false, // ⭐ IMPORTANT
+    defaultValues: {
+      candidate_id: "",
+      job_id: "",
+      interviewType: "",
+      interviewDate: "",
+      interviewTime: "",
+      meetingLink: "",
+      status: "",
+    },
+  });
 
+  const watchInterviewType = watch("interviewType");
+
+  /* ================= STATES ================= */
   const [search, setSearch] = useState("");
-
   const [interviews, setInterviews] = useState([]);
   const [loading, setLoading] = useState(false);
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 5;
-
   const lastIndex = currentPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
   const records = interviews.slice(firstIndex, lastIndex);
   const nPages = Math.ceil(interviews.length / recordsPerPage);
 
-  // Delete modal
+  // Delete
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
-  const handleDeleteClick = (id) => {
-    setDeleteId(id);
-    setShowDeleteModal(true);
-  };
+  // Edit
+  const [editInterviewId, setEditInterviewId] = useState(null);
+  const modalRef = useRef(null);
 
-  const confirmDelete = async () => {
-    try {
-      const res = await axios.get(
-        `https://norealtor.in/hirelink_apis/admin/deletedata/tbl_interview/itv_id/${deleteId}`
-      );
-
-      if (res.data.status) {
-        toast.success("Interview deleted successfully");
-        setShowDeleteModal(false);
-        fetchInterviews();
-      } else {
-        toast.error("Delete failed");
-      }
-    } catch (error) {
-      toast.error("Server error while deleting");
-    }
-  };
-
+  /* ================= FETCH ================= */
   const fetchInterviews = async () => {
     try {
       setLoading(true);
       const res = await axios.get(
         "https://norealtor.in/hirelink_apis/admin/getdata/tbl_interview"
       );
-
       if (res.data.status) {
         setInterviews(res.data.data);
       } else {
         toast.error("Failed to load interviews");
       }
-    } catch (error) {
+    } catch {
       toast.error("Something went wrong");
     } finally {
       setLoading(false);
@@ -82,40 +76,53 @@ function Interview() {
     fetchInterviews();
   }, []);
 
-  // edit model code
-  const [editInterviewId, setEditInterviewId] = useState(null);
-  const modalRef = useRef(null);
+  /* ================= DELETE ================= */
+  const handleDeleteClick = (id) => {
+    setDeleteId(id);
+    setShowDeleteModal(true);
+  };
 
-  const watchInterviewType = watch("interviewType");
+  const confirmDelete = async () => {
+    try {
+      const res = await axios.get(
+        `https://norealtor.in/hirelink_apis/admin/deletedata/tbl_interview/itv_id/${deleteId}`
+      );
+      if (res.data.status) {
+        toast.success("Interview deleted successfully");
+        setShowDeleteModal(false);
+        fetchInterviews();
+      } else {
+        toast.error("Delete failed");
+      }
+    } catch {
+      toast.error("Server error");
+    }
+  };
 
+  /* ================= EDIT MODAL ================= */
   const openEditInterviewModal = (item) => {
-    setEditInterviewId(item.itv_id); 
+    setEditInterviewId(item.itv_id);
 
     reset({
       candidate_id: item.candidate_id,
       job_id: item.job_id,
-      interviewType: item.interview_type,
-      interviewDate: item.interview_date,
-      interviewTime: item.interview_time,
-      meetingLink: item.meeting_link,
-      status: item.status,
+      interviewType: item.itv_type?.trim(),
+      interviewDate: item.itv_date?.split("T")[0], // YYYY-MM-DD
+      interviewTime: item.itv_time?.substring(0, 5), // HH:mm
+      meetingLink: item.itv_meeting_link || "",
+      status: item.itv_status,
     });
 
     const modalEl = document.getElementById("interviewexampleModal");
-    if (!modalEl || !window.bootstrap) return;
-
     const modal =
       window.bootstrap.Modal.getInstance(modalEl) ||
       new window.bootstrap.Modal(modalEl);
-
     modal.show();
   };
 
+  /* ================= UPDATE ================= */
   const onSubmit = async (data) => {
-    if (!editInterviewId) {
-      alert("Interview ID missing");
-      return;
-    }
+    if (!editInterviewId) return;
 
     try {
       const payload = {
@@ -134,97 +141,36 @@ function Interview() {
       const res = await axios.post(
         `https://norealtor.in/hirelink_apis/admin/updatedata/tbl_interview/itv_id/${editInterviewId}`,
         payload,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+        { headers: { "Content-Type": "application/json" } }
       );
 
-      if (res?.data?.status === true) {
-        alert("Interview updated successfully ✅");
-
+      if (res.data.status) {
+        toast.success("Interview updated successfully ✅");
         fetchInterviews();
-        const modalEl = document.getElementById("interviewexampleModal");
-        const modal = window.bootstrap.Modal.getInstance(modalEl);
-        modal.hide();
+        window.bootstrap.Modal.getInstance(
+          document.getElementById("interviewexampleModal")
+        ).hide();
       } else {
-        alert("Update failed ❌");
+        toast.error("Update failed ❌");
       }
-    } catch (error) {
-      console.error("Interview Update Error:", error.response || error);
-      alert("Server error ❌");
+    } catch {
+      toast.error("Server error ❌");
     }
   };
 
+  /* ================= UI ================= */
   return (
     <>
-      {/* Your Routes / Layout */}{" "}
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={true}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-      />
-      <div className="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
-        {" "}
-        <div>
-          {" "}
-          <h3 className="fw-bold mb-3">Interview Details</h3>{" "}
-        </div>{" "}
-      </div>
+      <ToastContainer position="top-right" autoClose={3000} theme="colored" />
+
+      <h3 className="fw-bold mb-3">Interview Details</h3>
+
       <div className="card shadow-sm p-3 border">
-        <div className="row g-2 align-items-center mb-3">
-          {" "}
-          <div className="col-md-2">
-            {" "}
-            <select className="form-select form-control">
-              {" "}
-              <option value="">Select Interview </option>{" "}
-              <option>Scheduled</option> <option>Rescheduled</option>{" "}
-              <option>Completed</option> <option>Cancelled</option>{" "}
-              <option>No-Show</option>{" "}
-            </select>{" "}
-          </div>{" "}
-          <div className="col-6 col-md-2">
-            {" "}
-            <input type="date" className="form-control" />{" "}
-          </div>{" "}
-          <div className="col-6 col-md-2">
-            {" "}
-            <input type="date" className="form-control" />{" "}
-          </div>{" "}
-          {/* Submit + Reset */}{" "}
-          <div className="col-12 col-md-3 d-flex justify-content-md-start justify-content-between">
-            {" "}
-            <button className="btn px-4 me-2 btn-success">Submit</button>{" "}
-            <button className="btn btn-light border px-3">
-              {" "}
-              <i className="fa fa-refresh"></i>{" "}
-            </button>{" "}
-          </div>{" "}
-          <div className="col-md-3">
-            {" "}
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Search..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />{" "}
-          </div>{" "}
-        </div>
         <div className="table-responsive">
           <table className="table table-bordered align-middle">
             <thead className="table-light text-center">
               <tr>
-                <th>ID</th>
+                <th>#</th>
                 <th>Candidate</th>
                 <th>Job</th>
                 <th>Interview</th>
@@ -235,102 +181,67 @@ function Interview() {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="5" className="text-center text-primary">
-                    Loading interviews...
+                  <td colSpan="5" className="text-center">
+                    Loading...
                   </td>
                 </tr>
-              ) : records.length > 0 ? (
-                records.map((i, index) => (
+              ) : records.length ? (
+                records.map((i, idx) => (
                   <tr key={i.itv_id}>
-                    {/* ID */}
-                    <td>{firstIndex + index + 1}</td>
-                    {/* Candidate Info */}
-                    <td className="text-start">
-                      <div className="fw-bold">
-                        Name:
-                        <div className="dropdown d-inline ms-2">
-                          <span
-                            className="fw-bold text-primary"
-                            role="button"
-                            data-bs-toggle="dropdown"
-                          >
-                            {i.can_name}
-                          </span>
-                          <ul className="dropdown-menu shadow">
-                            <li>
-                              <button
-                                className="dropdown-item"
-                                onClick={() => openEditInterviewModal(i)}
-                              >
-                                <i className="fas fa-edit me-2"></i> Edit
-                              </button>
-                            </li>
-                            <li>
-                              <button
-                                className="dropdown-item text-danger"
-                                onClick={() => handleDeleteClick(i.itv_id)}
-                              >
-                                <i className="fas fa-trash me-2"></i>Delete
-                              </button>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                      <div className="fw-bold">
-                        Email: <span>{i.can_email || "N/A"}</span>
-                      </div>
-                    </td>
+                    <td>{firstIndex + idx + 1}</td>
 
-                    {/* Job Details */}
-                    <td className="text-start">
-                      <b>Job Title:</b> {i.job_title} <br />
-                      <b>Company:</b> {i.job_company}
-                    </td>
-
-                    {/* Interview Info */}
-                    <td className="text-start">
-                      {/* <b>Interviewer:</b> {i.interviewer} <br /> */}
-                      <b>Type:</b> {i.itv_type} <br />
-                      <b>Date:</b> {i.itv_date} <br />
-                      <b>Time:</b> {i.itv_time}
-                    </td>
-
-                    {/* Created & Meeting Info */}
-                    <td className="text-start">
-                      <b>Meeting:</b>{" "}
-                      {i.itv_meeting_link ? (
-                        <a
-                          href={i.itv_meeting_link}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                    <td>
+                      <b>{i.can_name}</b>
+                      <div className="dropdown d-inline ms-2">
+                        <span
+                          className="text-primary fw-bold"
+                          role="button"
+                          data-bs-toggle="dropdown"
                         >
-                          Open Link
-                        </a>
-                      ) : (
-                        <span className="text-muted">N/A</span>
-                      )}
+                          •••
+                        </span>
+                        <ul className="dropdown-menu">
+                          <li>
+                            <button
+                              className="dropdown-item"
+                              onClick={() => openEditInterviewModal(i)}
+                            >
+                              Edit
+                            </button>
+                          </li>
+                          <li>
+                            <button
+                              className="dropdown-item text-danger"
+                              onClick={() => handleDeleteClick(i.itv_id)}
+                            >
+                              Delete
+                            </button>
+                          </li>
+                        </ul>
+                      </div>
+                    </td>
+
+                    <td>
+                      {i.job_title}
                       <br />
-                      <b>Status:</b>{" "}
-                      <span
-                        className={`badge ${
-                          i.itv_status === "Scheduled"
-                            ? "bg-primary"
-                            : i.itv_status === "Completed"
-                            ? "bg-success"
-                            : i.itv_status === "Cancelled"
-                            ? "bg-danger"
-                            : "bg-warning"
-                        }`}
-                      >
-                        {i.itv_status || "N/A"}
-                      </span>
+                      <small>{i.job_company}</small>
+                    </td>
+
+                    <td>
+                      {i.itv_type}
+                      <br />
+                      {i.itv_date} {i.itv_time}
+                    </td>
+
+                    <td>
+                      <span className="badge bg-info">{i.itv_status}</span>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
                   <td colSpan="5" className="text-center">
-                    No interviews found.
+                    No interviews found
                   </td>
                 </tr>
               )}
@@ -340,147 +251,89 @@ function Interview() {
           <Pagination
             currentPage={currentPage}
             totalPages={nPages}
-            onPageChange={(page) => setCurrentPage(page)}
+            onPageChange={setCurrentPage}
           />
         </div>
+      </div>
 
-        {/* Interview Edit Model Code  */}
-        <div
-          className="modal fade"
-          id="interviewexampleModal"
-          tabIndex="-1"
-          aria-hidden="true"
-          ref={modalRef}
-        >
-          <div className="modal-dialog modal-dialog-centered modal-lg">
-            <div className="modal-content shadow-lg rounded-4">
-              <div className="modal-header bg-success text-white rounded-top-4">
-                <h5 className="modal-title fw-bold">Interview Details</h5>
+      {/* ================= MODAL ================= */}
+      <div className="modal fade" id="interviewexampleModal" tabIndex="-1">
+        <div className="modal-dialog modal-lg modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-header bg-success text-white">
+              <h5 className="modal-title">Edit Interview</h5>
+              <button className="btn-close" data-bs-dismiss="modal"></button>
+            </div>
 
-                <i
-                  className="fa-regular fa-circle-xmark"
-                  data-bs-dismiss="modal"
-                  style={{ cursor: "pointer", fontSize: "25px" }}
-                ></i>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="modal-body row">
+                <input type="hidden" {...register("candidate_id")} />
+                <input type="hidden" {...register("job_id")} />
+
+                <div className="col-md-4 mb-2">
+                  <label>Interview Type</label>
+                  <select
+                    className="form-control"
+                    {...register("interviewType")}
+                  >
+                    <option value="">Select</option>
+                    <option value="Virtual Interview">Virtual Interview</option>
+                    <option value="In-Person">In-Person</option>
+                  </select>
+                </div>
+
+                <div className="col-md-4 mb-2">
+                  <label>Date</label>
+                  <input
+                    type="date"
+                    className="form-control"
+                    {...register("interviewDate")}
+                  />
+                </div>
+
+                <div className="col-md-4 mb-2">
+                  <label>Time</label>
+                  <input
+                    type="time"
+                    className="form-control"
+                    {...register("interviewTime")}
+                  />
+                </div>
+
+                {watchInterviewType === "Virtual Interview" && (
+                  <div className="col-md-6 mb-2">
+                    <label>Meeting Link</label>
+                    <input
+                      className="form-control"
+                      {...register("meetingLink")}
+                    />
+                  </div>
+                )}
+
+                <div className="col-md-4 mb-2">
+                  <label>Status</label>
+                  <select className="form-control" {...register("status")}>
+                    <option value="">Select</option>
+                    <option value="Scheduled">Scheduled</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Cancelled">Cancelled</option>
+                  </select>
+                </div>
               </div>
 
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="modal-body row">
-                  <input type="hidden" {...register("candidate_id")} />
-                  <input type="hidden" {...register("job_id")} />
-
-                  {/* Interview Type */}
-                  <div className="col-md-4 mb-2">
-                    <label className="form-label fw-semibold">
-                      Interview Type
-                    </label>
-
-                    <select
-                      className="form-control rounded-3"
-                      {...register("interviewType")}
-                    >
-                      <option value="">Select Interview Type</option>
-                      <option>Virtual Interview</option>
-                      <option>In-Person</option>
-                    </select>
-
-                    <span className="text-danger">
-                      {errors.interviewType?.message}
-                    </span>
-                  </div>
-
-                  {/* Interview Date */}
-                  <div className="col-md-4 mb-2">
-                    <label className="form-label fw-semibold">
-                      Interview Date
-                    </label>
-                    <input
-                      type="date"
-                      className="form-control rounded-3"
-                      {...register("interviewDate")}
-                    />
-                    <span className="text-danger">
-                      {errors.interviewDate?.message}
-                    </span>
-                  </div>
-
-                  {/* Interview Time */}
-                  <div className="col-md-4 mb-2">
-                    <label className="form-label fw-semibold">
-                      Interview Time
-                    </label>
-                    <input
-                      type="time"
-                      className="form-control rounded-3"
-                      {...register("interviewTime")}
-                    />
-                    <span className="text-danger">
-                      {errors.interviewTime?.message}
-                    </span>
-                  </div>
-
-                  {/* Meeting Link - Conditional Rendering */}
-                  {watchInterviewType === "Virtual Interview" && (
-                    <div className="col-md-4 mb-2">
-                      <label className="form-label fw-semibold">
-                        Meeting Link
-                      </label>
-                      <div className="input-group">
-                        <input
-                          type="text"
-                          className="form-control rounded-3"
-                          placeholder="Enter Meeting Link"
-                          {...register("meetingLink")}
-                        />
-                      </div>
-                      <span className="text-danger">
-                        {errors.meetingLink?.message}
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Status */}
-                  <div className="col-md-4 mb-2">
-                    <label className="form-label fw-semibold">Status</label>
-
-                    <select
-                      className="form-control rounded-3"
-                      {...register("status")}
-                    >
-                      <option value="">Select Status</option>
-                      <option value="Scheduled">Scheduled</option>
-                      <option value="Completed">Completed</option>
-                      <option value="Cancelled">Cancelled</option>
-                    </select>
-
-                    <span className="text-danger">
-                      {errors.status?.message}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="modal-footer bg-light rounded-bottom-4 d-flex">
-                  <button
-                    type="button"
-                    className="btn btn-outline-secondary rounded-3"
-                    data-bs-dismiss="modal"
-                  >
-                    Cancel
-                  </button>
-
-                  <button
-                    type="submit"
-                    className="btn btn-success px-4 ms-auto"
-                  >
-                    Submit
-                  </button>
-                </div>
-              </form>
-            </div>
+              <div className="modal-footer">
+                <button className="btn btn-secondary" data-bs-dismiss="modal">
+                  Cancel
+                </button>
+                <button className="btn btn-success" type="submit">
+                  Update
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
-      {/* DELETE MODAL */}
+
       <ConfirmDelete
         show={showDeleteModal}
         onConfirm={confirmDelete}

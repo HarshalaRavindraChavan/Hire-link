@@ -10,7 +10,7 @@ import { toast, ToastContainer } from "react-toastify";
 
 function Jobs() {
   // tital of tab
-  useState(() => {
+  useEffect(() => {
     document.title = "Hirelink | Jobs";
   }, []);
 
@@ -34,7 +34,7 @@ function Jobs() {
   const fetchStates = async () => {
     try {
       const res = await axios.get(
-        "https://norealtor.in/hirelink_apis/admin/getdata/tbl_states"
+        "https://norealtor.in/hirelink_apis/admin/getdata/states"
       );
 
       if (res.data.status) {
@@ -50,7 +50,7 @@ function Jobs() {
   const fetchCities = async (stateId) => {
     try {
       const res = await axios.get(
-        `https://norealtor.in/hirelink_apis/admin/getdata/tbl_city/state_id/${stateId}`
+        `https://norealtor.in/hirelink_apis/admin/getdata/district/state_id/${stateId}`
       );
 
       if (res.data.status) {
@@ -135,20 +135,15 @@ function Jobs() {
   };
 
   //=======================================================
-
-  const modalRef = useRef(null);
-
   // Validation Schema (NO if/else)
   const validationSchema = Yup.object({
     job_title: Yup.string().required("Job Title is required"),
-    job_company: Yup.string().required("Company Name is required"),
     job_no_hiring: Yup.number()
       .typeError("Applications Count must be a number")
       .required("Applications Count is required"),
     job_type: Yup.string().required("Job Type is required"),
     job_salary: Yup.string().required("Salary Range is required"),
-    job_status: Yup.string().required("Status is required"),
-    job_date: Yup.string().required("Posted Date is required"),
+    job_status: Yup.string().nullable(),
     job_location: Yup.string().required("Location is required"),
     job_state: Yup.string().required(),
     job_city: Yup.string().required(),
@@ -161,6 +156,7 @@ function Jobs() {
     handleSubmit,
     reset,
     setValue,
+    watch,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
@@ -175,22 +171,26 @@ function Jobs() {
     try {
       const payload = {
         job_title: data.job_title,
-        job_company: data.job_company,
+        job_company: auth?.emp_companyname,
         job_mc: selectedCategory || null,
         job_sc: selectedSubCategory || null,
         job_sc1: selectedSubCat1 || null,
         job_sc2: selectedSubCat2 || null,
         job_sc3: selectedSubCat3 || null,
+
         job_no_hiring: Number(data.job_no_hiring),
         job_type: data.job_type,
         job_salary: data.job_salary,
-        job_status: data.job_status,
+
+        job_status: data.job_status || "0", // ✅ DEFAULT PENDING
+
         job_date: data.job_date,
         job_skills: data.job_skills,
         job_location: data.job_location,
         job_state: data.job_state,
         job_city: data.job_city,
         job_experience: data.job_experience,
+
         job_employer_id: employerId,
       };
 
@@ -204,7 +204,7 @@ function Jobs() {
         toast.success("Job Added Successfully");
         fetchJobs();
 
-        const modal = window.bootstrap.Modal.getInstance(modalRef.current);
+        const modal = window.bootstrap.Modal.getInstance(addModalRef.current);
         modal.hide();
       } else {
         toast.error(
@@ -220,6 +220,8 @@ function Jobs() {
     }
   };
 
+  const addModalRef = useRef(null);
+  const editModalRef = useRef(null);
   // ================= CATEGORY STATES =================
   // Main
   const [categories, setCategories] = useState([]);
@@ -374,7 +376,7 @@ function Jobs() {
 
     reset({
       job_title: job.job_title ?? "",
-      job_company: job.job_company ?? "",
+      job_company: auth?.emp_companyname ?? "",
       job_mc: job.job_mc ?? "",
       job_sc: job.job_sc ?? "",
       job_sc1: job.job_sc1 ?? "",
@@ -422,12 +424,12 @@ function Jobs() {
 
       const payload = {
         job_title: data.job_title,
-        job_company: data.job_company,
-        job_mc: selectedCategory,
-        job_sc: selectedSubCategory,
-        job_sc1: selectedSubCat1,
-        job_sc2: selectedSubCat2,
-        job_sc3: selectedSubCat3,
+        job_mc: selectedCategory || null,
+        job_sc: selectedSubCategory || null,
+        job_sc1: selectedSubCat1 || null,
+        job_sc2: selectedSubCat2 || null,
+        job_sc3: selectedSubCat3 || null,
+
         job_no_hiring: Number(data.job_no_hiring),
         job_type: data.job_type,
         job_salary: data.job_salary,
@@ -685,7 +687,7 @@ function Jobs() {
         id="exampleModal"
         tabIndex="-1"
         aria-hidden="true"
-        ref={modalRef}
+        ref={addModalRef}
       >
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content shadow-lg border-0 rounded-4">
@@ -721,13 +723,10 @@ function Jobs() {
                   <label className="form-label fw-semibold">Company Name</label>
                   <input
                     type="text"
-                    {...register("job_company")}
+                    value={auth?.emp_companyname || ""}
                     className="form-control form-control-md rounded-3"
-                    placeholder="Enter Company Name"
+                    readOnly
                   />
-                  <span className="text-danger">
-                    {errors.job_company?.message}
-                  </span>
                 </div>
 
                 {/* Job Category */}
@@ -898,7 +897,7 @@ function Jobs() {
                 <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">Salary Range</label>
                   <input
-                    type="text"
+                    type="number"
                     {...register("job_salary")}
                     className="form-control form-control-md rounded-3"
                     placeholder="Enter Salary Range"
@@ -915,26 +914,57 @@ function Jobs() {
                     {...register("job_status")}
                     className="form-control form-control-md rounded-3"
                   >
-                    <option value="">Select Status</option>
+                    <option value="">Default (Processing)</option>
+                    <option value="0">Processing</option>
                     <option value="1">Active</option>
-                    <option value="2">Pending</option>
                   </select>
+
                   <span className="text-danger">
                     {errors.job_status?.message}
                   </span>
                 </div>
 
-                {/* Posted Date */}
-                <div className="col-md-4 mb-2">
-                  <label className="form-label fw-semibold">Posted Date</label>
-                  <input
-                    type="date"
-                    {...register("job_date")}
-                    className="form-control form-control-md rounded-3"
-                  />
-                  <span className="text-danger">
-                    {errors.job_date?.message}
-                  </span>
+                {/* State */}
+                <div className="col-md-4">
+                  <label className="fw-semibold">State</label>
+                  <select
+                    className=" form-control form-select"
+                    value={watch("job_state") || ""}
+                    onChange={(e) => {
+                      const stateId = e.target.value;
+                      setValue("job_state", stateId);
+                      setValue("job_city", "");
+                      fetchCities(stateId);
+                    }}
+                  >
+                    <option value="">Select State</option>
+                    {states.map((s) => (
+                      <option key={s.state_id} value={s.state_id}>
+                        {s.state_title}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-danger">{errors.job_state?.message}</p>
+                </div>
+
+                {/* City */}
+                <div className="col-md-4">
+                  <label className="fw-semibold">City</label>
+                  <select
+                    className="form-control form-select"
+                    value={watch("job_city") || ""}
+                    onChange={(e) => setValue("job_city", e.target.value)}
+                    disabled={!cities.length}
+                  >
+                    <option value="">Select City</option>
+                    {cities.map((c) => (
+                      <option key={c.districtid} value={c.districtid}>
+                        {c.district_title}
+                      </option>
+                    ))}
+                  </select>
+
+                  <p className="text-danger">{errors.job_city?.message}</p>
                 </div>
 
                 {/* Location */}
@@ -951,54 +981,13 @@ function Jobs() {
                   </span>
                 </div>
 
-                {/* State */}
-                <div className="col-md-4">
-                  <label className="fw-semibold">State</label>
-                  <select
-                    className="form-select form-control"
-                    {...register("job_state")}
-                    onChange={(e) => {
-                      const stateId = e.target.value;
-                      fetchCities(stateId);
-                      setValue("job_city", ""); // ✅ RESET CITY
-                    }}
-                  >
-                    <option value="">Select State</option>
-                    {states.map((s) => (
-                      <option key={s.state_id} value={s.state_id}>
-                        {s.state_name}
-                      </option>
-                    ))}
-                  </select>
-                  <p className="text-danger">{errors.state?.message}</p>
-                </div>
-
-                {/* City */}
-                <div className="col-md-4">
-                  <label className="fw-semibold">City</label>
-                  <select
-                    className="form-select form-control"
-                    {...register("job_city")} // ✅ CORRECT
-                    disabled={!cities.length}
-                  >
-                    <option value="">Select City</option>
-                    {cities.map((c) => (
-                      <option key={c.city_id} value={c.city_id}>
-                        {c.city_name}
-                      </option>
-                    ))}
-                  </select>
-
-                  <p className="text-danger">{errors.job_city?.message}</p>
-                </div>
-
                 {/* Experience Required */}
                 <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">
                     Experience Required
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     {...register("job_experience")}
                     className="form-control form-control-md rounded-3"
                     placeholder="Enter Experience Required"
@@ -1048,7 +1037,7 @@ function Jobs() {
         id="editjobexampleModal"
         tabIndex="-1"
         aria-hidden="true"
-        ref={modalRef}
+        ref={editModalRef}
       >
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content shadow-lg border-0 rounded-4">
@@ -1084,13 +1073,10 @@ function Jobs() {
                   <label className="form-label fw-semibold">Company Name</label>
                   <input
                     type="text"
-                    {...register("job_company")}
+                    value={auth?.emp_companyname || ""}
                     className="form-control form-control-md rounded-3"
-                    placeholder="Enter Company Name"
+                    readOnly
                   />
-                  <span className="text-danger">
-                    {errors.job_company?.message}
-                  </span>
                 </div>
 
                 {/* Job Category */}
@@ -1099,15 +1085,13 @@ function Jobs() {
                     Main Category
                   </label>
                   <select
-                    className="form-control form-select rounded-3"
+                    className="form-control form-select"
                     value={selectedCategory}
-                    onChange={(e) =>
-                      handleSelectChange(
-                        "job_mc",
-                        e.target.value,
-                        setSelectedCategory
-                      )
-                    }
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setSelectedCategory(val);
+                      setValue("job_mc", val); // 🔥 RHF sync
+                    }}
                   >
                     <option value="">Select Category</option>
                     {categories.map((cat) => (
@@ -1318,36 +1302,38 @@ function Jobs() {
                 <div className="col-md-4">
                   <label className="fw-semibold">State</label>
                   <select
-                    className="form-select form-control"
-                    {...register("job_state")}
+                    className="form-select"
+                    value={watch("job_state") || ""}
                     onChange={(e) => {
                       const stateId = e.target.value;
+                      setValue("job_state", stateId);
+                      setValue("job_city", "");
                       fetchCities(stateId);
-                      setValue("job_city", ""); // ✅ RESET CITY
                     }}
                   >
                     <option value="">Select State</option>
                     {states.map((s) => (
                       <option key={s.state_id} value={s.state_id}>
-                        {s.state_name}
+                        {s.state_title}
                       </option>
                     ))}
                   </select>
-                  <p className="text-danger">{errors.state?.message}</p>
+                  <p className="text-danger">{errors.job_state?.message}</p>
                 </div>
 
                 {/* City */}
                 <div className="col-md-4">
                   <label className="fw-semibold">City</label>
                   <select
-                    className="form-select form-control"
-                    {...register("job_city")} // ✅ CORRECT
+                    className="form-select"
+                    value={watch("job_city") || ""}
+                    onChange={(e) => setValue("job_city", e.target.value)}
                     disabled={!cities.length}
                   >
                     <option value="">Select City</option>
                     {cities.map((c) => (
-                      <option key={c.city_id} value={c.city_id}>
-                        {c.city_name}
+                      <option key={c.districtid} value={c.districtid}>
+                        {c.district_title}
                       </option>
                     ))}
                   </select>

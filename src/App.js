@@ -81,8 +81,8 @@ const UserLayout = () => {
           <Route path="profile" element={<Profile />} />
           <Route path="apply" element={<Apply />} />
         </Routes>
+        <Footer2 />
       </div>
-      <Footer2 />
     </>
   );
 };

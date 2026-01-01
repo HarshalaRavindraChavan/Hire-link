@@ -13,8 +13,11 @@ html {
 
 .home-page-wrapper {
   min-height: 100vh;
-  display: flex;
   flex-direction: column;
+}
+
+.content {
+  flex: 1; /* 👈 content जितका असेल तितकाच घेईल */
 }
 
 body::-webkit-scrollbar,

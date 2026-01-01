@@ -146,9 +146,8 @@ function Users() {
   const {
     register,
     handleSubmit,
-    watch,
     reset,
-    setValue, // ✅ ADD THIS
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -287,25 +286,25 @@ function Users() {
     setEditUserId(user.user_id);
 
     reset({
-      fullname: user.fullname ?? "",
-      email: user.email ?? "",
-      mobile: user.mobile ?? "",
-      location: user.location ?? "",
-      address: user.address ?? "",
-      state: user.state ?? "",
-      city: user.city ?? "",
-      joindate: user.joindate ?? "",
-      bankpassbook: user.bankpassbook ?? "",
-      experience: user.experience ?? "",
-      role: user.role ?? "",
-      menus: user.menus ? user.menus.split(",") : [], // ✅ IMPORTANT
+      fullname: user.user_name ?? "",
+      email: user.user_email ?? "",
+      mobile: user.user_mobile ?? "",
+      location: user.user_location ?? "",
+      address: user.user_address ?? "",
+      state: user.user_state ?? "",
+      city: user.user_city ?? "",
+      joindate: user.user_joindate ?? "",
+      bankpassbook: user.user_bankpassbook ?? "",
+      experience: user.user_experience ?? "",
+      role: user.user_role ?? "",
+      menus: user.user_menu_id ? user.user_menu_id.split(",") : [],
     });
 
-    if (user.state) fetchCities(user.state);
+    if (user.user_state) {
+      fetchCities(user.user_state);
+    }
 
     const modalEl = document.getElementById("editUserModal");
-    if (!modalEl || !window.bootstrap) return;
-
     const modal =
       window.bootstrap.Modal.getInstance(modalEl) ||
       new window.bootstrap.Modal(modalEl);
@@ -323,19 +322,19 @@ function Users() {
       setLoading(true);
 
       const payload = {
-        fullname: data.fullname,
-        email: data.email,
-        mobile: data.mobile,
-        location: data.location,
-        address: data.address,
-        state: data.state,
-        city: data.city,
-        joindate: data.joindate,
-        bankpassbook: data.bankpassbook,
-        experience: data.experience,
-        role: data.role,
-        menus: Array.isArray(data.menus)
-          ? data.menus.join(",") // ✅ FIX
+        user_name: data.fullname,
+        user_email: data.email,
+        user_mobile: data.mobile,
+        user_location: data.location,
+        user_address: data.address,
+        user_state: data.state,
+        user_city: data.city,
+        user_joindate: data.joindate,
+        user_bankpassbook: data.bankpassbook,
+        user_experience: data.experience,
+        user_role: data.role,
+        user_menu_id: Array.isArray(data.menus)
+          ? data.menus.join(",")
           : data.menus,
       };
 

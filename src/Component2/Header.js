@@ -60,18 +60,11 @@ function Header() {
               </NavLink>
 
               <button
-                className="btn btn-sm btn-outline-danger"
+                className="btn btn-sm btn-outline-danger ps-5 pe-5 fs-6"
                 onClick={logout}
               >
                 Logout
               </button>
-
-              <NavLink
-                to="/employer"
-                className="nav-link-custom border-start border-3 ps-3"
-              >
-                Employers / Post Job
-              </NavLink>
             </>
           )}
 

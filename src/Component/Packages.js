@@ -482,7 +482,9 @@ function Packages() {
                   <label>Package Name</label>
                   <input
                     className="form-control"
-                    {...register("pack_name")}
+                    {...register("pack_name", {
+                      required: "Package name is required",
+                    })}
                     placeholder="Enter Package Name"
                   />
                   <span className="text-danger">
@@ -496,9 +498,12 @@ function Packages() {
                   <input
                     type="number"
                     className="form-control"
-                    {...register("pack_price")}
-                    placeholder="Enter Package Price"
+                    {...register("pack_price", {
+                      required: "Price is required",
+                    })}
+                    placeholder="Enter Price"
                   />
+
                   <span className="text-danger">
                     {errors.pack_price?.message}
                   </span>
@@ -509,7 +514,10 @@ function Packages() {
                   <label>Duration</label>
                   <select
                     className="form-select form-control"
-                    {...register("pack_duration")}
+                    {...register("pack_duration", {
+                      required: "Duration is required",
+                    })}
+                    placeholder="Enter Duration"
                   >
                     <option value="">Select</option>
                     <option value="30 Days">30 Days</option>
@@ -528,9 +536,12 @@ function Packages() {
                   <input
                     type="number"
                     className="form-control"
-                    {...register("pack_jplimit")}
-                    placeholder="Number of Post Limit"
+                    {...register("pack_jplimit", {
+                      required: "Job post limit is required",
+                    })}
+                    placeholder="Enter Job Limit"
                   />
+
                   <span className="text-danger">
                     {errors.pack_jplimit?.message}
                   </span>
@@ -542,9 +553,12 @@ function Packages() {
                   <input
                     type="number"
                     className="form-control"
-                    {...register("pack_rvlimit")}
-                    placeholder="Number of View Limit"
+                    {...register("pack_rvlimit", {
+                      required: "Resume view limit is required",
+                    })}
+                    placeholder="Resume"
                   />
+
                   <span className="text-danger">
                     {errors.pack_rvlimit?.message}
                   </span>
@@ -555,7 +569,10 @@ function Packages() {
                   <label>Support</label>
                   <select
                     className="form-select form-control"
-                    {...register("pack_support")}
+                    {...register("pack_support", {
+                      required: "Support type is required",
+                    })}
+                    placeholder="Enter Support"
                   >
                     <option value="">Select</option>
                     <option value="Email">Email</option>
@@ -572,9 +589,10 @@ function Packages() {
                   <label>Description</label>
                   <textarea
                     className="form-control"
-                    rows={3}
-                    {...register("pack_description")}
-                    placeholder="Enter Package Description"
+                    {...register("pack_description", {
+                      required: "Description is required",
+                    })}
+                    placeholder="Enter Description"
                   />
                   <span className="text-danger">
                     {errors.pack_description?.message}
@@ -591,7 +609,9 @@ function Packages() {
                         <input
                           type="text"
                           className="form-control"
-                          {...register(`pack_benefits.${index}`)}
+                          {...register(`pack_benefits.${index}`, {
+                            required: "Benefit is required",
+                          })}
                           placeholder={`Benefit ${index + 1}`}
                         />
 

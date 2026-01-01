@@ -14,8 +14,9 @@ function Offer() {
     document.title = "Hirelink | Offers";
   }, []);
 
-  const modalRef = useRef(null);
   const [offers, setOffers] = useState([]);
+  const addModalRef = useRef(null);
+  const editModalRef = useRef(null);
 
   //============All Offer Disply==================================
 
@@ -119,14 +120,29 @@ function Offer() {
     offer_description: yup.string().required("Description is required"),
   });
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm({
+  // ✅ ADD FORM
+  const addForm = useForm({
     resolver: yupResolver(schema),
   });
+
+  // ✅ EDIT FORM
+  const editForm = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const {
+    register: addRegister,
+    handleSubmit: handleAddSubmit,
+    formState: { errors: addErrors },
+    reset: resetAdd,
+  } = addForm;
+
+  const {
+    register: editRegister,
+    handleSubmit: handleEditSubmit,
+    formState: { errors: editErrors },
+    reset: resetEdit,
+  } = editForm;
 
   const onSubmit = async (data) => {
     try {
@@ -147,9 +163,9 @@ function Offer() {
       );
 
       if (res.data.status === true) {
-        reset();
+        resetAdd();
 
-        const modal = window.bootstrap.Modal.getInstance(modalRef.current);
+        const modal = window.bootstrap.Modal.getInstance(addModalRef.current);
         modal.hide();
 
         toast.success("Offer Added Successfully 🎉", {
@@ -174,78 +190,77 @@ function Offer() {
   const [loading, setLoading] = useState(false);
 
   const openEditOfferModal = (offer) => {
-  if (!offer) return;
+    if (!offer) return;
 
-  setEditOfferId(offer.offer_id);
+    setEditOfferId(offer.offer_id);
 
-  reset({
-    offer_title: offer.offer_title ?? "",
-    offer_coupon_code: offer.offer_coupon_code ?? "",
-    offer_in: offer.offer_in ?? "",
-    offer_start_date: offer.offer_start_date ?? "",
-    offer_end_date: offer.offer_end_date ?? "",
-    offer_usage_limit: offer.offer_usage_limit ?? "",
-    offer_status: offer.offer_status ?? "",
-    offer_description: offer.offer_description ?? "",
-  });
+    resetEdit({
+      offer_title: offer.offer_title ?? "",
+      offer_coupon_code: offer.offer_coupon_code ?? "",
+      offer_in: offer.offer_in ?? "",
+      offer_start_date: offer.offer_start_date?.slice(0, 10),
+      offer_end_date: offer.offer_end_date?.slice(0, 10),
+      offer_usage_limit: offer.offer_usage_limit ?? "",
+      offer_status: offer.offer_status ?? "",
+      offer_description: offer.offer_description ?? "",
+    });
 
-  const modalEl = document.getElementById("editOfferModal");
-  if (!modalEl || !window.bootstrap) return;
+    const modalEl = document.getElementById("editOfferModal");
+    if (!modalEl || !window.bootstrap) return;
 
-  const modalInstance =
-    window.bootstrap.Modal.getInstance(modalEl) ||
-    new window.bootstrap.Modal(modalEl);
+    const modalInstance =
+      window.bootstrap.Modal.getInstance(modalEl) ||
+      new window.bootstrap.Modal(modalEl);
 
-  modalInstance.show();
-};
+    modalInstance.show();
+  };
 
-
- const handleUpdateOffer = async (data) => {
-  if (!editOfferId) {
-    toast.error("Offer ID missing");
-    return;
-  }
-
-  try {
-    setLoading(true);
-
-    const payload = {
-      offer_title: data.offer_title,
-      offer_coupon_code: data.offer_coupon_code,
-      offer_in: data.offer_in,
-      offer_start_date: data.offer_start_date,
-      offer_end_date: data.offer_end_date,
-      offer_usage_limit: Number(data.offer_usage_limit),
-      offer_status: data.offer_status,
-      offer_description: data.offer_description,
-    };
-
-    const response = await axios.post(
-      `https://norealtor.in/hirelink_apis/admin/updatedata/tbl_offer/offer_id/${editOfferId}`,
-      payload
-    );
-
-    if (response?.data?.status === true) {
-      toast.success("Offer updated successfully ✅");
-      fetchOffers();
-
-      const modalEl = document.getElementById("editOfferModal");
-      if (modalEl && window.bootstrap) {
-        const modalInstance =
-          window.bootstrap.Modal.getInstance(modalEl);
-        modalInstance?.hide();
-      }
-    } else {
-      toast.error("Offer update failed");
+  const handleUpdateOffer = async (data) => {
+    if (!editOfferId) {
+      toast.error("Offer ID missing");
+      return;
     }
-  } catch (error) {
-    console.error("Update Offer Error:", error);
-    toast.error("Server error");
-  } finally {
-    setLoading(false);
-  }
-};
 
+    try {
+      setLoading(true);
+
+      const payload = {
+        offer_title: data.offer_title,
+        offer_coupon_code: data.offer_coupon_code,
+        offer_in: data.offer_in,
+        offer_start_date: data.offer_start_date,
+        offer_end_date: data.offer_end_date,
+        offer_usage_limit: Number(data.offer_usage_limit),
+        offer_status: data.offer_status,
+        offer_description: data.offer_description,
+      };
+
+      const response = await axios.post(
+        `https://norealtor.in/hirelink_apis/admin/updatedata/tbl_offer/offer_id/${editOfferId}`,
+        payload
+      );
+
+      if (response?.data?.status === true) {
+        toast.success("Offer updated successfully ✅");
+        fetchOffers();
+
+        if (editModalRef.current && window.bootstrap) {
+          const modal =
+            window.bootstrap.Modal.getInstance(editModalRef.current) ||
+            new window.bootstrap.Modal(editModalRef.current);
+
+          modal.hide();
+        }
+      } else {
+        toast.error("Offer update failed");
+      }
+    } catch (error) {
+      console.error("Update Offer Error:", error);
+      toast.error("Server error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -371,7 +386,7 @@ function Offer() {
                           {item.offer_usage_limit}
                         </span>
                       </div>
-                       <div className="fw-bold">
+                      <div className="fw-bold">
                         Description:{"  "}
                         <span className="text-dark fw-normal">
                           {item.offer_description}
@@ -441,7 +456,7 @@ function Offer() {
         className="modal fade"
         id="exampleModal"
         tabIndex="-1"
-        ref={modalRef}
+        ref={addModalRef}
       >
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content rounded-4">
@@ -454,54 +469,56 @@ function Offer() {
               ></i>
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleAddSubmit(onSubmit)}>
               <div className="modal-body row">
                 <div className="col-md-4">
                   <label>Offer Title</label>
                   <input
                     type="text"
-                    {...register("offer_title")}
+                    {...addRegister("offer_title")}
                     className="form-control"
                     placeholder="Enter Offer Name"
                   />
-                  <p className="text-danger">{errors.offer_title?.message}</p>
+                  <p className="text-danger">
+                    {addErrors.offer_title?.message}
+                  </p>
                 </div>
 
                 <div className="col-md-4">
                   <label>Coupon Code</label>
                   <input
                     type="text"
-                    {...register("offer_coupon_code")}
+                    {...addRegister("offer_coupon_code")}
                     className="form-control"
                     placeholder="Enter Coupon Code"
                   />
                   <p className="text-danger">
-                    {errors.offer_coupon_code?.message}
+                    {addErrors.offer_coupon_code?.message}
                   </p>
                 </div>
 
                 <div className="col-md-4 ">
                   <label>Offer In</label>
                   <select
-                    {...register("offer_in")}
+                    {...addRegister("offer_in")}
                     className="form-select form-control"
                   >
                     <option value="">Select</option>
                     <option value="Percentage">Percentage</option>
                     <option value="Flat Amount">Flat Amount</option>
                   </select>
-                  <p className="text-danger">{errors.offer_in?.message}</p>
+                  <p className="text-danger">{addErrors.offer_in?.message}</p>
                 </div>
 
                 <div className="col-md-4">
                   <label>Start Date</label>
                   <input
                     type="date"
-                    {...register("offer_start_date")}
+                    {...addRegister("offer_start_date")}
                     className="form-control"
                   />
                   <p className="text-danger">
-                    {errors.offer_start_date?.message}
+                    {addErrors.offer_start_date?.message}
                   </p>
                 </div>
 
@@ -509,11 +526,11 @@ function Offer() {
                   <label>End Date</label>
                   <input
                     type="date"
-                    {...register("offer_end_date")}
+                    {...addRegister("offer_end_date")}
                     className="form-control"
                   />
                   <p className="text-danger">
-                    {errors.offer_end_date?.message}
+                    {addErrors.offer_end_date?.message}
                   </p>
                 </div>
 
@@ -521,38 +538,40 @@ function Offer() {
                   <label>Usage Limit</label>
                   <input
                     type="number"
-                    {...register("offer_usage_limit")}
+                    {...addRegister("offer_usage_limit")}
                     className="form-control"
                     placeholder="Number of User Limit"
                   />
                   <p className="text-danger">
-                    {errors.offer_usage_limit?.message}
+                    {addErrors.offer_usage_limit?.message}
                   </p>
                 </div>
 
                 <div className="col-md-4">
                   <label>Status</label>
                   <select
-                    {...register("offer_status")}
+                    {...addRegister("offer_status")}
                     className="form-select form-control"
                   >
                     <option value="">Select Status</option>
                     <option value="1">Active</option>
                     <option value="0">Inactive</option>
                   </select>
-                  <p className="text-danger">{errors.offer_status?.message}</p>
+                  <p className="text-danger">
+                    {addErrors.offer_status?.message}
+                  </p>
                 </div>
 
                 <div className="col-12">
                   <label>Description</label>
                   <textarea
-                    {...register("offer_description")}
+                    {...addRegister("offer_description")}
                     className="form-control"
                     rows={4}
                     placeholder="Details about offer"
                   ></textarea>
                   <p className="text-danger">
-                    {errors.offer_description?.message}
+                    {addErrors.offer_description?.message}
                   </p>
                 </div>
               </div>
@@ -575,13 +594,12 @@ function Offer() {
         </div>
       </div>
 
-
       {/* Edit Model */}
       <div
         className="modal fade"
         id="editOfferModal"
         tabIndex="-1"
-        ref={modalRef}
+        ref={editModalRef}
       >
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content rounded-4">
@@ -594,54 +612,56 @@ function Offer() {
               ></i>
             </div>
 
-            <form onSubmit={handleSubmit(handleUpdateOffer)}>
+            <form onSubmit={handleEditSubmit(handleUpdateOffer)}>
               <div className="modal-body row">
                 <div className="col-md-4">
                   <label>Offer Title</label>
                   <input
                     type="text"
-                    {...register("offer_title")}
+                    {...editRegister("offer_title")}
                     className="form-control"
                     placeholder="Enter Offer Name"
                   />
-                  <p className="text-danger">{errors.offer_title?.message}</p>
+                  <p className="text-danger">
+                    {editErrors.offer_title?.message}
+                  </p>
                 </div>
 
                 <div className="col-md-4">
                   <label>Coupon Code</label>
                   <input
                     type="text"
-                    {...register("offer_coupon_code")}
+                    {...editRegister("offer_coupon_code")}
                     className="form-control"
                     placeholder="Enter Coupon Code"
                   />
                   <p className="text-danger">
-                    {errors.offer_coupon_code?.message}
+                    {editErrors.offer_coupon_code?.message}
                   </p>
                 </div>
 
                 <div className="col-md-4 ">
                   <label>Offer In</label>
                   <select
-                    {...register("offer_in")}
+                    {...editRegister("offer_in")}
                     className="form-select form-control"
                   >
                     <option value="">Select</option>
                     <option value="Percentage">Percentage</option>
                     <option value="Flat Amount">Flat Amount</option>
                   </select>
-                  <p className="text-danger">{errors.offer_in?.message}</p>
+                  <p className="text-danger">{editErrors.offer_in?.message}</p>
                 </div>
 
                 <div className="col-md-4">
                   <label>Start Date</label>
                   <input
                     type="date"
-                    {...register("offer_start_date")}
+                    {...editRegister("offer_start_date")}
                     className="form-control"
                   />
                   <p className="text-danger">
-                    {errors.offer_start_date?.message}
+                    {editErrors.offer_start_date?.message}
                   </p>
                 </div>
 
@@ -649,11 +669,11 @@ function Offer() {
                   <label>End Date</label>
                   <input
                     type="date"
-                    {...register("offer_end_date")}
+                    {...editRegister("offer_end_date")}
                     className="form-control"
                   />
                   <p className="text-danger">
-                    {errors.offer_end_date?.message}
+                    {editErrors.offer_end_date?.message}
                   </p>
                 </div>
 
@@ -661,38 +681,42 @@ function Offer() {
                   <label>Usage Limit</label>
                   <input
                     type="number"
-                      {...register("offer_usage_limit", { valueAsNumber: true })}
+                    {...editRegister("offer_usage_limit", {
+                      valueAsNumber: true,
+                    })}
                     className="form-control"
                     placeholder="Number of User Limit"
                   />
                   <p className="text-danger">
-                    {errors.offer_usage_limit?.message}
+                    {editErrors.offer_usage_limit?.message}
                   </p>
                 </div>
 
                 <div className="col-md-4">
                   <label>Status</label>
                   <select
-                    {...register("offer_status")}
+                    {...editRegister("offer_status")}
                     className="form-select form-control"
                   >
                     <option value="">Select Status</option>
                     <option value="1">Active</option>
                     <option value="0">Inactive</option>
                   </select>
-                  <p className="text-danger">{errors.offer_status?.message}</p>
+                  <p className="text-danger">
+                    {editErrors.offer_status?.message}
+                  </p>
                 </div>
 
                 <div className="col-12">
                   <label>Description</label>
                   <textarea
-                    {...register("offer_description")}
+                    {...editRegister("offer_description")}
                     className="form-control"
                     rows={4}
                     placeholder="Details about offer"
                   ></textarea>
                   <p className="text-danger">
-                    {errors.offer_description?.message}
+                    {editErrors.offer_description?.message}
                   </p>
                 </div>
               </div>

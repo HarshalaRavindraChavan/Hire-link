@@ -19,7 +19,7 @@ const EmpProfile = () => {
   const fetchStates = async () => {
     try {
       const res = await axios.get(
-        "https://norealtor.in/hirelink_apis/admin/getdata/tbl_states"
+        "https://norealtor.in/hirelink_apis/admin/getdata/state"
       );
 
       if (res.data.status) {
@@ -35,7 +35,7 @@ const EmpProfile = () => {
   const fetchCities = async (stateId) => {
     try {
       const res = await axios.get(
-        `https://norealtor.in/hirelink_apis/admin/getdata/tbl_city/state_id/${stateId}`
+        `https://norealtor.in/hirelink_apis/admin/getdatawhere/district/state_id/${stateId}`
       );
 
       if (res.data.status) {
@@ -121,7 +121,14 @@ const EmpProfile = () => {
 
         if (res.data.status) {
           toast.success("Profile updated successfully");
-          localStorage.setItem("employer", JSON.stringify(res.data.data));
+
+          const updatedEmployer = {
+            ...employer,
+            emp_state: values.state,
+            emp_city: values.city,
+          };
+
+          localStorage.setItem("employer", JSON.stringify(updatedEmployer));
         } else {
           toast.error("Update failed");
         }
@@ -132,10 +139,10 @@ const EmpProfile = () => {
   });
 
   useEffect(() => {
-    if (formik.values.state) {
+    if (formik.values.state && states.length > 0) {
       fetchCities(formik.values.state);
     }
-  }, [formik.values.state]);
+  }, [formik.values.state, states]);
 
   const uploadFile = async (e, field) => {
     const file = e.target.files[0];
@@ -276,18 +283,6 @@ const EmpProfile = () => {
                       </div>
                     </div>
 
-                    <div className="col-md-4">
-                      <label className="fw-semibold">Location</label>
-                      <input
-                        type="text"
-                        className={fieldClass("location")}
-                        placeholder="Enter location"
-                        {...formik.getFieldProps("location")}
-                      />
-                      <div className="invalid-feedback">
-                        {formik.errors.location}
-                      </div>
-                    </div>
                     {/* state */}
                     <div className="col-md-4">
                       <label className="fw-semibold">State</label>
@@ -312,7 +307,7 @@ const EmpProfile = () => {
                         <option value="">Select State</option>
                         {states.map((s) => (
                           <option key={s.state_id} value={s.state_id}>
-                            {s.state_name}
+                            {s.state_title}
                           </option>
                         ))}
                       </select>
@@ -331,19 +326,35 @@ const EmpProfile = () => {
                         }`}
                         name="city"
                         value={formik.values.city}
-                        onChange={formik.handleChange}
+                        onChange={(e) =>
+                          formik.setFieldValue("city", e.target.value)
+                        }
                         onBlur={formik.handleBlur}
                         disabled={!cities.length}
                       >
                         <option value="">Select City</option>
                         {cities.map((c) => (
-                          <option key={c.city_id} value={c.city_id}>
-                            {c.city_name}
+                          <option key={c.districtid} value={c.districtid}>
+                            {c.district_title}
                           </option>
                         ))}
                       </select>
+
                       <div className="invalid-feedback">
                         {formik.errors.city}
+                      </div>
+                    </div>
+
+                    <div className="col-md-4">
+                      <label className="fw-semibold">Location</label>
+                      <input
+                        type="text"
+                        className={fieldClass("location")}
+                        placeholder="Enter location"
+                        {...formik.getFieldProps("location")}
+                      />
+                      <div className="invalid-feedback">
+                        {formik.errors.location}
                       </div>
                     </div>
 

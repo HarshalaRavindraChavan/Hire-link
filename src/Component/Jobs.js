@@ -34,7 +34,7 @@ function Jobs() {
   const fetchStates = async () => {
     try {
       const res = await axios.get(
-        "https://norealtor.in/hirelink_apis/admin/getdata/states"
+        "https://norealtor.in/hirelink_apis/admin/getdata/state"
       );
 
       if (res.data.status) {

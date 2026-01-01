@@ -341,7 +341,7 @@ function Candidates() {
                         </span>
                       </div>
                     </td>
-                    <td></td>
+              
                     <td className="text-center">
                       {candidate.can_resume ? (
                         <a

@@ -24,7 +24,7 @@ function Apply() {
                 className="mb-3"
                 style={{ textAlign: "center", fontWeight: "bold" }}
               >
-                Apply For This Job
+                Apply For The Job
               </h5>
 
               <form onSubmit={handleSubmit}>

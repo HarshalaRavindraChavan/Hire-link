@@ -30,40 +30,50 @@ function Profile() {
   const [selectedSubCat3, setSelectedSubCat3] = useState("");
 
   // // ================= STATE & CITY =================
-  // const [states, setStates] = useState([]);
-  // const [cities, setCities] = useState([]);
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
 
-  // useEffect(() => {
-  //   fetchStates();
-  // }, []);
+  useEffect(() => {
+    fetchStates();
+  }, []);
 
-  // const fetchStates = async () => {
-  //   try {
-  //     const res = await axios.get(
-  //       "https://norealtor.in/hirelink_apis/admin/getdata/state"
-  //     );
+  const fetchStates = async () => {
+    try {
+      const res = await axios.get(
+        "https://norealtor.in/hirelink_apis/admin/getdata/state"
+      );
 
-  //     if (res.data.status) {
-  //       setStates(res.data.data);
-  //     }
-  //   } catch (err) {
-  //     console.error("State fetch error", err);
-  //   }
-  // };
+      if (res.data.status) {
+        setStates(res.data.data);
+      }
+    } catch (err) {
+      console.error("State fetch error", err);
+    }
+  };
 
-  // const fetchCities = async (stateId) => {
-  //   try {
-  //     const res = await axios.get(
-  //       `https://norealtor.in/hirelink_apis/admin/getdatawhere/district/state_id/${stateId}`
-  //     );
+  const fetchCities = async (stateId) => {
+    if (!stateId) return;
 
-  //     if (res.data.status) {
-  //       setCities(res.data.data);
-  //     }
-  //   } catch (err) {
-  //     console.error("City fetch error", err);
-  //   }
-  // };
+    try {
+      setCities([]); // ✅ clear previous cities
+
+      const res = await axios.get(
+        `https://norealtor.in/hirelink_apis/admin/getdatawhere/district/state_id/${stateId}`
+      );
+
+      if (res.data.status) {
+        setCities(res.data.data);
+      }
+    } catch (err) {
+      console.error("City fetch error", err);
+    }
+  };
+
+  useEffect(() => {
+    if (candidate?.can_state) {
+      fetchCities(candidate.can_state);
+    }
+  }, [candidate?.can_state]);
 
   //Main cat
   useEffect(() => {
@@ -485,6 +495,36 @@ function Profile() {
                         </option>
                       ))}
                     </select>
+                  </div> */}
+
+                  <div className="col-md-6">
+                    <label className="fw-semibold">State</label>
+                    <select
+                      className="form-control form-select"
+                      value={candidate.can_state}
+                      onChange={(e) => {
+                        const stateId = e.target.value;
+
+                        setCandidate((prev) => ({
+                          ...prev,
+                          can_state: stateId,
+                          can_city: "",
+                        }));
+
+                        if (stateId) {
+                          fetchCities(stateId);
+                        } else {
+                          setCities([]);
+                        }
+                      }}
+                    >
+                      <option value="">Select State</option>
+                      {states.map((s) => (
+                        <option key={s.state_id} value={s.state_id}>
+                          {s.state_title}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   <div className="col-md-6">
@@ -498,7 +538,7 @@ function Profile() {
                           can_city: e.target.value,
                         }))
                       }
-                      disabled={!cities.length}
+                      disabled={!candidate.can_state}
                     >
                       <option value="">Select City</option>
                       {cities.map((c) => (
@@ -507,7 +547,7 @@ function Profile() {
                         </option>
                       ))}
                     </select>
-                  </div> */}
+                  </div>
 
                   <div className="col-md-6">
                     {" "}
@@ -613,7 +653,9 @@ function Profile() {
                       ) : (
                         <>
                           <i className="fa fa-upload text-muted"></i>{" "}
-                          <span className="text-muted">Upload CV</span>
+                          <span className="text-muted">
+                            Upload Cover Letter
+                          </span>
                         </>
                       )}
                       <input

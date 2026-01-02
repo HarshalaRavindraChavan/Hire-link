@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import JobSearchBar from "./JobSearchBar";
 import "../Component2/css/Jobs.css";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 
 function Jobs() {
@@ -159,6 +159,18 @@ function Jobs() {
     setSelectedJob(jobs[0]);
   }, [jobs, savedJobs]);
 
+  const navigate = useNavigate();
+
+  const handleApplyClick = () => {
+    const candidate = JSON.parse(localStorage.getItem("candidate"));
+
+    if (candidate) {
+      navigate("/apply");
+    } else {
+      navigate("/signin");
+    }
+  };
+  
   return (
     <>
       <ToastContainer
@@ -269,9 +281,13 @@ function Jobs() {
                   ₹{selectedJob.job_salary} a month
                 </p>
 
-                <NavLink to="/apply" className="apply-btn mt-0 mb-5">
+                <button
+                  type="button"
+                  className="apply-btn mt-0 mb-5"
+                  onClick={handleApplyClick}
+                >
                   Apply Now
-                </NavLink>
+                </button>
               </div>
 
               <div className="job-body">

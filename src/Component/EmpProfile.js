@@ -173,6 +173,58 @@ const EmpProfile = () => {
       formik.touched[name] && formik.errors[name] ? "is-invalid" : ""
     }`;
 
+  //change password model code
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const empId = employer?.emp_id;
+
+  const handlePasswordUpdate = async (e) => {
+    e.preventDefault();
+
+    if (!empId) {
+      toast.error("Employer ID not found");
+      return;
+    }
+
+    if (!newPassword || !confirmPassword) {
+      toast.error("All fields are required");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const payload = {
+        emp_password: newPassword,
+      };
+
+      await axios.post(
+        `https://norealtor.in/hirelink_apis/employer/updatedata/tbl_employer/emp_id/${empId}`,
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      toast.success("Password updated successfully");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (error) {
+      toast.error("Password update failed");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <ToastContainer position="top-right" autoClose={3000} theme="colored" />
@@ -432,10 +484,11 @@ const EmpProfile = () => {
               </div>
             </div>
           )}
+
           {activeTab === "password" && (
             <div className="card shadow-sm border-0">
               <div className="card-body p-4">
-                <form>
+                <form onSubmit={handlePasswordUpdate}>
                   <div className="row g-3">
                     <div className="col-md-6">
                       <label className="fw-semibold">New Password</label>
@@ -443,6 +496,8 @@ const EmpProfile = () => {
                         type="password"
                         className="form-control"
                         placeholder="Enter new password"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
                       />
                     </div>
 
@@ -452,12 +507,18 @@ const EmpProfile = () => {
                         type="password"
                         className="form-control"
                         placeholder="Confirm password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
                       />
                     </div>
 
                     <div className="text-center mt-4">
-                      <button type="submit" className="btn btn-success px-5">
-                        Update Password
+                      <button
+                        type="submit"
+                        className="btn btn-success px-5"
+                        disabled={loading}
+                      >
+                        {loading ? "Updating..." : "Update Password"}
                       </button>
                     </div>
                   </div>

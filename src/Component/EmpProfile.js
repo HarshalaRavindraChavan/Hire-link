@@ -409,18 +409,17 @@ const EmpProfile = () => {
                         {formik.errors.facebook}
                       </div>
                     </div>
-                  </div>
-
-                  <div className="col-md-4">
-                    <label className="fw-semibold">youtube</label>
-                    <input
-                      type="text"
-                      className={fieldClass("youtube")}
-                      placeholder="https://example.com"
-                      {...formik.getFieldProps("youtube")}
-                    />
-                    <div className="invalid-feedback">
-                      {formik.errors.youtube}
+                    <div className="col-md-4">
+                      <label className="fw-semibold">youtube</label>
+                      <input
+                        type="text"
+                        className={fieldClass("youtube")}
+                        placeholder="https://example.com"
+                        {...formik.getFieldProps("youtube")}
+                      />
+                      <div className="invalid-feedback">
+                        {formik.errors.youtube}
+                      </div>
                     </div>
                   </div>
 

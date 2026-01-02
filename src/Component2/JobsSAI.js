@@ -9,8 +9,10 @@ function JobsSAI() {
   const [showModal, setShowModal] = useState(false);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
 
-  const auth = JSON.parse(localStorage.getItem("auth"));
-  const candidateId = auth?.candidate_id;
+  const candidate = JSON.parse(localStorage.getItem("candidate"));
+  const candidateId = candidate?.can_id;
+  console.log("Candidate LS:", candidate);
+  console.log("Candidate ID:", candidate?.can_id);
   //save job display
   const [savedJobs, setSavedJobs] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -25,6 +27,8 @@ function JobsSAI() {
       const res = await axios.get(
         `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_save_job/save_candidate_id/${candidateId}`
       );
+
+      console.log("Saved API:", res.data);
 
       if (res.data.status) {
         setSavedJobs(res.data.data);
@@ -51,6 +55,8 @@ function JobsSAI() {
       const res = await axios.get(
         `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_applied/apl_candidate_id/${candidateId}`
       );
+
+      console.log("Applied API:", res.data);
 
       if (res.data.status) {
         setAppliedJobs(res.data.data);
@@ -90,6 +96,8 @@ function JobsSAI() {
   };
 
   useEffect(() => {
+    if (!candidateId) return;
+
     if (activeTab === "saved") {
       fetchSavedJobs();
     }
@@ -97,7 +105,11 @@ function JobsSAI() {
     if (activeTab === "applied") {
       fetchAppliedJobs();
     }
-  }, [activeTab]);
+
+    if (activeTab === "interviews") {
+      fetchInterviewJobs();
+    }
+  }, [activeTab, candidateId]);
 
   function UpdateStatusModal({ show, onClose }) {
     if (!show) return null;
@@ -384,7 +396,7 @@ function JobsSAI() {
                   color: activeTab === "interviews" ? "#22c55e" : "#0f172a",
                 }}
               >
-                1
+                {interviewCount}
               </span>
             </button>
           </li>
@@ -415,7 +427,7 @@ function JobsSAI() {
                         </h6>
                         <p className="mb-0">{job.job_company}</p>
                         <small className="text-muted">
-                          {job.district_title}, {job.state_title}
+                          {job.city_name}, {job.state_name}
                         </small>
                         {/* <p className="mb-0 text-muted">Saved {job.saved_at}</p> */}
                       </div>
@@ -464,11 +476,11 @@ function JobsSAI() {
                         <p className="mb-0">{job.job_company}</p>
 
                         <small className="text-muted">
-                          {job.district_title}, {job.state_title}
+                          {job.city_name}, {job.state_name}
                         </small>
 
                         <p className="mb-0 text-muted">
-                          Applied {job.applied_at}
+                          Applied {job.apl_added_date}
                         </p>
                       </div>
                     </div>
@@ -525,8 +537,6 @@ function JobsSAI() {
                     })}
                   </h6>
 
-                  <hr />
-
                   <div className="d-flex flex-column flex-md-row justify-content-between gap-3">
                     <div>
                       <h6 className="fw-bold mb-1">
@@ -536,7 +546,7 @@ function JobsSAI() {
                       <p className="mb-0">{job.job_company}</p>
 
                       <small className="text-muted">
-                        {job.district_title}, {job.state_title}
+                        {job.city_name}, {job.state_name}
                       </small>
 
                       <div className="mt-2">
@@ -552,8 +562,25 @@ function JobsSAI() {
                         </p>
 
                         <p className="mb-0">
-                          <i className="fa fa-phone me-2"></i>
-                          {job.itv_type}
+                          {job.itv_type === "Virtual Interview" ? (
+                            <>
+                              <i className="fa fa-video-camera me-2 text-success"></i>
+
+                              <a
+                                href={job.itv_meeting_link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-decoration-none fw-semibold"
+                              >
+                                Virtual Interview
+                              </a>
+                            </>
+                          ) : (
+                            <>
+                              <i className="fa fa-map-marker me-2 text-success"></i>
+                              In-Person Interview
+                            </>
+                          )}
                         </p>
                       </div>
                     </div>

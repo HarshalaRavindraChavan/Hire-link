@@ -164,13 +164,18 @@ function Jobs() {
   const handleApplyClick = () => {
     const candidate = JSON.parse(localStorage.getItem("candidate"));
 
-    if (candidate) {
-      navigate("/apply");
-    } else {
+    if (!candidate) {
       navigate("/signin");
+      return;
     }
+
+    navigate("/apply", {
+      state: {
+        job: selectedJob, // 👈 FULL JOB DATA
+      },
+    });
   };
-  
+
   return (
     <>
       <ToastContainer

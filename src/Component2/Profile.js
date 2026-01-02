@@ -81,6 +81,15 @@ function Profile() {
     }
   };
 
+  const handleCityChange = (e) => {
+    const cityId = e.target.value;
+
+    setCandidate((prev) => ({
+      ...prev,
+      can_city: cityId,
+    }));
+  };
+
   //Main cat
   useEffect(() => {
     fetchCategories();
@@ -217,6 +226,17 @@ function Profile() {
       fetchCities(data.can_state);
     }
   }, []);
+
+  // 🔁 SYNC SAVED CATEGORY TO DROPDOWNS (IMPORTANT)
+  useEffect(() => {
+    if (!candidate || !candidate.can_id) return;
+
+    setSelectedCategory(candidate.can_mc || "");
+    setSelectedSubCategory(candidate.can_sc || "");
+    setSelectedSubCat1(candidate.can_sc1 || "");
+    setSelectedSubCat2(candidate.can_sc2 || "");
+    setSelectedSubCat3(candidate.can_sc3 || "");
+  }, [candidate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -400,7 +420,7 @@ function Profile() {
               <p className="mb-0 text-muted">
                 {/* {candidate.can_address}
                 <br /> */}
-                {candidate.district_title}, {candidate.state_title}
+                {candidate.city_name}, {candidate.state_name}
               </p>
             </div>
 
@@ -453,7 +473,7 @@ function Profile() {
                       {candidate.can_email} | {candidate.can_mobile}
                     </p>
                     <p className="mb-0 text-muted">
-                      {candidate.district_title}, {candidate.state_title} <br />
+                      {/* {candidate.city_name}, {candidate.state_name} <br /> */}
                       {/* {candidate.can_address}  */}
                     </p>
                   </div>
@@ -466,44 +486,40 @@ function Profile() {
                 <div className="row g-2 mb-2">
                   <div className="col-md-6">
                     <label className="fw-semibold">State</label>
-                    <div className="col-md-6">
-                      <select
-                        className="form-control form-select"
-                        value={candidate.can_state || ""}
-                        onChange={handleStateChange}
-                      >
-                        <option value="">Select State</option>
-                        {states.map((state) => (
-                          <option key={state.state_id} value={state.state_id}>
-                            {state.state_name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                    <select
+                      className="form-control form-select"
+                      value={candidate.can_state || ""}
+                      onChange={handleStateChange}
+                    >
+                      <option value="">Select State</option>
+                      {states.map((state) => (
+                        <option key={state.state_id} value={state.state_id}>
+                          {state.state_name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   <div className="col-md-6">
                     <label className="fw-semibold">City</label>
-                    <div className="col-md-6">
-                      <select
-                        className="form-control form-select"
-                        value={candidate.can_city || ""}
-                        onChange={handleCityChange}
-                        disabled={!candidate.can_state}
-                      >
-                        <option value="">
-                          {!candidate.can_state
-                            ? "Select state first"
-                            : "Select City"}
-                        </option>
+                    <select
+                      className="form-control form-select"
+                      value={candidate.can_city || ""}
+                      onChange={handleCityChange}
+                      disabled={!candidate.can_state}
+                    >
+                      <option value="">
+                        {!candidate.can_state
+                          ? "Select state first"
+                          : "Select City"}
+                      </option>
 
-                        {cities.map((city) => (
-                          <option key={city.city_id} value={city.city_id}>
-                            {city.city_name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                      {cities.map((city) => (
+                        <option key={city.city_id} value={city.city_id}>
+                          {city.city_name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   <div className="col-md-6">

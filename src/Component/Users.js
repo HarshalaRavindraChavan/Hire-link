@@ -13,6 +13,7 @@ function Users() {
   }, []);
 
   const [users, setUsers] = useState([]);
+  // ================= STATE & CITY =================
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
 
@@ -23,27 +24,25 @@ function Users() {
   const fetchStates = async () => {
     try {
       const res = await axios.get(
-        "https://norealtor.in/hirelink_apis/admin/getdata/state"
+        "https://norealtor.in/hirelink_apis/candidate/getdata/tbl_state"
       );
 
-      if (res.data.status) {
-        setStates(res.data.data);
+      if (res.data?.status) {
+        setStates(res.data.data || []);
       }
     } catch (err) {
       console.error("State fetch error", err);
     }
   };
 
-  //=========all city
-
   const fetchCities = async (stateId) => {
     try {
       const res = await axios.get(
-        `https://norealtor.in/hirelink_apis/admin/getdatawhere/district/state_id/${stateId}`
+        `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_city/city_state_id/${stateId}`
       );
 
-      if (res.data.status) {
-        setCities(res.data.data);
+      if (res.data?.status) {
+        setCities(res.data.data || []);
       }
     } catch (err) {
       console.error("City fetch error", err);
@@ -361,28 +360,28 @@ function Users() {
     }
   };
 
-   // ✅ ADD FORM
-      const addForm = useForm({
-        resolver: yupResolver(schema),
-      });
-     // ✅ EDIT FORM
-      const editForm = useForm({
-        resolver: yupResolver(schema),
-      });
-    
-      const {
-        register: addRegister,
-        handleSubmit: handleAddSubmit,
-        formState: { errors: addErrors },
-        reset: resetAdd,
-      } = addForm;
-    
-      const {
-        register: editRegister,
-        handleSubmit: handleEditSubmit,
-        formState: { errors: editErrors },
-        reset: resetEdit,
-      } = editForm;
+  // ✅ ADD FORM
+  const addForm = useForm({
+    resolver: yupResolver(schema),
+  });
+  // ✅ EDIT FORM
+  const editForm = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const {
+    register: addRegister,
+    handleSubmit: handleAddSubmit,
+    formState: { errors: addErrors },
+    reset: resetAdd,
+  } = addForm;
+
+  const {
+    register: editRegister,
+    handleSubmit: handleEditSubmit,
+    formState: { errors: editErrors },
+    reset: resetEdit,
+  } = editForm;
 
   return (
     <>
@@ -673,45 +672,48 @@ function Users() {
                 </div>
 
                 {/* State */}
-                {/* <div className="col-md-4">
+                <div className="col-md-6">
                   <label className="fw-semibold">State</label>
                   <select
                     className="form-select form-control"
                     {...addRegister("state")}
                     onChange={(e) => {
                       const stateId = e.target.value;
-                      fetchCities(stateId);
-                      setValue("city", ""); // ✅ RESET CITY
+                      setValue("state", stateId);
+                      setValue("city", ""); // ✅ reset city
+                      fetchCities(stateId); // ✅ fetch cities
                     }}
                   >
                     <option value="">Select State</option>
-                    {states.map((s) => (
-                      <option key={s.state_id} value={s.state_id}>
-                        {s.state_title}
+                    {states.map((state) => (
+                      <option key={state.state_id} value={state.state_id}>
+                        {state.state_name}
                       </option>
                     ))}
                   </select>
                   <p className="text-danger">{addErrors.state?.message}</p>
-                </div> */}
+                </div>
 
-                {/* City */}
-                {/* <div className="col-md-4">
+                {/* city */}
+                <div className="col-md-6">
                   <label className="fw-semibold">City</label>
                   <select
                     className="form-select form-control"
                     {...addRegister("city")}
                     disabled={!cities.length}
                   >
-                    <option value="">Select City</option>
-                    {cities.map((c) => (
-                      <option key={c.districtid} value={c.districtid}>
-                        {c.district_title}
+                    <option value="">
+                      {!cities.length ? "Select state first" : "Select City"}
+                    </option>
+
+                    {cities.map((city) => (
+                      <option key={city.city_id} value={city.city_id}>
+                        {city.city_name}
                       </option>
                     ))}
                   </select>
-
                   <p className="text-danger">{addErrors.city?.message}</p>
-                </div> */}
+                </div>
 
                 {/* Join Date */}
                 <div className="col-md-4">
@@ -763,7 +765,9 @@ function Users() {
                   />
                   <input type="hidden" {...addRegister("adharupload")} />
 
-                  <p className="text-danger">{addErrors.adharupload?.message}</p>
+                  <p className="text-danger">
+                    {addErrors.adharupload?.message}
+                  </p>
                 </div>
 
                 {/* PAN Upload */}
@@ -792,7 +796,9 @@ function Users() {
                     className="form-control"
                     placeholder="Enter Bank Details"
                   />
-                  <p className="text-danger">{addErrors.bankpassbook?.message}</p>
+                  <p className="text-danger">
+                    {addErrors.bankpassbook?.message}
+                  </p>
                 </div>
 
                 {/* Experience */}
@@ -971,8 +977,8 @@ function Users() {
                   >
                     <option value="">Select City</option>
                     {cities.map((c) => (
-                      <option key={c.districtid} value={c.districtid}>
-                        {c.district_title}
+                      <option key={c.city_id} value={c.city_id}>
+                        {c.city_name}
                       </option>
                     ))}
                   </select>
@@ -1000,7 +1006,9 @@ function Users() {
                     className="form-control"
                     placeholder="Enter Bank Details"
                   />
-                  <p className="text-danger">{editErrors.bankpassbook?.message}</p>
+                  <p className="text-danger">
+                    {editErrors.bankpassbook?.message}
+                  </p>
                 </div>
 
                 {/* Experience */}
@@ -1012,7 +1020,9 @@ function Users() {
                     className="form-control"
                     placeholder="Enter Experience"
                   />
-                  <p className="text-danger">{editErrors.experience?.message}</p>
+                  <p className="text-danger">
+                    {editErrors.experience?.message}
+                  </p>
                 </div>
 
                 {/* Role */}

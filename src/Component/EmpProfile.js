@@ -7,44 +7,67 @@ import { toast, ToastContainer } from "react-toastify";
 const EmpProfile = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const employer = JSON.parse(localStorage.getItem("employer"));
-  const auth = JSON.parse(localStorage.getItem("auth"));
+  // const auth = JSON.parse(localStorage.getItem("auth"));
 
-  // const [states, setStates] = useState([]);
-  // const [cities, setCities] = useState([]);
+  // ================= STATE & CITY =================
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
 
-  // useEffect(() => {
-  //   fetchStates();
-  // }, []);
+  useEffect(() => {
+    fetchStates();
+  }, []);
 
-  // const fetchStates = async () => {
-  //   try {
-  //     const res = await axios.get(
-  //       "https://norealtor.in/hirelink_apis/admin/getdata/state"
-  //     );
+  const fetchStates = async () => {
+    try {
+      const res = await axios.get(
+        "https://norealtor.in/hirelink_apis/candidate/getdata/tbl_state"
+      );
 
-  //     if (res.data.status) {
-  //       setStates(res.data.data);
-  //     }
-  //   } catch (err) {
-  //     console.error("State fetch error", err);
-  //   }
-  // };
+      if (res.data?.status) {
+        setStates(res.data.data || []);
+      }
+    } catch (err) {
+      console.error("State fetch error", err);
+    }
+  };
 
-  // //=========all city==========
+  const fetchCities = async (stateId) => {
+    try {
+      const res = await axios.get(
+        `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_city/city_state_id/${stateId}`
+      );
 
-  // const fetchCities = async (stateId) => {
-  //   try {
-  //     const res = await axios.get(
-  //       `https://norealtor.in/hirelink_apis/admin/getdatawhere/district/state_id/${stateId}`
-  //     );
+      if (res.data?.status) {
+        setCities(res.data.data || []);
+      }
+    } catch (err) {
+      console.error("City fetch error", err);
+    }
+  };
+  const handleStateChange = async (e) => {
+    const stateId = e.target.value;
 
-  //     if (res.data.status) {
-  //       setCities(res.data.data);
-  //     }
-  //   } catch (err) {
-  //     console.error("City fetch error", err);
-  //   }
-  // };
+    // ✅ Formik state update
+    formik.setFieldValue("state", stateId);
+    formik.setFieldValue("city", "");
+
+    if (stateId) {
+      await fetchCities(stateId);
+    } else {
+      setCities([]);
+    }
+  };
+
+  const handleCityChange = (e) => {
+    const cityId = e.target.value;
+    formik.setFieldValue("city", cityId);
+  };
+
+  useEffect(() => {
+    if (formik.values.state) {
+      fetchCities(formik.values.state);
+    }
+  }, [formik.values.state]);
 
   const formik = useFormik({
     initialValues: {
@@ -57,8 +80,8 @@ const EmpProfile = () => {
 
       emp_companyname: employer?.emp_companyname || "",
       location: employer?.emp_location || "",
-      // city: employer?.emp_city || "",
-      // state: employer?.emp_state || "",
+      city: employer?.emp_city || "",
+      state: employer?.emp_state || "",
 
       website: employer?.emp_website || "",
       linkedin: employer?.emp_linkedin || "",
@@ -80,8 +103,8 @@ const EmpProfile = () => {
 
       emp_companyname: Yup.string().required("Company name is required"),
       location: Yup.string().required("Location is required"),
-      // city: Yup.string().required("City is required"),
-      // state: Yup.string().required("State is required"),
+      city: Yup.string().required("City is required"),
+      state: Yup.string().required("State is required"),
 
       website: Yup.string().url("Invalid URL").nullable(),
       linkedin: Yup.string().url("Invalid URL").nullable(),
@@ -100,8 +123,8 @@ const EmpProfile = () => {
           emp_mobile: values.mobile,
           emp_companyname: values.emp_companyname,
           emp_location: values.location,
-          // emp_city: values.city,
-          // emp_state: values.state,
+          emp_city: values.city,
+          emp_state: values.state,
           emp_website: values.website,
           emp_linkedin: values.linkedin,
           emp_facebook: values.facebook,
@@ -115,20 +138,20 @@ const EmpProfile = () => {
         }
 
         const res = await axios.post(
-          `https://norealtor.in/hirelink_apis/employer/updatedata/tbl_employer/emp_id/${auth.emp_id}`,
+          `https://norealtor.in/hirelink_apis/employer/updatedata/tbl_employer/emp_id/${employer?.emp_id}`,
           payload
         );
 
         if (res.data.status) {
           toast.success("Profile updated successfully");
 
-          // const updatedEmployer = {
-          //   ...employer,
-          //   emp_state: values.state,
-          //   emp_city: values.city,
-          // };
+          const updatedEmployer = {
+            ...employer,
+            emp_state: values.state,
+            emp_city: values.city,
+          };
 
-          // localStorage.setItem("employer", JSON.stringify(updatedEmployer));
+          localStorage.setItem("employer", JSON.stringify(updatedEmployer));
         } else {
           toast.error("Update failed");
         }
@@ -137,12 +160,6 @@ const EmpProfile = () => {
       }
     },
   });
-
-  //  useEffect(() => {
-  //   if (formik.values.state) {
-  //     fetchCities(formik.values.state);
-  //   }
-  // }, []);
 
   const uploadFile = async (e, field) => {
     const file = e.target.files[0];
@@ -336,66 +353,52 @@ const EmpProfile = () => {
                     </div>
 
                     {/* state */}
-                    {/* <div className="col-md-4">
+
+                    <div className="col-md-4">
                       <label className="fw-semibold">State</label>
-
                       <select
-                        className={`form-select form-control ${
-                          formik.touched.state && formik.errors.state
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                        name="state"
+                        className={fieldClass("state")}
                         value={formik.values.state}
-                        onChange={(e) => {
-                          const stateId = e.target.value;
-
-                          formik.setFieldValue("state", stateId);
-                          formik.setFieldValue("city", "");
-                          fetchCities(stateId);
-                        }}
-                        onBlur={formik.handleBlur}
+                        onChange={handleStateChange}
                       >
                         <option value="">Select State</option>
-                        {states.map((s) => (
-                          <option key={s.state_id} value={s.state_id}>
-                            {s.state_title}
+                        {states.map((state) => (
+                          <option key={state.state_id} value={state.state_id}>
+                            {state.state_name}
                           </option>
                         ))}
                       </select>
-                      <div className="invalid-feedback">
+                      <div className="invalid-feedback d-block">
                         {formik.errors.state}
                       </div>
                     </div>
+
                     {/* citys */}
-                    {/* <div className="col-md-4">
+                    <div className="col-md-4">
                       <label className="fw-semibold">City</label>
                       <select
-                        className={`form-select form-control ${
-                          formik.touched.city && formik.errors.city
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                        name="city"
+                        className={fieldClass("city")}
                         value={formik.values.city}
-                        onChange={(e) =>
-                          formik.setFieldValue("city", e.target.value)
-                        }
-                        onBlur={formik.handleBlur}
-                        disabled={!cities.length}
+                        onChange={handleCityChange}
+                        disabled={!formik.values.state}
                       >
-                        <option value="">Select City</option>
-                        {cities.map((c) => (
-                          <option key={c.districtid} value={c.districtid}>
-                            {c.district_title}
+                        <option value="">
+                          {!formik.values.state
+                            ? "Select state first"
+                            : "Select City"}
+                        </option>
+
+                        {cities.map((city) => (
+                          <option key={city.city_id} value={city.city_id}>
+                            {city.city_name}
                           </option>
                         ))}
                       </select>
 
-                      <div className="invalid-feedback">
+                      <div className="invalid-feedback d-block">
                         {formik.errors.city}
                       </div>
-                    </div> */}
+                    </div>
 
                     <div className="col-md-4">
                       <label className="fw-semibold">Location</label>

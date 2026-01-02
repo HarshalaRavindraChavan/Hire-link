@@ -2,15 +2,105 @@ import React, { useEffect, useState } from "react";
 import "../Component2/css/Profile.css";
 import { ToastContainer } from "react-toastify";
 import { Navigate } from "react-router-dom";
-
+import axios from "axios";
 
 function JobsSAI() {
   const [activeTab, setActiveTab] = useState("saved");
   const [showModal, setShowModal] = useState(false);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
 
+  const auth = JSON.parse(localStorage.getItem("auth"));
+  const candidateId = auth?.candidate_id;
+  //save job display
+  const [savedJobs, setSavedJobs] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [savedCount, setSavedCount] = useState(0);
+
+  const fetchSavedJobs = async () => {
+    if (!candidateId) return;
+
+    try {
+      setLoading(true);
+
+      const res = await axios.get(
+        `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_save_job/save_candidate_id/${candidateId}`
+      );
+
+      if (res.data.status) {
+        setSavedJobs(res.data.data);
+        setSavedCount(res.data.data.length); // ✅ COUNT
+      }
+    } catch (error) {
+      console.error("Saved jobs fetch error", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // applied jobs
+  const [appliedJobs, setAppliedJobs] = useState([]);
+  const [appliedCount, setAppliedCount] = useState(0);
+  const [appliedLoading, setAppliedLoading] = useState(false);
+
+  const fetchAppliedJobs = async () => {
+    if (!candidateId) return;
+
+    try {
+      setAppliedLoading(true);
+
+      const res = await axios.get(
+        `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_applied/apl_candidate_id/${candidateId}`
+      );
+
+      if (res.data.status) {
+        setAppliedJobs(res.data.data);
+        setAppliedCount(res.data.data.length); // ✅ COUNT
+      }
+    } catch (error) {
+      console.error("Applied jobs fetch error", error);
+    } finally {
+      setAppliedLoading(false);
+    }
+  };
+
+  // interview jobs
+  const [interviewJobs, setInterviewJobs] = useState([]);
+  const [interviewCount, setInterviewCount] = useState(0);
+  const [interviewLoading, setInterviewLoading] = useState(false);
+
+  const fetchInterviewJobs = async () => {
+    if (!candidateId) return;
+
+    try {
+      setInterviewLoading(true);
+
+      const res = await axios.get(
+        `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_interview/itv_candidate_id/${candidateId}`
+      );
+
+      if (res.data.status) {
+        setInterviewJobs(res.data.data);
+        setInterviewCount(res.data.data.length); // ✅ COUNT
+      }
+    } catch (error) {
+      console.error("Interview jobs fetch error", error);
+    } finally {
+      setInterviewLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === "saved") {
+      fetchSavedJobs();
+    }
+
+    if (activeTab === "applied") {
+      fetchAppliedJobs();
+    }
+  }, [activeTab]);
+
   function UpdateStatusModal({ show, onClose }) {
-    if (!show) return null; 
+    if (!show) return null;
 
     return (
       <div className="status-modal-overlay">
@@ -175,6 +265,14 @@ function JobsSAI() {
       </>
     );
   }
+  //helper of lower case uparcase
+  const toTitleCase = (text = "") => {
+    return text
+      .toLowerCase()
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  };
 
   return (
     <>
@@ -223,7 +321,7 @@ function JobsSAI() {
                   color: activeTab === "saved" ? "#22c55e" : "#0f172a",
                 }}
               >
-                1
+                {savedCount}
               </span>
             </button>
           </li>
@@ -253,7 +351,7 @@ function JobsSAI() {
                   color: activeTab === "applied" ? "#22c55e" : "#0f172a",
                 }}
               >
-                2
+                {appliedCount}
               </span>
             </button>
           </li>
@@ -296,70 +394,96 @@ function JobsSAI() {
         <div className="tab-content ps-2 pe-2">
           {/* SAVED */}
           {activeTab === "saved" && (
-            <div className="card mb-3 p-3">
-              <div className="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
-                <div className="d-flex gap-3">
-                  <div className="bg-light rounded p-3">
-                    <i className="fa fa-building fs-4 text-secondary"></i>
-                  </div>
+            <>
+              {loading && <p className="text-center">Loading...</p>}
 
-                  <div>
-                    <h6 className="fw-bold mb-1">Sr. Website Designer</h6>
-                    <p className="mb-0">Esenceweb</p>
-                    <small className="text-muted">Pune, Maharashtra</small>
-                    <p className="mb-0 text-muted">Saved today</p>
+              {!loading && savedJobs.length === 0 && (
+                <p className="text-center text-muted">No saved jobs found</p>
+              )}
+
+              {savedJobs.map((job) => (
+                <div className="card mb-3 p-3" key={job.job_id}>
+                  <div className="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
+                    <div className="d-flex gap-3">
+                      <div className="bg-light rounded p-3">
+                        <i className="fa fa-building fs-4 text-secondary"></i>
+                      </div>
+
+                      <div>
+                        <h6 className="fw-bold mb-1">
+                          {toTitleCase(job.job_title)}
+                        </h6>
+                        <p className="mb-0">{job.job_company}</p>
+                        <small className="text-muted">
+                          {job.district_title}, {job.state_title}
+                        </small>
+                        {/* <p className="mb-0 text-muted">Saved {job.saved_at}</p> */}
+                      </div>
+                    </div>
+
+                    <div className="d-flex align-items-center gap-3 mt-2 mt-md-0">
+                      <button className="btn btn-success btn-sm">
+                        Apply now
+                      </button>
+
+                      <i className="fa fa-bookmark text-success"></i>
+                      <i className="fa fa-ellipsis-vertical"></i>
+                    </div>
                   </div>
                 </div>
-
-                <div className="d-flex align-items-center gap-3 mt-2 mt-md-0">
-                  <button
-                    className="btn btn-success btn-sm"
-                    onClick={() => Navigate("/apply")}
-                  >
-                    Apply now
-                  </button>
-
-                  <i className="fa fa-bookmark"></i>
-                  <i className="fa fa-ellipsis-vertical"></i>
-                </div>
-              </div>
-            </div>
+              ))}
+            </>
           )}
 
           {/* APPLIED */}
           {activeTab === "applied" && (
             <>
-              <h6 className="fw-bold mt-3 mb-2 ps-3">Last 14 days</h6>
+              {appliedLoading && <p className="text-center">Loading...</p>}
 
-              <div className="card mb-3 p-3">
-                <div className="d-flex flex-column flex-md-row justify-content-between gap-3">
-                  <div className="d-flex gap-3">
-                    <div className="bg-light rounded p-3">
-                      <i className="fa fa-building fs-4 text-secondary"></i>
+              {!appliedLoading && appliedJobs.length === 0 && (
+                <p className="text-center text-muted">No applied jobs found</p>
+              )}
+
+              {appliedJobs.map((job) => (
+                <div className="card mb-3 p-3" key={job.job_id}>
+                  <div className="d-flex flex-column flex-md-row justify-content-between gap-3">
+                    <div className="d-flex gap-3">
+                      <div className="bg-light rounded p-3">
+                        <i className="fa fa-building fs-4 text-secondary"></i>
+                      </div>
+
+                      <div>
+                        {/* <span className="badge bg-success mb-1">
+                          {job.application_status}
+                        </span> */}
+
+                        <h6 className="fw-bold mb-1">
+                          {toTitleCase(job.job_title)}
+                        </h6>
+
+                        <p className="mb-0">{job.job_company}</p>
+
+                        <small className="text-muted">
+                          {job.district_title}, {job.state_title}
+                        </small>
+
+                        <p className="mb-0 text-muted">
+                          Applied {job.applied_at}
+                        </p>
+                      </div>
                     </div>
 
                     <div>
-                      <span className="badge bg-success mb-1">
-                        Interviewing
-                      </span>
-                      <h6 className="fw-bold mb-1">
-                        Lead Generation Specialist
-                      </h6>
-                      <p className="mb-0">Esenceweb IT</p>
-                      <small className="text-muted">Pune, Maharashtra</small>
+                      <button
+                        className="btn btn-outline-success btn-sm"
+                        onClick={() => setShowModal(true)}
+                      >
+                        Update status
+                      </button>
                     </div>
                   </div>
-
-                  <div>
-                    <button
-                      className="btn btn-outline-success btn-sm"
-                      onClick={() => setShowModal(true)}
-                    >
-                      Update status
-                    </button>
-                  </div>
                 </div>
-              </div>
+              ))}
             </>
           )}
 
@@ -371,58 +495,81 @@ function JobsSAI() {
 
           {/* INTERVIEWS */}
           {activeTab === "interviews" && (
-            <div className="card p-4 position-relative">
-              {/* LEFT TOP BADGE */}
-              <span
-                className="badge bg-success position-absolute"
-                style={{ top: "15px", left: "15px" }}
-              >
-                Interview starts in 19 hours
-              </span>
+            <>
+              {interviewLoading && <p className="text-center">Loading...</p>}
 
-              <h6 className="fw-bold mt-4">Wednesday, 17 December</h6>
-              <hr />
+              {!interviewLoading && interviewJobs.length === 0 && (
+                <p className="text-center text-muted">
+                  No interviews scheduled
+                </p>
+              )}
 
-              <div className="d-flex flex-column flex-md-row justify-content-between gap-3">
-                <div>
-                  <h6 className="fw-bold mb-1">Lead Generation Specialist</h6>
-                  <p className="mb-0">Esenceweb IT</p>
-                  <small className="text-muted">Pune, Maharashtra</small>
+              {interviewJobs.map((job) => (
+                <div
+                  className="card p-4 position-relative mb-3"
+                  key={job.job_id}
+                >
+                  {/* TOP BADGE */}
+                  <span
+                    className="badge bg-success position-absolute"
+                    style={{ top: "15px", left: "15px" }}
+                  >
+                    Interview Scheduled
+                  </span>
 
-                  <div className="mt-2">
-                    <p className="mb-1">
-                      <i className="fa fa-clock me-2"></i>
-                      9:00 am – 9:30 am IST
-                    </p>
-                    <p className="mb-0">
-                      <i className="fa fa-phone me-2"></i>
-                      Phone interview
-                    </p>
+                  <h6 className="fw-bold mt-4">
+                    {new Date(job.itv_date).toLocaleDateString("en-IN", {
+                      weekday: "long",
+                      day: "numeric",
+                      month: "long",
+                    })}
+                  </h6>
+
+                  <hr />
+
+                  <div className="d-flex flex-column flex-md-row justify-content-between gap-3">
+                    <div>
+                      <h6 className="fw-bold mb-1">
+                        {toTitleCase(job.job_title)}
+                      </h6>
+
+                      <p className="mb-0">{job.job_company}</p>
+
+                      <small className="text-muted">
+                        {job.district_title}, {job.state_title}
+                      </small>
+
+                      <div className="mt-2">
+                        <p className="mb-1">
+                          <i className="fa fa-clock me-2"></i>
+                          {new Date(
+                            `1970-01-01T${job.itv_time}`
+                          ).toLocaleTimeString("en-IN", {
+                            hour: "numeric",
+                            minute: "2-digit",
+                            hour12: true,
+                          })}
+                        </p>
+
+                        <p className="mb-0">
+                          <i className="fa fa-phone me-2"></i>
+                          {job.itv_type}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="d-flex align-items-center">
+                      <button
+                        className="btn btn-success"
+                        onClick={() => setShowScheduleModal(true)}
+                      >
+                        Schedule
+                      </button>
+                    </div>
                   </div>
                 </div>
-
-                <div className="d-flex flex-column flex-sm-row gap-2 mt-3 mt-md-0">
-                  <button
-                    className="btn btn-success"
-                    onClick={() => setShowScheduleModal(true)}
-                    style={{
-                      height: "40px",
-                      padding: "0 18px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    Schedule
-                  </button>
-
-                  <ScheduleInterviewModal
-                    show={showScheduleModal}
-                    onClose={() => setShowScheduleModal(false)}
-                  />
-                </div>
-              </div>
-            </div>
+              ))}
+            </>
           )}
         </div>
       </main>

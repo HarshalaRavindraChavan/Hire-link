@@ -222,7 +222,7 @@ function Jobs() {
         setSelectedSubCat1("");
         setSelectedSubCat2("");
         setSelectedSubCat3("");
-        setCities([]);
+        // setCities([]);
 
         toast.success("Job Added Successfully");
         fetchJobs();
@@ -424,7 +424,7 @@ function Jobs() {
     setSelectedSubCat2(job.job_sc2 ?? "");
     setSelectedSubCat3(job.job_sc3 ?? "");
 
-    if (job.job_state) fetchCities(job.job_state);
+    // if (job.job_state) fetchCities(job.job_state);
 
     const modalEl = document.getElementById("editjobexampleModal");
     if (!modalEl || !window.bootstrap) return;

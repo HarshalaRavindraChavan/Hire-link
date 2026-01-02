@@ -30,50 +30,50 @@ function Profile() {
   const [selectedSubCat3, setSelectedSubCat3] = useState("");
 
   // // ================= STATE & CITY =================
-  const [states, setStates] = useState([]);
-  const [cities, setCities] = useState([]);
+  // const [states, setStates] = useState([]);
+  // const [cities, setCities] = useState([]);
 
-  useEffect(() => {
-    fetchStates();
-  }, []);
+  // useEffect(() => {
+  //   fetchStates();
+  // }, []);
 
-  const fetchStates = async () => {
-    try {
-      const res = await axios.get(
-        "https://norealtor.in/hirelink_apis/admin/getdata/state"
-      );
+  // const fetchStates = async () => {
+  //   try {
+  //     const res = await axios.get(
+  //       "https://norealtor.in/hirelink_apis/admin/getdata/state"
+  //     );
 
-      if (res.data.status) {
-        setStates(res.data.data);
-      }
-    } catch (err) {
-      console.error("State fetch error", err);
-    }
-  };
+  //     if (res.data.status) {
+  //       setStates(res.data.data);
+  //     }
+  //   } catch (err) {
+  //     console.error("State fetch error", err);
+  //   }
+  // };
 
-  const fetchCities = async (stateId) => {
-    if (!stateId) return;
+  // const fetchCities = async (stateId) => {
+  //   if (!stateId) return;
 
-    try {
-      setCities([]); // ✅ clear previous cities
+  //   try {
+  //     setCities([]); // ✅ clear previous cities
 
-      const res = await axios.get(
-        `https://norealtor.in/hirelink_apis/admin/getdatawhere/district/state_id/${stateId}`
-      );
+  //     const res = await axios.get(
+  //       `https://norealtor.in/hirelink_apis/admin/getdatawhere/district/state_id/${stateId}`
+  //     );
 
-      if (res.data.status) {
-        setCities(res.data.data);
-      }
-    } catch (err) {
-      console.error("City fetch error", err);
-    }
-  };
+  //     if (res.data.status) {
+  //       setCities(res.data.data);
+  //     }
+  //   } catch (err) {
+  //     console.error("City fetch error", err);
+  //   }
+  // };
 
-  useEffect(() => {
-    if (candidate?.can_state) {
-      fetchCities(candidate.can_state);
-    }
-  }, [candidate?.can_state]);
+  // useEffect(() => {
+  //   if (candidate?.can_state) {
+  //     fetchCities(candidate.can_state);
+  //   }
+  // }, [candidate?.can_state]);
 
   //Main cat
   useEffect(() => {
@@ -497,7 +497,7 @@ function Profile() {
                     </select>
                   </div> */}
 
-                  <div className="col-md-6">
+                  {/* <div className="col-md-6">
                     <label className="fw-semibold">State</label>
                     <select
                       className="form-control form-select"
@@ -547,7 +547,7 @@ function Profile() {
                         </option>
                       ))}
                     </select>
-                  </div>
+                  </div> */}
 
                   <div className="col-md-6">
                     {" "}

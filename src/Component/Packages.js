@@ -456,11 +456,11 @@ function Packages() {
                     <td className="text-start">
                       <div className="fw-bold">
                         Added By:{" "}
-                        <span className="fw-normal">{pkg.added_by}</span>
+                        <span className="fw-normal">{pkg.pack_added_by}</span>
                       </div>
                       <div className="fw-bold">
                         Added Date:{" "}
-                        <span className="fw-normal">{pkg.added_date}</span>
+                        <span className="fw-normal">{pkg.pack_added_date}</span>
                       </div>
                     </td>
                   </tr>

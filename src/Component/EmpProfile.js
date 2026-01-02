@@ -9,42 +9,42 @@ const EmpProfile = () => {
   const employer = JSON.parse(localStorage.getItem("employer"));
   const auth = JSON.parse(localStorage.getItem("auth"));
 
-  const [states, setStates] = useState([]);
-  const [cities, setCities] = useState([]);
+  // const [states, setStates] = useState([]);
+  // const [cities, setCities] = useState([]);
 
-  useEffect(() => {
-    fetchStates();
-  }, []);
+  // useEffect(() => {
+  //   fetchStates();
+  // }, []);
 
-  const fetchStates = async () => {
-    try {
-      const res = await axios.get(
-        "https://norealtor.in/hirelink_apis/admin/getdata/state"
-      );
+  // const fetchStates = async () => {
+  //   try {
+  //     const res = await axios.get(
+  //       "https://norealtor.in/hirelink_apis/admin/getdata/state"
+  //     );
 
-      if (res.data.status) {
-        setStates(res.data.data);
-      }
-    } catch (err) {
-      console.error("State fetch error", err);
-    }
-  };
+  //     if (res.data.status) {
+  //       setStates(res.data.data);
+  //     }
+  //   } catch (err) {
+  //     console.error("State fetch error", err);
+  //   }
+  // };
 
-  //=========all city==========
+  // //=========all city==========
 
-  const fetchCities = async (stateId) => {
-    try {
-      const res = await axios.get(
-        `https://norealtor.in/hirelink_apis/admin/getdatawhere/district/state_id/${stateId}`
-      );
+  // const fetchCities = async (stateId) => {
+  //   try {
+  //     const res = await axios.get(
+  //       `https://norealtor.in/hirelink_apis/admin/getdatawhere/district/state_id/${stateId}`
+  //     );
 
-      if (res.data.status) {
-        setCities(res.data.data);
-      }
-    } catch (err) {
-      console.error("City fetch error", err);
-    }
-  };
+  //     if (res.data.status) {
+  //       setCities(res.data.data);
+  //     }
+  //   } catch (err) {
+  //     console.error("City fetch error", err);
+  //   }
+  // };
 
   const formik = useFormik({
     initialValues: {
@@ -57,8 +57,8 @@ const EmpProfile = () => {
 
       emp_companyname: employer?.emp_companyname || "",
       location: employer?.emp_location || "",
-      city: employer?.emp_city || "",
-      state: employer?.emp_state || "",
+      // city: employer?.emp_city || "",
+      // state: employer?.emp_state || "",
 
       website: employer?.emp_website || "",
       linkedin: employer?.emp_linkedin || "",
@@ -80,8 +80,8 @@ const EmpProfile = () => {
 
       emp_companyname: Yup.string().required("Company name is required"),
       location: Yup.string().required("Location is required"),
-      city: Yup.string().required("City is required"),
-      state: Yup.string().required("State is required"),
+      // city: Yup.string().required("City is required"),
+      // state: Yup.string().required("State is required"),
 
       website: Yup.string().url("Invalid URL").nullable(),
       linkedin: Yup.string().url("Invalid URL").nullable(),
@@ -100,8 +100,8 @@ const EmpProfile = () => {
           emp_mobile: values.mobile,
           emp_companyname: values.emp_companyname,
           emp_location: values.location,
-          emp_city: values.city,
-          emp_state: values.state,
+          // emp_city: values.city,
+          // emp_state: values.state,
           emp_website: values.website,
           emp_linkedin: values.linkedin,
           emp_facebook: values.facebook,
@@ -122,13 +122,13 @@ const EmpProfile = () => {
         if (res.data.status) {
           toast.success("Profile updated successfully");
 
-          const updatedEmployer = {
-            ...employer,
-            emp_state: values.state,
-            emp_city: values.city,
-          };
+          // const updatedEmployer = {
+          //   ...employer,
+          //   emp_state: values.state,
+          //   emp_city: values.city,
+          // };
 
-          localStorage.setItem("employer", JSON.stringify(updatedEmployer));
+          // localStorage.setItem("employer", JSON.stringify(updatedEmployer));
         } else {
           toast.error("Update failed");
         }
@@ -138,11 +138,11 @@ const EmpProfile = () => {
     },
   });
 
-  useEffect(() => {
-    if (formik.values.state && states.length > 0) {
-      fetchCities(formik.values.state);
-    }
-  }, [formik.values.state, states]);
+  //  useEffect(() => {
+  //   if (formik.values.state) {
+  //     fetchCities(formik.values.state);
+  //   }
+  // }, []);
 
   const uploadFile = async (e, field) => {
     const file = e.target.files[0];
@@ -284,7 +284,7 @@ const EmpProfile = () => {
                     </div>
 
                     {/* state */}
-                    <div className="col-md-4">
+                    {/* <div className="col-md-4">
                       <label className="fw-semibold">State</label>
 
                       <select
@@ -316,7 +316,7 @@ const EmpProfile = () => {
                       </div>
                     </div>
                     {/* citys */}
-                    <div className="col-md-4">
+                    {/* <div className="col-md-4">
                       <label className="fw-semibold">City</label>
                       <select
                         className={`form-select form-control ${
@@ -343,7 +343,7 @@ const EmpProfile = () => {
                       <div className="invalid-feedback">
                         {formik.errors.city}
                       </div>
-                    </div>
+                    </div> */}
 
                     <div className="col-md-4">
                       <label className="fw-semibold">Location</label>

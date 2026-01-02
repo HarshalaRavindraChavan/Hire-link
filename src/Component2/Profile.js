@@ -29,6 +29,42 @@ function Profile() {
   const [subCat3, setSubCat3] = useState([]);
   const [selectedSubCat3, setSelectedSubCat3] = useState("");
 
+  // // ================= STATE & CITY =================
+  // const [states, setStates] = useState([]);
+  // const [cities, setCities] = useState([]);
+
+  // useEffect(() => {
+  //   fetchStates();
+  // }, []);
+
+  // const fetchStates = async () => {
+  //   try {
+  //     const res = await axios.get(
+  //       "https://norealtor.in/hirelink_apis/admin/getdata/state"
+  //     );
+
+  //     if (res.data.status) {
+  //       setStates(res.data.data);
+  //     }
+  //   } catch (err) {
+  //     console.error("State fetch error", err);
+  //   }
+  // };
+
+  // const fetchCities = async (stateId) => {
+  //   try {
+  //     const res = await axios.get(
+  //       `https://norealtor.in/hirelink_apis/admin/getdatawhere/district/state_id/${stateId}`
+  //     );
+
+  //     if (res.data.status) {
+  //       setCities(res.data.data);
+  //     }
+  //   } catch (err) {
+  //     console.error("City fetch error", err);
+  //   }
+  // };
+
   //Main cat
   useEffect(() => {
     fetchCategories();
@@ -171,6 +207,11 @@ function Profile() {
     setSelectedSubCat1(data.can_sc1 || "");
     setSelectedSubCat2(data.can_sc2 || "");
     setSelectedSubCat3(data.can_sc3 || "");
+
+    // // ✅ IMPORTANT PART (इथेच!)
+    // if (data?.can_state) {
+    //   fetchCities(data.can_state);
+    // }
   }, []);
 
   const handleChange = (e) => {
@@ -355,7 +396,7 @@ function Profile() {
               <p className="mb-0 text-muted">
                 {/* {candidate.can_address}
                 <br /> */}
-                {candidate.can_city}, {candidate.can_state}
+                {candidate.district_title}, {candidate.state_title}
               </p>
             </div>
 
@@ -419,27 +460,54 @@ function Profile() {
                 {/* BASIC DETAILS */}
                 <h6 className="fw-bold mb-2">Professional Information</h6>
                 <div className="row g-2 mb-2">
-                  <div className="col-md-6">
-                    <input
-                      type="text"
-                      name="can_city"
-                      className="form-control form-control-md"
-                      placeholder="City"
-                      value={candidate.can_city}
-                      onChange={handleChange}
-                    />
+                  {/* <div className="col-md-6">
+                    <label className="fw-semibold">State</label>
+                    <select
+                      className="form-control form-select"
+                      value={candidate.can_state}
+                      onChange={(e) => {
+                        const stateId = e.target.value;
+
+                        setCandidate((prev) => ({
+                          ...prev,
+                          can_state: stateId,
+                          can_city: "",
+                        }));
+
+                        setCities([]);
+                        if (stateId) fetchCities(stateId);
+                      }}
+                    >
+                      <option value="">Select State</option>
+                      {states.map((s) => (
+                        <option key={s.state_id} value={s.state_id}>
+                          {s.state_title}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   <div className="col-md-6">
-                    <input
-                      type="text"
-                      name="can_state"
-                      className="form-control form-control-md"
-                      placeholder="State"
-                      value={candidate.can_state}
-                      onChange={handleChange}
-                    />
-                  </div>
+                    <label className="fw-semibold">City</label>
+                    <select
+                      className="form-control form-select"
+                      value={candidate.can_city}
+                      onChange={(e) =>
+                        setCandidate((prev) => ({
+                          ...prev,
+                          can_city: e.target.value,
+                        }))
+                      }
+                      disabled={!cities.length}
+                    >
+                      <option value="">Select City</option>
+                      {cities.map((c) => (
+                        <option key={c.districtid} value={c.districtid}>
+                          {c.district_title}
+                        </option>
+                      ))}
+                    </select>
+                  </div> */}
 
                   <div className="col-md-6">
                     {" "}

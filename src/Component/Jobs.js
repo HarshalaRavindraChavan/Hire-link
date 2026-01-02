@@ -23,43 +23,43 @@ function Jobs() {
   const [search, setSearch] = useState("");
   const [jobs, setJobs] = useState([]);
 
-  const [states, setStates] = useState([]);
-  const [cities, setCities] = useState([]);
+  // const [states, setStates] = useState([]);
+  // const [cities, setCities] = useState([]);
 
-  //==============status
-  useEffect(() => {
-    fetchStates();
-  }, []);
+  // //==============status
+  // useEffect(() => {
+  //   fetchStates();
+  // }, []);
 
-  const fetchStates = async () => {
-    try {
-      const res = await axios.get(
-        "https://norealtor.in/hirelink_apis/admin/getdata/state"
-      );
+  // const fetchStates = async () => {
+  //   try {
+  //     const res = await axios.get(
+  //       "https://norealtor.in/hirelink_apis/admin/getdata/state"
+  //     );
 
-      if (res.data.status) {
-        setStates(res.data.data);
-      }
-    } catch (err) {
-      console.error("State fetch error", err);
-    }
-  };
+  //     if (res.data.status) {
+  //       setStates(res.data.data);
+  //     }
+  //   } catch (err) {
+  //     console.error("State fetch error", err);
+  //   }
+  // };
 
-  //=========all city
+  // //=========all city
 
-  const fetchCities = async (stateId) => {
-    try {
-      const res = await axios.get(
-        `https://norealtor.in/hirelink_apis/admin/getdata/district/state_id/${stateId}`
-      );
+  // const fetchCities = async (stateId) => {
+  //   try {
+  //     const res = await axios.get(
+  //       `https://norealtor.in/hirelink_apis/admin/getdatawhere/district/state_id/${stateId}`
+  //     );
 
-      if (res.data.status) {
-        setCities(res.data.data);
-      }
-    } catch (err) {
-      console.error("City fetch error", err);
-    }
-  };
+  //     if (res.data.status) {
+  //       setCities(res.data.data);
+  //     }
+  //   } catch (err) {
+  //     console.error("City fetch error", err);
+  //   }
+  // };
 
   //============================= Get Data Code ============================
 
@@ -145,8 +145,8 @@ function Jobs() {
     job_salary: Yup.string().required("Salary Range is required"),
     job_status: Yup.string().nullable(),
     job_location: Yup.string().required("Location is required"),
-    job_state: Yup.string().required(),
-    job_city: Yup.string().required(),
+    // job_state: Yup.string().required(),
+    // job_city: Yup.string().required(),
     job_skills: Yup.string().required("Skills is required"),
     job_experience: Yup.string().required("Experience is required"),
   });
@@ -202,8 +202,8 @@ function Jobs() {
         job_date: data.job_date,
         job_skills: data.job_skills,
         job_location: data.job_location,
-        job_state: data.job_state,
-        job_city: data.job_city,
+        // job_state: data.job_state,
+        // job_city: data.job_city,
         job_experience: data.job_experience,
 
         job_employer_id: employerId,
@@ -222,7 +222,7 @@ function Jobs() {
         setSelectedSubCat1("");
         setSelectedSubCat2("");
         setSelectedSubCat3("");
-        setCities([]);
+        // setCities([]);
 
         toast.success("Job Added Successfully");
         fetchJobs();
@@ -411,8 +411,8 @@ function Jobs() {
       job_status: job.job_status ?? "",
       job_date: job.job_date ?? "",
       job_location: job.job_location ?? "",
-      job_state: job.job_state ?? "",
-      job_city: job.job_city ?? "",
+      // job_state: job.job_state ?? "",
+      // job_city: job.job_city ?? "",
       job_experience: job.job_experience ?? "",
       job_skills: job.job_skills ?? "",
     });
@@ -424,7 +424,7 @@ function Jobs() {
     setSelectedSubCat2(job.job_sc2 ?? "");
     setSelectedSubCat3(job.job_sc3 ?? "");
 
-    if (job.job_state) fetchCities(job.job_state);
+    // if (job.job_state) fetchCities(job.job_state);
 
     const modalEl = document.getElementById("editjobexampleModal");
     if (!modalEl || !window.bootstrap) return;
@@ -459,8 +459,8 @@ function Jobs() {
         job_status: data.job_status,
         job_date: data.job_date,
         job_location: data.job_location,
-        job_state: data.job_state,
-        job_city: data.job_city,
+        // job_state: data.job_state,
+        // job_city: data.job_city,
         job_experience: data.job_experience,
         job_skills: data.job_skills,
       };
@@ -758,7 +758,7 @@ function Jobs() {
                     Main Category
                   </label>
                   <select
-                   className="form-control form-control-md rounded-3"
+                    className="form-control form-control-md rounded-3"
                     value={selectedCategory}
                     {...addRegister("job_mc")}
                     onChange={(e) => {
@@ -779,7 +779,7 @@ function Jobs() {
                 <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">Sub Category</label>
                   <select
-                   className="form-control form-control-md rounded-3"
+                    className="form-control form-control-md rounded-3"
                     value={selectedSubCategory}
                     {...addRegister("job_sc")}
                     onChange={(e) =>
@@ -805,7 +805,7 @@ function Jobs() {
                     Sub Category 1
                   </label>
                   <select
-                  className="form-control form-control-md rounded-3"
+                    className="form-control form-control-md rounded-3"
                     value={selectedSubCat1}
                     {...addRegister("job_sc1")}
                     onChange={(e) =>
@@ -863,7 +863,7 @@ function Jobs() {
                     Sub Category 3
                   </label>
                   <select
-                  className="form-control form-control-md rounded-3"
+                    className="form-control form-control-md rounded-3"
                     value={selectedSubCat3}
                     {...addRegister("job_sc3")}
                     onChange={(e) =>
@@ -951,7 +951,7 @@ function Jobs() {
                 </div>
 
                 {/* State */}
-                <div className="col-md-4">
+                {/* <div className="col-md-4">
                   <label className="fw-semibold">State</label>
                   <select
                     className=" form-control form-select"
@@ -975,7 +975,7 @@ function Jobs() {
                 </div>
 
                 {/* City */}
-                <div className="col-md-4">
+                {/* <div className="col-md-4">
                   <label className="fw-semibold">City</label>
                   <select
                     className="form-control form-select"
@@ -992,7 +992,7 @@ function Jobs() {
                   </select>
 
                   <p className="text-danger">{addErrors.job_city?.message}</p>
-                </div>
+                </div> */} 
 
                 {/* Location */}
                 <div className="col-md-4 mb-2">
@@ -1112,7 +1112,7 @@ function Jobs() {
                     Main Category
                   </label>
                   <select
-                   className="form-control form-control-md rounded-3"
+                    className="form-control form-control-md rounded-3"
                     value={selectedCategory}
                     {...editRegister("job_mc")}
                     onChange={(e) => {
@@ -1318,7 +1318,7 @@ function Jobs() {
                 </div>
 
                 {/* State */}
-                <div className="col-md-4">
+                {/* <div className="col-md-4">
                   <label className="fw-semibold">State</label>
                   <select
                     className="form-select"
@@ -1339,10 +1339,10 @@ function Jobs() {
                     ))}
                   </select>
                   <p className="text-danger">{editErrors.job_state?.message}</p>
-                </div>
+                </div> */}
 
                 {/* City */}
-                <div className="col-md-4">
+                {/* <div className="col-md-4">
                   <label className="fw-semibold">City</label>
                   <select
                     className="form-select"
@@ -1359,7 +1359,7 @@ function Jobs() {
                   </select>
 
                   <p className="text-danger">{editErrors.job_city?.message}</p>
-                </div>
+                </div> */}
 
                 {/* Experience Required */}
                 <div className="col-md-4 mb-2">

@@ -191,14 +191,13 @@ function Interview() {
                     <td>{firstIndex + idx + 1}</td>
 
                     <td>
-                      <label style={{ fontWeight: "bold" }}>Name:</label>
-                      <b>{i.can_name}</b>
                       <div className="dropdown d-inline ms-2">
                         <span
                           className="text-primary fw-bold"
                           role="button"
                           data-bs-toggle="dropdown"
                         >
+                          {i.can_name}
                           (Click here for edit)
                         </span>
                         <ul className="dropdown-menu">
@@ -223,30 +222,39 @@ function Interview() {
                     </td>
 
                     <td>
-                      <label style={{ fontWeight: "bold" }}>Job Title:</label>
-                      {i.job_title}
-                      <br />
-                      <label style={{ fontWeight: "bold" }}>
-                        Company Name:
-                      </label>
-                      <small>{i.job_company}</small>
+                      <div className="fw-bold">
+                        Job Title:{" "}
+                        <span className="text-dark fw-normal">
+                          {i.job_title}
+                        </span>
+                      </div>
+                      <div className="fw-bold">
+                        Company Name:{" "}
+                        <span className="text-dark fw-normal">
+                          {i.job_company}
+                        </span>
+                      </div>
                     </td>
 
                     <td>
-                      <label style={{ fontWeight: "bold" }}>
-                        Interview Type:
-                      </label>
-                      {i.itv_type}
-                      <br />
-                      <label style={{ fontWeight: "bold" }}>
-                        Interview Date:
-                      </label>
-                      {i.itv_date}
-                      <br />
-                      <label style={{ fontWeight: "bold" }}>
-                        Interview Time:
-                      </label>
-                      {i.itv_time}
+                      <div className="fw-bold">
+                        Interview Type::{" "}
+                        <span className="text-dark fw-normal">
+                          {i.itv_type}
+                        </span>
+                      </div>
+                      <div className="fw-bold">
+                        Interview Date:{" "}
+                        <span className="text-dark fw-normal">
+                          {i.itv_date}
+                        </span>
+                      </div>
+                      <div className="fw-bold">
+                        Interview Time:{" "}
+                        <span className="text-dark fw-normal">
+                          {i.itv_time}
+                        </span>
+                      </div>
                     </td>
 
                     <td>

@@ -620,7 +620,7 @@ function Jobs() {
                       <div className="fw-bold ">
                         Exp. Required:{" "}
                         <span className="text-dark fw-normal">
-                          {job.job_experience}
+                          {job.job_experience}Year
                         </span>
                       </div>
                     </td>
@@ -670,12 +670,12 @@ function Jobs() {
                           {job.job_date}
                         </span>
                       </div>
-                      <div className="fw-bold ">
+                      {/* <div className="fw-bold ">
                         Applications:{" "}
                         <span className="text-dark fw-normal">
                           {job.job_applications}
                         </span>
-                      </div>
+                      </div> */}
                     </td>
                     <td className="text-center">
                       {job.job_status === "1" ? (

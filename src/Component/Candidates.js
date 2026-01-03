@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
-import image from "./logo/hirelink.png";
+import image from "./logo/no image.jpg";
 import Pagination from "./commenuse/Pagination";
 import axios from "axios";
 import * as Yup from "yup";
@@ -175,28 +175,26 @@ function Candidates() {
     }
   };
 
-  
   // mobile number star code
   const maskMobile = (mobile) => {
     if (!mobile) return "";
     return "******" + mobile.slice(-4);
   };
 
-// email hide code 
+  // email hide code
   const maskEmail = (email) => {
-  if (!email) return "";
+    if (!email) return "";
 
-  const [name, domain] = email.split("@");
-  if (!domain) return email;
+    const [name, domain] = email.split("@");
+    if (!domain) return email;
 
-  const maskedName =
-    name.length <= 2
-      ? name[0] + "*"
-      : name.slice(0, 2) + "*".repeat(name.length - 2);
+    const maskedName =
+      name.length <= 2
+        ? name[0] + "*"
+        : name.slice(0, 2) + "*".repeat(name.length - 2);
 
-  return `${maskedName}@${domain}`;
-};
-
+    return `${maskedName}@${domain}`;
+  };
 
   return (
     <>
@@ -289,14 +287,14 @@ function Candidates() {
                       <div className="fw-bold">
                         Name:
                         <div className="dropdown d-inline ms-2">
-                          <span
+                          {/* <span
                             className="fw-bold text-primary"
                             role="button"
                             data-bs-toggle="dropdown"
-                          >
-                            {candidate.can_name}
-                          </span>
-                          <ul className="dropdown-menu shadow">
+                          > */}
+                          {candidate.can_name}
+                          {/* </span> */}
+                          {/* <ul className="dropdown-menu shadow">
                             <li>
                               <button className="dropdown-item">
                                 <i className="fas fa-edit me-2"></i>Edit
@@ -312,7 +310,7 @@ function Candidates() {
                                 <i className="fas fa-trash me-2"></i>Delete
                               </button>
                             </li>
-                          </ul>
+                          </ul> */}
                         </div>
                       </div>
 
@@ -330,12 +328,12 @@ function Candidates() {
                         </span>
                       </div>
 
-                      <div className="fw-bold">
+                      {/* <div className="fw-bold">
                         Registar Date:{" "}
                         <span className="text-dark fw-normal">
                           {candidate.register_date}
                         </span>
-                      </div>
+                      </div> */}
                     </td>
 
                     {/* Profile Image */}
@@ -364,15 +362,13 @@ function Candidates() {
                         </span>
                       </div>
                     </td>
-              
+
                     <td className="text-center">
                       {candidate.can_resume ? (
                         <a
-                          href={candidate.can_resume}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn btn-sm btn-outline-success"
+                          href={`https://norealtor.in/hirelink_apis/Uploads/${candidate.can_resume}`}
                           download
+                          className="btn btn-sm btn-outline-success"
                         >
                           <i className="fas fa-download me-1"></i>
                           Download
@@ -381,8 +377,6 @@ function Candidates() {
                         <span className="text-muted">No Resume</span>
                       )}
                     </td>
-   
-
                   </tr>
                 ))
               ) : (

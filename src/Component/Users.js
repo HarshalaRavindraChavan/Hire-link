@@ -125,26 +125,30 @@ function Users() {
     state: yup.string().required(),
     city: yup.string().required(),
     joindate: yup.date().required(),
-    adhar: yup.string().required("Aadhar upload required"),
-    pan: yup.string().required("PAN upload required"),
-    // adharupload: yup.string().required("Aadhar upload required"),
-    // panupload: yup.string().required("PAN upload required"),
-
+    adharupload: yup.string().required("Aadhar upload required"),
+    panupload: yup.string().required("PAN upload required"),
     bankpassbook: yup.string().required(),
     experience: yup.string().required(),
     role: yup.string().required(),
     menus: yup.array().min(1).required(),
   });
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    setValue,
-    formState: { errors },
-  } = useForm({
+  // ✅ ADD FORM
+  const addForm = useForm({
     resolver: yupResolver(schema),
+    defaultValues: {
+      adharupload: "",
+      panupload: "",
+    },
   });
+
+  const {
+    register: addRegister,
+    handleSubmit: handleAddSubmit,
+    formState: { errors: addErrors },
+    reset: resetAdd,
+    setValue: addSetValue,
+  } = addForm;
 
   /* ================= SUBMIT ================= */
   const onSubmit = async (data) => {
@@ -157,8 +161,6 @@ function Users() {
       user_state: data.state,
       user_city: data.city,
       user_joindate: data.joindate,
-      // user_adhar: data.adhar,
-      // user_pan: data.pan,
       user_bankpassbook: data.bankpassbook,
       user_experience: data.experience,
       user_role: data.role,
@@ -205,8 +207,8 @@ function Users() {
 
     // helper to reset RHF value
     const resetRHF = () => {
-      if (field === "user_aadhar_image") setValue("adharupload", "");
-      if (field === "user_pan_image") setValue("panupload", "");
+      if (field === "user_aadhar_image") addSetValue("adharupload", "");
+      if (field === "user_pan_image") addSetValue("panupload", "");
     };
 
     // ❌ file type check
@@ -265,11 +267,11 @@ function Users() {
 
         // React Hook Form hidden field
         if (field === "user_aadhar_image") {
-          setValue("adharupload", filename, { shouldValidate: true });
+          addSetValue("adharupload", filename, { shouldValidate: true });
         }
 
         if (field === "user_pan_image") {
-          setValue("panupload", filename, { shouldValidate: true });
+          addSetValue("panupload", filename, { shouldValidate: true });
         }
 
         toast.success("File uploaded successfully ✅");
@@ -283,118 +285,103 @@ function Users() {
     }
   };
 
-  //Edit model code
-  // const [editUserId, setEditUserId] = useState(null);
-  // const [loading, setLoading] = useState(false);
+  // Edit model code
+  const [editUserId, setEditUserId] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  // const openEditUserModal = (user) => {
-  //   if (!user) return;
+  const openEditUserModal = (user) => {
+    if (!user) return;
 
-  //   setEditUserId(user.user_id);
+    setEditUserId(user.user_id);
 
-  //   resetEdit({
-  //     fullname: user.user_name ?? "",
-  //     email: user.user_email ?? "",
-  //     mobile: user.user_mobile ?? "",
-  //     location: user.user_location ?? "",
-  //     address: user.user_address ?? "",
-  //     state: user.user_state ?? "",
-  //     city: user.user_city ?? "",
-  //     joindate: user.user_joindate ?? "",
-  //     bankpassbook: user.user_bankpassbook ?? "",
-  //     experience: user.user_experience ?? "",
-  //     role: user.user_role ?? "",
-  //     menus: user.user_menu_id ? user.user_menu_id.split(",") : [],
-  //   });
+    resetEdit({
+      fullname: user.user_name ?? "",
+      email: user.user_email ?? "",
+      mobile: user.user_mobile ?? "",
+      location: user.user_location ?? "",
+      address: user.user_address ?? "",
+      state: user.user_state ?? "",
+      city: user.user_city ?? "",
+      joindate: user.user_joindate ?? "",
+      bankpassbook: user.user_bankpassbook ?? "",
+      experience: user.user_experience ?? "",
+      role: user.user_role ?? "",
+      menus: user.user_menu_id ? user.user_menu_id.split(",") : [],
+    });
 
-  //   if (user.user_state) {
-  //     fetchCities(user.user_state);
-  //   }
+    if (user.user_state) {
+      fetchCities(user.user_state);
+    }
 
-  //   const modalEl = document.getElementById("editUserModal");
-  //   const modal =
-  //     window.bootstrap.Modal.getInstance(modalEl) ||
-  //     new window.bootstrap.Modal(modalEl);
+    const modalEl = document.getElementById("editUserModal");
+    const modal =
+      window.bootstrap.Modal.getInstance(modalEl) ||
+      new window.bootstrap.Modal(modalEl);
 
-  //   modal.show();
-  // };
+    modal.show();
+  };
 
-  // const handleUpdateUser = async (data) => {
-  //   if (!editUserId) {
-  //     toast.error("User ID missing");
-  //     return;
-  //   }
+  const handleUpdateUser = async (data) => {
+    if (!editUserId) {
+      toast.error("User ID missing");
+      return;
+    }
 
-  //   try {
-  //     setLoading(true);
+    try {
+      setLoading(true);
 
-  //     const payload = {
-  //       user_name: data.fullname,
-  //       user_email: data.email,
-  //       user_mobile: data.mobile,
-  //       user_location: data.location,
-  //       user_address: data.address,
-  //       user_state: data.state,
-  //       user_city: data.city,
-  //       user_joindate: data.joindate,
-  //       user_bankpassbook: data.bankpassbook,
-  //       user_experience: data.experience,
-  //       user_role: data.role,
-  //       user_menu_id: Array.isArray(data.menus)
-  //         ? data.menus.join(",")
-  //         : data.menus,
-  //     };
+      const payload = {
+        user_name: data.fullname,
+        user_email: data.email,
+        user_mobile: data.mobile,
+        user_location: data.location,
+        user_address: data.address,
+        user_state: data.state,
+        user_city: data.city,
+        user_joindate: data.joindate,
+        user_bankpassbook: data.bankpassbook,
+        user_experience: data.experience,
+        user_role: data.role,
+        user_menu_id: Array.isArray(data.menus)
+          ? data.menus.join(",")
+          : data.menus,
+      };
 
-  //     const response = await axios.post(
-  //       `https://norealtor.in/hirelink_apis/admin/updatedata/tbl_user/user_id/${editUserId}`,
-  //       payload
-  //     );
+      const response = await axios.post(
+        `https://norealtor.in/hirelink_apis/admin/updatedata/tbl_user/user_id/${editUserId}`,
+        payload
+      );
 
-  //     if (response?.data?.status === true) {
-  //       toast.success("User updated successfully ✅");
-  //       fetchUsers();
+      if (response?.data?.status === true) {
+        toast.success("User updated successfully ✅");
+        fetchUsers();
 
-  //       const modalEl = document.getElementById("editUserModal");
-  //       const modalInstance = window.bootstrap.Modal.getInstance(modalEl);
-  //       modalInstance?.hide();
-  //     } else {
-  //       toast.error("User update failed");
-  //     }
-  //   } catch (error) {
-  //     console.error("User Update Error:", error);
-  //     toast.error("Server error");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // ✅ ADD FORM
-  const addForm = useForm({
-    resolver: yupResolver(schema),
-    defaultValues: {
-      adharupload: "",
-      panupload: "",
-    },
-  });
+        const modalEl = document.getElementById("editUserModal");
+        const modalInstance = window.bootstrap.Modal.getInstance(modalEl);
+        modalInstance?.hide();
+      } else {
+        toast.error("User update failed");
+      }
+    } catch (error) {
+      console.error("User Update Error:", error);
+      toast.error("Server error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // ✅ EDIT FORM
-  // const editForm = useForm({
-  //   resolver: yupResolver(schema),
-  // });
+  const editForm = useForm({
+    resolver: yupResolver(schema),
+  });
 
   const {
-    register: addRegister,
-    handleSubmit: handleAddSubmit,
-    formState: { errors: addErrors },
-    reset: resetAdd,
-  } = addForm;
-
-  // const {
-  //   register: editRegister,
-  //   handleSubmit: handleEditSubmit,
-  //   formState: { errors: editErrors },
-  //   reset: resetEdit,
-  // } = editForm;
+    register: editRegister,
+    handleSubmit: handleEditSubmit,
+    formState: { errors: editErrors },
+    reset: resetEdit,
+    setValue: editSetValue,
+  } = editForm;
 
   // mobile number star code
   const maskMobile = (mobile) => {
@@ -510,7 +497,7 @@ function Users() {
                               <li>
                                 <button
                                   className="dropdown-item"
-                                  // onClick={() => openEditUserModal(u)}
+                                  onClick={() => openEditUserModal(u)}
                                 >
                                   <i className="fas fa-edit me-2"></i> Edit
                                 </button>
@@ -564,9 +551,9 @@ function Users() {
                           </span>
                         </div> */}
                         <div className="fw-bold">
-                          Join Date:{"  "}
+                          Join Date:{" "}
                           <span className="text-dark fw-normal">
-                            {u.user_joindate}
+                            {u.user_joindate?.split("T")[0]}
                           </span>
                         </div>
                       </td>
@@ -715,8 +702,8 @@ function Users() {
                     {...addRegister("state")}
                     onChange={(e) => {
                       const stateId = e.target.value;
-                      setValue("state", stateId);
-                      setValue("city", ""); // ✅ reset city
+                      addSetValue("state", stateId);
+                      addSetValue("city", ""); // ✅ reset city
                       fetchCities(stateId); // ✅ fetch cities
                     }}
                   >
@@ -907,7 +894,7 @@ function Users() {
       </div>
 
       {/* Edit Model Code*/}
-      {/* <div className="modal fade" id="editUserModal" tabIndex="-1">
+      <div className="modal fade" id="editUserModal" tabIndex="-1">
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content rounded-4">
             <div className="modal-header bg-success text-white">
@@ -917,12 +904,12 @@ function Users() {
                 data-bs-dismiss="modal"
                 style={{ cursor: "pointer", color: "white", fontSize: "25px" }}
               ></i>
-            </div> */}
-      {/* 
+            </div>
+
             <form onSubmit={handleEditSubmit(handleUpdateUser)}>
-              <div className="modal-body row"> */}
-      {/* Full Name */}
-      {/* <div className="col-md-4">
+              <div className="modal-body row">
+                {/* Full Name */}
+                <div className="col-md-4">
                   <label className="fw-semibold">Full Name</label>
                   <input
                     type="text"
@@ -931,10 +918,10 @@ function Users() {
                     placeholder="Enter Full Name"
                   />
                   <p className="text-danger">{editErrors.fullname?.message}</p>
-                </div> */}
+                </div>
 
-      {/* Email */}
-      {/* <div className="col-md-4">
+                {/* Email */}
+                <div className="col-md-4">
                   <label className="fw-semibold">Email</label>
                   <input
                     type="text"
@@ -943,10 +930,10 @@ function Users() {
                     placeholder="Enter Email"
                   />
                   <p className="text-danger">{editErrors.email?.message}</p>
-                </div> */}
+                </div>
 
-      {/* Mobile */}
-      {/* <div className="col-md-4">
+                {/* Mobile */}
+                <div className="col-md-4">
                   <label className="fw-semibold">Mobile</label>
                   <input
                     type="text"
@@ -955,10 +942,10 @@ function Users() {
                     placeholder="Enter Mobile Number"
                   />
                   <p className="text-danger">{editErrors.mobile?.message}</p>
-                </div> */}
+                </div>
 
-      {/* Location */}
-      {/* <div className="col-md-4">
+                {/* Location */}
+                <div className="col-md-4">
                   <label className="fw-semibold">Location</label>
                   <input
                     type="text"
@@ -967,10 +954,10 @@ function Users() {
                     placeholder="Enter Location"
                   />
                   <p className="text-danger">{editErrors.location?.message}</p>
-                </div> */}
+                </div>
 
-      {/* Address */}
-      {/* <div className="col-md-4">
+                {/* Address */}
+                <div className="col-md-4">
                   <label className="fw-semibold">Address</label>
                   <input
                     type="text"
@@ -979,10 +966,10 @@ function Users() {
                     placeholder="Enter Address"
                   />
                   <p className="text-danger">{editErrors.address?.message}</p>
-                </div> */}
+                </div>
 
-      {/* State */}
-      {/* <div className="col-md-4">
+                {/* State */}
+                <div className="col-md-4">
                   <label className="fw-semibold">State</label>
                   <select
                     className="form-select form-control"
@@ -990,7 +977,7 @@ function Users() {
                     onChange={(e) => {
                       const stateId = e.target.value;
                       fetchCities(stateId);
-                      setValue("city", ""); // ✅ RESET CITY
+                      editSetValue("city", ""); // ✅ RESET CITY
                     }}
                   >
                     <option value="">Select State</option>
@@ -1001,10 +988,10 @@ function Users() {
                     ))}
                   </select>
                   <p className="text-danger">{editErrors.state?.message}</p>
-                </div> */}
+                </div>
 
-      {/* City */}
-      {/* <div className="col-md-4">
+                {/* City */}
+                <div className="col-md-4">
                   <label className="fw-semibold">City</label>
                   <select
                     className="form-select form-control"
@@ -1020,10 +1007,10 @@ function Users() {
                   </select>
 
                   <p className="text-danger">{editErrors.city?.message}</p>
-                </div> */}
+                </div>
 
-      {/* Join Date */}
-      {/* <div className="col-md-4">
+                {/* Join Date */}
+                <div className="col-md-4">
                   <label className="fw-semibold">Join Date</label>
                   <input
                     type="date"
@@ -1031,10 +1018,10 @@ function Users() {
                     className="form-control"
                   />
                   <p className="text-danger">{editErrors.joindate?.message}</p>
-                </div> */}
+                </div>
 
-      {/* Bank */}
-      {/* <div className="col-md-4">
+                {/* Bank */}
+                <div className="col-md-4">
                   <label className="fw-semibold">Bank Passbook</label>
                   <input
                     type="text"
@@ -1045,10 +1032,10 @@ function Users() {
                   <p className="text-danger">
                     {editErrors.bankpassbook?.message}
                   </p>
-                </div> */}
+                </div>
 
-      {/* Experience */}
-      {/* <div className="col-md-4">
+                {/* Experience */}
+                <div className="col-md-4">
                   <label className="fw-semibold">Experience</label>
                   <input
                     type="text"
@@ -1059,10 +1046,10 @@ function Users() {
                   <p className="text-danger">
                     {editErrors.experience?.message}
                   </p>
-                </div> */}
+                </div>
 
-      {/* Role */}
-      {/* <div className="col-md-4">
+                {/* Role */}
+                <div className="col-md-4">
                   <label className="fw-semibold">Role</label>
                   <select
                     {...editRegister("role")}
@@ -1075,10 +1062,10 @@ function Users() {
                     <option value="4">Accountant</option>
                   </select>
                   <p className="text-danger">{editErrors.role?.message}</p>
-                </div> */}
+                </div>
 
-      {/* Menus */}
-      {/* <div className="col-md-4">
+                {/* Menus */}
+                <div className="col-md-4">
                   <label className="fw-semibold">Menus</label>
                   <select
                     className="form-select form-control"
@@ -1098,9 +1085,9 @@ function Users() {
                   </select>
                   <p className="text-danger">{editErrors.menus?.message}</p>
                 </div>
-              </div> */}
+              </div>
 
-      {/* <div className="modal-footer bg-light rounded-bottom-4 d-flex">
+              <div className="modal-footer bg-light rounded-bottom-4 d-flex">
                 <button
                   type="button"
                   className="btn btn-outline-secondary rounded-3"
@@ -1116,7 +1103,7 @@ function Users() {
             </form>
           </div>
         </div>
-      </div> */}
+      </div>
 
       <ConfirmDelete
         show={showDeleteModal}

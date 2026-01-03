@@ -198,7 +198,7 @@ function Interview() {
                           role="button"
                           data-bs-toggle="dropdown"
                         >
-                          •••
+                          (Click here for edit)
                         </span>
                         <ul className="dropdown-menu">
                           <li>

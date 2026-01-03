@@ -125,16 +125,10 @@ function Users() {
     state: yup.string().required(),
     city: yup.string().required(),
     joindate: yup.date().required(),
-    adhar: yup
-      .string()
-      .matches(/^\d{12}$/)
-      .required(),
-    pan: yup
-      .string()
-      .matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/)
-      .required(),
-    adharupload: yup.string().required("Aadhar upload required"),
-    panupload: yup.string().required("PAN upload required"),
+    adhar: yup.string().required("Aadhar upload required"),
+    pan: yup.string().required("PAN upload required"),
+    // adharupload: yup.string().required("Aadhar upload required"),
+    // panupload: yup.string().required("PAN upload required"),
 
     bankpassbook: yup.string().required(),
     experience: yup.string().required(),
@@ -163,8 +157,8 @@ function Users() {
       user_state: data.state,
       user_city: data.city,
       user_joindate: data.joindate,
-      user_adhar: data.adhar,
-      user_pan: data.pan,
+      // user_adhar: data.adhar,
+      // user_pan: data.pan,
       user_bankpassbook: data.bankpassbook,
       user_experience: data.experience,
       user_role: data.role,
@@ -363,7 +357,12 @@ function Users() {
   // ✅ ADD FORM
   const addForm = useForm({
     resolver: yupResolver(schema),
+    defaultValues: {
+      adharupload: "",
+      panupload: "",
+    },
   });
+
   // ✅ EDIT FORM
   const editForm = useForm({
     resolver: yupResolver(schema),
@@ -382,6 +381,12 @@ function Users() {
     formState: { errors: editErrors },
     reset: resetEdit,
   } = editForm;
+
+  // mobile number star code
+  const maskMobile = (mobile) => {
+    if (!mobile) return "";
+    return "******" + mobile.slice(-4);
+  };
 
   return (
     <>
@@ -500,11 +505,12 @@ function Users() {
                           </span>
                         </div>
                         <div className="fw-bold">
-                          Mobile No:{"  "}
+                          Mobile No:{" "}
                           <span className="text-dark fw-normal">
-                            {u.user_mobile}
+                            {maskMobile(u.user_mobile)}
                           </span>
                         </div>
+
                         <div className="fw-bold">
                           Experience:{"  "}
                           <span className="text-dark fw-normal">
@@ -515,18 +521,18 @@ function Users() {
 
                       {/* User Id Proof */}
                       <td className="text-start">
-                        <div className="fw-bold">
+                        {/* <div className="fw-bold">
                           Aadhar No:{"  "}
                           <span className="text-dark fw-normal">
                             {u.user_adhar}
                           </span>
-                        </div>
-                        <div className="fw-bold">
+                        </div> */}
+                        {/* <div className="fw-bold">
                           Pan Card No:{"  "}
                           <span className="text-dark fw-normal">
                             {u.user_pan}
                           </span>
-                        </div>
+                        </div> */}
                         <div className="fw-bold">
                           Join Date:{"  "}
                           <span className="text-dark fw-normal">
@@ -581,8 +587,9 @@ function Users() {
               ) : (
                 <tr>
                   <td colSpan="6" className="text-center text-muted py-3">
-                    No data available
-                  </td>
+                      No data available
+                    </td>
+
                 </tr>
               )}
             </tbody>
@@ -672,7 +679,7 @@ function Users() {
                 </div>
 
                 {/* State */}
-                <div className="col-md-6">
+                <div className="col-md-4">
                   <label className="fw-semibold">State</label>
                   <select
                     className="form-select form-control"
@@ -695,7 +702,7 @@ function Users() {
                 </div>
 
                 {/* city */}
-                <div className="col-md-6">
+                <div className="col-md-4">
                   <label className="fw-semibold">City</label>
                   <select
                     className="form-select form-control"
@@ -727,7 +734,7 @@ function Users() {
                 </div>
 
                 {/* Aadhaar */}
-                <div className="col-md-4">
+                {/* <div className="col-md-4">
                   <label className="fw-semibold">Adhar Number</label>
                   <input
                     type="text"
@@ -736,10 +743,10 @@ function Users() {
                     placeholder="Enter Adhar Number"
                   />
                   <p className="text-danger">{addErrors.adhar?.message}</p>
-                </div>
+                </div> */}
 
                 {/* PAN */}
-                <div className="col-md-4">
+                {/* <div className="col-md-4">
                   <label className="fw-semibold">PAN Number</label>
                   <input
                     type="text"
@@ -748,7 +755,7 @@ function Users() {
                     placeholder="Enter PAN Number"
                   />
                   <p className="text-danger">{addErrors.pan?.message}</p>
-                </div>
+                </div> */}
 
                 {/* Aadhaar Upload */}
                 <div className="col-md-4">

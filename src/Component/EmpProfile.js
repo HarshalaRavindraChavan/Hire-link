@@ -63,12 +63,6 @@ const EmpProfile = () => {
     formik.setFieldValue("city", cityId);
   };
 
-  useEffect(() => {
-    if (formik.values.state) {
-      fetchCities(formik.values.state);
-    }
-  }, [formik.values.state]);
-
   const formik = useFormik({
     initialValues: {
       fullname: employer?.emp_name || "",
@@ -103,8 +97,8 @@ const EmpProfile = () => {
 
       emp_companyname: Yup.string().required("Company name is required"),
       location: Yup.string().required("Location is required"),
-      city: Yup.string().required("City is required"),
-      state: Yup.string().required("State is required"),
+      // city: Yup.string().required("City is required"),
+      // state: Yup.string().required("State is required"),
 
       website: Yup.string().url("Invalid URL").nullable(),
       linkedin: Yup.string().url("Invalid URL").nullable(),
@@ -147,8 +141,19 @@ const EmpProfile = () => {
 
           const updatedEmployer = {
             ...employer,
+            emp_name: values.fullname,
+            emp_email: values.email,
+            emp_mobile: values.mobile,
+            emp_companyname: values.emp_companyname,
+            emp_location: values.location,
             emp_state: values.state,
             emp_city: values.city,
+            emp_website: values.website,
+            emp_linkedin: values.linkedin,
+            emp_facebook: values.facebook,
+            emp_instagram: values.instagram,
+            emp_youtube: values.youtube,
+            emp_com_logo: values.emp_com_logo,
           };
 
           localStorage.setItem("employer", JSON.stringify(updatedEmployer));
@@ -241,6 +246,12 @@ const EmpProfile = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (formik.values.state) {
+      fetchCities(formik.values.state);
+    }
+  }, [formik.values.state]);
 
   return (
     <>

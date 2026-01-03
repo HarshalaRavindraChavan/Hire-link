@@ -303,11 +303,42 @@ function Profile() {
       if (result?.status === true) {
         toast.success("Profile updated successfully ✅");
 
+        const stateName =
+          states.find((s) => s.state_id == candidate.can_state)?.state_name ||
+          "";
+
+        const cityName =
+          cities.find((c) => c.city_id == candidate.can_city)?.city_name || "";
+
         const updatedCandidate = {
           ...candidate,
-          ...result.data,
+
+          // ✅ IDs (DO NOT CHANGE)
+          can_state: candidate.can_state,
+          can_city: candidate.can_city,
+
+          // ✅ Names (SEPARATE FIELDS)
+          state_name: stateName,
+          city_name: cityName,
+
+          // OTHER FIELDS
+          can_experience: candidate.can_experience,
+          can_skill: candidate.can_skill,
+          can_about: candidate.can_about,
+
+          can_aadhar: candidate.can_aadhar,
+          can_pan: candidate.can_pan,
+          can_resume: candidate.can_resume,
+          can_cv: candidate.can_cv,
+
+          can_mc: selectedCategory || candidate.can_mc,
+          can_sc: selectedSubCategory || candidate.can_sc,
+          can_sc1: selectedSubCat1 || candidate.can_sc1,
+          can_sc2: selectedSubCat2 || candidate.can_sc2,
+          can_sc3: selectedSubCat3 || candidate.can_sc3,
         };
 
+        setCandidate(updatedCandidate);
         localStorage.setItem("candidate", JSON.stringify(updatedCandidate));
 
         setTimeout(() => {

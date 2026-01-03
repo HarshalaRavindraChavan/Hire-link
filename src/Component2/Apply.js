@@ -16,7 +16,7 @@ function Apply() {
 
   const apl_candidate_id = candidate?.can_id;
   const apl_job_id = job?.job_id;
-  const apl_employer_id = job?.jon_employer_id; // backend key check kar
+  const apl_employer_id = job?.job_employer_id; // backend key check kar
 
   const [formData, setFormData] = useState({
     fullname: "",

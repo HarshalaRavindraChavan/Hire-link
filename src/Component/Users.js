@@ -203,10 +203,18 @@ function Users() {
     const maxSize = 50 * 1024; // 50KB
     const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
 
+    // helper to reset RHF value
+    const resetRHF = () => {
+      if (field === "user_aadhar_image") setValue("adharupload", "");
+      if (field === "user_pan_image") setValue("panupload", "");
+    };
+
     // ❌ file type check
     if (!allowedTypes.includes(file.type)) {
       toast.error("Invalid file type ❌ Only JPG / JPEG / PNG allowed");
-      e.target.value = ""; // reset input
+      e.target.value = "";
+      resetRHF();
+
       return;
     }
 
@@ -217,7 +225,9 @@ function Users() {
           file.size / 1024
         )}KB). Minimum 30KB required`
       );
-      e.target.value = ""; // reset input
+      e.target.value = "";
+      resetRHF();
+
       return;
     }
 
@@ -228,7 +238,9 @@ function Users() {
           file.size / 1024
         )}KB). Maximum 50KB allowed`
       );
-      e.target.value = ""; // reset input
+      e.target.value = "";
+      resetRHF();
+
       return;
     }
 
@@ -263,15 +275,17 @@ function Users() {
         toast.success("File uploaded successfully ✅");
       } else {
         toast.error("Upload failed ❌");
+        resetRHF();
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "File upload error ❌");
+      resetRHF();
     }
   };
 
   //Edit model code
-  const [editUserId, setEditUserId] = useState(null);
-  const [loading, setLoading] = useState(false);
+  // const [editUserId, setEditUserId] = useState(null);
+  // const [loading, setLoading] = useState(false);
 
   // const openEditUserModal = (user) => {
   //   if (!user) return;
@@ -382,28 +396,26 @@ function Users() {
   //   reset: resetEdit,
   // } = editForm;
 
-
   // mobile number star code
   const maskMobile = (mobile) => {
     if (!mobile) return "";
     return "******" + mobile.slice(-4);
   };
 
-// email hide code 
+  // email hide code
   const maskEmail = (email) => {
-  if (!email) return "";
+    if (!email) return "";
 
-  const [name, domain] = email.split("@");
-  if (!domain) return email;
+    const [name, domain] = email.split("@");
+    if (!domain) return email;
 
-  const maskedName =
-    name.length <= 2
-      ? name[0] + "*"
-      : name.slice(0, 2) + "*".repeat(name.length - 2);
+    const maskedName =
+      name.length <= 2
+        ? name[0] + "*"
+        : name.slice(0, 2) + "*".repeat(name.length - 2);
 
-  return `${maskedName}@${domain}`;
-};
-
+    return `${maskedName}@${domain}`;
+  };
 
   return (
     <>

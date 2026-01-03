@@ -143,6 +143,29 @@ function Applicant() {
       });
     }
   }, [selectedApplicant, reset]);
+
+  // mobile number star code
+  const maskMobile = (mobile) => {
+    if (!mobile) return "";
+    return "******" + mobile.slice(-4);
+  };
+
+// email hide code 
+  const maskEmail = (email) => {
+  if (!email) return "";
+
+  const [name, domain] = email.split("@");
+  if (!domain) return email;
+
+  const maskedName =
+    name.length <= 2
+      ? name[0] + "*"
+      : name.slice(0, 2) + "*".repeat(name.length - 2);
+
+  return `${maskedName}@${domain}`;
+};
+
+
   return (
     <>
       <div className="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
@@ -226,19 +249,19 @@ function Applicant() {
                             setSelectedApplicant(app);
                           }}
                         >
-                          {app.can_name}
+                          {app.can_name}  (Click here for edit)
                         </span>
                       </div>
                       <div className="fw-bold ">
                         Email:{" "}
                         <span className="text-dark fw-normal">
-                          {app.can_email}
+                          {maskEmail(app.can_email)}
                         </span>
                       </div>
                       <div className="fw-bold ">
                         Mobile:{" "}
                         <span className="text-dark fw-normal">
-                          {app.can_mobile}
+                          {maskMobile(app.can_mobile)}
                         </span>
                       </div>
                       <div className="fw-bold ">

@@ -221,6 +221,28 @@ function Employes() {
     }
   };
 
+    // mobile number star code
+  const maskMobile = (mobile) => {
+    if (!mobile) return "";
+    return "******" + mobile.slice(-4);
+  };
+
+// email hide code 
+  const maskEmail = (email) => {
+  if (!email) return "";
+
+  const [name, domain] = email.split("@");
+  if (!domain) return email;
+
+  const maskedName =
+    name.length <= 2
+      ? name[0] + "*"
+      : name.slice(0, 2) + "*".repeat(name.length - 2);
+
+  return `${maskedName}@${domain}`;
+};
+
+
   return (
     <>
       {/* HEADER */}
@@ -334,8 +356,8 @@ function Employes() {
                           </ul>
                         </div>
                       </div>
-                      <b>Email:</b> {emp.emp_email} <br />
-                      <b>Mobile:</b> {emp.emp_mobile} <br />
+                      <b>Email:</b> {maskEmail(emp.emp_email)} <br />
+                      <b>Mobile:</b> {maskMobile(emp.emp_mobile)} <br />
                       <b>Location:</b> {emp.emp_location} <br />
                       <b>City:</b> {emp.emp_city} <br />
                       <b>State:</b> {emp.emp_state}

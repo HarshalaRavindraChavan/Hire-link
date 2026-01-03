@@ -175,6 +175,29 @@ function Candidates() {
     }
   };
 
+  
+  // mobile number star code
+  const maskMobile = (mobile) => {
+    if (!mobile) return "";
+    return "******" + mobile.slice(-4);
+  };
+
+// email hide code 
+  const maskEmail = (email) => {
+  if (!email) return "";
+
+  const [name, domain] = email.split("@");
+  if (!domain) return email;
+
+  const maskedName =
+    name.length <= 2
+      ? name[0] + "*"
+      : name.slice(0, 2) + "*".repeat(name.length - 2);
+
+  return `${maskedName}@${domain}`;
+};
+
+
   return (
     <>
       <div className="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
@@ -296,14 +319,14 @@ function Candidates() {
                       <div className="fw-bold">
                         Email:{" "}
                         <span className="text-dark fw-normal">
-                          {candidate.can_email}
+                          {maskEmail(candidate.can_email)}
                         </span>
                       </div>
 
                       <div className="fw-bold">
                         Mobile No:{" "}
                         <span className="text-dark fw-normal">
-                          {candidate.can_mobile}
+                          {maskMobile(candidate.can_mobile)}
                         </span>
                       </div>
 

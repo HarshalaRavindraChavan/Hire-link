@@ -191,6 +191,7 @@ function Interview() {
                     <td>{firstIndex + idx + 1}</td>
 
                     <td>
+                      <label style={{ fontWeight: "bold" }}>Name:</label>
                       <b>{i.can_name}</b>
                       <div className="dropdown d-inline ms-2">
                         <span
@@ -222,15 +223,30 @@ function Interview() {
                     </td>
 
                     <td>
+                      <label style={{ fontWeight: "bold" }}>Job Title:</label>
                       {i.job_title}
                       <br />
+                      <label style={{ fontWeight: "bold" }}>
+                        Company Name:
+                      </label>
                       <small>{i.job_company}</small>
                     </td>
 
                     <td>
+                      <label style={{ fontWeight: "bold" }}>
+                        Interview Type:
+                      </label>
                       {i.itv_type}
                       <br />
-                      {i.itv_date} {i.itv_time}
+                      <label style={{ fontWeight: "bold" }}>
+                        Interview Date:
+                      </label>
+                      {i.itv_date}
+                      <br />
+                      <label style={{ fontWeight: "bold" }}>
+                        Interview Time:
+                      </label>
+                      {i.itv_time}
                     </td>
 
                     <td>

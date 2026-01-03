@@ -382,11 +382,28 @@ function Users() {
   //   reset: resetEdit,
   // } = editForm;
 
+
   // mobile number star code
   const maskMobile = (mobile) => {
     if (!mobile) return "";
     return "******" + mobile.slice(-4);
   };
+
+// email hide code 
+  const maskEmail = (email) => {
+  if (!email) return "";
+
+  const [name, domain] = email.split("@");
+  if (!domain) return email;
+
+  const maskedName =
+    name.length <= 2
+      ? name[0] + "*"
+      : name.slice(0, 2) + "*".repeat(name.length - 2);
+
+  return `${maskedName}@${domain}`;
+};
+
 
   return (
     <>
@@ -499,11 +516,12 @@ function Users() {
                         </div>
 
                         <div className="fw-bold">
-                          Email:{"  "}
+                          Email:{" "}
                           <span className="text-dark fw-normal">
-                            {u.user_email}
+                            {maskEmail(u.user_email)}
                           </span>
                         </div>
+
                         <div className="fw-bold">
                           Mobile No:{" "}
                           <span className="text-dark fw-normal">
@@ -587,9 +605,8 @@ function Users() {
               ) : (
                 <tr>
                   <td colSpan="6" className="text-center text-muted py-3">
-                      No data available
-                    </td>
-
+                    No data available
+                  </td>
                 </tr>
               )}
             </tbody>
@@ -889,11 +906,11 @@ function Users() {
                 style={{ cursor: "pointer", color: "white", fontSize: "25px" }}
               ></i>
             </div> */}
-{/* 
+      {/* 
             <form onSubmit={handleEditSubmit(handleUpdateUser)}>
               <div className="modal-body row"> */}
-                {/* Full Name */}
-                {/* <div className="col-md-4">
+      {/* Full Name */}
+      {/* <div className="col-md-4">
                   <label className="fw-semibold">Full Name</label>
                   <input
                     type="text"
@@ -904,8 +921,8 @@ function Users() {
                   <p className="text-danger">{editErrors.fullname?.message}</p>
                 </div> */}
 
-                {/* Email */}
-                {/* <div className="col-md-4">
+      {/* Email */}
+      {/* <div className="col-md-4">
                   <label className="fw-semibold">Email</label>
                   <input
                     type="text"
@@ -916,8 +933,8 @@ function Users() {
                   <p className="text-danger">{editErrors.email?.message}</p>
                 </div> */}
 
-                {/* Mobile */}
-                {/* <div className="col-md-4">
+      {/* Mobile */}
+      {/* <div className="col-md-4">
                   <label className="fw-semibold">Mobile</label>
                   <input
                     type="text"
@@ -928,8 +945,8 @@ function Users() {
                   <p className="text-danger">{editErrors.mobile?.message}</p>
                 </div> */}
 
-                {/* Location */}
-                {/* <div className="col-md-4">
+      {/* Location */}
+      {/* <div className="col-md-4">
                   <label className="fw-semibold">Location</label>
                   <input
                     type="text"
@@ -940,8 +957,8 @@ function Users() {
                   <p className="text-danger">{editErrors.location?.message}</p>
                 </div> */}
 
-                {/* Address */}
-                {/* <div className="col-md-4">
+      {/* Address */}
+      {/* <div className="col-md-4">
                   <label className="fw-semibold">Address</label>
                   <input
                     type="text"
@@ -952,8 +969,8 @@ function Users() {
                   <p className="text-danger">{editErrors.address?.message}</p>
                 </div> */}
 
-                {/* State */}
-                {/* <div className="col-md-4">
+      {/* State */}
+      {/* <div className="col-md-4">
                   <label className="fw-semibold">State</label>
                   <select
                     className="form-select form-control"
@@ -974,8 +991,8 @@ function Users() {
                   <p className="text-danger">{editErrors.state?.message}</p>
                 </div> */}
 
-                {/* City */}
-                {/* <div className="col-md-4">
+      {/* City */}
+      {/* <div className="col-md-4">
                   <label className="fw-semibold">City</label>
                   <select
                     className="form-select form-control"
@@ -993,8 +1010,8 @@ function Users() {
                   <p className="text-danger">{editErrors.city?.message}</p>
                 </div> */}
 
-                {/* Join Date */}
-                {/* <div className="col-md-4">
+      {/* Join Date */}
+      {/* <div className="col-md-4">
                   <label className="fw-semibold">Join Date</label>
                   <input
                     type="date"
@@ -1004,8 +1021,8 @@ function Users() {
                   <p className="text-danger">{editErrors.joindate?.message}</p>
                 </div> */}
 
-                {/* Bank */}
-                {/* <div className="col-md-4">
+      {/* Bank */}
+      {/* <div className="col-md-4">
                   <label className="fw-semibold">Bank Passbook</label>
                   <input
                     type="text"
@@ -1018,8 +1035,8 @@ function Users() {
                   </p>
                 </div> */}
 
-                {/* Experience */}
-                {/* <div className="col-md-4">
+      {/* Experience */}
+      {/* <div className="col-md-4">
                   <label className="fw-semibold">Experience</label>
                   <input
                     type="text"
@@ -1032,8 +1049,8 @@ function Users() {
                   </p>
                 </div> */}
 
-                {/* Role */}
-                {/* <div className="col-md-4">
+      {/* Role */}
+      {/* <div className="col-md-4">
                   <label className="fw-semibold">Role</label>
                   <select
                     {...editRegister("role")}
@@ -1048,8 +1065,8 @@ function Users() {
                   <p className="text-danger">{editErrors.role?.message}</p>
                 </div> */}
 
-                {/* Menus */}
-                {/* <div className="col-md-4">
+      {/* Menus */}
+      {/* <div className="col-md-4">
                   <label className="fw-semibold">Menus</label>
                   <select
                     className="form-select form-control"
@@ -1071,7 +1088,7 @@ function Users() {
                 </div>
               </div> */}
 
-              {/* <div className="modal-footer bg-light rounded-bottom-4 d-flex">
+      {/* <div className="modal-footer bg-light rounded-bottom-4 d-flex">
                 <button
                   type="button"
                   className="btn btn-outline-secondary rounded-3"

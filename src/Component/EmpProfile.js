@@ -156,7 +156,24 @@ const EmpProfile = () => {
             emp_com_logo: values.emp_com_logo,
           };
 
+          // ✅ employer update
           localStorage.setItem("employer", JSON.stringify(updatedEmployer));
+
+          // ✅ auth ALSO update (THIS WAS MISSING 🔥)
+          const oldAuth = JSON.parse(localStorage.getItem("auth"));
+
+          if (oldAuth) {
+            const updatedAuth = {
+              ...oldAuth,
+              emp_companyname: values.emp_companyname,
+              emp_com_logo: values.emp_com_logo,
+            };
+
+            localStorage.setItem("auth", JSON.stringify(updatedAuth));
+          }
+
+          // 🔄 notify other components
+          window.dispatchEvent(new Event("storage"));
         } else {
           toast.error("Update failed");
         }

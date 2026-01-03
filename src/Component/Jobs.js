@@ -23,43 +23,41 @@ function Jobs() {
   const [search, setSearch] = useState("");
   const [jobs, setJobs] = useState([]);
 
-  // const [states, setStates] = useState([]);
-  // const [cities, setCities] = useState([]);
+  // ================= STATE & CITY =================
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
 
-  // //==============status
-  // useEffect(() => {
-  //   fetchStates();
-  // }, []);
+  useEffect(() => {
+    fetchStates();
+  }, []);
 
-  // const fetchStates = async () => {
-  //   try {
-  //     const res = await axios.get(
-  //       "https://norealtor.in/hirelink_apis/admin/getdata/state"
-  //     );
+  const fetchStates = async () => {
+    try {
+      const res = await axios.get(
+        "https://norealtor.in/hirelink_apis/candidate/getdata/tbl_state"
+      );
 
-  //     if (res.data.status) {
-  //       setStates(res.data.data);
-  //     }
-  //   } catch (err) {
-  //     console.error("State fetch error", err);
-  //   }
-  // };
+      if (res.data?.status) {
+        setStates(res.data.data || []);
+      }
+    } catch (err) {
+      console.error("State fetch error", err);
+    }
+  };
 
-  // //=========all city
+  const fetchCities = async (stateId) => {
+    try {
+      const res = await axios.get(
+        `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_city/city_state_id/${stateId}`
+      );
 
-  // const fetchCities = async (stateId) => {
-  //   try {
-  //     const res = await axios.get(
-  //       `https://norealtor.in/hirelink_apis/admin/getdatawhere/district/state_id/${stateId}`
-  //     );
-
-  //     if (res.data.status) {
-  //       setCities(res.data.data);
-  //     }
-  //   } catch (err) {
-  //     console.error("City fetch error", err);
-  //   }
-  // };
+      if (res.data?.status) {
+        setCities(res.data.data || []);
+      }
+    } catch (err) {
+      console.error("City fetch error", err);
+    }
+  };
 
   //============================= Get Data Code ============================
 
@@ -145,8 +143,8 @@ function Jobs() {
     job_salary: Yup.string().required("Salary Range is required"),
     job_status: Yup.string().nullable(),
     job_location: Yup.string().required("Location is required"),
-    // job_state: Yup.string().required(),
-    // job_city: Yup.string().required(),
+    job_state: Yup.string().required("State is required"),
+    job_city: Yup.string().required("City is required"),
     job_skills: Yup.string().required("Skills is required"),
     job_experience: Yup.string().required("Experience is required"),
   });
@@ -202,8 +200,8 @@ function Jobs() {
         job_date: data.job_date,
         job_skills: data.job_skills,
         job_location: data.job_location,
-        // job_state: data.job_state,
-        // job_city: data.job_city,
+        job_state: data.job_state,
+        job_city: data.job_city,
         job_experience: data.job_experience,
 
         job_employer_id: employerId,
@@ -217,12 +215,14 @@ function Jobs() {
       if (res.data?.status === true) {
         resetAdd();
 
+        // ✅ state-city reset
+        setCities([]);
+
         setSelectedCategory("");
         setSelectedSubCategory("");
         setSelectedSubCat1("");
         setSelectedSubCat2("");
         setSelectedSubCat3("");
-        // setCities([]);
 
         toast.success("Job Added Successfully");
         fetchJobs();
@@ -397,25 +397,25 @@ function Jobs() {
 
     setEditJobId(job.job_id);
 
+    // existing resetEdit(...)
     resetEdit({
       job_title: job.job_title ?? "",
-      job_company: auth?.emp_companyname ?? "",
-      job_mc: job.job_mc ?? "",
-      job_sc: job.job_sc ?? "",
-      job_sc1: job.job_sc1 ?? "",
-      job_sc2: job.job_sc2 ?? "",
-      job_sc3: job.job_sc3 ?? "",
       job_no_hiring: job.job_no_hiring ?? "",
       job_type: job.job_type ?? "",
       job_salary: job.job_salary ?? "",
       job_status: job.job_status ?? "",
       job_date: job.job_date ?? "",
       job_location: job.job_location ?? "",
-      // job_state: job.job_state ?? "",
-      // job_city: job.job_city ?? "",
+      job_state: job.job_state ?? "",
+      job_city: job.job_city ?? "",
       job_experience: job.job_experience ?? "",
       job_skills: job.job_skills ?? "",
     });
+
+    // ✅ NEW ADD
+    if (job.job_state) {
+      fetchCities(job.job_state); // 🔥 load cities
+    }
 
     // set dropdown states
     setSelectedCategory(job.job_mc ?? "");
@@ -423,8 +423,6 @@ function Jobs() {
     setSelectedSubCat1(job.job_sc1 ?? "");
     setSelectedSubCat2(job.job_sc2 ?? "");
     setSelectedSubCat3(job.job_sc3 ?? "");
-
-    // if (job.job_state) fetchCities(job.job_state);
 
     const modalEl = document.getElementById("editjobexampleModal");
     if (!modalEl || !window.bootstrap) return;
@@ -459,8 +457,8 @@ function Jobs() {
         job_status: data.job_status,
         job_date: data.job_date,
         job_location: data.job_location,
-        // job_state: data.job_state,
-        // job_city: data.job_city,
+        job_state: data.job_state,
+        job_city: data.job_city,
         job_experience: data.job_experience,
         job_skills: data.job_skills,
       };
@@ -473,6 +471,8 @@ function Jobs() {
       if (response?.data?.status === true) {
         toast.success("Job updated successfully ✅");
         fetchJobs();
+
+        setCities([]); // ✅ IMPORTANT cleanup
 
         const modalEl = document.getElementById("editjobexampleModal");
         const modalInstance = window.bootstrap.Modal.getInstance(modalEl);
@@ -950,49 +950,48 @@ function Jobs() {
                   </span>
                 </div>
 
-                {/* State */}
-                {/* <div className="col-md-4">
+                <div className="col-md-4">
                   <label className="fw-semibold">State</label>
                   <select
-                    className=" form-control form-select"
+                    className="form-select form-control"
                     {...addRegister("job_state")}
                     onChange={(e) => {
                       const stateId = e.target.value;
                       setAddValue("job_state", stateId);
                       setAddValue("job_city", "");
-
                       fetchCities(stateId);
                     }}
                   >
                     <option value="">Select State</option>
-                    {states.map((s) => (
-                      <option key={s.state_id} value={s.state_id}>
-                        {s.state_title}
+                    {states.map((state) => (
+                      <option key={state.state_id} value={state.state_id}>
+                        {state.state_name}
                       </option>
                     ))}
                   </select>
                   <p className="text-danger">{addErrors.job_state?.message}</p>
                 </div>
 
-                {/* City */}
-                {/* <div className="col-md-4">
+                {/* city */}
+                <div className="col-md-4">
                   <label className="fw-semibold">City</label>
                   <select
-                    className="form-control form-select"
+                    className="form-select form-control"
                     {...addRegister("job_city")}
-                    onChange={(e) => setAddValue("job_city", e.target.value)}
                     disabled={!cities.length}
                   >
-                    <option value="">Select City</option>
-                    {cities.map((c) => (
-                      <option key={c.districtid} value={c.districtid}>
-                        {c.district_title}
+                    <option value="">
+                      {!cities.length ? "Select state first" : "Select City"}
+                    </option>
+
+                    {cities.map((city) => (
+                      <option key={city.city_id} value={city.city_id}>
+                        {city.city_name}
                       </option>
                     ))}
                   </select>
-
                   <p className="text-danger">{addErrors.job_city?.message}</p>
-                </div> */} 
+                </div>
 
                 {/* Location */}
                 <div className="col-md-4 mb-2">
@@ -1318,48 +1317,52 @@ function Jobs() {
                 </div>
 
                 {/* State */}
-                {/* <div className="col-md-4">
+                {/* State */}
+                <div className="col-md-4">
                   <label className="fw-semibold">State</label>
                   <select
-                    className="form-select"
+                    className="form-select form-control"
                     {...editRegister("job_state")}
                     onChange={(e) => {
                       const stateId = e.target.value;
                       setEditValue("job_state", stateId);
                       setEditValue("job_city", "");
-
                       fetchCities(stateId);
                     }}
                   >
                     <option value="">Select State</option>
-                    {states.map((s) => (
-                      <option key={s.state_id} value={s.state_id}>
-                        {s.state_title}
+                    {states.map((state) => (
+                      <option key={state.state_id} value={state.state_id}>
+                        {state.state_name}
                       </option>
                     ))}
                   </select>
+
                   <p className="text-danger">{editErrors.job_state?.message}</p>
-                </div> */}
+                </div>
 
                 {/* City */}
-                {/* <div className="col-md-4">
+                {/* City */}
+                <div className="col-md-4">
                   <label className="fw-semibold">City</label>
                   <select
-                    className="form-select"
+                    className="form-select form-control"
                     {...editRegister("job_city")}
-                    onChange={(e) => setEditValue("job_city", e.target.value)}
                     disabled={!cities.length}
                   >
-                    <option value="">Select City</option>
-                    {cities.map((c) => (
-                      <option key={c.districtid} value={c.districtid}>
-                        {c.district_title}
+                    <option value="">
+                      {!cities.length ? "Select state first" : "Select City"}
+                    </option>
+
+                    {cities.map((city) => (
+                      <option key={city.city_id} value={city.city_id}>
+                        {city.city_name}
                       </option>
                     ))}
                   </select>
 
                   <p className="text-danger">{editErrors.job_city?.message}</p>
-                </div> */}
+                </div>
 
                 {/* Experience Required */}
                 <div className="col-md-4 mb-2">

@@ -104,6 +104,7 @@ function Applicant() {
       const payload = {
         itv_candidate_id: data.candidate_id,
         itv_job_id: data.job_id,
+        itv_employer_id: employerId,
         itv_type: data.interviewType,
         itv_date: data.interviewDate,
         itv_meeting_link: data.meetingLink || "",
@@ -150,21 +151,20 @@ function Applicant() {
     return "******" + mobile.slice(-4);
   };
 
-// email hide code 
+  // email hide code
   const maskEmail = (email) => {
-  if (!email) return "";
+    if (!email) return "";
 
-  const [name, domain] = email.split("@");
-  if (!domain) return email;
+    const [name, domain] = email.split("@");
+    if (!domain) return email;
 
-  const maskedName =
-    name.length <= 2
-      ? name[0] + "*"
-      : name.slice(0, 2) + "*".repeat(name.length - 2);
+    const maskedName =
+      name.length <= 2
+        ? name[0] + "*"
+        : name.slice(0, 2) + "*".repeat(name.length - 2);
 
-  return `${maskedName}@${domain}`;
-};
-
+    return `${maskedName}@${domain}`;
+  };
 
   return (
     <>
@@ -249,7 +249,7 @@ function Applicant() {
                             setSelectedApplicant(app);
                           }}
                         >
-                          {app.can_name}  (Click here for edit)
+                          {app.can_name} (Click here for edit)
                         </span>
                       </div>
                       <div className="fw-bold ">
@@ -446,7 +446,6 @@ function Applicant() {
                 </button>
               </div>
             </form>
-            
           </div>
         </div>
       </div>

@@ -141,23 +141,12 @@ function Jobs() {
   }, [searchKeyword, searchPlace]);
 
   useEffect(() => {
-    if (selectedJob) return; // 👈 user already interacted
-
-    if (jobs.length === 0) return;
-
-    if (savedJobs.length > 0) {
-      const savedJobDetail = jobs.find(
-        (job) => Number(job.job_id) === Number(savedJobs[0])
-      );
-
-      if (savedJobDetail) {
-        setSelectedJob(savedJobDetail);
-        return;
-      }
+    if (filteredJobs.length > 0) {
+      setSelectedJob(filteredJobs[0]); // 👈 first job auto select
+    } else {
+      setSelectedJob(null); // 👈 no jobs → no details
     }
-
-    setSelectedJob(jobs[0]);
-  }, [jobs, savedJobs]);
+  }, [filteredJobs]);
 
   const navigate = useNavigate();
 

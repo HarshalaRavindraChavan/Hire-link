@@ -45,14 +45,25 @@ function Jobs() {
     }
   };
 
-  const fetchCities = async (stateId) => {
+  const fetchCities = async (stateId, selectedCity = null) => {
     try {
       const res = await axios.get(
         `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_city/city_state_id/${stateId}`
       );
 
       if (res.data?.status) {
-        setCities(res.data.data || []);
+        const cityList = res.data.data || [];
+        setCities(cityList);
+
+        // ✅ IMPORTANT FIX
+        if (selectedCity) {
+          setTimeout(() => {
+            setEditValue("job_city", selectedCity, {
+              shouldValidate: true,
+              shouldDirty: true,
+            });
+          }, 0);
+        }
       }
     } catch (err) {
       console.error("City fetch error", err);
@@ -407,14 +418,13 @@ function Jobs() {
       job_date: job.job_date ?? "",
       job_location: job.job_location ?? "",
       job_state: job.job_state ?? "",
-      job_city: job.job_city ?? "",
       job_experience: job.job_experience ?? "",
       job_skills: job.job_skills ?? "",
     });
 
     // ✅ NEW ADD
     if (job.job_state) {
-      fetchCities(job.job_state); // 🔥 load cities
+      fetchCities(job.job_state, job.job_city); // 🔥 FIX
     }
 
     // set dropdown states
@@ -950,6 +960,7 @@ function Jobs() {
                   </span>
                 </div>
 
+                {/* state */}
                 <div className="col-md-4">
                   <label className="fw-semibold">State</label>
                   <select
@@ -1317,7 +1328,6 @@ function Jobs() {
                 </div>
 
                 {/* State */}
-                {/* State */}
                 <div className="col-md-4">
                   <label className="fw-semibold">State</label>
                   <select
@@ -1341,7 +1351,6 @@ function Jobs() {
                   <p className="text-danger">{editErrors.job_state?.message}</p>
                 </div>
 
-                {/* City */}
                 {/* City */}
                 <div className="col-md-4">
                   <label className="fw-semibold">City</label>

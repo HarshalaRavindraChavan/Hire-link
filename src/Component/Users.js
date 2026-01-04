@@ -35,14 +35,25 @@ function Users() {
     }
   };
 
-  const fetchCities = async (stateId) => {
+  const fetchCities = async (stateId, selectedCity = null) => {
     try {
       const res = await axios.get(
         `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_city/city_state_id/${stateId}`
       );
 
       if (res.data?.status) {
-        setCities(res.data.data || []);
+        const cityData = res.data.data || [];
+        setCities(cityData);
+
+        // ✅ IMPORTANT: wait till cities set, then set city
+        if (selectedCity) {
+          setTimeout(() => {
+            editSetValue("city", selectedCity, {
+              shouldValidate: true,
+              shouldDirty: true,
+            });
+          }, 0);
+        }
       }
     } catch (err) {
       console.error("City fetch error", err);
@@ -113,13 +124,17 @@ function Users() {
   });
 
   /* ================= VALIDATION ================= */
-  const schema = yup.object({
+  const addschema = yup.object({
     fullname: yup.string().required(),
     email: yup.string().email().required(),
     mobile: yup
       .string()
       .matches(/^\d{10}$/)
       .required(),
+    password: yup
+      .string()
+      .min(6, "Minimum 6 characters")
+      .required("Password is required"),
     location: yup.string().required(),
     address: yup.string().required(),
     state: yup.string().required(),
@@ -135,7 +150,7 @@ function Users() {
 
   // ✅ ADD FORM
   const addForm = useForm({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(addschema),
     defaultValues: {
       adharupload: "",
       panupload: "",
@@ -155,6 +170,7 @@ function Users() {
     const payload = {
       user_name: data.fullname,
       user_email: data.email,
+      user_password: data.password,
       user_mobile: data.mobile,
       user_location: data.location,
       user_address: data.address,
@@ -286,6 +302,38 @@ function Users() {
   };
 
   // Edit model code
+
+  const editSchema = yup.object({
+    fullname: yup.string().required(),
+    email: yup.string().email().required(),
+    mobile: yup
+      .string()
+      .matches(/^\d{10}$/)
+      .required(),
+    location: yup.string().required(),
+    address: yup.string().required(),
+    state: yup.string().required(),
+    city: yup.string().required(),
+    joindate: yup.date().required(),
+    bankpassbook: yup.string().required(),
+    experience: yup.string().required(),
+    role: yup.string().required(),
+    menus: yup.array().min(1).required(),
+  });
+
+  // ✅ EDIT FORM
+  const editForm = useForm({
+    resolver: yupResolver(editSchema),
+  });
+
+  const {
+    register: editRegister,
+    handleSubmit: handleEditSubmit,
+    formState: { errors: editErrors },
+    reset: resetEdit,
+    setValue: editSetValue,
+  } = editForm;
+
   const [editUserId, setEditUserId] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -301,16 +349,16 @@ function Users() {
       location: user.user_location ?? "",
       address: user.user_address ?? "",
       state: user.user_state ?? "",
-      city: user.user_city ?? "",
-      joindate: user.user_joindate ?? "",
+      joindate: user.user_joindate?.split("T")[0] ?? "",
       bankpassbook: user.user_bankpassbook ?? "",
       experience: user.user_experience ?? "",
       role: user.user_role ?? "",
       menus: user.user_menu_id ? user.user_menu_id.split(",") : [],
     });
 
-    if (user.user_state) {
-      fetchCities(user.user_state);
+    // ✅ MOST IMPORTANT PART
+    if (user.user_state && user.user_city) {
+      fetchCities(user.user_state, user.user_city);
     }
 
     const modalEl = document.getElementById("editUserModal");
@@ -356,6 +404,8 @@ function Users() {
         toast.success("User updated successfully ✅");
         fetchUsers();
 
+        setCities([]);
+
         const modalEl = document.getElementById("editUserModal");
         const modalInstance = window.bootstrap.Modal.getInstance(modalEl);
         modalInstance?.hide();
@@ -369,19 +419,6 @@ function Users() {
       setLoading(false);
     }
   };
-
-  // ✅ EDIT FORM
-  const editForm = useForm({
-    resolver: yupResolver(schema),
-  });
-
-  const {
-    register: editRegister,
-    handleSubmit: handleEditSubmit,
-    formState: { errors: editErrors },
-    reset: resetEdit,
-    setValue: editSetValue,
-  } = editForm;
 
   // mobile number star code
   const maskMobile = (mobile) => {
@@ -551,7 +588,7 @@ function Users() {
                           </span>
                         </div> */}
                         <div className="fw-bold">
-                          Join Date:{" "}
+                          Join:{" "}
                           <span className="text-dark fw-normal">
                             {u.user_joindate?.split("T")[0]}
                           </span>
@@ -662,12 +699,24 @@ function Users() {
                 <div className="col-md-4">
                   <label className="fw-semibold">Mobile</label>
                   <input
-                    type="text"
+                    type="number"
                     {...addRegister("mobile")}
                     className="form-control"
                     placeholder="Enter Mobile Number"
                   />
                   <p className="text-danger">{addErrors.mobile?.message}</p>
+                </div>
+
+                {/* password */}
+                <div className="col-md-4">
+                  <label className="fw-semibold">Password</label>
+                  <input
+                    type="text"
+                    {...addRegister("password")}
+                    className="form-control"
+                    placeholder="Enter Password"
+                  />
+                  <p className="text-danger">{addErrors.password?.message}</p>
                 </div>
 
                 {/* Address */}
@@ -976,8 +1025,9 @@ function Users() {
                     {...editRegister("state")}
                     onChange={(e) => {
                       const stateId = e.target.value;
+                      editSetValue("state", stateId);
+                      editSetValue("city", "");
                       fetchCities(stateId);
-                      editSetValue("city", ""); // ✅ RESET CITY
                     }}
                   >
                     <option value="">Select State</option>
@@ -998,7 +1048,9 @@ function Users() {
                     {...editRegister("city")}
                     disabled={!cities.length}
                   >
-                    <option value="">Select City</option>
+                    <option value="">
+                      {!cities.length ? "Select state first" : "Select City"}
+                    </option>
                     {cities.map((c) => (
                       <option key={c.city_id} value={c.city_id}>
                         {c.city_name}

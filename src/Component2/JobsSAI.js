@@ -13,6 +13,40 @@ function JobsSAI() {
   const candidateId = candidate?.can_id;
   console.log("Candidate LS:", candidate);
   console.log("Candidate ID:", candidate?.can_id);
+
+  const fetchAllCounts = async () => {
+    if (!candidateId) return;
+
+    try {
+      const [savedRes, appliedRes, interviewRes] = await Promise.all([
+        axios.get(
+          `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_save_job/save_candidate_id/${candidateId}`
+        ),
+        axios.get(
+          `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_applied/apl_candidate_id/${candidateId}`
+        ),
+        axios.get(
+          `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_interview/itv_candidate_id/${candidateId}`
+        ),
+      ]);
+
+      if (savedRes.data.status) setSavedCount(savedRes.data.data.length);
+
+      if (appliedRes.data.status) setAppliedCount(appliedRes.data.data.length);
+
+      if (interviewRes.data.status)
+        setInterviewCount(interviewRes.data.data.length);
+    } catch (err) {
+      console.error("Count fetch error", err);
+    }
+  };
+
+  useEffect(() => {
+    if (candidateId) {
+      fetchAllCounts(); // 🔥 COUNTS FIRST LOAD
+    }
+  }, [candidateId]);
+
   //save job display
   const [savedJobs, setSavedJobs] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -32,7 +66,6 @@ function JobsSAI() {
 
       if (res.data.status) {
         setSavedJobs(res.data.data);
-        setSavedCount(res.data.data.length); // ✅ COUNT
       }
     } catch (error) {
       console.error("Saved jobs fetch error", error);
@@ -60,7 +93,6 @@ function JobsSAI() {
 
       if (res.data.status) {
         setAppliedJobs(res.data.data);
-        setAppliedCount(res.data.data.length); // ✅ COUNT
       }
     } catch (error) {
       console.error("Applied jobs fetch error", error);
@@ -76,7 +108,7 @@ function JobsSAI() {
 
   const fetchInterviewJobs = async () => {
     if (!candidateId) return;
-
+ 
     try {
       setInterviewLoading(true);
 
@@ -86,7 +118,6 @@ function JobsSAI() {
 
       if (res.data.status) {
         setInterviewJobs(res.data.data);
-        setInterviewCount(res.data.data.length); // ✅ COUNT
       }
     } catch (error) {
       console.error("Interview jobs fetch error", error);

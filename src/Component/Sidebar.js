@@ -37,7 +37,7 @@ function Sidebar() {
 
   let finalMenus = [];
 
-  if (role === "employer") {
+  if (Number(role) === 100) {
     // 🧑‍💼 Employer → fixed menus (Profile INCLUDED)
     finalMenus = allMenus.filter((menu) => employerMenuIds.includes(menu.id));
   } else if (role === "1") {

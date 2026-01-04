@@ -88,7 +88,7 @@ function Signin() {
             localStorage.setItem(
               "auth",
               JSON.stringify({
-                role: "employer",
+                role: 100,
                 emp_id: data.data.emp_id,
                 emp_companyname: data.data.emp_companyname,
               })

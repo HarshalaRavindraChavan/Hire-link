@@ -676,6 +676,7 @@ function Profile() {
                   </div>
 
                   <div className="col-md-6">
+                    <label className="fw-semibold">Experience</label>
                     <input
                       type="text"
                       name="can_experience"
@@ -687,6 +688,7 @@ function Profile() {
                   </div>
 
                   <div className="col-md-6">
+                    <label className="fw-semibold">Skills</label>
                     <input
                       type="text"
                       name="can_skill"
@@ -698,6 +700,7 @@ function Profile() {
                   </div>
 
                   <div className="col-12">
+                    <label className="fw-semibold">Describe Self</label>
                     <textarea
                       name="can_about"
                       className="form-control form-control-md"

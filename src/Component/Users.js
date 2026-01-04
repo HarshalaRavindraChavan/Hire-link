@@ -531,7 +531,7 @@ function Users() {
                         <div className="fw-bold">
                           Experience:{"  "}
                           <span className="text-dark fw-normal">
-                            {u.user_experience}
+                            {u.user_experience} Year
                           </span>
                         </div>
                       </td>
@@ -586,12 +586,12 @@ function Users() {
                       </td>
                       {/* Activity Detail */}
                       <td className="text-start">
-                        <div className="fw-bold ">
+                        {/* <div className="fw-bold ">
                           Added By:{"  "}
                           <span className="text-dark fw-normal">
                             {u.user_added_by}
                           </span>
-                        </div>
+                        </div> */}
                         <div className="fw-bold ">
                           Added Date:{"  "}
                           <span className="text-dark fw-normal">
@@ -670,18 +670,6 @@ function Users() {
                   <p className="text-danger">{addErrors.mobile?.message}</p>
                 </div>
 
-                {/* Location */}
-                <div className="col-md-4">
-                  <label className="fw-semibold">Location</label>
-                  <input
-                    type="text"
-                    {...addRegister("location")}
-                    className="form-control"
-                    placeholder="Enter Location"
-                  />
-                  <p className="text-danger">{addErrors.location?.message}</p>
-                </div>
-
                 {/* Address */}
                 <div className="col-md-4">
                   <label className="fw-semibold">Address</label>
@@ -736,6 +724,18 @@ function Users() {
                     ))}
                   </select>
                   <p className="text-danger">{addErrors.city?.message}</p>
+                </div>
+
+                {/* Location */}
+                <div className="col-md-4">
+                  <label className="fw-semibold">Location</label>
+                  <input
+                    type="text"
+                    {...addRegister("location")}
+                    className="form-control"
+                    placeholder="Enter Location"
+                  />
+                  <p className="text-danger">{addErrors.location?.message}</p>
                 </div>
 
                 {/* Join Date */}
@@ -828,7 +828,7 @@ function Users() {
                 <div className="col-md-4">
                   <label className="fw-semibold">Experience</label>
                   <input
-                    type="text"
+                    type="number"
                     {...addRegister("experience")}
                     className="form-control"
                     placeholder="Enter Experience"

@@ -77,7 +77,7 @@ function Jobs() {
       }
 
       // EMPLOYER → ONLY HIS DATA
-      if (role === "employer") {
+      if (Number(role) === 100) {
         res = await axios.get(
           `https://norealtor.in/hirelink_apis/employer/getdatawhere/tbl_job/job_employer_id/${employerId}`
         );
@@ -501,7 +501,7 @@ function Jobs() {
         <div>
           <h3 className="fw-bold mb-3">Jobs</h3>
         </div>
-        {role === "employer" && (
+        {Number(role) === 100 && (
           <div className="ms-auto py-2 py-md-0">
             <a
               data-bs-toggle="modal"

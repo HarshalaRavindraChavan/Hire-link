@@ -50,7 +50,7 @@ function Applicant() {
       }
 
       // EMPLOYER → ONLY HIS DATA
-      if (role === "employer") {
+      if (Number(role) === 100) {
         res = await axios.get(
           `https://norealtor.in/hirelink_apis/employer/getdatawhere/tbl_applied/apl_employer_id/${employerId}`
         );
@@ -267,7 +267,7 @@ function Applicant() {
                       <div className="fw-bold ">
                         Experience:{" "}
                         <span className="text-dark fw-normal">
-                          {app.can_experience}
+                          {app.can_experience} Year
                         </span>
                       </div>
                     </td>

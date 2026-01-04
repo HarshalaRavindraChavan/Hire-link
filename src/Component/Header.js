@@ -11,7 +11,7 @@ function Sidebar() {
   let displayName = "";
   // let displayEmail = "";
 
-  if (role === "employer") {
+  if (Number(role) === 100) {
     displayName = employer?.emp_name || "Employer";
     // displayEmail = employer?.emp_email || "";
   } else if (role === "1") {
@@ -32,7 +32,7 @@ function Sidebar() {
     if (role === "1") {
       // Admin logout
       navigate("/admin");
-    } else if (role === "employer") {
+    } else if (Number(role) === 100) {
       // Employer logout
       navigate("/signin");
     } else {
@@ -407,7 +407,7 @@ function Sidebar() {
                   {/* MENU ITEMS */}
                   <li>
                     <Link
-                      to={role === "employer" ? "/emp-profile" : "/profile"}
+                      to={Number(role) === 100 ? "/emp-profile" : "/profile"}
                       className="dropdown-item d-flex align-items-center gap-2"
                     >
                       <i className="fa fa-user text-primary"></i>

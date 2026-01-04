@@ -221,27 +221,26 @@ function Employes() {
     }
   };
 
-    // mobile number star code
+  // mobile number star code
   const maskMobile = (mobile) => {
     if (!mobile) return "";
     return "******" + mobile.slice(-4);
   };
 
-// email hide code 
+  // email hide code
   const maskEmail = (email) => {
-  if (!email) return "";
+    if (!email) return "";
 
-  const [name, domain] = email.split("@");
-  if (!domain) return email;
+    const [name, domain] = email.split("@");
+    if (!domain) return email;
 
-  const maskedName =
-    name.length <= 2
-      ? name[0] + "*"
-      : name.slice(0, 2) + "*".repeat(name.length - 2);
+    const maskedName =
+      name.length <= 2
+        ? name[0] + "*"
+        : name.slice(0, 2) + "*".repeat(name.length - 2);
 
-  return `${maskedName}@${domain}`;
-};
-
+    return `${maskedName}@${domain}`;
+  };
 
   return (
     <>
@@ -329,7 +328,7 @@ function Employes() {
 
                     {/* User Details */}
                     <td style={{ width: "35%" }}>
-                      <div className="fw-bold">
+                      {/* <div className="fw-bold">
                         Name:
                         <div className="dropdown d-inline ms-2">
                           <span
@@ -355,26 +354,27 @@ function Employes() {
                             </li>
                           </ul>
                         </div>
-                      </div>
+                      </div> */}
+                      <b>Name:</b> {emp.emp_name} <br />
                       <b>Email:</b> {maskEmail(emp.emp_email)} <br />
                       <b>Mobile:</b> {maskMobile(emp.emp_mobile)} <br />
                       <b>Location:</b> {emp.emp_location} <br />
-                      <b>City:</b> {emp.emp_city} <br />
-                      <b>State:</b> {emp.emp_state}
+                      <b>City:</b> {emp.city_name} <br />
+                      <b>State:</b> {emp.state_name}
                     </td>
 
                     {/* Company Details */}
                     <td style={{ width: "30%" }}>
                       <b>Company:</b> {emp.emp_companyname} <br />
-                      <b>Website:</b> {emp.emp_website}
+                      <b>Website:</b> {emp.emp_website || NaN}
                     </td>
 
                     {/* Social Media */}
                     <td style={{ width: "25%" }}>
-                      <b>LinkedIn:</b> {emp.emp_linkedin} <br />
-                      <b>Facebook:</b> {emp.emp_facebook} <br />
-                      <b>Instagram:</b> {emp.emp_instagram} <br />
-                      <b>YouTube:</b> {emp.emp_youtube}
+                      <b>LinkedIn:</b> {emp.emp_linkedin || NaN} <br />
+                      <b>Facebook:</b> {emp.emp_facebook || NaN} <br />
+                      <b>Instagram:</b> {emp.emp_instagram || NaN} <br />
+                      <b>YouTube:</b> {emp.emp_youtube || NaN}
                     </td>
 
                     {/* Registration Date */}

@@ -33,6 +33,18 @@ function Profile() {
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
 
+  // change password code
+  const [showCurrent, setShowCurrent] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const candidateId = localStorage.getItem("candidate_id");
+
   useEffect(() => {
     fetchStates();
   }, []);
@@ -210,22 +222,22 @@ function Profile() {
 
   // Login Check but not login to redirect Signin page
 
-  const navigate = useNavigate();
-  React.useEffect(() => {
-    const stored = localStorage.getItem("candidate");
+  // const navigate = useNavigate();
+  // React.useEffect(() => {
+  //   const stored = localStorage.getItem("candidate");
 
-    if (!stored) {
-      navigate("/signin");
-      return;
-    }
+  //   if (!stored) {
+  //     navigate("/signin");
+  //     return;
+  //   }
 
-    const data = JSON.parse(stored);
-    setCandidate(data);
+  //   const data = JSON.parse(stored);
+  //   setCandidate(data);
 
-    if (data?.can_state) {
-      fetchCities(data.can_state);
-    }
-  }, []);
+  //   if (data?.can_state) {
+  //     fetchCities(data.can_state);
+  //   }
+  // }, []);
 
   // 🔁 SYNC SAVED CATEGORY TO DROPDOWNS (IMPORTANT)
   useEffect(() => {
@@ -411,6 +423,59 @@ function Profile() {
     }
   };
 
+  // change password
+  const handleChangePassword = async () => {
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      alert("All fields are required");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      alert("New password and confirm password do not match");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch(
+        "https://norealtor.in/hirelink_apis/candidate/change-password",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            candidate_id: candidateId,
+            current_password: currentPassword,
+            new_password: newPassword,
+          }),
+        }
+      );
+
+      const result = await response.json();
+
+      if (response.ok && result.status) {
+        alert("Password updated successfully ✅");
+
+        // reset fields
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+
+        // close modal
+        document.querySelector("#changePasswordModal .btn-close")?.click();
+      } else {
+        alert(result.message || "Current password is incorrect");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <ToastContainer
@@ -464,7 +529,154 @@ function Profile() {
               Edit Profile
             </button>
           </div>
+          <div className="d-flex justify-content-end">
+            <button
+              className="btn btn-outline-success mt-md-0 px-4 py-2"
+              style={{ minWidth: "80px", height: "40px" }}
+              data-bs-toggle="modal"
+              data-bs-target="#changePasswordModal"
+            >
+              Change Password
+            </button>
+          </div>
         </div>
+
+        <div
+          className="modal fade"
+          id="changePasswordModal"
+          tabIndex="-1"
+          aria-labelledby="changePasswordModalLabel"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              {/* Modal Header */}
+              <div className="modal-header">
+                <h5
+                  className="modal-title"
+                  id="changePasswordModalLabel"
+                  style={{ fontWeight: "bold" }}
+                >
+                  Change Password
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="modal"
+                ></button>
+              </div>
+
+              {/* Modal Body */}
+              <div className="modal-body">
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleChangePassword();
+                  }}
+                >
+                  {/* Current Password */}
+                  <div className="mb-3">
+                    <label className="form-label fw-semibold">
+                      Current Password
+                    </label>
+
+                    <div className="input-group">
+                      <input
+                        type={showCurrent ? "text" : "password"}
+                        className="form-control"
+                        placeholder="Enter current password"
+                        value={currentPassword}
+                        onChange={(e) => setCurrentPassword(e.target.value)}
+                      />
+
+                      <span
+                        className="input-group-text"
+                        style={{ cursor: "pointer" }}
+                        onClick={() => setShowCurrent(!showCurrent)}
+                      >
+                        <i
+                          className={`fa-solid ${
+                            showCurrent ? "fa-eye-slash" : "fa-eye"
+                          }`}
+                        ></i>
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* New Password */}
+                  <div className="mb-3">
+                    <label className="form-label fw-semibold">
+                      New Password
+                    </label>
+
+                    <div className="input-group">
+                      <input
+                        type={showNew ? "text" : "password"}
+                        className="form-control"
+                        placeholder="Enter new password"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                      />
+
+                      <span
+                        className="input-group-text"
+                        style={{ cursor: "pointer" }}
+                        onClick={() => setShowNew(!showNew)}
+                      >
+                        <i
+                          className={`fa-solid ${
+                            showNew ? "fa-eye-slash" : "fa-eye"
+                          }`}
+                        ></i>
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Confirm Password */}
+                  <div className="mb-3">
+                    <label className="form-label fw-semibold">
+                      Confirm Password
+                    </label>
+
+                    <div className="input-group">
+                      <input
+                        type={showConfirm ? "text" : "password"}
+                        className="form-control"
+                        placeholder="Confirm new password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                      />
+
+                      <span
+                        className="input-group-text"
+                        style={{ cursor: "pointer" }}
+                        onClick={() => setShowConfirm(!showConfirm)}
+                      >
+                        <i
+                          className={`fa-solid ${
+                            showConfirm ? "fa-eye-slash" : "fa-eye"
+                          }`}
+                        ></i>
+                      </span>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              {/* Modal Footer */}
+              <div className="modal-footer">
+                <button
+                  type="submit"
+                  className="btn btn-success"
+                  disabled={loading}
+                >
+                  {loading ? "Updating..." : "Update Password"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="mt-4">
           <JobsSAI />
         </div>

@@ -1566,7 +1566,7 @@ function Jobs() {
                     Experience Required
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     {...editRegister("job_experience")}
                     className="form-control form-control-md rounded-3"
                     placeholder="Enter Experience Required"

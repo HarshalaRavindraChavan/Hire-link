@@ -1265,7 +1265,7 @@ function Users() {
                 <div className="col-md-4">
                   <label className="fw-semibold">Experience</label>
                   <input
-                    type="text"
+                    type="number"
                     {...editRegister("experience")}
                     className="form-control"
                     placeholder="Enter Experience"

@@ -24,6 +24,8 @@ function Sidebar() {
   } else if (role === "1") {
     displayName = "Admin";
     // displayEmail = "";
+    com_logo =
+      "https://media.istockphoto.com/id/1553217327/vector/user-profile-icon-avatar-person-sign-profile-picture.jpg";
   }
 
   const handleLogout = () => {
@@ -33,7 +35,7 @@ function Sidebar() {
     // 🔥 Clear storage
     localStorage.removeItem("auth");
     localStorage.removeItem("employer");
-    localStorage.removeItem("candidate"); 
+    localStorage.removeItem("candidate");
 
     // 🔁 Role-wise redirect
     if (role === "1") {

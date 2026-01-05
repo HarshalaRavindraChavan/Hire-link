@@ -23,6 +23,16 @@ function Jobs() {
   const [search, setSearch] = useState("");
   const [jobs, setJobs] = useState([]);
 
+  // ================= EDUCATION =================
+  const [educationType, setEducationType] = useState("");
+  const [educationDetail, setEducationDetail] = useState("");
+
+  const educationOptions = {
+    Diploma: ["D.Form"],
+    Graduation: ["B.Sc", "B.Form"],
+    "Post Graduation": ["M.Sc", "M.Form"],
+  };
+
   // ================= STATE & CITY =================
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
@@ -158,6 +168,8 @@ function Jobs() {
     job_city: Yup.string().required("City is required"),
     job_skills: Yup.string().required("Skills is required"),
     job_experience: Yup.string().required("Experience is required"),
+    job_education_type: Yup.string().required("Education Type is required"),
+    job_education_detail: Yup.string().required("Education Detail is required"),
   });
 
   const addForm = useForm({
@@ -187,7 +199,7 @@ function Jobs() {
   } = editForm;
 
   const onSubmit = async (data) => {
-    if (role !== "employer") {
+    if (Number(role) !== 100) {
       toast.error("Only employer can add jobs");
       return;
     }
@@ -213,8 +225,9 @@ function Jobs() {
         job_location: data.job_location,
         job_state: data.job_state,
         job_city: data.job_city,
+        job_education_type: educationType,
+        job_education_detail: educationDetail,
         job_experience: data.job_experience,
-
         job_employer_id: employerId,
       };
 
@@ -228,6 +241,9 @@ function Jobs() {
 
         // ✅ state-city reset
         setCities([]);
+
+        setEducationType("");
+        setEducationDetail("");
 
         setSelectedCategory("");
         setSelectedSubCategory("");
@@ -406,9 +422,9 @@ function Jobs() {
   const openEditJobModal = (job) => {
     if (!job) return;
 
+    // ================= BASIC =================
     setEditJobId(job.job_id);
 
-    // existing resetEdit(...)
     resetEdit({
       job_title: job.job_title ?? "",
       job_no_hiring: job.job_no_hiring ?? "",
@@ -418,22 +434,35 @@ function Jobs() {
       job_date: job.job_date ?? "",
       job_location: job.job_location ?? "",
       job_state: job.job_state ?? "",
+      job_city: job.job_city ?? "",
       job_experience: job.job_experience ?? "",
       job_skills: job.job_skills ?? "",
+      job_education_type: job.job_education_type ?? "",
+      job_education_detail: job.job_education_detail ?? "",
     });
 
-    // ✅ NEW ADD
+    // ================= STATE → CITY (AUTO SELECT) =================
     if (job.job_state) {
-      fetchCities(job.job_state, job.job_city); // 🔥 FIX
+      fetchCities(job.job_state, job.job_city);
+    } else {
+      setCities([]);
     }
 
-    // set dropdown states
+    // ================= CATEGORY CHAIN =================
     setSelectedCategory(job.job_mc ?? "");
     setSelectedSubCategory(job.job_sc ?? "");
     setSelectedSubCat1(job.job_sc1 ?? "");
     setSelectedSubCat2(job.job_sc2 ?? "");
     setSelectedSubCat3(job.job_sc3 ?? "");
 
+    // ================= EDUCATION =================
+    setEducationType(job.job_education_type ?? "");
+    setEducationDetail(job.job_education_detail ?? "");
+
+    setEditValue("job_education_type", job.job_education_type ?? "");
+    setEditValue("job_education_detail", job.job_education_detail ?? "");
+
+    // ================= OPEN MODAL =================
     const modalEl = document.getElementById("editjobexampleModal");
     if (!modalEl || !window.bootstrap) return;
 
@@ -471,6 +500,8 @@ function Jobs() {
         job_city: data.job_city,
         job_experience: data.job_experience,
         job_skills: data.job_skills,
+        job_education_type: educationType,
+        job_education_detail: educationDetail,
       };
 
       const response = await axios.post(
@@ -1018,6 +1049,82 @@ function Jobs() {
                   </span>
                 </div>
 
+                {/* eduction type */}
+                <div className="col-md-4 mb-2">
+                  <label className="fw-semibold">Education Type</label>
+                  <select
+                    className="form-select form-control"
+                    {...addRegister("job_education_type")}
+                    value={educationType}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setEducationType(val);
+                      setEducationDetail("");
+                      setAddValue("job_education_type", val, {
+                        shouldValidate: true,
+                      });
+                      setAddValue("job_education_detail", "", {
+                        shouldValidate: true,
+                      });
+                    }}
+                  >
+                    <option value="">Select Education</option>
+                    <option value="Diploma">Diploma</option>
+                    <option value="Graduation">Graduation</option>
+                    <option value="Post Graduation">Post Graduation</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  <p className="text-danger">
+                    {addErrors.job_education_type?.message}
+                  </p>
+                </div>
+
+                {/* eduction Detail */}
+
+                <div className="col-md-4 mb-2">
+                  <label className="fw-semibold">Education Detail</label>
+
+                  {educationType === "Other" ? (
+                    <input
+                      type="text"
+                      className="form-control"
+                      {...addRegister("job_education_detail")}
+                      placeholder="Enter Education"
+                      value={educationDetail}
+                      onChange={(e) => {
+                        setEducationDetail(e.target.value);
+                        setAddValue("job_education_detail", e.target.value, {
+                          shouldValidate: true,
+                        });
+                      }}
+                    />
+                  ) : (
+                    <select
+                      className="form-select form-control"
+                      {...addRegister("job_education_detail")}
+                      value={educationDetail}
+                      onChange={(e) => {
+                        setEducationDetail(e.target.value);
+                        setAddValue("job_education_detail", e.target.value, {
+                          shouldValidate: true,
+                        });
+                      }}
+                      disabled={!educationType}
+                    >
+                      <option value="">Select</option>
+                      {educationOptions[educationType]?.map((opt) => (
+                        <option key={opt} value={opt}>
+                          {opt}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+
+                  <p className="text-danger">
+                    {addErrors.job_education_detail?.message}
+                  </p>
+                </div>
+
                 {/* Experience Required */}
                 <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">
@@ -1371,6 +1478,86 @@ function Jobs() {
                   </select>
 
                   <p className="text-danger">{editErrors.job_city?.message}</p>
+                </div>
+
+                {/* Eduction Type */}
+                <div className="col-md-4 mb-2">
+                  <label className="fw-semibold">Education Type</label>
+                  <select
+                    className="form-select form-control"
+                    {...editRegister("job_education_type")}
+                    value={educationType}
+                    onChange={(e) => {
+                      const val = e.target.value;
+
+                      setEducationType(val);
+                      setEducationDetail("");
+
+                      setEditValue("job_education_type", val, {
+                        shouldValidate: true,
+                      });
+                      setEditValue("job_education_detail", "", {
+                        shouldValidate: true,
+                      });
+                    }}
+                  >
+                    <option value="">Select Education</option>
+                    <option value="Diploma">Diploma</option>
+                    <option value="Graduation">Graduation</option>
+                    <option value="Post Graduation">Post Graduation</option>
+                    <option value="Other">Other</option>
+                  </select>
+
+                  <p className="text-danger">
+                    {editErrors.job_education_type?.message}
+                  </p>
+                </div>
+
+                {/* eduction Detail */}
+
+                <div className="col-md-4 mb-2">
+                  <label className="fw-semibold">Education Detail</label>
+
+                  {educationType === "Other" ? (
+                    <input
+                      type="text"
+                      className="form-control rounded-3"
+                      {...editRegister("job_education_detail")}
+                      placeholder="Enter Education"
+                      value={educationDetail}
+                      onChange={(e) => {
+                        setEducationDetail(e.target.value);
+                        setEditValue("job_education_detail", e.target.value, {
+                          shouldValidate: true,
+                        });
+                      }}
+                    />
+                  ) : (
+                    <select
+                      className="form-select form-control"
+                      {...editRegister("job_education_detail")}
+                      value={educationDetail}
+                      onChange={(e) => {
+                        setEducationDetail(e.target.value);
+                        setEditValue("job_education_detail", e.target.value, {
+                          shouldValidate: true,
+                        });
+                      }}
+                      disabled={!educationType}
+                    >
+                      <option value="">Select</option>
+
+                      {educationOptions[educationType]?.map((opt) => (
+                        <option key={opt} value={opt}>
+                          {opt}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+
+                  <p className="text-danger">
+                    {editErrors.job_education_detail?.message}
+                  </p>
                 </div>
 
                 {/* Experience Required */}

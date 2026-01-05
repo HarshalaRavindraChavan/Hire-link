@@ -438,35 +438,25 @@ function Profile() {
     setLoading(true);
 
     try {
-      const response = await fetch(
+      const response = await post(
         "https://norealtor.in/hirelink_apis/candidate/change-password",
         {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            candidate_id: candidateId,
-            current_password: currentPassword,
-            new_password: newPassword,
-          }),
+          candidate_id: candidateId,
+          current_password: currentPassword,
+          new_password: newPassword,
         }
       );
 
-      const result = await response.json();
-
-      if (response.ok && result.status) {
+      if (response.data?.status) {
         alert("Password updated successfully ✅");
 
-        // reset fields
         setCurrentPassword("");
         setNewPassword("");
         setConfirmPassword("");
 
-        // close modal
         document.querySelector("#changePasswordModal .btn-close")?.click();
       } else {
-        alert(result.message || "Current password is incorrect");
+        alert(response.data?.message || "Current password is incorrect");
       }
     } catch (error) {
       console.error(error);

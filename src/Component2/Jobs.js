@@ -123,7 +123,13 @@ function Jobs() {
       !keyword ||
       job.job_title?.toLowerCase().includes(keyword) ||
       job.job_company?.toLowerCase().includes(keyword) ||
-      job.job_skills?.toLowerCase().includes(keyword);
+      job.job_skills?.toLowerCase().includes(keyword) ||
+      // ✅ CATEGORY SEARCH
+      job.main_category?.toLowerCase().includes(keyword) ||
+      job.sub_category?.toLowerCase().includes(keyword) ||
+      job.sub_category1?.toLowerCase().includes(keyword) ||
+      job.sub_category2?.toLowerCase().includes(keyword) ||
+      job.sub_category3?.toLowerCase().includes(keyword);
 
     const placeMatch =
       !place ||

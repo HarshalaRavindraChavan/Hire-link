@@ -25,30 +25,41 @@ function JobSearchBar({
       return;
     }
 
+    const keyword = searchKeyword.toLowerCase();
     let suggestions = [];
 
     jobs.forEach((job) => {
+      /* ===== Skills ===== */
       if (job.job_skills) {
         job.job_skills
           .split(",")
           .map((s) => s.trim())
           .forEach((skill) => {
-            if (skill.toLowerCase().startsWith(searchKeyword.toLowerCase())) {
+            if (skill.toLowerCase().startsWith(keyword)) {
               suggestions.push({ text: skill, type: "Skill" });
             }
           });
       }
 
+      /* ===== Titles, Company, Categories ===== */
       [
         { value: job.job_title, type: "Job Title" },
         { value: job.job_company, type: "Company" },
-      ].forEach((f) => {
-        if (f.value?.toLowerCase().startsWith(searchKeyword.toLowerCase())) {
-          suggestions.push({ text: f.value, type: f.type });
+
+        // 🔥 Category hierarchy
+        { value: job.main_category, type: "Category" },
+        { value: job.sub_category, type: "Sub Category" },
+        { value: job.sub_category1, type: "Category" },
+        { value: job.sub_category2, type: "Category" },
+        { value: job.sub_category3, type: "Category" },
+      ].forEach((item) => {
+        if (item.value?.toLowerCase().startsWith(keyword)) {
+          suggestions.push({ text: item.value, type: item.type });
         }
       });
     });
 
+    // 🔹 Remove duplicates
     const unique = suggestions.filter(
       (v, i, a) => a.findIndex((t) => t.text === v.text) === i
     );
@@ -65,11 +76,13 @@ function JobSearchBar({
       return;
     }
 
+    const place = searchPlace.toLowerCase();
+
     const suggestions = jobs
       .filter(
         (j) =>
-          j.city_name?.toLowerCase().includes(searchPlace.toLowerCase()) ||
-          j.state_name?.toLowerCase().includes(searchPlace.toLowerCase())
+          j.city_name?.toLowerCase().includes(place) ||
+          j.state_name?.toLowerCase().includes(place)
       )
       .map((j) => `${j.city_name}, ${j.state_name}`)
       .filter((v, i, a) => a.indexOf(v) === i)
@@ -87,7 +100,7 @@ function JobSearchBar({
           <i className="fa fa-search me-2"></i>
           <input
             className="form-control border-0"
-            placeholder="Job title, keywords, or company"
+            placeholder="Job title, Company, Category"
             value={searchKeyword}
             onChange={(e) => {
               setSearchKeyword(e.target.value);
@@ -98,7 +111,7 @@ function JobSearchBar({
           />
         </div>
 
-        {showKeywordSug && (
+        {showKeywordSug && keywordSug.length > 0 && (
           <ul
             className="list-group position-absolute w-100 shadow"
             style={{ zIndex: 1000, background: "#dfdcdcff" }}
@@ -112,8 +125,10 @@ function JobSearchBar({
                   setAppliedKeyword(item.text);
                   setShowKeywordSug(false);
                 }}
+                style={{ cursor: "pointer" }}
               >
-                {item.text} <small>({item.type})</small>
+                {item.text}
+                <small className="text-muted">({item.type})</small>
               </li>
             ))}
           </ul>
@@ -137,9 +152,9 @@ function JobSearchBar({
           />
         </div>
 
-        {showPlaceSug && (
+        {showPlaceSug && placeSug.length > 0 && (
           <ul
-            className="list-group position-absolute w-100"
+            className="list-group position-absolute w-100 shadow"
             style={{ zIndex: 1000, background: "#dfdcdcff" }}
           >
             {placeSug.map((p, i) => (
@@ -151,6 +166,7 @@ function JobSearchBar({
                   setAppliedPlace(p);
                   setShowPlaceSug(false);
                 }}
+                style={{ cursor: "pointer" }}
               >
                 {p}
               </li>
@@ -161,7 +177,10 @@ function JobSearchBar({
 
       {/* SEARCH BUTTON */}
       <div className="col-12 col-md-2 text-center">
-        <button className="btn find-btn w-100 pt-3 pb-4 text-center mt-2" onClick={onSearch}>
+        <button
+          className="btn find-btn w-100 pt-3 pb-4 text-center mt-2"
+          onClick={onSearch}
+        >
           Find jobs
         </button>
       </div>

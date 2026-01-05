@@ -29,6 +29,16 @@ function Profile() {
   const [subCat3, setSubCat3] = useState([]);
   const [selectedSubCat3, setSelectedSubCat3] = useState("");
 
+  // ================= EDUCATION =================
+  const [educationType, setEducationType] = useState("");
+  const [educationDetail, setEducationDetail] = useState("");
+
+  const educationOptions = {
+    Diploma: ["D.Form"],
+    Graduation: ["B.Sc", "B.Form"],
+    "Post Graduation": ["M.Sc", "M.Form"],
+  };
+
   // ================= STATE & CITY =================
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
@@ -43,7 +53,7 @@ function Profile() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const candidateId = localStorage.getItem("candidate_id");
+  // const candidateId = localStorage.getItem("candidate_id");
 
   useEffect(() => {
     fetchStates();
@@ -212,6 +222,8 @@ function Profile() {
     can_cv: "",
     can_experience: "",
     can_skill: "",
+    can_education_type: "",
+    can_education_detail: "",
     can_about: "",
     can_mc: "",
     can_sc: "",
@@ -222,26 +234,29 @@ function Profile() {
 
   // Login Check but not login to redirect Signin page
 
-  // const navigate = useNavigate();
-  // React.useEffect(() => {
-  //   const stored = localStorage.getItem("candidate");
+  const navigate = useNavigate();
+  React.useEffect(() => {
+    const stored = localStorage.getItem("candidate");
 
-  //   if (!stored) {
-  //     navigate("/signin");
-  //     return;
-  //   }
+    if (!stored) {
+      navigate("/signin");
+      return;
+    }
 
-  //   const data = JSON.parse(stored);
-  //   setCandidate(data);
+    const data = JSON.parse(stored);
+    setCandidate(data);
 
-  //   if (data?.can_state) {
-  //     fetchCities(data.can_state);
-  //   }
-  // }, []);
+    if (data?.can_state) {
+      fetchCities(data.can_state);
+    }
+  }, []);
 
   // 🔁 SYNC SAVED CATEGORY TO DROPDOWNS (IMPORTANT)
   useEffect(() => {
     if (!candidate || !candidate.can_id) return;
+
+    setEducationType(candidate.can_education_type || "");
+    setEducationDetail(candidate.can_education_detail || "");
 
     setSelectedCategory(candidate.can_mc || "");
     setSelectedSubCategory(candidate.can_sc || "");
@@ -304,6 +319,8 @@ function Profile() {
           can_pan: candidate.can_pan,
           can_resume: candidate.can_resume,
           can_cv: candidate.can_cv,
+          can_education_type: candidate.can_education_type,
+          can_education_detail: candidate.can_education_detail,
         },
         {
           headers: { "Content-Type": "application/json" },
@@ -343,6 +360,10 @@ function Profile() {
           can_resume: candidate.can_resume,
           can_cv: candidate.can_cv,
 
+          // Education
+          can_education_type: candidate.can_education_type,
+          can_education_detail: candidate.can_education_detail,
+
           can_mc: selectedCategory || candidate.can_mc,
           can_sc: selectedSubCategory || candidate.can_sc,
           can_sc1: selectedSubCat1 || candidate.can_sc1,
@@ -378,7 +399,7 @@ function Profile() {
 
     // allow only PDF
     if (file.type !== "application/pdf") {
-      alert("Only PDF files are allowed");
+      toast.error("Only PDF files are allowed");
       return;
     }
 
@@ -432,12 +453,17 @@ function Profile() {
   // change password
   const handleChangePassword = async () => {
     if (!currentPassword || !newPassword || !confirmPassword) {
-      alert("All fields are required");
+      toast.error("All fields are required");
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      alert("New password and confirm password do not match");
+      toast.error("New password and confirm password do not match");
+      return;
+    }
+
+    if (!candidate?.can_id) {
+      toast.error("Candidate ID missing");
       return;
     }
 
@@ -447,14 +473,14 @@ function Profile() {
       const response = await axios.post(
         "https://norealtor.in/hirelink_apis/candidate/change-password",
         {
-          candidate_id: candidateId,
+          candidate_id: candidate.can_id, // ✅ FIXED
           current_password: currentPassword,
           new_password: newPassword,
         }
       );
 
       if (response.data?.status) {
-        alert("Password updated successfully ✅");
+        toast.success("Password updated successfully ✅");
 
         setCurrentPassword("");
         setNewPassword("");
@@ -462,17 +488,15 @@ function Profile() {
 
         document.querySelector("#changePasswordModal .btn-close")?.click();
       } else {
-        alert(response.data?.message || "Current password is incorrect");
+        toast.error(response.data?.message || "Current password is incorrect");
       }
     } catch (error) {
       console.error(error);
-      alert("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
   };
-
- 
 
   return (
     <>
@@ -518,24 +542,25 @@ function Profile() {
               </p>
             </div>
 
-            {/* Edit Button */}
-            <button
-              className="btn btn-outline-success mt-3 mt-md-0"
-              data-bs-toggle="modal"
-              data-bs-target="#editProfileModal"
-            >
-              Edit Profile
-            </button>
-          </div>
-          <div className="d-flex justify-content-end">
-            <button
-              className="btn btn-outline-success mt-md-0 px-4 py-2"
-              style={{ minWidth: "80px", height: "40px" }}
-              data-bs-toggle="modal"
-              data-bs-target="#changePasswordModal"
-            >
-              Change Password
-            </button>
+            <div className="d-flex flex-column align-items-center align-items-md-end gap-2 mt-3">
+              <button
+                className="btn btn-outline-success px-4"
+                data-bs-toggle="modal"
+                data-bs-target="#editProfileModal"
+                style={{ minWidth: "160px" }}
+              >
+                Edit Profile
+              </button>
+
+              <button
+                className="btn btn-outline-success px-4"
+                data-bs-toggle="modal"
+                data-bs-target="#changePasswordModal"
+                style={{ minWidth: "160px" }}
+              >
+                Change Password
+              </button>
+            </div>
           </div>
         </div>
 
@@ -659,18 +684,17 @@ function Profile() {
                       </span>
                     </div>
                   </div>
+                  {/* Modal Footer */}
+                  <div className="modal-footer">
+                    <button
+                      type="submit"
+                      className="btn btn-success"
+                      disabled={loading}
+                    >
+                      {loading ? "Updating..." : "Update Password"}
+                    </button>
+                  </div>
                 </form>
-              </div>
-
-              {/* Modal Footer */}
-              <div className="modal-footer">
-                <button
-                  type="submit"
-                  className="btn btn-success"
-                  disabled={loading}
-                >
-                  {loading ? "Updating..." : "Update Password"}
-                </button>
               </div>
             </div>
           </div>
@@ -882,7 +906,9 @@ function Profile() {
                       ) : (
                         <>
                           <i className="fa fa-upload text-muted"></i>{" "}
-                          <span className="text-muted">Upload Resume</span>
+                          <span className="text-muted">
+                            Upload Resume (PDF)
+                          </span>
                         </>
                       )}
                       <input
@@ -914,7 +940,7 @@ function Profile() {
                         <>
                           <i className="fa fa-upload text-muted"></i>{" "}
                           <span className="text-muted">
-                            Upload Cover Letter
+                            Upload Cover Letter(PDF)
                           </span>
                         </>
                       )}
@@ -930,6 +956,71 @@ function Profile() {
                         value={candidate.can_cv}
                       />
                     </label>{" "}
+                  </div>
+
+                  <div className="col-md-6">
+                    <label className="fw-semibold">Education Type</label>
+                    <select
+                      className="form-select form-control"
+                      value={educationType}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setEducationType(val);
+                        setEducationDetail("");
+
+                        setCandidate((prev) => ({
+                          ...prev,
+                          can_education_type: val,
+                          can_education_detail: "",
+                        }));
+                      }}
+                    >
+                      <option value="">Select Education</option>
+                      <option value="Diploma">Diploma</option>
+                      <option value="Graduation">Graduation</option>
+                      <option value="Post Graduation">Post Graduation</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+
+                  <div className="col-md-6">
+                    <label className="fw-semibold">Education Detail</label>
+
+                    {educationType === "Other" ? (
+                      <input
+                        type="text"
+                        className="form-control round-3"
+                        placeholder="Enter Education Detail"
+                        value={educationDetail}
+                        onChange={(e) => {
+                          setEducationDetail(e.target.value);
+                          setCandidate((prev) => ({
+                            ...prev,
+                            can_education_detail: e.target.value,
+                          }));
+                        }}
+                      />
+                    ) : (
+                      <select
+                        className="form-select form-control"
+                        value={educationDetail}
+                        disabled={!educationType}
+                        onChange={(e) => {
+                          setEducationDetail(e.target.value);
+                          setCandidate((prev) => ({
+                            ...prev,
+                            can_education_detail: e.target.value,
+                          }));
+                        }}
+                      >
+                        <option value="">Select</option>
+                        {educationOptions[educationType]?.map((opt) => (
+                          <option key={opt} value={opt}>
+                            {opt}
+                          </option>
+                        ))}
+                      </select>
+                    )}
                   </div>
 
                   <div className="col-md-6">

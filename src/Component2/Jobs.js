@@ -6,6 +6,13 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 
 function Jobs() {
+  const makeSlug = (text) =>
+    text
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, "-");
+
   const [jobs, setJobs] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
   const location = useLocation();
@@ -155,6 +162,16 @@ function Jobs() {
   }, [filteredJobs]);
 
   const navigate = useNavigate();
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleApplyClick = () => {
     const candidate = JSON.parse(localStorage.getItem("candidate"));
@@ -216,7 +233,17 @@ function Jobs() {
                 className={`job-card position-relative ${
                   selectedJob?.job_id === job.job_id ? "selected" : ""
                 }`}
-                onClick={() => setSelectedJob(job)}
+                onClick={() => {
+                  if (isMobile) {
+                    const slug = makeSlug(job.job_title);
+
+                    navigate(`/job/${job.job_id}-${slug}`, {
+                      state: { job },
+                    });
+                  } else {
+                    setSelectedJob(job);
+                  }
+                }}
                 style={{ cursor: "pointer" }}
               >
                 <button
@@ -255,7 +282,7 @@ function Jobs() {
           </div>
 
           {/* ========== RIGHT JOB DETAILS ========== */}
-          {selectedJob && (
+          {!isMobile && selectedJob && (
             <div className="col-12 col-md-8 job-detail mb-5">
               <div className="job-header pt-3 pb-3">
                 <button

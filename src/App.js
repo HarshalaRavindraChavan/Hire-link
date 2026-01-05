@@ -31,6 +31,7 @@ import Apply from "./Component2/Apply";
 import Signin from "./Component2/Signin";
 import Signup from "./Component2/Signup";
 import Forgot from "./Component2/Forgot";
+import JobDetail from "./Component2/JobDetail";
 
 // Employer Components
 import Header3 from "./Component3/Header";
@@ -77,6 +78,8 @@ const UserLayout = () => {
           <Route index element={<Home />} />
           <Route path="companies" element={<Company />} />
           <Route path="jobs" element={<Jobs />} />
+          {/* ✅ MOBILE JOB DETAIL PAGE */}
+          <Route path="job/:slug" element={<JobDetail />} />
           <Route path="contacts" element={<Contacts />} />
           <Route path="profile" element={<Profile />} />
           <Route path="apply" element={<Apply />} />

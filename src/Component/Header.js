@@ -9,11 +9,18 @@ function Sidebar() {
 
   const role = auth?.role;
   let displayName = "";
+  let com_logo = logo;
   // let displayEmail = "";
 
   if (Number(role) === 100) {
     displayName = employer?.emp_name || "Employer";
     // displayEmail = employer?.emp_email || "";
+    if (employer?.emp_com_logo) {
+      com_logo = `https://norealtor.in/hirelink_apis/Uploads/${employer.emp_com_logo}`;
+    } else {
+      com_logo =
+        "https://media.istockphoto.com/id/1553217327/vector/user-profile-icon-avatar-person-sign-profile-picture.jpg";
+    }
   } else if (role === "1") {
     displayName = "Admin";
     // displayEmail = "";
@@ -26,7 +33,7 @@ function Sidebar() {
     // 🔥 Clear storage
     localStorage.removeItem("auth");
     localStorage.removeItem("employer");
-    localStorage.removeItem("candidate"); // safe (असला तरी)
+    localStorage.removeItem("candidate"); 
 
     // 🔁 Role-wise redirect
     if (role === "1") {
@@ -350,7 +357,7 @@ function Sidebar() {
               >
                 <div className="avatar-sm">
                   <img
-                    src="https://media.istockphoto.com/id/1553217327/vector/user-profile-icon-avatar-person-sign-profile-picture-portrait-symbol-easily-editable-line.jpg?s=170667a&w=0&k=20&c=xUuHLFaa94WIFdV-XBgxX9SSsaJJgGQhE1Tmevqrytg="
+                    src={com_logo}
                     alt="..."
                     className="avatar-img rounded-circle"
                   />

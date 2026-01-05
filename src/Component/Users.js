@@ -12,6 +12,16 @@ function Users() {
     document.title = "Hirelink | Users";
   }, []);
 
+  // ================= EDUCATION =================
+  const [educationType, setEducationType] = useState("");
+  const [educationDetail, setEducationDetail] = useState("");
+
+  const educationOptions = {
+    Diploma: ["D.Form"],
+    Graduation: ["B.Sc", "B.Form"],
+    "Post Graduation": ["M.Sc", "M.Form"],
+  };
+
   const [users, setUsers] = useState([]);
   // ================= STATE & CITY =================
   const [states, setStates] = useState([]);
@@ -144,6 +154,9 @@ function Users() {
     panupload: yup.string().required("PAN upload required"),
     bankpassbook: yup.string().required(),
     experience: yup.string().required(),
+    education_type: yup.string().required("Education Type is required"),
+    education_detail: yup.string().required("Education Detail is required"),
+
     role: yup.string().required(),
     menus: yup.array().min(1).required(),
   });
@@ -179,6 +192,8 @@ function Users() {
       user_joindate: data.joindate,
       user_bankpassbook: data.bankpassbook,
       user_experience: data.experience,
+      user_education_type: data.education_type,
+      user_education_detail: data.education_detail,
       user_role: data.role,
       user_menu_id: data.menus.join(","),
       user_aadhar_image: User.user_aadhar_image,
@@ -197,6 +212,8 @@ function Users() {
         resetAdd(); // form reset
         setUser({ user_aadhar_image: "", user_pan_image: "" }); // reset file state
         fetchUsers(); // refresh table
+        setEducationType("");
+        setEducationDetail("");
 
         const modal = document.getElementById("exampleModal");
         const bsModal =
@@ -317,6 +334,8 @@ function Users() {
     joindate: yup.date().required(),
     bankpassbook: yup.string().required(),
     experience: yup.string().required(),
+    education_type: yup.string().required("Education Type is required"),
+    education_detail: yup.string().required("Education Detail is required"),
     role: yup.string().required(),
     menus: yup.array().min(1).required(),
   });
@@ -361,6 +380,12 @@ function Users() {
       fetchCities(user.user_state, user.user_city);
     }
 
+    setEducationType(user.user_education_type ?? "");
+    setEducationDetail(user.user_education_detail ?? "");
+
+    editSetValue("education_type", user.user_education_type ?? "");
+    editSetValue("education_detail", user.user_education_detail ?? "");
+
     const modalEl = document.getElementById("editUserModal");
     const modal =
       window.bootstrap.Modal.getInstance(modalEl) ||
@@ -389,6 +414,8 @@ function Users() {
         user_joindate: data.joindate,
         user_bankpassbook: data.bankpassbook,
         user_experience: data.experience,
+        user_education_type: data.education_type,
+        user_education_detail: data.education_detail,
         user_role: data.role,
         user_menu_id: Array.isArray(data.menus)
           ? data.menus.join(",")
@@ -873,6 +900,81 @@ function Users() {
                   </p>
                 </div>
 
+                {/* Education Type */}
+                <div className="col-md-4">
+                  <label className="fw-semibold">Education Type</label>
+                  <select
+                    className="form-select form-control"
+                    {...addRegister("education_type")}
+                    value={educationType}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setEducationType(val);
+                      setEducationDetail("");
+                      addSetValue("education_type", val, {
+                        shouldValidate: true,
+                      });
+                      addSetValue("education_detail", "", {
+                        shouldValidate: true,
+                      });
+                    }}
+                  >
+                    <option value="">Select Education</option>
+                    <option value="Diploma">Diploma</option>
+                    <option value="Graduation">Graduation</option>
+                    <option value="Post Graduation">Post Graduation</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  <p className="text-danger">
+                    {addErrors.education_type?.message}
+                  </p>
+                </div>
+
+                {/* Education Detail */}
+                <div className="col-md-4">
+                  <label className="fw-semibold">Education Detail</label>
+
+                  {educationType === "Other" ? (
+                    <input
+                      type="text"
+                      className="form-control round-3"
+                      {...addRegister("education_detail")}
+                      placeholder="Enter Education"
+                      value={educationDetail}
+                      onChange={(e) => {
+                        setEducationDetail(e.target.value);
+                        addSetValue("education_detail", e.target.value, {
+                          shouldValidate: true,
+                        });
+                      }}
+                    />
+                  ) : (
+                    <select
+                      className="form-select form-control"
+                      {...addRegister("education_detail")}
+                      value={educationDetail}
+                      onChange={(e) => {
+                        setEducationDetail(e.target.value);
+                        addSetValue("education_detail", e.target.value, {
+                          shouldValidate: true,
+                        });
+                      }}
+                      disabled={!educationType}
+                    >
+                      <option value="">Select</option>
+                      {educationOptions[educationType]?.map((opt) => (
+                        <option key={opt} value={opt}>
+                          {opt}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+
+                  <p className="text-danger">
+                    {addErrors.education_detail?.message}
+                  </p>
+                </div>
+
                 {/* Experience */}
                 <div className="col-md-4">
                   <label className="fw-semibold">Experience</label>
@@ -915,8 +1017,8 @@ function Users() {
                     <option value="4">Applicant</option>
                     <option value="5">Interview</option>
                     <option value="6">Employer</option>
-                    <option value="7">Packages</option>
-                    <option value="8">Offers</option>
+                    {/* <option value="7">Packages</option>
+                    <option value="8">Offers</option> */}
                     <option value="9">Contact</option>
                     <option value="10">User</option>
                   </select>
@@ -1086,6 +1188,79 @@ function Users() {
                   </p>
                 </div>
 
+                {/* Education Type */}
+                <div className="col-md-4">
+                  <label className="fw-semibold">Education Type</label>
+                  <select
+                    className="form-select"
+                    {...editRegister("education_type")}
+                    value={educationType}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setEducationType(val);
+                      setEducationDetail("");
+                      editSetValue("education_type", val, {
+                        shouldValidate: true,
+                      });
+                      editSetValue("education_detail", "", {
+                        shouldValidate: true,
+                      });
+                    }}
+                  >
+                    <option value="">Select Education</option>
+                    <option value="Diploma">Diploma</option>
+                    <option value="Graduation">Graduation</option>
+                    <option value="Post Graduation">Post Graduation</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  <p className="text-danger">
+                    {editErrors.education_type?.message}
+                  </p>
+                </div>
+
+                {/* Education Detail */}
+                <div className="col-md-4">
+                  <label className="fw-semibold">Education Detail</label>
+
+                  {educationType === "Other" ? (
+                    <input
+                      type="text"
+                      className="form-control"
+                      {...editRegister("education_detail")}
+                      value={educationDetail}
+                      onChange={(e) => {
+                        setEducationDetail(e.target.value);
+                        editSetValue("education_detail", e.target.value, {
+                          shouldValidate: true,
+                        });
+                      }}
+                    />
+                  ) : (
+                    <select
+                      className="form-select"
+                      {...editRegister("education_detail")}
+                      value={educationDetail}
+                      onChange={(e) => {
+                        setEducationDetail(e.target.value);
+                        editSetValue("education_detail", e.target.value, {
+                          shouldValidate: true,
+                        });
+                      }}
+                    >
+                      <option value="">Select</option>
+                      {educationOptions[educationType]?.map((opt) => (
+                        <option key={opt} value={opt}>
+                          {opt}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+
+                  <p className="text-danger">
+                    {editErrors.education_detail?.message}
+                  </p>
+                </div>
+
                 {/* Experience */}
                 <div className="col-md-4">
                   <label className="fw-semibold">Experience</label>
@@ -1130,8 +1305,8 @@ function Users() {
                     <option value="4">Applicant</option>
                     <option value="5">Interview</option>
                     <option value="6">Employer</option>
-                    <option value="7">Packages</option>
-                    <option value="8">Offers</option>
+                    {/* <option value="7">Packages</option>
+                    <option value="8">Offers</option> */}
                     <option value="9">Contact</option>
                     <option value="10">User</option>
                   </select>

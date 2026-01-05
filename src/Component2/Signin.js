@@ -91,6 +91,7 @@ function Signin() {
                 role: 100,
                 emp_id: data.data.emp_id,
                 emp_companyname: data.data.emp_companyname,
+                emp_com_logo: data.data.emp_com_logo,
               })
             );
 

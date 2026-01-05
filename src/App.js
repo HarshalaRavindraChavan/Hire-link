@@ -123,6 +123,7 @@ function App() {
           <Route path="/jobs" element={<Jobs />} />
           <Route path="/contacts" element={<Contacts />} />
           <Route path="/apply" element={<Apply />} />
+          <Route path="/job/:slug" element={<JobDetail />} />
           <Route path="/profile" element={<Profile />} />
         </Route>
 

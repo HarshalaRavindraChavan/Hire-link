@@ -154,12 +154,14 @@ function Jobs() {
   }, [searchKeyword, searchPlace]);
 
   useEffect(() => {
-    if (filteredJobs.length > 0) {
-      setSelectedJob(filteredJobs[0]); // 👈 first job auto select
-    } else {
-      setSelectedJob(null); // 👈 no jobs → no details
+    if (!selectedJob && filteredJobs.length > 0) {
+      setSelectedJob(filteredJobs[0]); // only once
     }
-  }, [filteredJobs]);
+
+    if (filteredJobs.length === 0) {
+      setSelectedJob(null);
+    }
+  }, [filteredJobs, selectedJob]);
 
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);

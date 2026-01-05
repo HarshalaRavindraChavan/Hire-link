@@ -151,65 +151,62 @@ function Apply() {
                         readOnly
                       />
                     </div>
-                  </div>
 
-                  {/* Row 2 – Education (READ ONLY) */}
-                  {(formData.educationType || formData.educationDetail) && (
-                    <>
-                      <div className="col-md-6 mb-3">
-                        <label className="form-label">Education Type</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          value={formData.educationType || "Not Provided"}
-                          readOnly
-                        />
-                      </div>
+                    {/* Row 2 – Education (READ ONLY) */}
 
-                      <div className="col-md-6 mb-3">
-                        <label className="form-label">Education Detail</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          value={formData.educationDetail || "Not Provided"}
-                          readOnly
-                        />
-                      </div>
-                    </>
-                  )}
-
-                  {/* Row 3 */}
-                  <div className="row">
                     <div className="col-md-6 mb-3">
-                      <label className="form-label">Mobile</label>
+                      <label className="form-label">Education Type</label>
                       <input
                         type="text"
                         className="form-control"
-                        value={formData.mobile}
+                        value={formData.educationType || "Not Provided"}
                         readOnly
                       />
                     </div>
+
                     <div className="col-md-6 mb-3">
-                      <label className="form-label">Experience</label>
+                      <label className="form-label">Education Detail</label>
                       <input
                         type="text"
                         className="form-control"
-                        value={formData.experience}
+                        value={formData.educationDetail || "Not Provided"}
                         readOnly
                       />
                     </div>
-                  </div>
 
-                  {/* Row 4 */}
-                  <div className="row">
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">Primary Skill</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={formData.skill}
-                        readOnly
-                      />
+                    {/* Row 3 */}
+                    <div className="row">
+                      <div className="col-md-6 mb-3">
+                        <label className="form-label">Mobile</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          value={formData.mobile}
+                          readOnly
+                        />
+                      </div>
+                      <div className="col-md-6 mb-3">
+                        <label className="form-label">Experience</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          value={formData.experience}
+                          readOnly
+                        />
+                      </div>
+                    </div>
+
+                    {/* Row 4 */}
+                    <div className="row">
+                      <div className="col-md-6 mb-3">
+                        <label className="form-label">Primary Skill</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          value={formData.skill}
+                          readOnly
+                        />
+                      </div>
                     </div>
                   </div>
 

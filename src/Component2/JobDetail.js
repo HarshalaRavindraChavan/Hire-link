@@ -1,6 +1,7 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
 
 function JobDetail() {
   const { state } = useLocation();
@@ -49,50 +50,304 @@ function JobDetail() {
     );
   }
 
+  const handleApplyClick = () => {
+    const candidate = JSON.parse(localStorage.getItem("candidate"));
+
+    if (!candidate?.can_id) {
+      toast.warn("Please login to apply for job");
+      navigate("/signin");
+      return;
+    }
+
+    navigate("/apply", {
+      state: {
+        job:job, // same job object
+      },
+    });
+  };
+
   return (
-    <div className="container mt-3 mb-5">
-      {/* BACK */}
-      <button className="btn btn-light mb-3" onClick={() => navigate(-1)}>
-        ← Back
-      </button>
-
-      {/* HEADER */}
-      <h4 className="fw-bold">{job.job_title}</h4>
-      <p className="text-muted">
-        {job.job_company} · {job.city_name}, {job.state_name}
-      </p>
-
-      <p className="fw-semibold text-success fs-5">₹{job.job_salary} a month</p>
-
-      {/* APPLY */}
-      <button
-        className="apply-btn w-100 mb-4"
-        onClick={() =>
-          navigate("/apply", {
-            state: { job },
-          })
-        }
+    <>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="colored"
+      />
+      {/* JOB CARD */}
+      <div
+        style={{
+          background: "#ffffff",
+          margin: "12px 0 50px 0",
+          padding: "16px",
+          borderRadius: "8px",
+        }}
       >
-        Apply Now
-      </button>
+        {/* Job Title */}
+        <h2
+          style={{
+            margin: "0 0 6px 0",
+            fontSize: "20px",
+            color: "#111",
+          }}
+        >
+          {job.job_title}
+        </h2>
 
-      <hr />
+        {/* Company */}
+        <div
+          style={{
+            fontSize: "14px",
+            color: "#555",
+            marginBottom: "6px",
+          }}
+        >
+          <strong>{job.job_company}</strong>
+        </div>
 
-      {/* DETAILS */}
-      <h6 className="fw-bold">Skills</h6>
-      <p>{job.job_skills || "Not specified"}</p>
+        {/* Location */}
+        <div
+          style={{
+            fontSize: "13px",
+            color: "#777",
+            marginBottom: "12px",
+          }}
+        >
+          {job.city_name},{job.state_name}
+        </div>
 
-      <h6 className="fw-bold">Job Description</h6>
-      <p>{job.job_description}</p>
+        <hr
+          style={{
+            border: "none",
+            borderTop: "1px solid #eee",
+            margin: "12px 0",
+          }}
+        />
 
-      <h6 className="fw-bold">Job Type</h6>
-      <p>{job.job_type}</p>
+        {/* Job Details */}
+        <h4
+          style={{
+            margin: "0 0 8px 0",
+            fontSize: "16px",
+            color: "#000",
+            fontWidth: "700",
+          }}
+        >
+          Job Type
+        </h4>
 
-      <h6 className="fw-bold">Location</h6>
-      <p>
-        {job.city_name}, {job.state_name}
-      </p>
-    </div>
+        <div style={{ marginBottom: "12px" }}>
+          <span
+            style={{
+              display: "inline-block",
+              background: "#eef2f7",
+              padding: "6px 10px",
+              borderRadius: "20px",
+              fontSize: "13px",
+              color: "#333",
+            }}
+          >
+            {job.job_type}
+          </span>
+        </div>
+
+        {/* Pay Section */}
+        <h4
+          style={{
+            margin: "16px 0 6px 0",
+            fontSize: "16px",
+          }}
+        >
+          {" "}
+          <i className="fa-solid fa-money-bill"></i> Pay
+        </h4>
+        <p
+          style={{
+            margin: 0,
+            fontSize: "14px",
+            color: "#444",
+          }}
+        >
+          <span
+            style={{
+              display: "inline-block",
+              background: "#eef2f7",
+              padding: "6px 10px",
+              borderRadius: "20px",
+              fontSize: "13px",
+              color: "#333",
+            }}
+          >
+            <i className="fa-solid fa-indian-rupee-sign"></i> {job.job_salary}
+          </span>
+        </p>
+
+        {/* Location Section */}
+        <h4
+          style={{
+            margin: "16px 0 6px 0",
+            fontSize: "16px",
+          }}
+        >
+          {" "}
+          <i className="fa-solid fa-location-dot"></i> Location
+        </h4>
+        <p
+          style={{
+            margin: 0,
+            fontSize: "14px",
+            color: "#444",
+          }}
+        >
+          {job.city_name} , {job.job_state_name}
+        </p>
+
+        {/* Skills Section */}
+        <h4
+          style={{
+            margin: "16px 0 6px 0",
+            fontSize: "16px",
+          }}
+        >
+          <i className="fa-solid fa-hand-point-right"></i> Skills
+        </h4>
+
+        <p
+          style={{
+            margin: 0,
+            fontSize: "14px",
+            color: "#444",
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "8px",
+          }}
+        >
+          {job?.job_skills?.split(",").map((skill, index) => (
+            <span
+              key={index}
+              style={{
+                display: "inline-block",
+                background: "#eef2f7",
+                padding: "6px 12px",
+                borderRadius: "20px",
+                fontSize: "13px",
+                color: "#333",
+                textTransform: "capitalize",
+              }}
+            >
+              {skill.trim()}
+            </span>
+          ))}
+        </p>
+
+        {/* Description */}
+        <h4
+          style={{
+            margin: "16px 0 6px 0",
+            fontSize: "18px",
+          }}
+        >
+          Full job description
+        </h4>
+
+        <p
+          style={{
+            fontSize: "14px",
+            color: "#333",
+            lineHeight: 1.6,
+          }}
+        >
+          {job.job_description}
+        </p>
+
+        {/* <p
+          style={{
+            fontSize: "14px",
+            color: "#333",
+            lineHeight: 1.6,
+          }}
+        >
+          The ideal candidate must be able to solve tough technical problems,
+          understand previous written code, update existing websites, create new
+          websites and write clean, well documented code.
+        </p> */}
+
+        {/* <p
+          style={{
+            fontSize: "14px",
+            color: "#333",
+            fontWeight: "bold",
+          }}
+        >
+          Energetic, Honest, Punctual.
+        </p>
+
+        <p
+          style={{
+            fontSize: "14px",
+            color: "#333",
+          }}
+        >
+          Minimum 6 months experience in PHP, MySQL, JavaScript, jQuery,
+          WordPress required.
+        </p>
+
+        <p
+          style={{
+            fontSize: "14px",
+            color: "#333",
+          }}
+        >
+          Knowledge of Node.js and AngularJS is preferred.
+        </p> */}
+      </div>
+
+      {/* ACTION BUTTONS */}
+      <div
+        style={{
+          position: "relative",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          background: "#ffffff",
+          padding: "10px 12px",
+          display: "flex",
+          gap: "10px",
+        }}
+      >
+        <button
+          style={{
+            flex: 1,
+            background: "#008b0c",
+            color: "#ffffff",
+            border: "none",
+            borderRadius: "6px",
+            padding: "12px",
+            fontSize: "16px",
+            fontWeight: "bold",
+          }}
+          onClick={handleApplyClick}
+        >
+          Apply now
+        </button>
+
+        <button
+          style={{
+            background: "#ffffff",
+            color: "#b1b1b1",
+            border: "1px solid #b1b1b1",
+            borderRadius: "6px",
+            padding: "12px 14px",
+            fontSize: "14px",
+          }}
+        >
+          Save
+        </button>
+      </div>
+    </>
   );
 }
 

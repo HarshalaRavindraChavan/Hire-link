@@ -376,25 +376,31 @@ function Profile() {
     const file = e.target.files[0];
     if (!file) return;
 
-    const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
-
-    // ✅ SIZE LIMITS (KB → Bytes)
-    const minSize = 30 * 1024; // 30 KB
-    const maxSize = 50 * 1024; // 50 KB
-
-    // ❌ TYPE VALIDATION
-    if (!allowedTypes.includes(file.type)) {
-      toast.error("Only JPG, JPEG, PNG files are allowed");
-      e.target.value = "";
+    // allow only PDF
+    if (file.type !== "application/pdf") {
+      alert("Only PDF files are allowed");
       return;
     }
 
-    // ❌ SIZE VALIDATION
-    if (file.size < minSize || file.size > maxSize) {
-      toast.error("File size must be between 30 KB and 50 KB");
-      e.target.value = "";
-      return;
-    }
+    // const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+
+    // // ✅ SIZE LIMITS (KB → Bytes)
+    // const minSize = 30 * 1024; // 30 KB
+    // const maxSize = 50 * 1024; // 50 KB
+
+    // // ❌ TYPE VALIDATION
+    // if (!allowedTypes.includes(file.type)) {
+    //   toast.error("Only JPG, JPEG, PNG files are allowed");
+    //   e.target.value = "";
+    //   return;
+    // }
+
+    // // ❌ SIZE VALIDATION
+    // if (file.size < minSize || file.size > maxSize) {
+    //   toast.error("File size must be between 30 KB and 50 KB");
+    //   e.target.value = "";
+    //   return;
+    // }
 
     const formData = new FormData();
     formData.append(fieldName, file);
@@ -438,7 +444,7 @@ function Profile() {
     setLoading(true);
 
     try {
-      const response = await post(
+      const response = await axios.post(
         "https://norealtor.in/hirelink_apis/candidate/change-password",
         {
           candidate_id: candidateId,
@@ -465,6 +471,8 @@ function Profile() {
       setLoading(false);
     }
   };
+
+ 
 
   return (
     <>
@@ -531,6 +539,7 @@ function Profile() {
           </div>
         </div>
 
+        {/* change password model */}
         <div
           className="modal fade"
           id="changePasswordModal"
@@ -755,7 +764,7 @@ function Profile() {
                     </select>
                   </div>
 
-                  <div className="col-md-6">
+                  {/* <div className="col-md-6">
                     {" "}
                     <label className="btn btn-outline-success w-100">
                       {" "}
@@ -813,6 +822,50 @@ function Profile() {
                         value={candidate.can_pan}
                       />
                     </label>{" "}
+                  </div> */}
+
+                  {/* aadhar number */}
+                  <div className="col-md-6">
+                    <label className="form-label fw-semibold">
+                      Aadhar Card Number
+                    </label>
+
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Enter 12-digit Aadhar number"
+                      value={candidate.can_aadhar}
+                      maxLength={12}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\D/g, "");
+                        setCandidate((prev) => ({
+                          ...prev,
+                          can_aadhar: value,
+                        }));
+                      }}
+                    />
+                  </div>
+                  {/* pan number */}
+                  <div className="col-md-6">
+                    <label className="form-label fw-semibold">
+                      PAN Card Number
+                    </label>
+
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Enter PAN number (ABCDE1234F)"
+                      value={candidate.can_pan}
+                      maxLength={10}
+                      style={{ textTransform: "uppercase" }}
+                      onChange={(e) => {
+                        const value = e.target.value.toUpperCase();
+                        setCandidate((prev) => ({
+                          ...prev,
+                          can_pan: value,
+                        }));
+                      }}
+                    />
                   </div>
 
                   <div className="col-md-6">
@@ -835,6 +888,7 @@ function Profile() {
                       <input
                         type="file"
                         hidden
+                        accept=".pdf"
                         onChange={(e) => uploadFile(e, "can_resume")}
                       />{" "}
                       <input
@@ -867,6 +921,7 @@ function Profile() {
                       <input
                         type="file"
                         hidden
+                        accept=".pdf"
                         onChange={(e) => uploadFile(e, "can_cv")}
                       />{" "}
                       <input

@@ -12,6 +12,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
+import { BASE_URL } from "../config/constants";
 
 function Login() {
   const navigate = useNavigate();
@@ -45,7 +46,7 @@ function Login() {
         console.log("Sending login API request...");
 
         const response = await axios.post(
-          "https://norealtor.in/hirelink_apis/admin/login",
+          `${BASE_URL}hirelink_apis/admin/login`,
           {
             user_email: values.user_email.trim(),
             user_password: values.user_password.trim(),

@@ -373,6 +373,7 @@ function Users() {
       location: user.user_location ?? "",
       address: user.user_address ?? "",
       state: user.user_state ?? "",
+      city: user.user_city ?? "",
       joindate: user.user_joindate?.split("T")[0] ?? "",
       // bankpassbook: user.user_bankpassbook ?? "",
       experience: user.user_experience ?? "",

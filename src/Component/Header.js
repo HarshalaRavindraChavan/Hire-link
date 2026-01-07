@@ -1,5 +1,7 @@
 import logo from "./logo/admin-logo.png";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import { BASE_URL } from "../config/constants";
+
 
 function Sidebar() {
   const navigate = useNavigate();
@@ -16,7 +18,7 @@ function Sidebar() {
     displayName = employer?.emp_name || "Employer";
     // displayEmail = employer?.emp_email || "";
     if (employer?.emp_com_logo) {
-      com_logo = `https://norealtor.in/hirelink_apis/Uploads/${employer.emp_com_logo}`;
+      com_logo = `${BASE_URL}hirelink_apis/Uploads/${employer.emp_com_logo}`;
     } else {
       com_logo =
         "https://media.istockphoto.com/id/1553217327/vector/user-profile-icon-avatar-person-sign-profile-picture.jpg";

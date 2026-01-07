@@ -6,6 +6,8 @@ import * as Yup from "yup";
 import Pagination from "./commenuse/Pagination";
 import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
+import { BASE_URL } from "../config/constants";
+
 
 function Packages() {
   // Correct: useEffect for title
@@ -99,7 +101,7 @@ function Packages() {
       };
 
       const res = await axios.post(
-        "https://norealtor.in/hirelink_apis/admin/insert/tbl_package",
+        `${BASE_URL}hirelink_apis/admin/insert/tbl_package`,
         payload
       );
 
@@ -151,7 +153,7 @@ function Packages() {
   const fetchPackages = async () => {
     try {
       const res = await axios.get(
-        "https://norealtor.in/hirelink_apis/admin/getdata/tbl_package"
+        `${BASE_URL}hirelink_apis/admin/getdata/tbl_package`,
       );
 
       if (res.data.status === true) {
@@ -170,7 +172,7 @@ function Packages() {
   const confirmDelete = async () => {
     try {
       const res = await axios.get(
-        `https://norealtor.in/hirelink_apis/admin/deletedata/tbl_package/pack_id/${deletePackageId}`
+        `${BASE_URL}hirelink_apis/admin/deletedata/tbl_package/pack_id/${deletePackageId}`
       );
 
       if (res.data.status === true) {
@@ -250,7 +252,7 @@ function Packages() {
       setLoading(true);
 
       const response = await axios.post(
-        `https://norealtor.in/hirelink_apis/admin/updatedata/tbl_package/pack_id/${editPackId}`,
+        `${BASE_URL}hirelink_apis/admin/updatedata/tbl_package/pack_id/${editPackId}`,
         {
           pack_name: data.pack_name,
           pack_price: data.pack_price,

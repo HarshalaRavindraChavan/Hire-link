@@ -3,9 +3,10 @@ import "./css/Signup.css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectFade } from "swiper/modules";
 import logo from "./logo/hirelink.png";
-
 import "swiper/css";
 import "swiper/css/effect-fade";
+// import { BASE_URL } from "../config/constants";
+
 
 function Registar() {
   return (

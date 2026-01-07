@@ -6,6 +6,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import Pagination from "./commenuse/Pagination";
 import { toast } from "react-toastify";
+import { BASE_URL } from "../config/constants";
+
 
 function Employes() {
   // tital of tab
@@ -24,7 +26,7 @@ function Employes() {
   const fetchEmployers = async () => {
     try {
       const res = await axios.get(
-        "https://norealtor.in/hirelink_apis/admin/getdata/tbl_employer"
+        `${BASE_URL}hirelink_apis/admin/getdata/tbl_employer`,
       );
 
       if (res.data.status === true) {
@@ -57,7 +59,7 @@ function Employes() {
   const confirmDelete = async () => {
     try {
       const res = await axios.get(
-        `https://norealtor.in/hirelink_apis/admin/deletedata/tbl_employer/emp_id/${deleteId}`
+        `${BASE_URL}hirelink_apis/admin/deletedata/tbl_employer/emp_id/${deleteId}`
       );
 
       if (res.data.status === true) {
@@ -130,7 +132,7 @@ function Employes() {
       };
 
       const res = await axios.post(
-        "https://norealtor.in/hirelink_apis/employer/insert/tbl_employer",
+        `${BASE_URL}hirelink_apis/employer/insert/tbl_employer`,
         payload
       );
 
@@ -200,7 +202,7 @@ function Employes() {
 
     try {
       const res = await axios.post(
-        "https://norealtor.in/hirelink_apis/candidate/fileupload",
+        `${BASE_URL}hirelink_apis/candidate/fileupload`,
         formData
       );
 

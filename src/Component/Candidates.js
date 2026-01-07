@@ -7,6 +7,8 @@ import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
+import { BASE_URL } from "../config/constants";
+
 
 function Candidates() {
   // tital of tab
@@ -24,7 +26,7 @@ function Candidates() {
   const fetchCandidates = async () => {
     try {
       const res = await axios.get(
-        "https://norealtor.in/hirelink_apis/admin/getdata/tbl_candidate"
+        `${BASE_URL}hirelink_apis/admin/getdata/tbl_candidate`,
       );
 
       if (res.data.status === true) {
@@ -58,7 +60,7 @@ function Candidates() {
   const confirmDelete = async () => {
     try {
       const res = await axios.get(
-        `https://norealtor.in/hirelink_apis/admin/deletedata/tbl_candidate/can_id/${deleteId}`
+        `${BASE_URL}hirelink_apis/admin/deletedata/tbl_candidate/can_id/${deleteId}`,
       );
 
       if (res.data.status === true) {
@@ -151,7 +153,7 @@ function Candidates() {
 
     try {
       const res = await axios.post(
-        "https://norealtor.in/hirelink_apis/admin/insert/tbl_candidate",
+        `${BASE_URL}hirelink_apis/admin/insert/tbl_candidate`,
         payload
       );
 

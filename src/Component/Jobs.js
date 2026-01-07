@@ -115,7 +115,7 @@ function Jobs() {
 
   //==========Pagination=========================
   const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 5;
+  const recordsPerPage = 100;
   const lastIndex = currentPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
   const records = jobs.slice(firstIndex, lastIndex);
@@ -170,6 +170,7 @@ function Jobs() {
     job_experience: Yup.string().required("Experience is required"),
     job_education_type: Yup.string().required("Education Type is required"),
     job_education_detail: Yup.string().required("Education Detail is required"),
+    job_description: Yup.string().required("Description is required"),
   });
 
   const addForm = useForm({
@@ -229,6 +230,7 @@ function Jobs() {
         job_education_detail: educationDetail,
         job_experience: data.job_experience,
         job_employer_id: employerId,
+        job_description: data.job_description,
       };
 
       const res = await axios.post(
@@ -439,6 +441,7 @@ function Jobs() {
       job_skills: job.job_skills ?? "",
       job_education_type: job.job_education_type ?? "",
       job_education_detail: job.job_education_detail ?? "",
+      job_description: job.job_description ?? "",
     });
 
     // ================= STATE → CITY (AUTO SELECT) =================
@@ -502,6 +505,7 @@ function Jobs() {
         job_skills: data.job_skills,
         job_education_type: educationType,
         job_education_detail: educationDetail,
+        job_description: data.job_description,
       };
 
       const response = await axios.post(
@@ -631,25 +635,27 @@ function Jobs() {
                           >
                             {job.job_title}
                           </span>
-                          <ul className="dropdown-menu shadow">
-                            <li>
-                              <button
-                                className="dropdown-item"
-                                onClick={() => openEditJobModal(job)}
-                              >
-                                <i className="fas fa-edit me-2"></i> Edit
-                              </button>
-                            </li>
+                          {Number(role) === 100 && (
+                            <ul className="dropdown-menu shadow">
+                              <li>
+                                <button
+                                  className="dropdown-item"
+                                  onClick={() => openEditJobModal(job)}
+                                >
+                                  <i className="fas fa-edit me-2"></i> Edit
+                                </button>
+                              </li>
 
-                            <li>
-                              <button
-                                className="dropdown-item text-danger"
-                                onClick={() => handleDeleteClick(job.job_id)}
-                              >
-                                <i className="fas fa-trash me-2"></i>Delete
-                              </button>
-                            </li>
-                          </ul>
+                              <li>
+                                <button
+                                  className="dropdown-item text-danger"
+                                  onClick={() => handleDeleteClick(job.job_id)}
+                                >
+                                  <i className="fas fa-trash me-2"></i>Delete
+                                </button>
+                              </li>
+                            </ul>
+                          )}
                         </div>
                       </div>
                       <div className="fw-bold ">
@@ -682,25 +688,25 @@ function Jobs() {
                       <div className="fw-bold ">
                         Subcate :{" "}
                         <span className="text-dark fw-normal">
-                          {job.sc_name ?? null}
+                          {job.sc_name ?? "-"}
                         </span>
                       </div>
                       <div className="fw-bold ">
                         Subcate 1 :{" "}
                         <span className="text-dark fw-normal">
-                          {job.sc1_name ?? null}
+                          {job.sc1_name ?? "-"}
                         </span>
                       </div>
                       <div className="fw-bold ">
                         subcate 2 :{" "}
                         <span className="text-dark fw-normal">
-                          {job.sc2_name ?? null}
+                          {job.sc2_name ?? "-"}
                         </span>
                       </div>
                       <div className="fw-bold ">
                         subcate 3 :{" "}
                         <span className="text-dark fw-normal">
-                          {job.sc3_name ?? null}
+                          {job.sc3_name ?? "-"}
                         </span>
                       </div>
                     </td>
@@ -722,7 +728,7 @@ function Jobs() {
                       {job.job_status === "1" ? (
                         <span className="badge bg-success">Active</span>
                       ) : (
-                        <span className="badge bg-warning">Pending</span>
+                        <span className="badge bg-primary">Processing</span>
                       )}
                     </td>
                   </tr>
@@ -1152,6 +1158,21 @@ function Jobs() {
                   />
                   <span className="text-danger">
                     {addErrors.job_skills?.message}
+                  </span>
+                </div>
+
+                {/* Description */}
+                <div className="col-md-12 mb-2">
+                  <label className="form-label fw-semibold">Description</label>
+                  <textarea
+                    rows={5}
+                    {...addRegister("job_description")}
+                    className="form-control"
+                    placeholder="Enter Job Description"
+                  ></textarea>
+
+                  <span className="text-danger">
+                    {addErrors.job_description?.message}
                   </span>
                 </div>
               </div>
@@ -1587,6 +1608,21 @@ function Jobs() {
                   />
                   <span className="text-danger">
                     {editErrors.job_skills?.message}
+                  </span>
+                </div>
+
+                {/* Description */}
+                <div className="col-md-12 mb-2">
+                  <label className="form-label fw-semibold">Description</label>
+                  <textarea
+                    rows={5}
+                    {...editRegister("job_description")}
+                    className="form-control"
+                    placeholder="Enter Job Description"
+                  ></textarea>
+
+                  <span className="text-danger">
+                    {editErrors.job_description?.message}
                   </span>
                 </div>
               </div>

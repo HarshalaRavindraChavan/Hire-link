@@ -1026,7 +1026,7 @@ function Profile() {
                   <div className="col-md-6">
                     <label className="fw-semibold">Experience</label>
                     <input
-                      type="text"
+                      type="number"
                       name="can_experience"
                       className="form-control form-control-md"
                       placeholder="Experience"

@@ -12,7 +12,7 @@ function Contact() {
 
   // Pagination start
   const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 5;
+  const recordsPerPage = 100;
   const lastIndex = currentPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
 
@@ -93,8 +93,8 @@ function Contact() {
             </thead>
 
             <tbody>
-              {contacts.length > 0 ? (
-                contacts.map((c) => (
+              {records.length > 0 ? (
+                records.map((c) => (
                   <tr key={c.con_id} className="text-center align-middle">
                     <td>{c.con_id}</td>
 

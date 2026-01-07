@@ -91,7 +91,7 @@ function Users() {
 
   /* ================= PAGINATION ================= */
   const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 10;
+  const recordsPerPage = 100;
 
   const filteredUsers = users.filter((u) => String(u.user_id) !== "1");
 
@@ -152,7 +152,7 @@ function Users() {
     joindate: yup.date().required(),
     adharupload: yup.string().required("Aadhar upload required"),
     panupload: yup.string().required("PAN upload required"),
-    bankpassbook: yup.string().required(),
+    bankpassbook: yup.string().required("BackPassbook upload required"),
     experience: yup.string().required(),
     education_type: yup.string().required("Education Type is required"),
     education_detail: yup.string().required("Education Detail is required"),
@@ -242,6 +242,7 @@ function Users() {
     const resetRHF = () => {
       if (field === "user_aadhar_image") addSetValue("adharupload", "");
       if (field === "user_pan_image") addSetValue("panupload", "");
+      if (field === "user_bankpassbook") addSetValue("bankpassbook", "");
     };
 
     // ❌ file type check
@@ -307,6 +308,10 @@ function Users() {
           addSetValue("panupload", filename, { shouldValidate: true });
         }
 
+        if (field === "user_bankpassbook") {
+          addSetValue("bankpassbook", filename, { shouldValidate: true });
+        }
+
         toast.success("File uploaded successfully ✅");
       } else {
         toast.error("Upload failed ❌");
@@ -332,7 +337,7 @@ function Users() {
     state: yup.string().required(),
     city: yup.string().required(),
     joindate: yup.date().required(),
-    bankpassbook: yup.string().required(),
+    // bankpassbook: yup.string().required(),
     experience: yup.string().required(),
     education_type: yup.string().required("Education Type is required"),
     education_detail: yup.string().required("Education Detail is required"),
@@ -369,7 +374,7 @@ function Users() {
       address: user.user_address ?? "",
       state: user.user_state ?? "",
       joindate: user.user_joindate?.split("T")[0] ?? "",
-      bankpassbook: user.user_bankpassbook ?? "",
+      // bankpassbook: user.user_bankpassbook ?? "",
       experience: user.user_experience ?? "",
       role: user.user_role ?? "",
       menus: user.user_menu_id ? user.user_menu_id.split(",") : [],
@@ -412,7 +417,7 @@ function Users() {
         user_state: data.state,
         user_city: data.city,
         user_joindate: data.joindate,
-        user_bankpassbook: data.bankpassbook,
+        // user_bankpassbook: data.bankpassbook,
         user_experience: data.experience,
         user_education_type: data.education_type,
         user_education_detail: data.education_detail,
@@ -886,8 +891,27 @@ function Users() {
                   <p className="text-danger">{addErrors.panupload?.message}</p>
                 </div>
 
-                {/* Bank */}
+                {/* Back Upload */}
                 <div className="col-md-4">
+                  <label className="fw-semibold">
+                    BankPassbook Upload
+                    {User.user_bankpassbook && (
+                      <i className="fa-solid fa-circle-check text-success ms-2"></i>
+                    )}
+                  </label>
+                  <input
+                    type="file"
+                    className="form-control"
+                    onChange={(e) => uploadFile(e, "user_bankpassbook")}
+                  />
+                  <input type="hidden" {...addRegister("bankpassbook")} />
+                  <p className="text-danger">
+                    {addErrors.bankpassbook?.message}
+                  </p>
+                </div>
+
+                {/* Bank */}
+                {/* <div className="col-md-4">
                   <label className="fw-semibold">Bank Passbook</label>
                   <input
                     type="text"
@@ -898,7 +922,7 @@ function Users() {
                   <p className="text-danger">
                     {addErrors.bankpassbook?.message}
                   </p>
-                </div>
+                </div> */}
 
                 {/* Education Type */}
                 <div className="col-md-4">
@@ -1175,7 +1199,7 @@ function Users() {
                 </div>
 
                 {/* Bank */}
-                <div className="col-md-4">
+                {/* <div className="col-md-4">
                   <label className="fw-semibold">Bank Passbook</label>
                   <input
                     type="text"
@@ -1186,7 +1210,7 @@ function Users() {
                   <p className="text-danger">
                     {editErrors.bankpassbook?.message}
                   </p>
-                </div>
+                </div> */}
 
                 {/* Education Type */}
                 <div className="col-md-4">

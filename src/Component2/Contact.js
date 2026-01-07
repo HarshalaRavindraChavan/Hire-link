@@ -1,28 +1,56 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import "../Component2/css/Contacts.css"; // ✔ YOU ASKED TO ADD THIS
+import axios from "axios";
+import { useState } from "react";
 
 export default function Contact() {
+  const [loading, setLoading] = useState(false);
+
   const validationSchema = Yup.object({
-    name: Yup.string()
+    con_name: Yup.string()
       .required("Full Name is required")
       .min(3, "Minimum 3 characters"),
-    email: Yup.string().email("Invalid email").required("Email is required"),
-    phone: Yup.string()
+    con_email: Yup.string()
+      .email("Invalid email")
+      .required("Email is required"),
+    con_mobile: Yup.string()
       .matches(/^[0-9]{10}$/, "Enter 10 digit number")
       .required("Phone number is required"),
-    subject: Yup.string().required("Subject is required"),
-    message: Yup.string()
+    con_subject: Yup.string().required("Subject is required"),
+    con_message: Yup.string()
       .required("Message is required")
       .min(10, "Minimum 10 characters"),
   });
 
   const formik = useFormik({
-    initialValues: { name: "", email: "", phone: "", subject: "", message: "" },
+    initialValues: {
+      con_name: "",
+      con_email: "",
+      con_mobile: "",
+      con_subject: "",
+      con_message: "",
+    },
     validationSchema,
-    onSubmit: (values) => {
-      console.log(values);
-      alert("Message Sent Successfully!");
+    onSubmit: async (values, { resetForm }) => {
+      setLoading(true);
+      try {
+        const res = await axios.post(
+          "https://norealtor.in/hirelink_apis/candidate/insert/tbl_contact",
+          values
+        );
+
+        if (res.data?.status) {
+          alert("Message Sent Successfully ✅");
+          resetForm();
+        } else {
+          alert(res.data?.message || "Failed");
+        }
+      } catch (err) {
+        alert("Server Error ❌");
+      } finally {
+        setLoading(false);
+      }
     },
   });
 
@@ -107,11 +135,13 @@ export default function Contact() {
                 <input
                   type="text"
                   className="form-control"
-                  {...formik.getFieldProps("name")}
+                  {...formik.getFieldProps("con_name")}
                   placeholder="Enter Full Name"
                 />
-                {formik.touched.name && formik.errors.name && (
-                  <small className="text-danger">{formik.errors.name}</small>
+                {formik.touched.con_name && formik.errors.con_name && (
+                  <small className="text-danger">
+                    {formik.errors.con_name}
+                  </small>
                 )}
               </div>
 
@@ -121,11 +151,13 @@ export default function Contact() {
                 <input
                   type="email"
                   className="form-control"
-                  {...formik.getFieldProps("email")}
-                   placeholder="Enter Email Address"
+                  {...formik.getFieldProps("con_email")}
+                  placeholder="Enter Email Address"
                 />
-                {formik.touched.email && formik.errors.email && (
-                  <small className="text-danger">{formik.errors.email}</small>
+                {formik.touched.con_email && formik.errors.con_email && (
+                  <small className="text-danger">
+                    {formik.errors.con_email}
+                  </small>
                 )}
               </div>
 
@@ -135,11 +167,13 @@ export default function Contact() {
                 <input
                   type="text"
                   className="form-control"
-                  {...formik.getFieldProps("phone")}
-                   placeholder="Enter Mobile Number"
+                  {...formik.getFieldProps("con_mobile")}
+                  placeholder="Enter Mobile Number"
                 />
-                {formik.touched.phone && formik.errors.phone && (
-                  <small className="text-danger">{formik.errors.phone}</small>
+                {formik.touched.con_mobile && formik.errors.con_mobile && (
+                  <small className="text-danger">
+                    {formik.errors.con_mobile}
+                  </small>
                 )}
               </div>
 
@@ -149,11 +183,13 @@ export default function Contact() {
                 <input
                   type="text"
                   className="form-control"
-                  {...formik.getFieldProps("subject")}
-                   placeholder="Enter Subject"
+                  {...formik.getFieldProps("con_subject")}
+                  placeholder="Enter Subject"
                 />
-                {formik.touched.subject && formik.errors.subject && (
-                  <small className="text-danger">{formik.errors.subject}</small>
+                {formik.touched.con_subject && formik.errors.con_subject && (
+                  <small className="text-danger">
+                    {formik.errors.con_subject}
+                  </small>
                 )}
               </div>
 
@@ -163,16 +199,22 @@ export default function Contact() {
                 <textarea
                   rows="4"
                   className="form-control"
-                  {...formik.getFieldProps("message")}
-                   placeholder="Enter Your Message"
+                  {...formik.getFieldProps("con_message")}
+                  placeholder="Enter Your Message"
                 ></textarea>
-                {formik.touched.message && formik.errors.message && (
-                  <small className="text-danger">{formik.errors.message}</small>
+                {formik.touched.con_message && formik.errors.con_message && (
+                  <small className="text-danger">
+                    {formik.errors.con_message}
+                  </small>
                 )}
               </div>
 
-              <button type="submit" className="btn btn-contact w-100">
-                Send Message ✉️
+              <button
+                type="submit"
+                className="btn btn-contact w-100"
+                disabled={loading}
+              >
+                {loading ? "Sending..." : "Send Message ✉️"}
               </button>
             </form>
           </div>

@@ -2,14 +2,20 @@ import React, { useState } from "react";
 
 function Verify() {
   const [code, setCode] = useState("");
-  const phoneNumber = "9876543248"; // Dynamic value API किंवा Props मधून येऊ शकतो
+  const email = "harshal@gmail.com";
 
-  // Masking function (hide all numbers except last 3)
-  const maskPhoneNumber = (phone) => {
-    if (!phone) return "";
-    const lastThree = phone.slice(-3);
-    const masked = "X".repeat(phone.length - 3);
-    return masked + lastThree;
+  const maskEmail = (email) => {
+    if (!email) return "";
+
+    const [name, domain] = email.split("@");
+    if (!domain) return email;
+
+    const maskedName =
+      name.length <= 2
+        ? name[0] + "*"
+        : name.slice(0, 3) + "*".repeat(name.length - 2);
+
+    return `${maskedName}@${domain}`;
   };
 
   const handleSubmit = (e) => {
@@ -20,16 +26,15 @@ function Verify() {
   return (
     <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
       <div className="card shadow p-4" style={{ width: "420px" }}>
-        
         <div className="text-center mb-3">
-          <h2 className="fw-bold text-primary">Hirelink</h2>
+          <h2 className="fw-bold text-success">Hirelink</h2>
         </div>
 
-        <h5 className="text-center fw-bold mb-3">2-Step Verification</h5>
+        <h5 className="text-center fw-bold mb-3">Email Verification</h5>
 
-        <p className="text-center text-secondary">
+        <p className="text-center" style={{ color: "#928f8fff" }}>
           Your verification code has been sent to: <br />
-          <b>{maskPhoneNumber(phoneNumber)}</b>
+          <b>{maskEmail(email)}</b>
         </p>
 
         <form onSubmit={handleSubmit}>
@@ -43,25 +48,30 @@ function Verify() {
             required
           />
 
-          <p className="small text-secondary">This code will expire in 10 minutes.</p>
+          <p className="small text-dark">
+            This code will expire in 10 minutes.
+          </p>
 
-          <button className="btn btn-primary w-100 fw-semibold">Submit</button>
+          <button className="btn btn-success w-100 fw-semibold">Submit</button>
         </form>
 
         <div className="text-center mt-3">
-          <button className="btn btn-link fw-semibold text-decoration-none">
+          <button
+            className="btn btn-link fw-semibold text-decoration-none"
+            style={{ color: "#928f8fff" }}
+          >
             Send new code
           </button>
         </div>
 
-        <div className="text-center mt-2">
+        {/* <div className="text-center mt-2">
           <button className="btn btn-link text-decoration-none small">
             Don't have access to this phone number?
           </button>
-        </div>
+        </div> */}
 
-        <footer className="text-center mt-3 small text-secondary">
-          © 2025 Hirelink 
+        <footer className="text-center mt-3 small text-warning">
+          © {new Date().getFullYear()} Hirelink
         </footer>
       </div>
     </div>

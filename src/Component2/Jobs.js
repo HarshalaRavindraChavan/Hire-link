@@ -286,7 +286,7 @@ function Jobs() {
           {/* ========== RIGHT JOB DETAILS ========== */}
           {!isMobile && selectedJob && (
             <div className="col-12 col-md-8 job-detail mb-5">
-              <div className="job-header pt-3 pb-3">
+              <div className="job-header pt-3 pb-1">
                 <button
                   className="save-btn"
                   onClick={() => toggleSaveJob(selectedJob.job_id)}

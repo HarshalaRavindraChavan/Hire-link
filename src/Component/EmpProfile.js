@@ -100,7 +100,7 @@ const EmpProfile = () => {
       // city: Yup.string().required("City is required"),
       // state: Yup.string().required("State is required"),
 
-      website: Yup.string().url("Invalid URL").nullable(),
+      website: Yup.string().url("Invalid URL").required("Website is required"),
       linkedin: Yup.string().url("Invalid URL").nullable(),
       facebook: Yup.string().url("Invalid URL").nullable(),
       instagram: Yup.string().url("Invalid URL").nullable(),

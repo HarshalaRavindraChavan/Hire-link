@@ -26,7 +26,7 @@ function Applicant() {
 
   //==========Pagination=========================
   const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 5;
+  const recordsPerPage = 100;
   const lastIndex = currentPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
   const records = users.slice(firstIndex, lastIndex);

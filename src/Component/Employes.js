@@ -37,7 +37,7 @@ function Employes() {
 
   // PAGINATION
   const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 5;
+  const recordsPerPage = 100;
 
   const lastIndex = currentPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
@@ -76,25 +76,20 @@ function Employes() {
 
   const validationSchema = Yup.object().shape({
     emp_name: Yup.string().required("Full name is required"),
-
     emp_email: Yup.string()
       .email("Invalid email")
       .required("Email is required"),
     emp_mobile: Yup.string()
       .matches(/^[0-9]{10}$/, "Enter valid 10-digit mobile number")
       .required("Mobile number is required"),
-
     emp_password: Yup.string()
       .min(6, "Password must be 6 characters")
       .required("Password is required"),
-
     emp_companyname: Yup.string().required("Company name is required"),
-
     emp_location: Yup.string().required("Location is required"),
-
     emp_city: Yup.string().required("City is required"),
-
     emp_state: Yup.string().required("State is required"),
+    website: Yup.string().url("Invalid URL").required("Website is required"),
   });
 
   // 2. React Hook Form
@@ -366,15 +361,15 @@ function Employes() {
                     {/* Company Details */}
                     <td style={{ width: "30%" }}>
                       <b>Company:</b> {emp.emp_companyname} <br />
-                      <b>Website:</b> {emp.emp_website || NaN}
+                      <b>Website:</b> {emp.emp_website || "-"}
                     </td>
 
                     {/* Social Media */}
                     <td style={{ width: "25%" }}>
-                      <b>LinkedIn:</b> {emp.emp_linkedin || NaN} <br />
-                      <b>Facebook:</b> {emp.emp_facebook || NaN} <br />
-                      <b>Instagram:</b> {emp.emp_instagram || NaN} <br />
-                      <b>YouTube:</b> {emp.emp_youtube || NaN}
+                      <b>LinkedIn:</b> {emp.emp_linkedin || "-"} <br />
+                      <b>Facebook:</b> {emp.emp_facebook || "-"} <br />
+                      <b>Instagram:</b> {emp.emp_instagram || "-"} <br />
+                      <b>YouTube:</b> {emp.emp_youtube || "-"}
                     </td>
 
                     {/* Registration Date */}

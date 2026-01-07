@@ -6,6 +6,7 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
 import Pagination from "./commenuse/Pagination";
+import { BASE_URL } from "../config/constants";
 
 function Applicant() {
   // tital of tab
@@ -45,14 +46,14 @@ function Applicant() {
       // ADMIN / SUBADMIN / BACKEND → ALL DATA
       if (["1", "2", "3", "4"].includes(role)) {
         res = await axios.get(
-          "https://norealtor.in/hirelink_apis/admin/getdata/tbl_applied"
+          `${BASE_URL}hirelink_apis/admin/getdata/tbl_applied`
         );
       }
 
       // EMPLOYER → ONLY HIS DATA
       if (Number(role) === 100) {
         res = await axios.get(
-          `https://norealtor.in/hirelink_apis/employer/getdatawhere/tbl_applied/apl_employer_id/${employerId}`
+          `${BASE_URL}hirelink_apis/employer/getdatawhere/tbl_applied/apl_employer_id/${employerId}`
         );
       }
 
@@ -113,7 +114,7 @@ function Applicant() {
       };
 
       const res = await axios.post(
-        "https://norealtor.in/hirelink_apis/admin/insert/tbl_interview",
+        `${BASE_URL}hirelink_apis/admin/insert/tbl_interview`,
         payload
       );
 

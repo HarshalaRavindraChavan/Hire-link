@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Pagination from "./commenuse/Pagination";
 import axios from "axios";
+import { BASE_URL } from "../config/constants";
+
 
 function Contact() {
   // Correct way: set tab title
@@ -29,7 +31,7 @@ function Contact() {
   const fetchContact = async () => {
     try {
       const res = await axios.get(
-        "https://norealtor.in/hirelink_apis/admin/getdata/tbl_contact"
+        `${BASE_URL}hirelink_apis/admin/getdata/tbl_contact`,
       );
 
       if (res.data.status === true) {

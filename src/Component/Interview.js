@@ -4,6 +4,8 @@ import Pagination from "./commenuse/Pagination";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
 import { toast, ToastContainer } from "react-toastify";
 import { useForm } from "react-hook-form";
+import { BASE_URL } from "../config/constants";
+
 
 function Interview() {
   useEffect(() => {
@@ -58,7 +60,7 @@ function Interview() {
     try {
       setLoading(true);
       const res = await axios.get(
-        "https://norealtor.in/hirelink_apis/admin/getdata/tbl_interview"
+        `${BASE_URL}hirelink_apis/admin/getdata/tbl_interview`,
       );
       if (res.data.status) {
         setInterviews(res.data.data);
@@ -85,7 +87,7 @@ function Interview() {
   const confirmDelete = async () => {
     try {
       const res = await axios.get(
-        `https://norealtor.in/hirelink_apis/admin/deletedata/tbl_interview/itv_id/${deleteId}`
+        `${BASE_URL}hirelink_apis/admin/deletedata/tbl_interview/itv_id/${deleteId}`
       );
       if (res.data.status) {
         toast.success("Interview deleted successfully");
@@ -139,7 +141,7 @@ function Interview() {
       };
 
       const res = await axios.post(
-        `https://norealtor.in/hirelink_apis/admin/updatedata/tbl_interview/itv_id/${editInterviewId}`,
+        `${BASE_URL}hirelink_apis/admin/updatedata/tbl_interview/itv_id/${editInterviewId}`,
         payload,
         { headers: { "Content-Type": "application/json" } }
       );

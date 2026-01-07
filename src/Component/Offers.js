@@ -7,6 +7,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Pagination from "./commenuse/Pagination";
 import { toast, ToastContainer } from "react-toastify";
+import { BASE_URL } from "../config/constants";
+
 
 function Offer() {
   // tital of tab
@@ -27,7 +29,7 @@ function Offer() {
   const fetchOffers = async () => {
     try {
       const res = await axios.get(
-        "https://norealtor.in/hirelink_apis/admin/getdata/tbl_offer"
+        `${BASE_URL}hirelink_apis/admin/getdata/tbl_offer`,
       );
 
       if (res.data.status === true) {
@@ -66,7 +68,7 @@ function Offer() {
   const confirmDelete = async () => {
     try {
       const res = await axios.get(
-        `https://norealtor.in/hirelink_apis/admin/deletedata/tbl_offer/offer_id/${deleteId}`
+        `${BASE_URL}hirelink_apis/admin/deletedata/tbl_offer/offer_id/${deleteId}`
       );
 
       if (res.data.status === true) {
@@ -158,7 +160,7 @@ function Offer() {
       };
 
       const res = await axios.post(
-        "https://norealtor.in/hirelink_apis/admin/insert/tbl_offer",
+        `${BASE_URL}hirelink_apis/admin/insert/tbl_offer`,
         payload
       );
 
@@ -236,7 +238,7 @@ function Offer() {
       };
 
       const response = await axios.post(
-        `https://norealtor.in/hirelink_apis/admin/updatedata/tbl_offer/offer_id/${editOfferId}`,
+        `${BASE_URL}hirelink_apis/admin/updatedata/tbl_offer/offer_id/${editOfferId}`,
         payload
       );
 

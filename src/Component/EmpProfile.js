@@ -3,6 +3,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
+import { BASE_URL } from "../config/constants";
+
 
 const EmpProfile = () => {
   const [activeTab, setActiveTab] = useState("profile");
@@ -20,7 +22,7 @@ const EmpProfile = () => {
   const fetchStates = async () => {
     try {
       const res = await axios.get(
-        "https://norealtor.in/hirelink_apis/candidate/getdata/tbl_state"
+        `${BASE_URL}hirelink_apis/candidate/getdata/tbl_state`,
       );
 
       if (res.data?.status) {
@@ -34,7 +36,7 @@ const EmpProfile = () => {
   const fetchCities = async (stateId) => {
     try {
       const res = await axios.get(
-        `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_city/city_state_id/${stateId}`
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_city/city_state_id/${stateId}`
       );
 
       if (res.data?.status) {
@@ -132,7 +134,7 @@ const EmpProfile = () => {
         }
 
         const res = await axios.post(
-          `https://norealtor.in/hirelink_apis/employer/updatedata/tbl_employer/emp_id/${employer?.emp_id}`,
+          `${BASE_URL}hirelink_apis/employer/updatedata/tbl_employer/emp_id/${employer?.emp_id}`,
           payload
         );
 
@@ -192,7 +194,7 @@ const EmpProfile = () => {
 
     try {
       const res = await axios.post(
-        "https://norealtor.in/hirelink_apis/admin/fileupload",
+        `${BASE_URL}hirelink_apis/admin/fileupload`,
         formData
       );
 
@@ -244,7 +246,7 @@ const EmpProfile = () => {
       };
 
       await axios.post(
-        `https://norealtor.in/hirelink_apis/employer/updatedata/tbl_employer/emp_id/${empId}`,
+        `${BASE_URL}hirelink_apis/employer/updatedata/tbl_employer/emp_id/${empId}`,
         payload,
         {
           headers: {

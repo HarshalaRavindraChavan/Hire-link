@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { BASE_URL } from "../config/constants";
+
 
 function Verify() {
   const [code, setCode] = useState("");

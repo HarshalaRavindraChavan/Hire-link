@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { BASE_URL } from "../config/constants";
+
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -47,25 +49,25 @@ function Dashboard() {
           users,
         ] = await Promise.all([
           axios.get(
-            "https://norealtor.in/hirelink_apis/admin/countdata/tbl_job"
+            `${BASE_URL}hirelink_apis/admin/countdata/tbl_job`,
           ),
           axios.get(
-            "https://norealtor.in/hirelink_apis/admin/countdata/tbl_candidate"
+            `${BASE_URL}hirelink_apis/admin/countdata/tbl_candidate`,
           ),
           axios.get(
-            "https://norealtor.in/hirelink_apis/admin/countdata/tbl_applied"
+            `${BASE_URL}hirelink_apis/admin/countdata/tbl_applied`,
           ),
           axios.get(
-            "https://norealtor.in/hirelink_apis/admin/countdata/tbl_interview"
+            `${BASE_URL}hirelink_apis/admin/countdata/tbl_interview`,
           ),
           axios.get(
-            "https://norealtor.in/hirelink_apis/admin/countdata/tbl_employer"
+            `${BASE_URL}hirelink_apis/admin/countdata/tbl_employer`,
           ),
           axios.get(
-            "https://norealtor.in/hirelink_apis/admin/countdata/tbl_contact"
+            `${BASE_URL}hirelink_apis/admin/countdata/tbl_contact`,
           ),
           axios.get(
-            "https://norealtor.in/hirelink_apis/admin/countdata/tbl_user"
+            `${BASE_URL}hirelink_apis/admin/countdata/tbl_user`,
           ),
         ]);
 

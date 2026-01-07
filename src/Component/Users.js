@@ -6,6 +6,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Pagination from "./commenuse/Pagination";
 import { toast } from "react-toastify";
+import { BASE_URL } from "../config/constants";
+
 
 function Users() {
   useEffect(() => {
@@ -34,7 +36,7 @@ function Users() {
   const fetchStates = async () => {
     try {
       const res = await axios.get(
-        "https://norealtor.in/hirelink_apis/candidate/getdata/tbl_state"
+        `${BASE_URL}hirelink_apis/candidate/getdata/tbl_state`,
       );
 
       if (res.data?.status) {
@@ -48,7 +50,7 @@ function Users() {
   const fetchCities = async (stateId, selectedCity = null) => {
     try {
       const res = await axios.get(
-        `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_city/city_state_id/${stateId}`
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_city/city_state_id/${stateId}`
       );
 
       if (res.data?.status) {
@@ -79,7 +81,7 @@ function Users() {
   const fetchUsers = async () => {
     try {
       const res = await axios.get(
-        "https://norealtor.in/hirelink_apis/admin/getdata/tbl_user"
+    `${BASE_URL}hirelink_apis/admin/getdata/tbl_user`,
       );
       if (res.data.status === true) {
         setUsers(res.data.data);
@@ -112,7 +114,7 @@ function Users() {
   const confirmDelete = async () => {
     try {
       const res = await axios.get(
-        `https://norealtor.in/hirelink_apis/admin/deletedata/tbl_user/user_id/${deleteId}`
+        `${BASE_URL}hirelink_apis/admin/deletedata/tbl_user/user_id/${deleteId}`
       );
 
       if (res.data.status === true) {
@@ -202,7 +204,7 @@ function Users() {
 
     try {
       const res = await axios.post(
-        "https://norealtor.in/hirelink_apis/admin/insert/tbl_user",
+        `${BASE_URL}hirelink_apis/admin/insert/tbl_user`,
         payload
       );
 
@@ -286,7 +288,7 @@ function Users() {
 
     try {
       const res = await axios.post(
-        "https://norealtor.in/hirelink_apis/admin/fileupload",
+        `${BASE_URL}hirelink_apis/admin/fileupload`,
         formData
       );
 
@@ -429,7 +431,7 @@ function Users() {
       };
 
       const response = await axios.post(
-        `https://norealtor.in/hirelink_apis/admin/updatedata/tbl_user/user_id/${editUserId}`,
+        `${BASE_URL}hirelink_apis/admin/updatedata/tbl_user/user_id/${editUserId}`,
         payload
       );
 

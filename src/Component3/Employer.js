@@ -318,15 +318,17 @@ function Employer() {
             <div className="col-md-6 col-lg-4">
               <div className="pricing-card h-100">
                 <h6 className="text-uppercase small text-muted mb-2">
-                  Starter
+                  New Employer
                 </h6>
-                <h3 className="mb-3">Free</h3>
-                <p className="small text-muted">
+                <h3 className="mb-3">
+                  ₹5,000
+                </h3>
+                {/* <p className="small text-muted">
                   Ideal for small businesses hiring occasionally.
-                </p>
+                </p> */}
                 <ul className="list-unstyled small mb-4">
                   <li>
-                    <i className="bi bi-check2 me-2"></i>Up to 3 active jobs
+                    <i className="bi bi-check2 me-2"></i>Unlimited Job Creat
                   </li>
                   <li>
                     <i className="bi bi-check2 me-2"></i>Basic candidate filters

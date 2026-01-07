@@ -1,5 +1,6 @@
 import React from "react";
 import "../Component3/css/Footer.css";
+import { NavLink } from "react-router-dom";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -38,26 +39,20 @@ export default function Footer() {
               <h5 className="fw-bold text-white mb-3">Hirelink</h5>
               <ul className="footer-links list-unstyled">
                 <li>
-                  <a href="#">About us</a>
+                  <NavLink to="/jobs">About Us</NavLink>
                 </li>
                 <li>
-                  <a href="#">Press</a>
+                  <NavLink to="/jobs">Terms & Condition</NavLink>
                 </li>
                 <li>
-                  <a href="#">Security</a>
+                  <NavLink to="/jobs">Privacy & Policies</NavLink>
                 </li>
-                <li>
-                  <a href="#">Terms</a>
-                </li>
-                <li>
-                  <a href="#">Privacy & Policies</a>
-                </li>
-                <li>
+                {/* <li>
                   <a href="#">Careers</a>
-                </li>
-                <li>
+                </li> */}
+                {/* <li>
                   <a href="#">Sitemap</a>
-                </li>
+                </li> */}
               </ul>
             </div>
 
@@ -66,9 +61,9 @@ export default function Footer() {
               <h5 className="fw-bold text-white mb-3">Employers</h5>
               <ul className="footer-links list-unstyled">
                 <li>
-                  <a href="#">Post a job</a>
+                  <NavLink to="/employer">Post a job</NavLink>
                 </li>
-                <li>
+                {/* <li>
                   <a href="#">Products</a>
                 </li>
                 <li>
@@ -76,9 +71,9 @@ export default function Footer() {
                 </li>
                 <li>
                   <a href="#">Insights</a>
-                </li>
+                </li> */}
                 <li>
-                  <a href="#">FAQ</a>
+                  <NavLink to="/FAQ">FAQ</NavLink>
                 </li>
               </ul>
             </div>

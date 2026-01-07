@@ -3,6 +3,7 @@ import "../Component2/css/Profile.css";
 import { ToastContainer } from "react-toastify";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
+import { BASE_URL } from "../config/constants";
 
 function JobsSAI() {
   const [activeTab, setActiveTab] = useState("saved");
@@ -20,13 +21,13 @@ function JobsSAI() {
     try {
       const [savedRes, appliedRes, interviewRes] = await Promise.all([
         axios.get(
-          `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_save_job/save_candidate_id/${candidateId}`
+          `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_save_job/save_candidate_id/${candidateId}`
         ),
         axios.get(
-          `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_applied/apl_candidate_id/${candidateId}`
+          `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_applied/apl_candidate_id/${candidateId}`
         ),
         axios.get(
-          `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_interview/itv_candidate_id/${candidateId}`
+          `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_interview/itv_candidate_id/${candidateId}`
         ),
       ]);
 
@@ -59,7 +60,7 @@ function JobsSAI() {
       setLoading(true);
 
       const res = await axios.get(
-        `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_save_job/save_candidate_id/${candidateId}`
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_save_job/save_candidate_id/${candidateId}`
       );
 
       console.log("Saved API:", res.data);
@@ -86,7 +87,7 @@ function JobsSAI() {
       setAppliedLoading(true);
 
       const res = await axios.get(
-        `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_applied/apl_candidate_id/${candidateId}`
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_applied/apl_candidate_id/${candidateId}`
       );
 
       console.log("Applied API:", res.data);
@@ -113,7 +114,7 @@ function JobsSAI() {
       setInterviewLoading(true);
 
       const res = await axios.get(
-        `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_interview/itv_candidate_id/${candidateId}`
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_interview/itv_candidate_id/${candidateId}`
       );
 
       if (res.data.status) {

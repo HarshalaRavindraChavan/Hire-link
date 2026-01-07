@@ -5,6 +5,7 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 // import { resume } from "react-dom/server";
 import JobsSAI from "./JobsSAI";
+import { BASE_URL } from "../config/constants";
 
 function Profile() {
   // ================= CATEGORY STATES =================
@@ -62,7 +63,7 @@ function Profile() {
   const fetchStates = async () => {
     try {
       const res = await axios.get(
-        "https://norealtor.in/hirelink_apis/candidate/getdata/tbl_state"
+        `${BASE_URL}hirelink_apis/candidate/getdata/tbl_state`,
       );
 
       if (res.data?.status) {
@@ -76,7 +77,7 @@ function Profile() {
   const fetchCities = async (stateId) => {
     try {
       const res = await axios.get(
-        `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_city/city_state_id/${stateId}`
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_city/city_state_id/${stateId}`
       );
 
       if (res.data?.status) {
@@ -120,7 +121,7 @@ function Profile() {
   const fetchCategories = async () => {
     try {
       const res = await axios.get(
-        "https://norealtor.in/hirelink_apis/candidate/getdata/tbl_main_category"
+        `${BASE_URL}hirelink_apis/candidate/getdata/tbl_main_category`
       );
       setCategories(res.data.data || []);
     } catch (err) {
@@ -141,7 +142,7 @@ function Profile() {
   const fetchSubCategories = async (mc_id) => {
     try {
       const res = await axios.get(
-        `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_subcategory/sc_mc_id/${mc_id}`
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_subcategory/sc_mc_id/${mc_id}`
       );
       setSubCategories(res.data.data || []);
     } catch (err) {
@@ -162,7 +163,7 @@ function Profile() {
   const fetchSubCat1 = async (sc_id) => {
     try {
       const res = await axios.get(
-        `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_subcategory_1/sc1_sc_id/${sc_id}`
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_subcategory_1/sc1_sc_id/${sc_id}`
       );
       setSubCat1(res.data.data || []);
     } catch (err) {
@@ -183,7 +184,7 @@ function Profile() {
   const fetchSubCat2 = async (sc1_id) => {
     try {
       const res = await axios.get(
-        `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_subcategory_2/sc2_sc1_id/${sc1_id}`
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_subcategory_2/sc2_sc1_id/${sc1_id}`
       );
       setSubCat2(res.data.data || []);
     } catch (err) {
@@ -204,7 +205,7 @@ function Profile() {
   const fetchSubCat3 = async (sc2_id) => {
     try {
       const res = await axios.get(
-        `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_subcategory_3/sc3_sc2_id/${sc2_id}`
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_subcategory_3/sc3_sc2_id/${sc2_id}`
       );
       setSubCat3(res.data.data || []);
     } catch (err) {
@@ -306,7 +307,7 @@ function Profile() {
 
     try {
       const response = await axios.post(
-        `https://norealtor.in/hirelink_apis/candidate/updatedata/tbl_candidate/can_id/${candidate.can_id}`,
+        `${BASE_URL}hirelink_apis/candidate/updatedata/tbl_candidate/can_id/${candidate.can_id}`,
         {
           can_experience: candidate.can_experience,
           can_skill: candidate.can_skill,
@@ -428,7 +429,7 @@ function Profile() {
 
     try {
       const res = await axios.post(
-        "https://norealtor.in/hirelink_apis/candidate/fileupload",
+        `${BASE_URL}hirelink_apis/candidate/fileupload`,
         formData
       );
 
@@ -471,7 +472,7 @@ function Profile() {
 
     try {
       const response = await axios.post(
-        "https://norealtor.in/hirelink_apis/candidate/change-password",
+      `${BASE_URL}hirelink_apis/candidate/change-password`,
         {
           candidate_id: candidate.can_id, // ✅ FIXED
           current_password: currentPassword,

@@ -6,6 +6,7 @@ import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast, ToastContainer } from "react-toastify";
+import { BASE_URL } from "../config/constants";
 
 function Signin() {
   const navigate = useNavigate();
@@ -56,7 +57,7 @@ function Signin() {
 
         if (activeRole === "Candidate") {
           url =
-            "https://norealtor.in/hirelink_apis/candidate/signin/tbl_candidate";
+            `${BASE_URL}hirelink_apis/candidate/signin/tbl_candidate`;
 
           payload = {
             can_email: values.email,
@@ -64,7 +65,7 @@ function Signin() {
           };
         } else {
           url =
-            "https://norealtor.in/hirelink_apis/employer/signin/tbl_employer";
+            `${BASE_URL}hirelink_apis/employer/signin/tbl_employer`;
 
           payload = {
             emp_email: values.email,

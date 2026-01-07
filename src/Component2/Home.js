@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import JobSearchBar from "./JobSearchBar";
+import { BASE_URL } from "../config/constants";
 
 function Home() {
   const [jobs, setJobs] = useState([]);
@@ -12,7 +13,7 @@ function Home() {
     document.title = "Welcome To Hirelink";
 
     axios
-      .get("https://norealtor.in/hirelink_apis/candidate/getdata/tbl_job")
+      .get(`${BASE_URL}hirelink_apis/candidate/getdata/tbl_job`)
       .then((res) => {
         if (res.data.status === "success") {
           setJobs(res.data.data);

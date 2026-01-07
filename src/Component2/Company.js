@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../Component2/css/Company.css";
 
+
 function Company() {
   useState(() => {
     document.title = "Hirelink | Companies Review";

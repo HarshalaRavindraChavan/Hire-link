@@ -3,8 +3,6 @@ import "../Component3/css/Footer.css";
 import { NavLink } from "react-router-dom";
 
 export default function Footer() {
-  const year = new Date().getFullYear();
-
   return (
     <footer className="footer pt-5 pb-2">
       <div className="row mb-4 ">
@@ -39,10 +37,10 @@ export default function Footer() {
               <h5 className="fw-bold text-white mb-3">Hirelink</h5>
               <ul className="footer-links list-unstyled">
                 <li>
-                  <NavLink to="/jobs">About Us</NavLink>
+                  <NavLink to="/about">About Us</NavLink>
                 </li>
                 <li>
-                  <NavLink to="/jobs">Terms & Condition</NavLink>
+                  <NavLink to="/teams&condition">Terms & Condition</NavLink>
                 </li>
                 <li>
                   <NavLink to="/jobs">Privacy & Policies</NavLink>
@@ -61,7 +59,7 @@ export default function Footer() {
               <h5 className="fw-bold text-white mb-3">Employers</h5>
               <ul className="footer-links list-unstyled">
                 <li>
-                  <NavLink to="/employer">Post a job</NavLink>
+                  <NavLink to="/jobs">Post a job</NavLink>
                 </li>
                 {/* <li>
                   <a href="#">Products</a>
@@ -106,7 +104,8 @@ export default function Footer() {
       <hr style={{ borderColor: "white" }} />
 
       <div className="text-center py-3 text-white small">
-        © {year} · Esenceweb IT | All Rights Reserved
+        © {new Date().getFullYear()} · Hirelinkinfo.com || All Rights Reserved
+        || Design By <a href="https://www.esenceweb.com/">Ensenceweb IT</a>
         <div className="social-icons mt-2">
           <a href="#">
             <i className="bi bi-facebook"></i>

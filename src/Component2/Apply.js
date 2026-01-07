@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import { BASE_URL } from "../config/constants";
 
 function Apply() {
   const location = useLocation();
@@ -42,7 +43,7 @@ function Apply() {
 
     try {
       const res = await axios.post(
-        "https://norealtor.in/hirelink_apis/admin/insert/tbl_applied",
+        `${BASE_URL}hirelink_apis/admin/insert/tbl_applied`,
         {
           apl_candidate_id,
           apl_job_id,

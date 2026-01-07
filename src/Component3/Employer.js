@@ -320,27 +320,23 @@ function Employer() {
                 <h6 className="text-uppercase small text-muted mb-2">
                   New Employer
                 </h6>
-                <h3 className="mb-3">
-                  ₹5,000
-                </h3>
+                <h3 className="mb-3">₹5,000</h3>
                 {/* <p className="small text-muted">
                   Ideal for small businesses hiring occasionally.
                 </p> */}
                 <ul className="list-unstyled small mb-4">
                   <li>
-                    <i className="bi bi-check2 me-2"></i>Unlimited Job Creat
+                    <i className="bi bi-check2 me-2"></i>Unlimited job post
                   </li>
                   <li>
-                    <i className="bi bi-check2 me-2"></i>Basic candidate filters
+                    <i className="bi bi-check2 me-2"></i>Advanced filters &amp;
+                    tags
                   </li>
                   <li>
                     <i className="bi bi-check2 me-2"></i>Email support
                   </li>
                 </ul>
-                <a
-                  href="#get-started"
-                  className="btn btn-outline-primary w-100"
-                >
+                <a href="" className="btn btn-outline-primary w-100">
                   Start for free
                 </a>
               </div>
@@ -348,26 +344,26 @@ function Employer() {
 
             {/* <!-- Recommended --> */}
             <div className="col-md-6 col-lg-4">
-              <div className="pricing-card h-100 pricing-featured">
-                <span
+              <div className="pricing-card h-100 ">
+                {/* <span
                   className="badge badge-top"
                   style={{ fontWeight: "bold" }}
                 >
                   Most popular
-                </span>
-                <h6 className="text-uppercase small text-muted mb-2">Growth</h6>
-                <h3 className="mb-3">
-                  ₹4,999 <span className="fs-6 text-muted">/ month</span>
-                </h3>
-                <p className="small text-muted">
+                </span> */}
+                <h6 className="text-uppercase small text-muted mb-2">
+                  Extend Employer
+                </h6>
+                <h3 className="mb-3">₹2,500</h3>
+                {/* <p className="small text-muted">
                   For teams that need to hire consistently.
-                </p>
+                </p> */}
                 <ul className="list-unstyled small mb-4">
                   <li>
                     <i className="bi bi-check2 me-2"></i>Unlimited job posts
                   </li>
                   <li>
-                    <i className="bi bi-check2 me-2"></i>Boosted job visibility
+                    <i className="bi bi-check2 me-2"></i>2 Access Employer
                   </li>
                   <li>
                     <i className="bi bi-check2 me-2"></i>Advanced filters &amp;
@@ -392,16 +388,15 @@ function Employer() {
             <div className="col-md-6 col-lg-4">
               <div className="pricing-card h-100">
                 <h6 className="text-uppercase small text-muted mb-2">
-                  Enterprise
+                  Resume Download
                 </h6>
-                <h3 className="mb-3">Let’s talk</h3>
-                <p className="small text-muted">
+                <h3 className="mb-3">₹60 </h3>
+                {/* <p className="small text-muted">
                   For large organisations with custom needs.
-                </p>
+                </p> */}
                 <ul className="list-unstyled small mb-4">
                   <li>
-                    <i className="bi bi-check2 me-2"></i>Custom contracts &amp;
-                    SLAs
+                    <i className="bi bi-check2 me-2"></i>Par resume download
                   </li>
                   <li>
                     <i className="bi bi-check2 me-2"></i>Dedicated account
@@ -411,9 +406,9 @@ function Employer() {
                     <i className="bi bi-check2 me-2"></i>Tailored integrations
                   </li>
                 </ul>
-                <a href="#contact" className="btn btn-outline-primary w-100">
+                {/* <a href="#contact" className="btn btn-outline-primary w-100">
                   Contact sales
-                </a>
+                </a> */}
               </div>
             </div>
           </div>

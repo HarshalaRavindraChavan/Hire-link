@@ -4,6 +4,7 @@ import "../Component2/css/Contacts.css"; // ✔ YOU ASKED TO ADD THIS
 import axios from "axios";
 import { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
+import { BASE_URL } from "../config/constants";
 
 export default function Contact() {
   const [loading, setLoading] = useState(false);
@@ -37,7 +38,7 @@ export default function Contact() {
       setLoading(true);
       try {
         const res = await axios.post(
-          "https://norealtor.in/hirelink_apis/candidate/insert/tbl_contact",
+          `${BASE_URL}hirelink_apis/candidate/insert/tbl_contact`,
           values
         );
 

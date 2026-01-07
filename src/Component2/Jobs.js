@@ -4,6 +4,7 @@ import JobSearchBar from "./JobSearchBar";
 import "../Component2/css/Jobs.css";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import { BASE_URL } from "../config/constants";
 
 function Jobs() {
   const makeSlug = (text) =>
@@ -38,7 +39,7 @@ function Jobs() {
   const fetchSavedJobs = async (canId) => {
     try {
       const res = await axios.get(
-        `https://norealtor.in/hirelink_apis/candidate/saved-jobs/${canId}`
+        `${BASE_URL}hirelink_apis/candidate/saved-jobs/${canId}`
       );
 
       if (res.data.status) {
@@ -73,14 +74,14 @@ function Jobs() {
     try {
       if (isSaved) {
         await axios.post(
-          "https://norealtor.in/hirelink_apis/candidate/unsave-job",
+          `${BASE_URL}hirelink_apis/candidate/unsave-job`,
           payload
         );
         setSavedJobs((prev) => prev.filter((id) => id !== Number(jobId)));
         toast.info("Job removed");
       } else {
         await axios.post(
-          "https://norealtor.in/hirelink_apis/candidate/save-job",
+          `${BASE_URL}hirelink_apis/candidate/save-job`,
           payload
         );
         setSavedJobs((prev) => [...prev, Number(jobId)]);
@@ -95,7 +96,7 @@ function Jobs() {
     document.title = "Hirelink | Jobs";
 
     axios
-      .get("https://norealtor.in/hirelink_apis/candidate/getdata/tbl_job")
+      .get(`${BASE_URL}hirelink_apis/candidate/getdata/tbl_job`)
       .then((res) => {
         if (res.data.status === "success") {
           setJobs(res.data.data); // ✅ THIS WAS MISSING

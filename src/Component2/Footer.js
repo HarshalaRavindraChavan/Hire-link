@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import "../Component2/css/Footer.css";
 import { NavLink } from "react-router-dom";
 
-
 function Footer() {
   return (
     <footer className="footer mt-5">
@@ -18,7 +17,8 @@ function Footer() {
       </div>
 
       <p className="copy mt-5">
-        © {new Date().getFullYear()} Esenceweb IT || All Rights Reserved
+        © {new Date().getFullYear()} · Hirelinkinfo.com || All Rights Reserved || Design By{" "}
+        <a href="https://www.esenceweb.com/">Ensenceweb IT</a>
       </p>
     </footer>
   );

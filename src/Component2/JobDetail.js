@@ -2,6 +2,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
+import { BASE_URL } from "../config/constants";
 
 function JobDetail() {
   const { state } = useLocation();
@@ -19,7 +20,7 @@ function JobDetail() {
     if (!job && jobId) {
       axios
         .get(
-          `https://norealtor.in/hirelink_apis/candidate/getdatawhere/tbl_job/job_id/${jobId}`
+          `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_job/job_id/${jobId}`
         )
         .then((res) => {
           if (res.data?.status && res.data.data?.length > 0) {

@@ -8,6 +8,7 @@ import * as Yup from "yup";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { BASE_URL } from "../config/constants";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -56,25 +57,22 @@ const Signup = () => {
 
       if (activeRole === "Candidate") {
         // 🔹 Candidate Signup API
-        url =
-          "https://norealtor.in/hirelink_apis/candidate/signup/tbl_candidate";
-
-        payload = {
-          can_name: values.fullname,
-          can_email: values.email,
-          can_password: values.password,
-          can_mobile: values.mobile,
-        };
+        (url = `${BASE_URL}hirelink_apis/candidate/signup/tbl_candidate`);
+          (payload = {
+            can_name: values.fullname,
+            can_email: values.email,
+            can_password: values.password,
+            can_mobile: values.mobile,
+          });
       } else {
         // 🔹 Employer Signup API
-        url = "https://norealtor.in/hirelink_apis/employer/signup/tbl_employer";
-
-        payload = {
-          emp_name: values.fullname,
-          emp_email: values.email,
-          emp_password: values.password,
-          emp_mobile: values.mobile,
-        };
+        (url = `${BASE_URL}hirelink_apis/employer/signup/tbl_employer`);
+          (payload = {
+            emp_name: values.fullname,
+            emp_email: values.email,
+            emp_password: values.password,
+            emp_mobile: values.mobile,
+          });
       }
 
       const response = await axios.post(url, payload);

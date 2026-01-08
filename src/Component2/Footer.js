@@ -10,10 +10,11 @@ function Footer() {
         <NavLink to="/companies">Browse companies</NavLink>
         {/* <NavLink to="/dashboard">Work at JobFinder</NavLink> */}
         {/* <NavLink to="/dashboard">Countries</NavLink> */}
-        <NavLink to="/About">About</NavLink>
+        <NavLink to="/about">About</NavLink>
         <NavLink to="/help">Help</NavLink>
-        <NavLink to="/team&condition">Terms & Condition</NavLink>
+        <NavLink to="/terms&condition">Terms & Condition</NavLink>
         <NavLink to="/employer">Post a job</NavLink>
+        <NavLink to="/returnpolicy">Return policy</NavLink>
       </div>
 
       <p className="copy mt-5">

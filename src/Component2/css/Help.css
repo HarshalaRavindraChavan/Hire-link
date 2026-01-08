@@ -1,0 +1,121 @@
+/* Wrapper */
+.hl-tabs-wrapper {
+  width: 100%;
+  max-width: 1000px;
+  margin: auto;
+  font-family: Arial, sans-serif;
+}
+
+/* Header */
+.hl-tabs-header {
+  display: flex;
+  border-bottom: 2px solid #dee2e6;
+  background: #f8f9fa;
+}
+
+/* Tab Button */
+.hl-tab-btn {
+  flex: 1;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.hl-tab-btn:hover {
+  background: #e9ecef;
+}
+
+/* Active Tab */
+.hl-tab-active {
+  background: #ffffff;
+  border-bottom: 3px solid #037516;
+  font-weight: 600;
+  color: #037516;
+}
+
+/* Content */
+.hl-tabs-content {
+  border: 1px solid #dee2e6;
+  border-top: none;
+  padding: 20px;
+  background: #fff;
+}
+
+/* Panel */
+.hl-tab-panel {
+  animation: hlFadeIn 0.3s ease-in-out;
+}
+
+/* Animation */
+@keyframes hlFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* FAQ Section */
+
+
+/* Wrapper */
+.hl-faq-box {
+  margin-top: 20px;
+}
+
+/* FAQ Item */
+.hl-faq-item {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 20px 25px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Question */
+.hl-faq-question {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #af970c;
+}
+
+/* Answer (Hidden by default) */
+.hl-faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  line-height: 1.6;
+  transition: max-height 0.4s ease, margin-top 0.3s ease;
+}
+
+/* Hover Effect */
+.hl-faq-item:hover {
+  border-left: 5px solid #067e38;
+  background-color: #fdfdfd;
+}
+
+/* Show Answer on Hover */
+.hl-faq-item:hover .hl-faq-answer {
+  max-height: 200px;
+  margin-top: 10px;
+}
+
+/* Question Color Change */
+.hl-faq-item:hover .hl-faq-question {
+  color: #41b923;
+}

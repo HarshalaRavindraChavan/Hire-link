@@ -1,0 +1,14 @@
+.notification-box {
+  margin-top: 20px;
+  border: 1px solid #ddd;
+  padding: 15px;
+  width: 350px;
+  border-radius: 8px;
+}
+
+.notification-item {
+  background: #f8f9fa;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 5px;
+}

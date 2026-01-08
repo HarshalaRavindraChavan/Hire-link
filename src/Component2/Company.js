@@ -1,27 +1,30 @@
 import React, { useState, useEffect } from "react";
 import "../Component2/css/Company.css";
-
+import { BASE_URL } from "../config/constants";
 
 function Company() {
-  useState(() => {
+  useEffect(() => {
     document.title = "Hirelink | Companies Review";
   }, []);
 
   const [searchText, setSearchText] = useState("");
   const [showList, setShowList] = useState(false);
+  const [companies, setCompanies] = useState([]);
+  const [popularCompanies, setPopularCompanies] = useState([]);
 
-  const companies = ["Amazon", "TCS", "Infosys", "Wipro", "Cognizant"];
-
-  const popularCompanies = [
-    { name: "Hirelink", reviews: "54,409", logo: "image1.jpeg" },
-    { name: "Hirelink", reviews: "54,409", logo: "image2.jpeg" },
-    { name: "Hirelink", reviews: "54,409", logo: "image3.jpeg" },
-    { name: "Hirelink", reviews: "54,409", logo: "image4.jpeg" },
-    // { name: "Hirelink", reviews: "54,409", logo: "image/logo.png" },
-    // { name: "Hirelink", reviews: "54,409", logo: "image/logo.png" },
-    // { name: "Hirelink", reviews: "54,409", logo: "image/logo.png" },
-    // { name: "Hirelink", reviews: "54,409", logo: "image/logo.png" },
-  ];
+  useEffect(() => {
+    fetch`${BASE_URL}hirelink_apis/admin/getdata/tbl_employer`
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.data) {
+          setCompanies(data.data);
+          setPopularCompanies(data.data.slice(0, 4)); 
+        }
+      })
+      .catch((err) => {
+        console.error("API Error:", err);
+      });
+  }, []);
 
   // Click outside hide dropdown
   useEffect(() => {
@@ -102,10 +105,21 @@ function Company() {
           {popularCompanies.map((c, i) => (
             <div className="col-6 col-md-3" key={i}>
               <div className="company-card">
-                <img src={c.logo} width="100" className="mb-2" alt="logo" />
-                <h6 className="mt-2 mb-1 fw-semibold">{c.name}</h6>
+                <img
+                  src={
+                    c.employer_logo
+                      ? c.employer_logo
+                      : "https://via.placeholder.com/100"
+                  }
+                  width="100"
+                  className="mb-2"
+                  alt="logo"
+                />
+                <h6 className="mt-2 mb-1 fw-semibold">
+                  {c.employer_company_name}
+                </h6>
                 <p style={{ fontSize: "13px", color: "#777" }}>
-                  {c.reviews} reviews
+                  {c.total_reviews || "0"} reviews
                 </p>
               </div>
             </div>

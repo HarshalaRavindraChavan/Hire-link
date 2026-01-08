@@ -61,6 +61,8 @@ const AdminLayout = () => {
               <Route path="offer" element={<Offer />} />
               <Route path="contact" element={<Contact />} />
               <Route path="user" element={<Users />} />
+              <Route path="sendNotification" element={<SendNotification/>}/>
+              <Route path="notification" element={<Notification/>}/>
             </Routes>
           </div>
         </div>

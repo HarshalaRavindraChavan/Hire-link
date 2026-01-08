@@ -15,11 +15,19 @@ function Footer() {
         <NavLink to="/terms&condition">Terms & Condition</NavLink>
         <NavLink to="/employer">Post a job</NavLink>
         <NavLink to="/returnpolicy">Return policy</NavLink>
+        <NavLink to="/privacy&policies">Privacy & Policies</NavLink>
       </div>
 
       <p className="copy mt-5">
-        © {new Date().getFullYear()} · Hirelinkinfo.com || All Rights Reserved || Design By{" "}
-        <a href="https://www.esenceweb.com/">Ensenceweb IT</a>
+        © {new Date().getFullYear()} · Hirelinkinfo.com | All Rights Reserved |
+        Design By{" "}
+        <a
+          href="https://www.esenceweb.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Ensenceweb IT
+        </a>
       </p>
     </footer>
   );

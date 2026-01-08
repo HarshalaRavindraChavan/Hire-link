@@ -32,6 +32,11 @@ import Signin from "./Component2/Signin";
 import Signup from "./Component2/Signup";
 import Forgot from "./Component2/Forgot";
 import JobDetail from "./Component2/JobDetail";
+import About from "./Component2/About";
+import Help from "./Component2/Help";
+import Privacypolicies from "./Component2/Privacypolicies";
+import Termscondition from "./Component2/Termscondition";
+import Returnpolicy from "./Component2/Returnpolicy";
 
 // Employer Components
 import Header3 from "./Component3/Header";
@@ -61,8 +66,8 @@ const AdminLayout = () => {
               <Route path="offer" element={<Offer />} />
               <Route path="contact" element={<Contact />} />
               <Route path="user" element={<Users />} />
-              <Route path="sendNotification" element={<SendNotification/>}/>
-              <Route path="notification" element={<Notification/>}/>
+              <Route path="sendNotification" element={<SendNotification />} />
+              <Route path="notification" element={<Notification />} />
             </Routes>
           </div>
         </div>
@@ -87,6 +92,11 @@ const UserLayout = () => {
           <Route path="contacts" element={<Contacts />} />
           <Route path="profile" element={<Profile />} />
           <Route path="apply" element={<Apply />} />
+          <Route path="about" element={<About />} />
+          <Route path="help" element={<Help />} />
+          <Route path="returnpolicy" element={<Returnpolicy />} />
+          <Route path="privacy&policies" element={<Privacypolicies />} />
+          <Route path="terms&condition" element={<Termscondition />} />
         </Routes>
         <Footer2 />
       </div>
@@ -129,6 +139,11 @@ function App() {
           <Route path="/apply" element={<Apply />} />
           <Route path="/job/:slug" element={<JobDetail />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="about" element={<About />} />
+          <Route path="help" element={<Help />} />
+          <Route path="returnpolicy" element={<Returnpolicy />} />
+          <Route path="privacy&policies" element={<Privacypolicies />} />
+          <Route path="terms&condition" element={<Termscondition />} />
         </Route>
 
         {/* Employer ROUTES */}
@@ -149,9 +164,8 @@ function App() {
           <Route path="/offer" element={<Offer />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/user" element={<Users />} />
-          <Route path="/sendNotification" element={<SendNotification/>}/>
-          <Route path="/notification" element={<Notification/>}/>
-
+          <Route path="/sendNotification" element={<SendNotification />} />
+          <Route path="/notification" element={<Notification />} />
         </Route>
       </Routes>
     </BrowserRouter>

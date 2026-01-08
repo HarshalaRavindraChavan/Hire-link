@@ -14,7 +14,7 @@ export default function Footer() {
             directly.
           </p>
 
-          <button
+          {/* <button
             className="btn st me-2"
             style={{ background: "green", color: "white" }}
           >
@@ -26,7 +26,7 @@ export default function Footer() {
             style={{ borderColor: "white" }}
           >
             Contact Support
-          </button>
+          </button> */}
         </div>
 
         {/* RIGHT SIDE LINK COLUMNS */}
@@ -40,10 +40,10 @@ export default function Footer() {
                   <NavLink to="/about">About Us</NavLink>
                 </li>
                 <li>
-                  <NavLink to="/teams&condition">Terms & Condition</NavLink>
+                  <NavLink to="/terms&condition">Terms & Condition</NavLink>
                 </li>
                 <li>
-                  <NavLink to="/jobs">Privacy & Policies</NavLink>
+                  <NavLink to="/privacy&policies">Privacy & Policies</NavLink>
                 </li>
                 {/* <li>
                   <a href="#">Careers</a>
@@ -59,7 +59,7 @@ export default function Footer() {
               <h5 className="fw-bold text-white mb-3">Employers</h5>
               <ul className="footer-links list-unstyled">
                 <li>
-                  <NavLink to="/jobs">Post a job</NavLink>
+                  <NavLink to="/employer">Post a job</NavLink>
                 </li>
                 {/* <li>
                   <a href="#">Products</a>
@@ -104,8 +104,15 @@ export default function Footer() {
       <hr style={{ borderColor: "white" }} />
 
       <div className="text-center py-3 text-white small">
-        © {new Date().getFullYear()} · Hirelinkinfo.com || All Rights Reserved
-        || Design By <a href="https://www.esenceweb.com/">Ensenceweb IT</a>
+        © {new Date().getFullYear()} · Hirelinkinfo.com | All Rights Reserved |
+        Design By{" "}
+        <a
+          href="https://www.esenceweb.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Ensenceweb IT
+        </a>
         <div className="social-icons mt-2">
           <a href="#">
             <i className="bi bi-facebook"></i>

@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 
-const SOCKET_URL = "http://localhost:5000";
+const BASE_URL = "https://hirelinkinfo.com/";
 
-export const socket = io(SOCKET_URL, {
+export const socket = io(BASE_URL, {
   transports: ["websocket"],
 });

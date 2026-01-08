@@ -13,12 +13,12 @@ function Company() {
   const [popularCompanies, setPopularCompanies] = useState([]);
 
   useEffect(() => {
-    fetch`${BASE_URL}hirelink_apis/admin/getdata/tbl_employer`
+    fetch(`${BASE_URL}hirelink_apis/admin/getdata/tbl_employer`)
       .then((res) => res.json())
       .then((data) => {
         if (data?.data) {
           setCompanies(data.data);
-          setPopularCompanies(data.data.slice(0, 4)); 
+          setPopularCompanies(data.data.slice(0, 4));
         }
       })
       .catch((err) => {
@@ -65,17 +65,19 @@ function Company() {
               <ul className="suggest-list">
                 {companies
                   .filter((c) =>
-                    c.toLowerCase().includes(searchText.toLowerCase())
+                    c.emp_companyname
+                      ?.toLowerCase()
+                      .includes(searchText.toLowerCase())
                   )
                   .map((c, i) => (
                     <li
                       key={i}
                       onClick={() => {
-                        setSearchText(c);
+                        setSearchText(c.emp_companyname);
                         setShowList(false);
                       }}
                     >
-                      {c}
+                      {c.emp_companyname}
                     </li>
                   ))}
               </ul>
@@ -91,12 +93,12 @@ function Company() {
         </div>
 
         {/* EXTRA LINK */}
-        <a
+        {/* <a
           href="#"
           style={{ fontSize: "14px", color: "#2557a7", fontWeight: 600 }}
         >
           Do you want to search for salaries?
-        </a>
+        </a> */}
 
         {/* POPULAR COMPANIES */}
         <h3 className="text-start mt-5 fw-bold ps-3">Popular companies</h3>
@@ -107,19 +109,17 @@ function Company() {
               <div className="company-card">
                 <img
                   src={
-                    c.employer_logo
-                      ? c.employer_logo
+                    c.emp_com_logo
+                      ? `${BASE_URL}hirelink_apis/Uploads/${c.emp_com_logo}`
                       : "https://via.placeholder.com/100"
                   }
                   width="100"
                   className="mb-2"
                   alt="logo"
                 />
-                <h6 className="mt-2 mb-1 fw-semibold">
-                  {c.employer_company_name}
-                </h6>
+                <h6 className="mt-2 mb-1 fw-semibold">{c.emp_companyname}</h6>
                 <p style={{ fontSize: "13px", color: "#777" }}>
-                  {c.total_reviews || "0"} reviews
+                  {/* {c.total_reviews || "0"} reviews */}
                 </p>
               </div>
             </div>

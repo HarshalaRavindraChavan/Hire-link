@@ -61,6 +61,11 @@ function Jobs() {
   const toggleSaveJob = async (jobId) => {
     if (!candidate?.can_id) {
       toast.warn("Please login as Candidate to save jobs");
+      
+      setTimeout(() => {
+        navigate("/signin");
+      }, 3000);
+
       return;
     }
 
@@ -345,7 +350,6 @@ function Jobs() {
                   {selectedJob.city_name}, {selectedJob.state_name}
                 </p>{" "}
                 <hr />
-                <h6 className="fw-bold fs-5">Benefits</h6>
                 <h6 className="fw-bold fs-5">Job Description</h6>
                 <p>{selectedJob.job_description}</p>
                 <hr />

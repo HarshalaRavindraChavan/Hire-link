@@ -358,7 +358,7 @@ function Termscondition() {
               <br /> Non-compliance may lead to termination of access and
               removal of content.
             </p>
-            <p className="tc-footer-text">© 2026 All Rights Reserved</p>
+            <p className="tc-footer-text">© {new Date().getFullYear()} All Rights Reserved</p>
           </div>
         </div>
       </div>

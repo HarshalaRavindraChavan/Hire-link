@@ -71,7 +71,7 @@ export default function Footer() {
                   <a href="#">Insights</a>
                 </li> */}
                 <li>
-                  <NavLink to="/FAQ">FAQ</NavLink>
+                  <NavLink to="/help">FAQ</NavLink>
                 </li>
               </ul>
             </div>

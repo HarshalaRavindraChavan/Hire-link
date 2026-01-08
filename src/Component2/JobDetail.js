@@ -23,8 +23,11 @@ function JobDetail() {
           `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_job/job_id/${jobId}`
         )
         .then((res) => {
-          if (res.data?.status && res.data.data?.length > 0) {
-            setJob(res.data.data[0]); // ✅ FIXED
+          if (
+            (res.data.status === true || res.data.status === "success") &&
+            res.data.data?.length > 0
+          ) {
+            setJob(res.data.data[0]);
           } else {
             navigate("/jobs");
           }
@@ -62,7 +65,7 @@ function JobDetail() {
 
     navigate("/apply", {
       state: {
-        job:job, // same job object
+        job: job, // same job object
       },
     });
   };
@@ -203,7 +206,7 @@ function JobDetail() {
             color: "#444",
           }}
         >
-          {job.city_name} , {job.job_state_name}
+          {job.city_name} , {job.state_name}
         </p>
 
         {/* Skills Section */}

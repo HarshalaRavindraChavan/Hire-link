@@ -37,6 +37,8 @@ import JobDetail from "./Component2/JobDetail";
 import Header3 from "./Component3/Header";
 import Footer3 from "./Component3/Footer";
 import Employer from "./Component3/Employer";
+import SendNotification from "./Component/SendNotification";
+import Notification from "./Component/Notification";
 
 // ---------------- ADMIN LAYOUT ----------------
 const AdminLayout = () => {
@@ -145,6 +147,9 @@ function App() {
           <Route path="/offer" element={<Offer />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/user" element={<Users />} />
+          <Route path="/sendNotification" element={<SendNotification/>}/>
+          <Route path="/notification" element={<Notification/>}/>
+
         </Route>
       </Routes>
     </BrowserRouter>

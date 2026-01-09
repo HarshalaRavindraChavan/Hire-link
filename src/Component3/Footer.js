@@ -1,32 +1,36 @@
 import React from "react";
 import "../Component3/css/Footer.css";
 import { NavLink } from "react-router-dom";
+import logo from "../Component2/logo/admin-logo.png";
 
 export default function Footer() {
   return (
     <footer className="footer pt-5 pb-2">
       <div className="row mb-4 ">
         {/* LEFT HELP COLUMN */}
-        <div className="col-lg-5 col-md-5 mb-5 left-help text-center ">
-          <h3 className="fw-bold text-white">We're here to help</h3>
-          <p className="text-light">
+        <div className="col-lg-5 col-md-5 mb-5 left-help text-start ">
+          <img src={logo} alt="Footer Logo" className="w-25 text-start"></img>
+          <h3 className="fw-bold text-white text-start">We're here to help</h3>
+          <p className="text-light text-start">
             Visit our Help Centre for answers to common questions or contact us
             directly.
           </p>
 
-          {/* <button
+          <NavLink
+            to="/help"
             className="btn st me-2"
             style={{ background: "green", color: "white" }}
           >
             Help Centre
-          </button>
+          </NavLink>
 
-          <button
+          <NavLink
+            to="/contacts"
             className="btn btn-outline-light me-2"
             style={{ borderColor: "white" }}
           >
             Contact Support
-          </button> */}
+          </NavLink>
         </div>
 
         {/* RIGHT SIDE LINK COLUMNS */}
@@ -40,13 +44,17 @@ export default function Footer() {
                   <NavLink to="/about">About Us</NavLink>
                 </li>
                 <li>
-                  <NavLink to="/employer-terms-condition">Terms & Condition</NavLink>
+                  <NavLink to="/employer-terms-condition">
+                    Terms & Condition
+                  </NavLink>
                 </li>
-                 <li>
+                <li>
                   <NavLink to="/employer-return-policy">Returnpolicy</NavLink>
                 </li>
                 <li>
-                  <NavLink to="/employer-privacy-policies">Privacy & Policies</NavLink>
+                  <NavLink to="/employer-privacy-policies">
+                    Privacy & Policies
+                  </NavLink>
                 </li>
                 {/* <li>
                   <a href="#">Careers</a>

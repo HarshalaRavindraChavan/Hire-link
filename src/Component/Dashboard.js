@@ -159,7 +159,7 @@ function Dashboard() {
         />
 
         {/* ---------------- ADMIN ONLY ---------------- */}
-        {role === "1" && (
+        {Number(role) === 1 && (
           <>
             <DashboardCard
               title="Employees"

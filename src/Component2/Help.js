@@ -77,6 +77,51 @@ function Help() {
                         </div>
                       </div>
                     </div>
+
+                    <div className="hl-faq-box">
+                      <div className="hl-faq-item">
+                        <h3 className="hl-faq-question">
+                          <i className="fa fa-question-circle"></i>
+                          Do I get voting rights?
+                        </h3>
+                        <div className="hl-faq-answer">
+                          <p>
+                            Absolutely—every member acts as a partner, with
+                            equal rights and transparency in governance.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="hl-faq-box">
+                      <div className="hl-faq-item">
+                        <h3 className="hl-faq-question">
+                          <i className="fa fa-question-circle"></i>
+                          Do I get voting rights?
+                        </h3>
+                        <div className="hl-faq-answer">
+                          <p>
+                            Absolutely—every member acts as a partner, with
+                            equal rights and transparency in governance.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="hl-faq-box">
+                      <div className="hl-faq-item">
+                        <h3 className="hl-faq-question">
+                          <i className="fa fa-question-circle"></i>
+                          Do I get voting rights?
+                        </h3>
+                        <div className="hl-faq-answer">
+                          <p>
+                            Absolutely—every member acts as a partner, with
+                            equal rights and transparency in governance.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -102,6 +147,51 @@ function Help() {
                             Yes. Our investment model prioritizes diversified
                             ventures and ethical distribution, ensuring
                             consistent ROI.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="hl-faq-box">
+                      <div className="hl-faq-item">
+                        <h3 className="hl-faq-question">
+                          <i className="fa fa-question-circle"></i>
+                          Do I get voting rights?
+                        </h3>
+                        <div className="hl-faq-answer">
+                          <p>
+                            Absolutely—every member acts as a partner, with
+                            equal rights and transparency in governance.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="hl-faq-box">
+                      <div className="hl-faq-item">
+                        <h3 className="hl-faq-question">
+                          <i className="fa fa-question-circle"></i>
+                          Do I get voting rights?
+                        </h3>
+                        <div className="hl-faq-answer">
+                          <p>
+                            Absolutely—every member acts as a partner, with
+                            equal rights and transparency in governance.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="hl-faq-box">
+                      <div className="hl-faq-item">
+                        <h3 className="hl-faq-question">
+                          <i className="fa fa-question-circle"></i>
+                          Do I get voting rights?
+                        </h3>
+                        <div className="hl-faq-answer">
+                          <p>
+                            Absolutely—every member acts as a partner, with
+                            equal rights and transparency in governance.
                           </p>
                         </div>
                       </div>
@@ -151,6 +241,49 @@ function Help() {
                       </div>
                     </div>
 
+                    <div className="hl-faq-box">
+                      <div className="hl-faq-item">
+                        <h3 className="hl-faq-question">
+                          <i className="fa fa-question-circle"></i>
+                          Do I get voting rights?
+                        </h3>
+                        <div className="hl-faq-answer">
+                          <p>
+                            Absolutely—every member acts as a partner, with
+                            equal rights and transparency in governance.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="hl-faq-box">
+                      <div className="hl-faq-item">
+                        <h3 className="hl-faq-question">
+                          <i className="fa fa-question-circle"></i>
+                          Do I get voting rights?
+                        </h3>
+                        <div className="hl-faq-answer">
+                          <p>
+                            Absolutely—every member acts as a partner, with
+                            equal rights and transparency in governance.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="hl-faq-box">
+                      <div className="hl-faq-item">
+                        <h3 className="hl-faq-question">
+                          <i className="fa fa-question-circle"></i>
+                          Do I get voting rights?
+                        </h3>
+                        <div className="hl-faq-answer">
+                          <p>
+                            Absolutely—every member acts as a partner, with
+                            equal rights and transparency in governance.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                     <div className="hl-faq-box">
                       <div className="hl-faq-item">
                         <h3 className="hl-faq-question">

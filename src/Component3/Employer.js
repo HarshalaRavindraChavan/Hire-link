@@ -336,9 +336,9 @@ function Employer() {
                     <i className="bi bi-check2 me-2"></i>Email support
                   </li>
                 </ul>
-                <a href="" className="btn btn-outline-primary w-100">
+                {/* <a href="" className="btn btn-outline-primary w-100">
                   Start for free
-                </a>
+                </a> */}
               </div>
             </div>
 
@@ -379,7 +379,7 @@ function Employer() {
                   className="btn w-100"
                   style={{ backgroundColor: "green", color: "white" }}
                 >
-                  Talk to sales
+                  Extend
                 </a>
               </div>
             </div>

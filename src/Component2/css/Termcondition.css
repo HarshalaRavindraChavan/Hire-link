@@ -53,3 +53,19 @@
   font-size: 14px;
   color: #000000;
 }
+
+@media (max-width: 768px) {
+  .tc-text {
+    padding-left: 0;
+  }
+
+  .tc-wrapper {
+  padding: 10px;
+  
+}
+
+.tc-title {
+ 
+  font-size: 30px;
+}
+}

@@ -113,8 +113,10 @@ function Company() {
                       ? `${BASE_URL}hirelink_apis/Uploads/${c.emp_com_logo}`
                       : "https://via.placeholder.com/100"
                   }
-                  width="100"
+                  width="100px"
+                  height="100px"
                   className="mb-2"
+                  style={{ borderRadius: "50%" }}
                   alt="logo"
                 />
                 <h6 className="mt-2 mb-1 fw-semibold">{c.emp_companyname}</h6>

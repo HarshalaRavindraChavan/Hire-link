@@ -25,6 +25,11 @@ function JobSearchBar({
       return;
     }
 
+    if (searchKeyword === appliedKeyword) {
+      setShowKeywordSug(false);
+      return;
+    }
+
     const keyword = searchKeyword.toLowerCase();
     let suggestions = [];
 
@@ -35,8 +40,8 @@ function JobSearchBar({
           .split(",")
           .map((s) => s.trim())
           .forEach((skill) => {
-            if (skill.toLowerCase().startsWith(keyword)) {
-              suggestions.push({ text: skill, type: "Skill" });
+            if (skill.trim().toLowerCase().startsWith(keyword)) {
+              suggestions.push({ text: skill.trim(), type: "Skill" });
             }
           });
       }
@@ -66,7 +71,7 @@ function JobSearchBar({
 
     setKeywordSug(unique.slice(0, 8));
     setShowKeywordSug(true);
-  }, [searchKeyword, jobs]);
+  }, [searchKeyword, appliedKeyword, jobs]);
 
   /* ================= PLACE SUGGESTIONS ================= */
   useEffect(() => {
@@ -106,7 +111,7 @@ function JobSearchBar({
               setSearchKeyword(e.target.value);
               setAppliedKeyword("");
             }}
-            onFocus={() => searchKeyword && setShowKeywordSug(true)}
+            // onFocus={() => searchKeyword && setShowKeywordSug(true)}
             style={{ boxShadow: "none" }}
           />
         </div>
@@ -141,7 +146,7 @@ function JobSearchBar({
           <i className="fa fa-location-dot me-2"></i>
           <input
             className="form-control border-0"
-            placeholder="City, state"
+            placeholder="City, State"
             value={searchPlace}
             onChange={(e) => {
               setSearchPlace(e.target.value);

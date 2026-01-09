@@ -1,4 +1,4 @@
-import "../Component3/css/Returnpolicy.css";
+import "../Component3/css/Privacypolicies.css";
 import logo from "../Component2/logo/hirelink.png";
 
 function Returnpolicy() {

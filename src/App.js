@@ -34,6 +34,7 @@ import Forgot from "./Component2/Forgot";
 import JobDetail from "./Component2/JobDetail";
 import About from "./Component2/About";
 import Help from "./Component2/Help";
+import Receipt from "./Component2/Receipt";
 import Notification from "./Component2/Notification";
 import Cprivacypolicies from "./Component2/Privacypolicies";
 import Ctermscondition from "./Component2/Termscondition";
@@ -142,6 +143,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/signin" element={<Signin />} />
         <Route path="/forgot" element={<Forgot />} />
+        <Route path="/receipt" element={<Receipt />} />
 
         {/* USER ROUTES */}
         <Route path="/" element={<UserLayout />}>

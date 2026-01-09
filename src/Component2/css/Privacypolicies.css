@@ -1,0 +1,70 @@
+/* ===== Terms & Conditions Unique CSS ===== */
+
+.cpp-body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #f4f6f9;
+}
+
+.cpp-wrapper {
+  min-height: 100vh;
+  padding: 30px 30px 0 30px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 280px;
+  background-attachment: fixed;
+}
+
+.cpp-container {
+  max-width: 900px;
+  margin: auto;
+  background: rgba(255, 255, 255, 0.46);
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+}
+
+.cpp-title {
+  text-align: center;
+  color: #333;
+  margin-bottom: 25px;
+  font-size: 35px;
+}
+
+.cpp-heading {
+  margin-top: 25px;
+  padding-left: 50px;
+  color: #000000;
+  font-size: 18px;
+  text-align: start;
+  font-weight: 700;
+}
+
+.cpp-text {
+  color: #000000;
+  line-height: 1.7;
+  font-size: 15px;
+  padding-left: 50px;
+}
+
+.cpp-footer-text {
+  margin-top: 30px;
+  text-align: center;
+  font-size: 14px;
+  color: #000000;
+}
+
+@media (max-width: 768px) {
+  .cpp-text {
+    padding-left: 0;
+  }
+
+  .cpp-wrapper {
+    padding: 10px;
+  }
+
+  .cpp-title {
+    font-size: 30px;
+  }
+}

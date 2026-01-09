@@ -34,6 +34,7 @@ import Forgot from "./Component2/Forgot";
 import JobDetail from "./Component2/JobDetail";
 import About from "./Component2/About";
 import Help from "./Component2/Help";
+import Notification from "./Component2/Notification";
 import Cprivacypolicies from "./Component2/Privacypolicies";
 import Ctermscondition from "./Component2/Termscondition";
 import Creturnpolicy from "./Component2/Returnpolicy";
@@ -42,9 +43,6 @@ import Creturnpolicy from "./Component2/Returnpolicy";
 import Header3 from "./Component3/Header";
 import Footer3 from "./Component3/Footer";
 import Employer from "./Component3/Employer";
-import SendNotification from "./Component/SendNotification";
-import Notification from "./Component/Notification";
-
 import Eprivacypolicies from "./Component3/Privacypolicies";
 import Etermscondition from "./Component3/Termscondition";
 import Ereturnpolicy from "./Component3/Returnpolicy";
@@ -70,8 +68,6 @@ const AdminLayout = () => {
               <Route path="offer" element={<Offer />} />
               <Route path="contact" element={<Contact />} />
               <Route path="user" element={<Users />} />
-              <Route path="sendNotification" element={<SendNotification />} />
-              <Route path="notification" element={<Notification />} />
             </Routes>
           </div>
         </div>
@@ -99,6 +95,7 @@ const UserLayout = () => {
           <Route path="about" element={<About />} />
           <Route path="help" element={<Help />} />
           <Route path="candidate-return-policy" element={<Creturnpolicy />} />
+          <Route path="/notification" element={<Notification />} />
           <Route
             path="candidate-privacy-policies"
             element={<Cprivacypolicies />}
@@ -158,6 +155,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/help" element={<Help />} />
           <Route path="/candidate-return-policy" element={<Creturnpolicy />} />
+          <Route path="/notification" element={<Notification />} />
           <Route
             path="/candidate-privacy-policies"
             element={<Cprivacypolicies />}
@@ -195,8 +193,6 @@ function App() {
           <Route path="/offer" element={<Offer />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/user" element={<Users />} />
-          <Route path="/sendNotification" element={<SendNotification />} />
-          <Route path="/notification" element={<Notification />} />
         </Route>
       </Routes>
     </BrowserRouter>

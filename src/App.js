@@ -34,9 +34,9 @@ import Forgot from "./Component2/Forgot";
 import JobDetail from "./Component2/JobDetail";
 import About from "./Component2/About";
 import Help from "./Component2/Help";
-import Privacypolicies from "./Component2/Privacypolicies";
-import Termscondition from "./Component2/Termscondition";
-import Returnpolicy from "./Component2/Returnpolicy";
+import Cprivacypolicies from "./Component2/Privacypolicies";
+import Ctermscondition from "./Component2/Termscondition";
+import Creturnpolicy from "./Component2/Returnpolicy";
 
 // Employer Components
 import Header3 from "./Component3/Header";
@@ -44,6 +44,10 @@ import Footer3 from "./Component3/Footer";
 import Employer from "./Component3/Employer";
 import SendNotification from "./Component/SendNotification";
 import Notification from "./Component/Notification";
+
+import Eprivacypolicies from "./Component3/Privacypolicies";
+import Etermscondition from "./Component3/Termscondition";
+import Ereturnpolicy from "./Component3/Returnpolicy";
 
 // ---------------- ADMIN LAYOUT ----------------
 const AdminLayout = () => {
@@ -94,9 +98,15 @@ const UserLayout = () => {
           <Route path="apply" element={<Apply />} />
           <Route path="about" element={<About />} />
           <Route path="help" element={<Help />} />
-          <Route path="returnpolicy" element={<Returnpolicy />} />
-          <Route path="privacy&policies" element={<Privacypolicies />} />
-          <Route path="terms&condition" element={<Termscondition />} />
+          <Route path="candidate-return-policy" element={<Creturnpolicy />} />
+          <Route
+            path="candidate-privacy-policies"
+            element={<Cprivacypolicies />}
+          />
+          <Route
+            path="candidate-terms-condition"
+            element={<Ctermscondition />}
+          />
         </Routes>
         <Footer2 />
       </div>
@@ -111,6 +121,12 @@ const EmployerLayout = () => {
       <Header3 />
       <Routes>
         <Route path="employer" element={<Employer />} />
+        <Route path="employer-return-policy" element={<Ereturnpolicy />} />
+        <Route
+          path="employer-privacy-policies"
+          element={<Eprivacypolicies />}
+        />
+        <Route path="employer-terms-condition" element={<Etermscondition />} />
       </Routes>
       <Footer3 />
     </>
@@ -139,16 +155,31 @@ function App() {
           <Route path="/apply" element={<Apply />} />
           <Route path="/job/:slug" element={<JobDetail />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="about" element={<About />} />
-          <Route path="help" element={<Help />} />
-          <Route path="returnpolicy" element={<Returnpolicy />} />
-          <Route path="privacy&policies" element={<Privacypolicies />} />
-          <Route path="terms&condition" element={<Termscondition />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/help" element={<Help />} />
+          <Route path="/candidate-return-policy" element={<Creturnpolicy />} />
+          <Route
+            path="/candidate-privacy-policies"
+            element={<Cprivacypolicies />}
+          />
+          <Route
+            path="/candidate-terms-condition"
+            element={<Ctermscondition />}
+          />
         </Route>
 
         {/* Employer ROUTES */}
         <Route element={<EmployerLayout />}>
           <Route path="/employer" element={<Employer />} />
+          <Route path="/employer-return-policy" element={<Ereturnpolicy />} />
+          <Route
+            path="/employer-privacy-policies"
+            element={<Eprivacypolicies />}
+          />
+          <Route
+            path="/employer-terms-condition"
+            element={<Etermscondition />}
+          />
         </Route>
 
         {/* ADMIN ROUTES (NO /admin PREFIX) */}

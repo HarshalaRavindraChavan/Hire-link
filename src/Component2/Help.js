@@ -28,14 +28,14 @@ function Help() {
           Employer
         </button>
 
-        <button
+        {/* <button
           className={
             activeTab === "Other" ? "hl-tab-btn hl-tab-active" : "hl-tab-btn"
           }
           onClick={() => setActiveTab("Other")}
         >
           Other
-        </button>
+        </button> */}
       </div>
 
       {/* Tabs Content */}
@@ -53,7 +53,7 @@ function Help() {
                           <i className="fa fa-question-circle"></i>
                           Are my profits guaranteed?
                         </h3>
-                        <div className="hl-faq-answer">
+                        <div className="hl-faq-answer text-start">
                           <p>
                             Yes. Our investment model prioritizes diversified
                             ventures and ethical distribution, ensuring
@@ -69,10 +69,11 @@ function Help() {
                           <i className="fa fa-question-circle"></i>
                           Do I get voting rights?
                         </h3>
-                        <div className="hl-faq-answer">
+                        <div className="hl-faq-answer text-start">
                           <p>
-                            Absolutely—every member acts as a partner, with
-                            equal rights and transparency in governance.
+                            Yes. Our investment model prioritizes diversified
+                            ventures and ethical distribution, ensuring
+                            consistent ROI.
                           </p>
                         </div>
                       </div>
@@ -84,10 +85,11 @@ function Help() {
                           <i className="fa fa-question-circle"></i>
                           Do I get voting rights?
                         </h3>
-                        <div className="hl-faq-answer">
+                        <div className="hl-faq-answer text-start">
                           <p>
-                            Absolutely—every member acts as a partner, with
-                            equal rights and transparency in governance.
+                            Yes. Our investment model prioritizes diversified
+                            ventures and ethical distribution, ensuring
+                            consistent ROI.
                           </p>
                         </div>
                       </div>
@@ -99,25 +101,11 @@ function Help() {
                           <i className="fa fa-question-circle"></i>
                           Do I get voting rights?
                         </h3>
-                        <div className="hl-faq-answer">
+                        <div className="hl-faq-answer text-start">
                           <p>
-                            Absolutely—every member acts as a partner, with
-                            equal rights and transparency in governance.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="hl-faq-box">
-                      <div className="hl-faq-item">
-                        <h3 className="hl-faq-question">
-                          <i className="fa fa-question-circle"></i>
-                          Do I get voting rights?
-                        </h3>
-                        <div className="hl-faq-answer">
-                          <p>
-                            Absolutely—every member acts as a partner, with
-                            equal rights and transparency in governance.
+                            Yes. Our investment model prioritizes diversified
+                            ventures and ethical distribution, ensuring
+                            consistent ROI.
                           </p>
                         </div>
                       </div>
@@ -142,7 +130,7 @@ function Help() {
                           <i className="fa fa-question-circle"></i>
                           Are my profits guaranteed?
                         </h3>
-                        <div className="hl-faq-answer">
+                        <div className="hl-faq-answer text-start">
                           <p>
                             Yes. Our investment model prioritizes diversified
                             ventures and ethical distribution, ensuring
@@ -158,7 +146,7 @@ function Help() {
                           <i className="fa fa-question-circle"></i>
                           Do I get voting rights?
                         </h3>
-                        <div className="hl-faq-answer">
+                        <div className="hl-faq-answer text-start">
                           <p>
                             Absolutely—every member acts as a partner, with
                             equal rights and transparency in governance.
@@ -173,7 +161,7 @@ function Help() {
                           <i className="fa fa-question-circle"></i>
                           Do I get voting rights?
                         </h3>
-                        <div className="hl-faq-answer">
+                        <div className="hl-faq-answer text-start">
                           <p>
                             Absolutely—every member acts as a partner, with
                             equal rights and transparency in governance.
@@ -188,7 +176,7 @@ function Help() {
                           <i className="fa fa-question-circle"></i>
                           Do I get voting rights?
                         </h3>
-                        <div className="hl-faq-answer">
+                        <div className="hl-faq-answer text-start">
                           <p>
                             Absolutely—every member acts as a partner, with
                             equal rights and transparency in governance.
@@ -203,7 +191,7 @@ function Help() {
                           <i className="fa fa-question-circle"></i>
                           Do I get voting rights?
                         </h3>
-                        <div className="hl-faq-answer">
+                        <div className="hl-faq-answer text-start">
                           <p>
                             Absolutely—every member acts as a partner, with
                             equal rights and transparency in governance.
@@ -218,9 +206,8 @@ function Help() {
           </div>
         )}
 
-        {activeTab === "Other" && (
+        {/* {activeTab === "Other" && (
           <div className="hl-tab-panel">
-            {/* Other */}
             <div className="hl-faq-section">
               <div className="container">
                 <div className="row text-center">
@@ -303,7 +290,7 @@ function Help() {
               </div>
             </div>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

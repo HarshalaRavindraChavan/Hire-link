@@ -12,10 +12,10 @@ function Footer() {
         {/* <NavLink to="/dashboard">Countries</NavLink> */}
         <NavLink to="/about">About</NavLink>
         <NavLink to="/help">Help</NavLink>
-        <NavLink to="/terms&condition">Terms & Condition</NavLink>
+        <NavLink to="/candidate-terms-condition">Terms & Condition</NavLink>
         <NavLink to="/employer">Post a job</NavLink>
-        <NavLink to="/returnpolicy">Return policy</NavLink>
-        <NavLink to="/privacy&policies">Privacy & Policies</NavLink>
+        <NavLink to="/candidate-return-policy">Return policy</NavLink>
+        <NavLink to="/candidate-privacy-policies">Privacy & Policies</NavLink>
       </div>
 
       <p className="copy mt-5">

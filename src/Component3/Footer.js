@@ -40,10 +40,13 @@ export default function Footer() {
                   <NavLink to="/about">About Us</NavLink>
                 </li>
                 <li>
-                  <NavLink to="/terms&condition">Terms & Condition</NavLink>
+                  <NavLink to="/employer-terms-condition">Terms & Condition</NavLink>
+                </li>
+                 <li>
+                  <NavLink to="/employer-return-policy">Returnpolicy</NavLink>
                 </li>
                 <li>
-                  <NavLink to="/privacy&policies">Privacy & Policies</NavLink>
+                  <NavLink to="/employer-privacy-policies">Privacy & Policies</NavLink>
                 </li>
                 {/* <li>
                   <a href="#">Careers</a>
@@ -91,9 +94,6 @@ export default function Footer() {
                 </li>
                 <li>
                   <a href="#">Hiring guide</a>
-                </li>
-                <li>
-                  <a href="#">Events</a>
                 </li>
               </ul>
             </div>

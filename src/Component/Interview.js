@@ -6,7 +6,6 @@ import { toast, ToastContainer } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { BASE_URL } from "../config/constants";
 
-
 function Interview() {
   useEffect(() => {
     document.title = "Hirelink | Interview";
@@ -55,13 +54,27 @@ function Interview() {
   const [editInterviewId, setEditInterviewId] = useState(null);
   const modalRef = useRef(null);
 
+  const auth = JSON.parse(localStorage.getItem("auth"));
+  const role = auth?.role;
+  const employerId = auth?.emp_id;
+
   /* ================= FETCH ================= */
   const fetchInterviews = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/getdata/tbl_interview`,
-      );
+      let res;
+      if (["1", "2", "3", "4"].includes(role)) {
+        res = await axios.get(
+          `${BASE_URL}hirelink_apis/admin/getdata/tbl_interview`
+        );
+      }
+
+      if (Number(role) === 100) {
+        res = await axios.get(
+          `${BASE_URL}hirelink_apis/employer/getdatawhere/tbl_interview/itv_employer_id/${employerId}`
+        );
+      }
+
       if (res.data.status) {
         setInterviews(res.data.data);
       } else {

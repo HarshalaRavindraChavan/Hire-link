@@ -1,22 +1,22 @@
 /* ===== Terms & Conditions Unique CSS ===== */
 
-.ctc-body {
+.crp-body {
   margin: 0;
   padding: 0;
   font-family: Arial, Helvetica, sans-serif;
   background-color: #f4f6f9;
 }
 
-.ctc-wrapper {
+.crp-wrapper {
   min-height: 100vh;
-    padding: 30px 30px 0 30px;
+   padding: 30px 30px 0 30px;
   background-repeat: no-repeat;
   background-position: center;
   background-size: 280px;
   background-attachment: fixed;
 }
 
-.ctc-container {
+.crp-container {
   max-width: 900px;
   margin: auto;
   background: rgba(255, 255, 255, 0.46);
@@ -25,29 +25,30 @@
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
 }
 
-.ctc-title {
+.crp-title {
   text-align: center;
   color: #333;
   margin-bottom: 25px;
   font-size: 35px;
 }
 
-.ctc-heading {
+.crp-heading {
   margin-top: 25px;
+  padding-left: 50px;
   color: #000000;
   font-size: 18px;
-  text-align: center;
+  text-align: start;
   font-weight: 700;
 }
 
-.ctc-text {
+.crp-text {
   color: #000000;
   line-height: 1.7;
   font-size: 15px;
   padding-left: 50px;
 }
 
-.ctc-footer-text {
+.crp-footer-text {
   margin-top: 30px;
   text-align: center;
   font-size: 14px;
@@ -55,17 +56,15 @@
 }
 
 @media (max-width: 768px) {
-  .ctc-text {
+  .crp-text {
     padding-left: 0;
   }
 
-  .ctc-wrapper {
-  padding: 10px;
-  
-}
+  .crp-wrapper {
+    padding: 10px;
+  }
 
-.ctc-title {
- 
-  font-size: 30px;
-}
+  .crp-title {
+    font-size: 30px;
+  }
 }

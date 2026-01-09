@@ -63,7 +63,7 @@ function Profile() {
   const fetchStates = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdata/tbl_state`,
+        `${BASE_URL}hirelink_apis/candidate/getdata/tbl_state`
       );
 
       if (res.data?.status) {
@@ -285,8 +285,8 @@ function Profile() {
     }
 
     const fileErrors = {
-      can_aadhar: "Please upload Aadhar file",
-      can_pan: "Please upload PAN file",
+      can_aadhar: "aadhar number is required",
+      can_pan: "pan number is required",
       can_resume: "Please upload Resume",
       can_cv: "Please upload CV",
     };
@@ -472,7 +472,7 @@ function Profile() {
 
     try {
       const response = await axios.post(
-      `${BASE_URL}hirelink_apis/candidate/change-password`,
+        `${BASE_URL}hirelink_apis/candidate/change-password`,
         {
           candidate_id: candidate.can_id, // ✅ FIXED
           current_password: currentPassword,

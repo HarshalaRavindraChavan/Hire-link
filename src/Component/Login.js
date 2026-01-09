@@ -136,7 +136,7 @@ function Login() {
           </div>
 
           {formik.touched.user_email && formik.errors.user_email && (
-            <small className="text-danger d-block mt-1 text-center">
+            <small className="text-danger d-block text-start">
               {formik.errors.user_email}
             </small>
           )}
@@ -161,7 +161,7 @@ function Login() {
           </div>
 
           {formik.touched.user_password && formik.errors.user_password && (
-            <small className="text-danger d-block mt-1 text-center">
+            <small className="text-danger d-block text-start">
               {formik.errors.user_password}
             </small>
           )}

@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
 import Pagination from "./commenuse/Pagination";
 import { BASE_URL } from "../config/constants";
+import TableSkeleton from "./commenuse/TableSkeleton";
 
 function Applicant() {
   // tital of tab
@@ -24,6 +25,7 @@ function Applicant() {
 
   const [search, setSearch] = useState("");
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   //==========Pagination=========================
   const [currentPage, setCurrentPage] = useState(1);
@@ -41,16 +43,15 @@ function Applicant() {
 
   const fetchJobs = async () => {
     try {
+      setLoading(true); 
       let res;
 
-      // ADMIN / SUBADMIN / BACKEND → ALL DATA
       if (["1", "2", "3", "4"].includes(role)) {
         res = await axios.get(
           `${BASE_URL}hirelink_apis/admin/getdata/tbl_applied`
         );
       }
 
-      // EMPLOYER → ONLY HIS DATA
       if (Number(role) === 100) {
         res = await axios.get(
           `${BASE_URL}hirelink_apis/employer/getdatawhere/tbl_applied/apl_employer_id/${employerId}`
@@ -62,10 +63,10 @@ function Applicant() {
       }
     } catch (error) {
       console.error("Jobs fetch error:", error);
+    } finally {
+      setLoading(false); 
     }
   };
-
-  //candidate interview Schdul Code
 
   // Yup Validation Schema
   const schema = yup.object().shape({
@@ -234,7 +235,9 @@ function Applicant() {
             </thead>
 
             <tbody>
-              {records.length > 0 ? (
+              {loading ? (
+                <TableSkeleton rows={6} columns={4} />
+              ) : records.length > 0 ? (
                 records.map((app, index) => (
                   <tr key={app.apl_id}>
                     <td>{firstIndex + index + 1}</td>

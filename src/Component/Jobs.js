@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import Pagination from "./commenuse/Pagination";
 import { toast, ToastContainer } from "react-toastify";
 import { BASE_URL } from "../config/constants";
+import TableSkeleton from "./commenuse/TableSkeleton";
 
 
 function Jobs() {
@@ -45,7 +46,7 @@ function Jobs() {
   const fetchStates = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdata/tbl_state`,
+        `${BASE_URL}hirelink_apis/candidate/getdata/tbl_state`
       );
 
       if (res.data?.status) {
@@ -89,13 +90,13 @@ function Jobs() {
 
   const fetchJobs = async () => {
     try {
+      setLoading(true);
+
       let res;
 
       // ADMIN / SUBADMIN / BACKEND → ALL DATA
       if (["1", "2", "3", "4"].includes(role)) {
-        res = await axios.get(
-          `${BASE_URL}hirelink_apis/admin/getdata/tbl_job`,
-        );
+        res = await axios.get(`${BASE_URL}hirelink_apis/admin/getdata/tbl_job`);
       }
 
       // EMPLOYER → ONLY HIS DATA
@@ -111,6 +112,8 @@ function Jobs() {
     } catch (error) {
       console.error("Jobs fetch error:", error);
       toast.error("Failed to load jobs");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -325,7 +328,7 @@ function Jobs() {
   const fetchCategories = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/getdata/tbl_main_category`,
+        `${BASE_URL}hirelink_apis/admin/getdata/tbl_main_category`
       );
       setCategories(res.data.data || []);
     } catch (err) {
@@ -484,8 +487,6 @@ function Jobs() {
     }
 
     try {
-      setLoading(true);
-
       const payload = {
         job_title: data.job_title,
         job_mc: selectedCategory || null,
@@ -620,7 +621,9 @@ function Jobs() {
             </thead>
 
             <tbody>
-              {records.length > 0 ? (
+              {loading ? (
+                <TableSkeleton rows={6} columns={5} />
+              ) : records.length > 0 ? (
                 records.map((job, index) => (
                   <tr key={job.job_id}>
                     <td>{firstIndex + index + 1}</td>

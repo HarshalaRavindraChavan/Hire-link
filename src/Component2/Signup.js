@@ -9,6 +9,7 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { BASE_URL } from "../config/constants";
+import { saveFcmToken } from "./saveFcmToken";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -57,22 +58,22 @@ const Signup = () => {
 
       if (activeRole === "Candidate") {
         // 🔹 Candidate Signup API
-        (url = `${BASE_URL}hirelink_apis/candidate/signup/tbl_candidate`);
-          (payload = {
-            can_name: values.fullname,
-            can_email: values.email,
-            can_password: values.password,
-            can_mobile: values.mobile,
-          });
+        url = `${BASE_URL}hirelink_apis/candidate/signup/tbl_candidate`;
+        payload = {
+          can_name: values.fullname,
+          can_email: values.email,
+          can_password: values.password,
+          can_mobile: values.mobile,
+        };
       } else {
         // 🔹 Employer Signup API
-        (url = `${BASE_URL}hirelink_apis/employer/signup/tbl_employer`);
-          (payload = {
-            emp_name: values.fullname,
-            emp_email: values.email,
-            emp_password: values.password,
-            emp_mobile: values.mobile,
-          });
+        url = `${BASE_URL}hirelink_apis/employer/signup/tbl_employer`;
+        payload = {
+          emp_name: values.fullname,
+          emp_email: values.email,
+          emp_password: values.password,
+          emp_mobile: values.mobile,
+        };
       }
 
       const response = await axios.post(url, payload);
@@ -84,6 +85,8 @@ const Signup = () => {
         // 🔹 Store & Redirect based on role
         if (activeRole === "Candidate") {
           localStorage.setItem("candidate", JSON.stringify(data.data));
+          saveFcmToken(data.data.can_id);
+
           setTimeout(() => navigate("/profile"), 1200);
         } else {
           // 🔹 Auth (role & permission)
@@ -284,8 +287,15 @@ const Signup = () => {
                 </div>
               </div>
 
-              <button className="btn btn-primary-signup w-100 mt-3">
-                Create Account
+              <button
+                type="submit"
+                className="btn btn-primary-signup w-100 mt-3 d-flex justify-content-center align-items-center gap-2"
+                disabled={loading}
+              >
+                {loading && (
+                  <span className="spinner-border spinner-border-sm"></span>
+                )}
+                {loading ? "Creating account....." : "Create Account"}
               </button>
             </form>
           </div>

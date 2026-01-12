@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
 import { BASE_URL } from "../config/constants";
-
+import TableSkeleton from "./commenuse/TableSkeleton";
 
 function Candidates() {
   // tital of tab
@@ -18,6 +18,7 @@ function Candidates() {
 
   const [search, setSearch] = useState("");
   const [candidates, setCandidates] = useState([]);
+  const [loading, setLoading] = useState(true);
   //==================== get All candidate
   useEffect(() => {
     fetchCandidates();
@@ -25,8 +26,9 @@ function Candidates() {
 
   const fetchCandidates = async () => {
     try {
+      setLoading(true);
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/getdata/tbl_candidate`,
+        `${BASE_URL}hirelink_apis/admin/getdata/tbl_candidate`
       );
 
       if (res.data.status === true) {
@@ -34,6 +36,8 @@ function Candidates() {
       }
     } catch (error) {
       console.error("Error fetching candidates", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -60,7 +64,7 @@ function Candidates() {
   const confirmDelete = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/deletedata/tbl_candidate/can_id/${deleteId}`,
+        `${BASE_URL}hirelink_apis/admin/deletedata/tbl_candidate/can_id/${deleteId}`
       );
 
       if (res.data.status === true) {
@@ -277,7 +281,9 @@ function Candidates() {
             </thead>
 
             <tbody>
-              {records.length > 0 ? (
+              {loading ? (
+                <TableSkeleton rows={6} columns={5} />
+              ) : records.length > 0 ? (
                 records.map((candidate, index) => (
                   <tr key={candidate.can_id}>
                     <td className="text-center fw-bold">

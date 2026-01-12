@@ -7,6 +7,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast, ToastContainer } from "react-toastify";
 import { BASE_URL } from "../config/constants";
+import { saveFcmToken } from "./saveFcmToken";
 
 function Signin() {
   const navigate = useNavigate();
@@ -56,16 +57,14 @@ function Signin() {
         let payload = {};
 
         if (activeRole === "Candidate") {
-          url =
-            `${BASE_URL}hirelink_apis/candidate/signin/tbl_candidate`;
+          url = `${BASE_URL}hirelink_apis/candidate/signin/tbl_candidate`;
 
           payload = {
             can_email: values.email,
             can_password: values.password,
           };
         } else {
-          url =
-            `${BASE_URL}hirelink_apis/employer/signin/tbl_employer`;
+          url = `${BASE_URL}hirelink_apis/employer/signin/tbl_employer`;
 
           payload = {
             emp_email: values.email,
@@ -81,7 +80,7 @@ function Signin() {
 
           if (activeRole === "Candidate") {
             localStorage.setItem("candidate", JSON.stringify(data.data));
-
+            saveFcmToken(data.data.can_id);
             setTimeout(() => {
               navigate("/profile");
             }, 1200); //  1.2 sec delay
@@ -280,7 +279,11 @@ function Signin() {
                 className="btn btn-primary-auth w-100"
                 disabled={loading}
               >
-                {loading ? "Logging in..." : "Login"}
+                {loading
+                  ? activeRole === "Candidate"
+                    ? "Logging in as Candidate..."
+                    : "Logging in as Employer..."
+                  : "Login"}
               </button>
             </form>
 

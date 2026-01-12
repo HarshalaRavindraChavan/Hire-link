@@ -5,6 +5,7 @@ import ConfirmDelete from "./commenuse/ConfirmDelete";
 import { toast, ToastContainer } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { BASE_URL } from "../config/constants";
+import TableSkeleton from "./commenuse/TableSkeleton";
 
 function Interview() {
   useEffect(() => {
@@ -195,11 +196,7 @@ function Interview() {
 
             <tbody>
               {loading ? (
-                <tr>
-                  <td colSpan="5" className="text-center">
-                    Loading...
-                  </td>
-                </tr>
+                <TableSkeleton rows={6} columns={5} />
               ) : records.length ? (
                 records.map((i, idx) => (
                   <tr key={i.itv_id}>

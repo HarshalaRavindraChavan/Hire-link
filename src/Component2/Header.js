@@ -46,15 +46,15 @@ function Header() {
           {/* ✅ AFTER LOGIN */}
           {isLogin && (
             <>
-              <NavLink to="/" className="nav-link-custom ms-2 me-2">
+              {/* <NavLink to="/" className="nav-link-custom ms-2 me-2">
                 <i className="fa fa-bookmark"></i>
               </NavLink>
               <a href="#" className="nav-link-custom ms-2 me-2">
                 <i className="fa fa-message"></i>
-              </a>
-              <a href="#" className="nav-link-custom ms-2 me-2">
+              </a> */}
+              <NavLink to="/notification" className="nav-link-custom ms-2 me-2">
                 <i className="fa fa-bell"></i>
-              </a>
+              </NavLink>
               <NavLink to="/profile" className="nav-link-custom ms-2 me-2">
                 <i className="fa fa-user"></i>
               </NavLink>

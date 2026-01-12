@@ -7,12 +7,14 @@ import * as yup from "yup";
 import Pagination from "./commenuse/Pagination";
 import { toast } from "react-toastify";
 import { BASE_URL } from "../config/constants";
-
+import TableSkeleton from "./commenuse/TableSkeleton";
 
 function Users() {
   useEffect(() => {
     document.title = "Hirelink | Users";
   }, []);
+
+  const [loading, setLoading] = useState(false);
 
   // ================= EDUCATION =================
   const [educationType, setEducationType] = useState("");
@@ -36,7 +38,7 @@ function Users() {
   const fetchStates = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdata/tbl_state`,
+        `${BASE_URL}hirelink_apis/candidate/getdata/tbl_state`
       );
 
       if (res.data?.status) {
@@ -80,14 +82,18 @@ function Users() {
 
   const fetchUsers = async () => {
     try {
+      setLoading(true);
+
       const res = await axios.get(
-    `${BASE_URL}hirelink_apis/admin/getdata/tbl_user`,
+        `${BASE_URL}hirelink_apis/admin/getdata/tbl_user`
       );
       if (res.data.status === true) {
         setUsers(res.data.data);
       }
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -361,7 +367,6 @@ function Users() {
   } = editForm;
 
   const [editUserId, setEditUserId] = useState(null);
-  const [loading, setLoading] = useState(false);
 
   const openEditUserModal = (user) => {
     if (!user) return;
@@ -542,7 +547,9 @@ function Users() {
             </thead>
 
             <tbody>
-              {records.length > 0 ? (
+              {loading ? (
+                <TableSkeleton rows={6} columns={5} />
+              ) : records.length > 0 ? (
                 records
                   .filter((u) => String(u.user_id) !== "1")
                   .map((u, index) => (

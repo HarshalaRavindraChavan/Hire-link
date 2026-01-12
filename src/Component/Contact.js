@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Pagination from "./commenuse/Pagination";
 import axios from "axios";
 import { BASE_URL } from "../config/constants";
-
+import TableSkeleton from "./commenuse/TableSkeleton";
 
 function Contact() {
   // Correct way: set tab title
@@ -11,6 +11,7 @@ function Contact() {
   }, []);
 
   const [contacts, setContact] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // Pagination start
   const [currentPage, setCurrentPage] = useState(1);
@@ -30,8 +31,10 @@ function Contact() {
 
   const fetchContact = async () => {
     try {
+      setLoading(true); // loader start
+
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/getdata/tbl_contact`,
+        `${BASE_URL}hirelink_apis/admin/getdata/tbl_contact`
       );
 
       if (res.data.status === true) {
@@ -39,6 +42,8 @@ function Contact() {
       }
     } catch (error) {
       console.error("Error fetching Contact", error);
+    } finally {
+      setLoading(false); // loader stop
     }
   };
 
@@ -95,7 +100,9 @@ function Contact() {
             </thead>
 
             <tbody>
-              {records.length > 0 ? (
+              {loading ? (
+                <TableSkeleton rows={6} columns={5} />
+              ) : records.length > 0 ? (
                 records.map((c) => (
                   <tr key={c.con_id} className="text-center align-middle">
                     <td>{c.con_id}</td>

@@ -1,0 +1,150 @@
+/* ===== BASE ===== */
+.about-page {
+  font-family: Poppins, Arial, sans-serif;
+  background: #f4f7fb;
+}
+
+/* ===== HERO ===== */
+.about-hero {
+  background: linear-gradient(135deg, #59bb3b, #6baf1e);
+  color: #fff;
+  padding: 30px 20px;
+  text-align: center;
+}
+
+.about-hero h1 {
+  font-size: 42px;
+  margin-bottom: 15px;
+}
+
+.about-hero p {
+  font-size: 17px;
+  max-width: 800px;
+  margin: auto;
+  opacity: 0.95;
+}
+
+/* ===== CONTAINER ===== */
+.about-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 60px 20px;
+}
+
+/* ===== FLEX SECTION ===== */
+.about-flex-wrapper {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  margin-bottom: 60px;
+}
+
+/* IMAGE */
+.about-image-box {
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 80px;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* TEXT */
+.about-content-box {
+  flex: 1;
+}
+
+.about-content-box h2 {
+  font-size: 28px;
+  margin-bottom: 15px;
+}
+
+.about-content-box p {
+  color: #555;
+  line-height: 1.7;
+}
+
+/* CARDS */
+.about-cards-box {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+  margin-top: 30px;
+  margin-bottom: 60px;
+}
+
+.about-card {
+  background: #fff;
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.about-card h3 {
+  margin-bottom: 10px;
+  color: #2c2c2c;
+}
+
+.about-card p {
+  color: #555;
+  line-height: 1.6;
+}
+
+/* ===== EMPLOYER / CANDIDATE ===== */
+.about-role-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-bottom: 60px;
+  margin-top: -80px;
+}
+
+.about-role-card {
+  background: #ffffff;
+  padding: 35px;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.about-role-card p {
+  color: #555;
+  line-height: 1.7;
+}
+
+/* ===== WHY CHOOSE ===== */
+.about-why {
+  background: linear-gradient(135deg, #9fa108, #036908);
+  color: #fff;
+  padding: 50px 30px;
+  border-radius: 16px;
+  text-align: center;
+}
+
+.about-why p {
+  max-width: 800px;
+  margin: auto;
+  line-height: 1.8;
+}
+
+/* ===== MOBILE ORDER FIX ===== */
+@media (max-width: 768px) {
+  .about-flex-wrapper {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  /* TEXT TOP */
+  .about-content-box {
+    order: 1;
+  }
+
+  /* IMAGE MIDDLE */
+  .about-image-box {
+    order: 2;
+    margin-bottom: 30px;
+  }
+
+  /* CARDS BOTTOM */
+  .about-cards-box {
+    order: 3;
+  }
+}

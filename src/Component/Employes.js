@@ -7,7 +7,7 @@ import * as Yup from "yup";
 import Pagination from "./commenuse/Pagination";
 import { toast } from "react-toastify";
 import { BASE_URL } from "../config/constants";
-
+import TableSkeleton from "./commenuse/TableSkeleton";
 
 function Employes() {
   // tital of tab
@@ -25,8 +25,9 @@ function Employes() {
 
   const fetchEmployers = async () => {
     try {
+      setLoading(true);
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/getdata/tbl_employer`,
+        `${BASE_URL}hirelink_apis/admin/getdata/tbl_employer`
       );
 
       if (res.data.status === true) {
@@ -34,6 +35,8 @@ function Employes() {
       }
     } catch (error) {
       console.error("Error Employer Fetch:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -316,7 +319,9 @@ function Employes() {
             </thead>
 
             <tbody>
-              {records.length > 0 ? (
+              {loading ? (
+                <TableSkeleton rows={6} columns={5} />
+              ) : records.length > 0 ? (
                 records.map((emp, index) => (
                   <tr key={emp.emp_id || index}>
                     <td className="text-center fw-bold">

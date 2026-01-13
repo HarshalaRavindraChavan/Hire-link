@@ -5,6 +5,8 @@ import { toast, ToastContainer } from "react-toastify";
 import { BASE_URL } from "../config/constants";
 
 function Apply() {
+   const [updateStatus, setUpdateStatus] = useState("");
+  // "", "updating", "success", "error"
   const location = useLocation();
   const { job } = location.state || {};
   const navigate = useNavigate();
@@ -133,6 +135,7 @@ function Apply() {
       candidateData.can_resume
     );
   };
+ 
 
   const handleApplySubmit = async (e) => {
     e.preventDefault();
@@ -148,13 +151,25 @@ function Apply() {
 
     try {
       if (isProfileDirty) {
-        const updateRes = await axios.post(
-          `${BASE_URL}hirelink_apis/candidate/updatedata/tbl_candidate/can_id/${apl_candidate_id}`,
-          candidateData
-        );
+        try {
+          setUpdateStatus("updating");
 
-        if (!updateRes.data?.status) {
-          toast.error("Profile update failed");
+          const updateRes = await axios.post(
+            `${BASE_URL}hirelink_apis/candidate/updatedata/tbl_candidate/can_id/${apl_candidate_id}`,
+            candidateData
+          );
+
+          if (!updateRes.data?.status) {
+            setUpdateStatus("error");
+            toast.error("Profile update failed ❌");
+            return;
+          }
+
+          setUpdateStatus("success");
+          toast.success("Profile updated successfully ✅");
+        } catch (err) {
+          setUpdateStatus("error");
+          toast.error("Profile update error ❌");
           return;
         }
       }
@@ -166,19 +181,19 @@ function Apply() {
 
       if (applyRes.data?.status) {
         toast.success("Job applied successfully ✅");
-        setApplied(true);
+        // setApplied(true);
 
         localStorage.setItem(
           "candidate",
           JSON.stringify({ ...candidate, ...candidateData })
         );
 
-        setOriginalCandidate(candidateData);
-        setIsProfileDirty(false);
+        // setOriginalCandidate(candidateData);
+        // setIsProfileDirty(false);
 
-        setTimeout(() => {
-          navigate("/profile/applied-jobs", { replace: true });
-        }, 1500);
+        // setTimeout(() => {
+        navigate("/profile/applied-jobs", { replace: true });
+        // }, 1500);
       }
     } catch {
       toast.error("Something went wrong");

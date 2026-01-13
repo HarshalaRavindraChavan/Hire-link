@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../Component2/css/Profile.css";
 import { ToastContainer } from "react-toastify";
-import { Navigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../config/constants";
 
@@ -9,6 +9,9 @@ function JobsSAI() {
   const [activeTab, setActiveTab] = useState("saved");
   const [showModal, setShowModal] = useState(false);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
+
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const candidate = JSON.parse(localStorage.getItem("candidate"));
   const candidateId = candidate?.can_id;
@@ -109,7 +112,7 @@ function JobsSAI() {
 
   const fetchInterviewJobs = async () => {
     if (!candidateId) return;
- 
+
     try {
       setInterviewLoading(true);
 
@@ -142,6 +145,19 @@ function JobsSAI() {
       fetchInterviewJobs();
     }
   }, [activeTab, candidateId]);
+
+  // 🔗 URL ↔ TAB SYNC
+  useEffect(() => {
+    if (location.pathname === "/profile") {
+      navigate("/profile/saved-jobs", { replace: true });
+    } else if (location.pathname.includes("saved-jobs")) {
+      setActiveTab("saved");
+    } else if (location.pathname.includes("applied-jobs")) {
+      setActiveTab("applied");
+    } else if (location.pathname.includes("interviews")) {
+      setActiveTab("interviews");
+    }
+  }, [location.pathname, navigate]);
 
   function UpdateStatusModal({ show, onClose }) {
     if (!show) return null;
@@ -342,7 +358,7 @@ function JobsSAI() {
             <button
               className={`nav-link ${activeTab === "saved" ? "active" : ""}`}
               type="button"
-              onClick={() => setActiveTab("saved")}
+              onClick={() => navigate("/profile/saved-jobs")}
               style={{
                 borderRadius: "30px",
                 padding: "8px 18px",
@@ -375,7 +391,7 @@ function JobsSAI() {
             <button
               className={`nav-link ${activeTab === "applied" ? "active" : ""}`}
               type="button"
-              onClick={() => setActiveTab("applied")}
+              onClick={() => navigate("/profile/applied-jobs")}
               style={{
                 borderRadius: "30px",
                 padding: "8px 18px",
@@ -407,7 +423,7 @@ function JobsSAI() {
                 activeTab === "interviews" ? "active" : ""
               }`}
               type="button"
-              onClick={() => setActiveTab("interviews")}
+              onClick={() => navigate("/profile/interviews")}
               style={{
                 borderRadius: "30px",
                 padding: "8px 18px",
@@ -466,7 +482,14 @@ function JobsSAI() {
                     </div>
 
                     <div className="d-flex align-items-center gap-3 mt-2 mt-md-0">
-                      <button className="btn btn-success btn-sm">
+                      <button
+                        className="btn btn-success btn-sm"
+                        onClick={() =>
+                          navigate("/apply", {
+                            state: { job }, // 👈 FULL JOB OBJECT PASS
+                          })
+                        }
+                      >
                         Apply now
                       </button>
 

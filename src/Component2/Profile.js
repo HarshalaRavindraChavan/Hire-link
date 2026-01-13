@@ -554,7 +554,7 @@ function Profile() {
               </button>
 
               <button
-                className="btn btn-outline-success px-4"
+                className="btn btn-outline-danger px-4"
                 data-bs-toggle="modal"
                 data-bs-target="#changePasswordModal"
                 style={{ minWidth: "160px" }}

@@ -484,17 +484,13 @@ function JobsSAI() {
                     <div className="d-flex align-items-center gap-3 mt-2 mt-md-0">
                       <button
                         className="btn btn-success btn-sm"
-                        onClick={() =>
-                          navigate("/apply", {
-                            state: { job }, // 👈 FULL JOB OBJECT PASS
-                          })
-                        }
+                        onClick={() => navigate(`/apply/${job.job_id}`)}
                       >
                         Apply now
                       </button>
 
-                      <i className="fa fa-bookmark text-success"></i>
-                      <i className="fa fa-ellipsis-vertical"></i>
+                      {/* <i className="fa fa-bookmark text-success"></i>
+                      <i className="fa fa-ellipsis-vertical"></i> */}
                     </div>
                   </div>
                 </div>

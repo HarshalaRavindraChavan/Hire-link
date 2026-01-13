@@ -1,393 +1,522 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { BASE_URL } from "../config/constants";
 
 function Apply() {
-   const [updateStatus, setUpdateStatus] = useState("");
-  // "", "updating", "success", "error"
-  const location = useLocation();
-  const { job } = location.state || {};
+  const { job_id } = useParams(); // job_id
   const navigate = useNavigate();
 
-  const [applied, setApplied] = useState(false);
-  const [showProfileHint, setShowProfileHint] = useState(false);
+  const candidateLS = JSON.parse(localStorage.getItem("candidate"));
+
+  const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [profileUpdating, setProfileUpdating] = useState(false);
+  const [resumeUploading, setResumeUploading] = useState(false);
 
-  const candidate = JSON.parse(localStorage.getItem("candidate"));
-
-  const apl_candidate_id = candidate?.can_id;
-  const apl_job_id = job?.job_id;
-  const apl_employer_id = job?.job_employer_id;
-
-  const [originalCandidate, setOriginalCandidate] = useState(null);
-  const [isProfileDirty, setIsProfileDirty] = useState(false);
-
-  const [candidateData, setCandidateData] = useState({
-    can_experience: "",
-    can_skill: "",
-    can_education_type: "",
-    can_education_detail: "",
-    can_resume: "",
-  });
-
-  useEffect(() => {
-    if (candidate) {
-      const snapshot = {
-        can_experience: candidate.can_experience || "",
-        can_skill: candidate.can_skill || "",
-        can_education_type: candidate.can_education_type || "",
-        can_education_detail: candidate.can_education_detail || "",
-        can_resume: candidate.can_resume || "",
-      };
-
-      setOriginalCandidate(snapshot);
-      setCandidateData(snapshot);
-    }
-  }, [candidate]);
-
-  const [formData, setFormData] = useState({
-    fullname: "",
-    email: "",
-    mobile: "",
-  });
-
-  useEffect(() => {
-    if (candidate) {
-      setFormData({
-        fullname: candidate.can_name || "",
-        email: candidate.can_email || "",
-        mobile: candidate.can_mobile || "",
-      });
-    }
-  }, [candidate]);
-
-  useEffect(() => {
-    if (!job) {
-      navigate("/signin", { replace: true });
-    }
-  }, [job, navigate]);
-
-  if (!job) return null;
-
+  // ✅ Education Options
   const educationOptions = {
     Diploma: ["D.Form"],
     Graduation: ["B.Sc", "B.Form"],
     "Post Graduation": ["M.Sc", "M.Form"],
   };
 
-  const updateCandidateField = (key, value) => {
-    setCandidateData((prev) => {
-      const updated = { ...prev, [key]: value };
+  // ✅ Form Data (Candidate Profile + Apply)
+  const [formData, setFormData] = useState({
+    can_full_name: "",
+    can_email: "",
+    can_phone: "",
 
-      if (!originalCandidate) {
-        setIsProfileDirty(true);
-        return updated;
-      }
+    education_type: "",
+    education_detail: "",
+    education_other: "",
 
-      setIsProfileDirty(
-        JSON.stringify(updated) !== JSON.stringify(originalCandidate)
+    experience: "",
+    skills: "",
+
+    can_resume: "", // ✅ hidden resume filename
+  });
+
+  /* ================= JOB DETAIL ================= */
+  const fetchJobDetail = async () => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_job/job_id/${job_id}`
       );
-      return updated;
-    });
+
+      if (res?.data?.status === true || res?.data?.status === "success") {
+        const jData = Array.isArray(res.data.data)
+          ? res.data.data[0]
+          : res.data.data;
+
+        console.log("✅ JOB DATA =>", jData);
+        setJob(jData);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to load job details");
+    }
   };
 
+  /* ================= CANDIDATE PROFILE (FROM DB) ================= */
+  const fetchCandidateProfile = async () => {
+    try {
+      if (!candidateLS?.can_id) return;
+
+      const res = await axios.get(
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_candidate/can_id/${candidateLS.can_id}`
+      );
+
+      if (res.data.status === true || res.data.status === "success") {
+        const cData = Array.isArray(res.data.data)
+          ? res.data.data[0]
+          : res.data.data;
+
+        setFormData((prev) => ({
+          ...prev,
+          can_full_name: cData?.can_name || candidateLS?.can_name || "",
+          can_email: cData?.can_email || candidateLS?.can_email || "",
+          can_phone: cData?.can_mobile || candidateLS?.can_mobile || "",
+
+          education_type: cData?.can_education_type || "",
+          education_detail: cData?.can_education_detail || "",
+          education_other: "",
+
+          experience: cData?.can_experience || "",
+          skills: cData?.can_skill || "",
+
+          can_resume: cData?.can_resume || "",
+        }));
+
+        // ✅ localStorage update (optional)
+        localStorage.setItem(
+          "candidate",
+          JSON.stringify({
+            ...candidateLS,
+            ...cData,
+          })
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to load candidate profile");
+    }
+  };
+
+  useEffect(() => {
+    document.title = "Hirelink | Apply";
+
+    fetchJobDetail();
+    fetchCandidateProfile();
+  }, [job_id]);
+
+  /* ================= HANDLERS ================= */
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleEducationTypeChange = (e) => {
+    const type = e.target.value;
+
+    setFormData((prev) => ({
+      ...prev,
+      education_type: type,
+      education_detail: "",
+      education_other: "",
+    }));
+  };
+
+  /* ================= RESUME UPLOAD (PDF Only) ================= */
   const uploadFile = async (e, fieldName) => {
     const file = e.target.files[0];
     if (!file) return;
 
+    // ✅ allow only PDF
     if (file.type !== "application/pdf") {
       toast.error("Only PDF files are allowed");
-      e.target.value = "";
       return;
     }
 
-    setLoading(true);
+    setResumeUploading(true);
 
-    const fd = new FormData();
-    fd.append(fieldName, file);
+    const formDataFile = new FormData();
+    formDataFile.append(fieldName, file);
 
     try {
       const res = await axios.post(
         `${BASE_URL}hirelink_apis/candidate/fileupload`,
-        fd
+        formDataFile
       );
 
-      if (res.data.status) {
-        updateCandidateField(fieldName, res.data.files[fieldName]);
-        setShowProfileHint(false);
+      if (res.data.status === true || res.data.status === "success") {
+        const filename = res.data.files[fieldName];
+
+        // ✅ set hidden resume field
+        setFormData((prev) => ({
+          ...prev,
+          can_resume: filename,
+        }));
+
+        // ✅ localStorage update so refresh madhe pan disel
+        const oldCand = JSON.parse(localStorage.getItem("candidate"));
+        localStorage.setItem(
+          "candidate",
+          JSON.stringify({
+            ...oldCand,
+            can_resume: filename,
+          })
+        );
+
         toast.success("Resume uploaded successfully ✅");
       } else {
-        toast.error("Resume upload failed ❌");
+        toast.error("Resume not uploaded ❌");
       }
-    } catch {
-      toast.error("Resume upload failed ❌");
+    } catch (err) {
+      toast.error("Resume not uploaded ❌");
+      console.error(err);
     } finally {
-      setLoading(false);
+      setResumeUploading(false);
     }
   };
 
-  const isProfileComplete = () => {
-    return (
-      candidateData.can_education_type &&
-      candidateData.can_education_detail &&
-      candidateData.can_resume
-    );
-  };
- 
+  /* ================= PROFILE UPDATE (JSON) ================= */
+  const updateCandidateProfile = async () => {
+    const candidate = JSON.parse(localStorage.getItem("candidate"));
 
+    if (!candidate?.can_id) {
+      toast.error("Candidate not found");
+      return false;
+    }
+
+    // ✅ validations
+    if (!formData.education_type) {
+      toast.warn("Please select Education Type");
+      return false;
+    }
+
+    const finalEducation =
+      formData.education_type === "Other"
+        ? formData.education_other
+        : formData.education_detail;
+
+    if (!finalEducation?.trim()) {
+      toast.warn("Please select/enter Education Detail");
+      return false;
+    }
+
+    if (!formData.skills.trim()) {
+      toast.warn("Please enter Skills");
+      return false;
+    }
+
+    if (!formData.experience.trim()) {
+      toast.warn("Please enter Experience");
+      return false;
+    }
+
+    if (!formData.can_resume) {
+      toast.warn("Please upload Resume (PDF)");
+      return false;
+    }
+
+    setProfileUpdating(true);
+
+    try {
+      // ✅ DB field names exact
+      const payload = {
+        can_education_type: formData.education_type,
+        can_education_detail: finalEducation,
+        can_experience: formData.experience,
+        can_skill: formData.skills, // ✅ IMPORTANT: can_skill
+        can_resume: formData.can_resume,
+      };
+
+      const res = await axios.post(
+        `${BASE_URL}hirelink_apis/candidate/updatedata/tbl_candidate/can_id/${candidate.can_id}`,
+        payload,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      if (res.data.status === true || res.data.status === "success") {
+        toast.success("✅ Profile Updated Successfully!");
+
+        // ✅ localStorage update
+        const updatedCandidate = {
+          ...candidate,
+          can_education_type: formData.education_type,
+          can_education_detail: finalEducation,
+          can_experience: formData.experience,
+          can_skill: formData.skills,
+          can_resume: formData.can_resume,
+        };
+
+        localStorage.setItem("candidate", JSON.stringify(updatedCandidate));
+
+        // ✅ UI refresh
+        setFormData((prev) => ({
+          ...prev,
+          education_type: formData.education_type,
+          education_detail: finalEducation,
+          education_other: "",
+          experience: formData.experience,
+          skills: formData.skills,
+          can_resume: formData.can_resume,
+        }));
+
+        return true;
+      } else {
+        toast.error(res.data.message || "Profile update failed");
+        return false;
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Server error while updating profile");
+      return false;
+    } finally {
+      setProfileUpdating(false);
+    }
+  };
+
+  /* ================= APPLY JOB ================= */
   const handleApplySubmit = async (e) => {
     e.preventDefault();
-    if (loading || applied) return;
 
-    if (!isProfileComplete()) {
-      setShowProfileHint(true);
-      toast.info("Please complete your profile to apply");
+    const candidate = JSON.parse(localStorage.getItem("candidate"));
+
+    if (!candidate?.can_id) {
+      toast.warn("Please login first");
+      navigate("/signin");
+      return;
+    }
+
+    // ✅ first update profile
+    const ok = await updateCandidateProfile();
+    if (!ok) return;
+
+    if (!job?.job_employer_id) {
+      toast.error("Employer ID not found");
       return;
     }
 
     setLoading(true);
 
+    const payload = {
+      apl_candidate_id: candidate.can_id,
+      apl_job_id: Number(job_id),
+      apl_employer_id: job.job_employer_id,
+    };
+
     try {
-      if (isProfileDirty) {
-        try {
-          setUpdateStatus("updating");
-
-          const updateRes = await axios.post(
-            `${BASE_URL}hirelink_apis/candidate/updatedata/tbl_candidate/can_id/${apl_candidate_id}`,
-            candidateData
-          );
-
-          if (!updateRes.data?.status) {
-            setUpdateStatus("error");
-            toast.error("Profile update failed ❌");
-            return;
-          }
-
-          setUpdateStatus("success");
-          toast.success("Profile updated successfully ✅");
-        } catch (err) {
-          setUpdateStatus("error");
-          toast.error("Profile update error ❌");
-          return;
-        }
-      }
-
-      const applyRes = await axios.post(
+      const res = await axios.post(
         `${BASE_URL}hirelink_apis/admin/insert/tbl_applied`,
-        { apl_candidate_id, apl_job_id, apl_employer_id }
+        payload,
+        { headers: { "Content-Type": "application/json" } }
       );
 
-      if (applyRes.data?.status) {
-        toast.success("Job applied successfully ✅");
-        // setApplied(true);
-
-        localStorage.setItem(
-          "candidate",
-          JSON.stringify({ ...candidate, ...candidateData })
-        );
-
-        // setOriginalCandidate(candidateData);
-        // setIsProfileDirty(false);
-
-        // setTimeout(() => {
-        navigate("/profile/applied-jobs", { replace: true });
-        // }, 1500);
+      if (res.data.status === true || res.data.status === "success") {
+        toast.success("✅ Job Applied Successfully!");
+        setTimeout(() => navigate("/profile/applied-jobs"), 1200);
+      } else {
+        toast.error(res.data.message || "Failed to apply job");
       }
-    } catch {
-      toast.error("Something went wrong");
+    } catch (error) {
+      console.log(error);
+      toast.error("Server error while applying job");
     } finally {
       setLoading(false);
     }
   };
-
-  const isApplyDisabled = loading || applied;
 
   return (
     <>
       <ToastContainer position="top-right" autoClose={3000} theme="colored" />
 
-      <div className="container my-4 my-md-5">
-        <div className="row justify-content-center">
-          <div className="col-lg-8 col-md-10 col-12">
-            <div className="card shadow-sm border-0">
-              <div className="card-body p-4">
-                <h5 className="text-center fw-bold mb-3">Apply For The Job</h5>
+      <div className="container mt-5 mb-5">
+        <h3 className="fw-bold mb-3">Apply Job</h3>
 
-                <div className="row">
-                  <div className="mb-2 col-md-6">
-                    <label>Job Title</label>
-                    <input
-                      className="form-control"
-                      value={job.job_title}
-                      readOnly
-                    />
-                  </div>
-                  <div className="mb-2 col-md-6">
-                    <label>Company Name</label>
-                    <input
-                      className="form-control"
-                      value={job.job_company}
-                      readOnly
-                    />
-                  </div>
-                </div>
+        {/* ✅ Job Info */}
+        {job && (
+          <div className="card p-3 mb-4 shadow-sm">
+            <h5 className="fw-bold">{job.job_title}</h5>
+            <p className="text-muted m-0">
+              {job.job_company} · {job.city_name}, {job.state_name}
+            </p>
+            {/* <p className="text-success fw-semibold mt-2">
+              ₹{job.job_salary}/month
+            </p> */}
+          </div>
+        )}
 
-                <form onSubmit={handleApplySubmit}>
-                  <div className="row">
-                    <div className="col-md-6 mb-3">
-                      <label>Full Name</label>
-                      <input
-                        className="form-control"
-                        value={formData.fullname}
-                        readOnly
-                      />
-                    </div>
+        {/* ✅ APPLY FORM */}
+        <div className="card p-4 shadow-sm">
+          <form onSubmit={handleApplySubmit}>
+            <div className="row">
+              {/* Name */}
+              <div className="col-6 mb-3">
+                <label className="form-label fw-semibold">Full Name</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={formData.can_full_name}
+                  disabled
+                />
+              </div>
 
-                    <div className="col-md-6 mb-3">
-                      <label>Email</label>
-                      <input
-                        className="form-control"
-                        value={formData.email}
-                        readOnly
-                      />
-                    </div>
+              {/* Email */}
+              <div className="col-6 mb-3">
+                <label className="form-label fw-semibold">Email</label>
+                <input
+                  type="email"
+                  className="form-control"
+                  value={formData.can_email}
+                  disabled
+                />
+              </div>
 
-                    <div className="col-md-6 mb-3">
-                      <label>Mobile</label>
-                      <input
-                        className="form-control"
-                        value={formData.mobile}
-                        readOnly
-                      />
-                    </div>
+              {/* Phone */}
+              <div className="col-6 mb-3">
+                <label className="form-label fw-semibold">Phone</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={formData.can_phone}
+                  disabled
+                />
+              </div>
 
-                    <div className="col-md-6 mb-3">
-                      <label>Upload Resume</label>
-                      <label
-                        className="btn btn-outline-success w-100"
-                        style={{ marginTop: "0" }}
-                      >
-                        {candidateData.can_resume
-                          ? "Resume Uploaded"
-                          : "Upload Resume (PDF)"}
-                        <input
-                          hidden
-                          type="file"
-                          accept=".pdf"
-                          onChange={(e) => uploadFile(e, "can_resume")}
-                        />
-                      </label>
-                    </div>
+              {/* Education Type */}
+              <div className="col-6 mb-3">
+                <label className="form-label fw-semibold">Education Type</label>
+                <select
+                  className="form-select form-control"
+                  value={formData.education_type}
+                  onChange={handleEducationTypeChange}
+                >
+                  <option value="">-- Select Education Type --</option>
+                  <option value="Diploma">Diploma</option>
+                  <option value="Graduation">Graduation</option>
+                  <option value="Post Graduation">Post Graduation</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
 
-                    <div className="col-md-6 mb-3">
-                      <label>Education Type</label>
-                      <select
-                        className="form-select form-control"
-                        value={candidateData.can_education_type}
-                        onChange={(e) => {
-                          updateCandidateField(
-                            "can_education_type",
-                            e.target.value
-                          );
-                          updateCandidateField("can_education_detail", "");
-                        }}
-                      >
-                        <option value="">Select</option>
-                        <option value="Diploma">Diploma</option>
-                        <option value="Graduation">Graduation</option>
-                        <option value="Post Graduation">Post Graduation</option>
-                        <option value="Other">Other</option>
-                      </select>
-                    </div>
-
-                    <div className="col-md-6 mb-3">
-                      <label>Education Detail</label>
-
-                      {candidateData.can_education_type === "Other" ? (
-                        <input
-                          className="form-control"
-                          value={candidateData.can_education_detail}
-                          placeholder="Enter Your Education"
-                          onChange={(e) =>
-                            updateCandidateField(
-                              "can_education_detail",
-                              e.target.value
-                            )
-                          }
-                        />
-                      ) : (
-                        <select
-                          className="form-select form-control"
-                          disabled={!candidateData.can_education_type}
-                          value={candidateData.can_education_detail}
-                          onChange={(e) =>
-                            updateCandidateField(
-                              "can_education_detail",
-                              e.target.value
-                            )
-                          }
-                        >
-                          <option value="">Select</option>
-                          {educationOptions[
-                            candidateData.can_education_type
-                          ]?.map((opt) => (
-                            <option key={opt} value={opt}>
-                              {opt}
-                            </option>
-                          ))}
-                        </select>
+              {/* Education Detail */}
+              {formData.education_type &&
+                formData.education_type !== "Other" && (
+                  <div className="col-6 mb-3">
+                    <label className="form-label fw-semibold">
+                      Education Detail
+                    </label>
+                    <select
+                      className="form-select form-control"
+                      name="education_detail"
+                      value={formData.education_detail}
+                      onChange={handleChange}
+                    >
+                      <option value="">-- Select --</option>
+                      {educationOptions[formData.education_type]?.map(
+                        (item) => (
+                          <option key={item} value={item}>
+                            {item}
+                          </option>
+                        )
                       )}
-                    </div>
-
-                    <div className="col-md-6 mb-3">
-                      <label>Experience</label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        placeholder="Enter Experience"
-                        value={candidateData.can_experience}
-                        onChange={(e) =>
-                          updateCandidateField("can_experience", e.target.value)
-                        }
-                      />
-                    </div>
-
-                    <div className="col-md-6 mb-3">
-                      <label>Primary Skill</label>
-                      <input
-                        className="form-control"
-                        placeholder="Enter Primary Skill"
-                        value={candidateData.can_skill}
-                        onChange={(e) =>
-                          updateCandidateField("can_skill", e.target.value)
-                        }
-                      />
-                    </div>
+                    </select>
                   </div>
+                )}
 
-                  {showProfileHint && (
-                    <small className="text-muted d-block mb-2">
-                      Please complete your profile to apply
-                    </small>
-                  )}
+              {/* Other Education */}
+              {formData.education_type === "Other" && (
+                <div className="col-6 mb-3">
+                  <label className="form-label fw-semibold">
+                    Enter Education
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="education_other"
+                    value={formData.education_other}
+                    onChange={handleChange}
+                    placeholder="Ex: BCA, MCA, ITI, etc..."
+                  />
+                </div>
+              )}
 
-                  <button
-                    type="submit"
-                    className="btn btn-success w-100"
-                    disabled={isApplyDisabled}
-                  >
-                    {loading
-                      ? "Updating & Applying..."
-                      : applied
-                      ? "Already Applied"
-                      : "Apply Now"}
-                  </button>
-                </form>
+              {/* Experience */}
+              <div className="col-6 mb-3">
+                <label className="form-label fw-semibold">Experience</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="experience"
+                  value={formData.experience}
+                  onChange={handleChange}
+                  placeholder="Ex: 1 year / Fresher"
+                />
+              </div>
+
+              {/* Skills */}
+              <div className="col-6 mb-3">
+                <label className="form-label fw-semibold">Skills</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="skills"
+                  value={formData.skills}
+                  onChange={handleChange}
+                  placeholder="Ex: React, PHP, MySQL, HTML, CSS"
+                />
+              </div>
+
+              {/* Resume Upload */}
+              <div className="col-6 mb-3">
+                <label className="form-label fw-semibold">
+                  Upload Resume (PDF Only)
+                </label>
+
+                <input
+                  type="file"
+                  className="form-control"
+                  accept="application/pdf"
+                  onChange={(e) => uploadFile(e, "can_resume")}
+                />
+
+                {/* ✅ hidden input */}
+                <input
+                  type="hidden"
+                  name="can_resume"
+                  value={formData.can_resume}
+                />
+
+                {resumeUploading && (
+                  <small className="text-warning">Uploading resume...</small>
+                )}
+
+                {formData.can_resume && (
+                  <small className="text-success">
+                    ✅ Uploaded Resume: {formData.can_resume}
+                  </small>
+                )}
               </div>
             </div>
-          </div>
+
+            <button
+              type="submit"
+              className="btn btn-success w-100"
+              disabled={loading || profileUpdating || resumeUploading}
+            >
+              {resumeUploading
+                ? "Uploading Resume..."
+                : profileUpdating
+                ? "Updating Profile..."
+                : loading
+                ? "Applying..."
+                : "Update Profile + Apply"}
+            </button>
+          </form>
         </div>
       </div>
     </>

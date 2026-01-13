@@ -8,6 +8,7 @@ import * as Yup from "yup";
 import { toast, ToastContainer } from "react-toastify";
 import { BASE_URL } from "../config/constants";
 import { saveFcmToken } from "./saveFcmToken";
+import ReCAPTCHA from "react-google-recaptcha";
 
 function Signin() {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ function Signin() {
   const [successMsg, setSuccessMsg] = useState("");
   const [apiError, setApiError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState(null);
 
   // ✅ FIX 1: activeRole state
   const [activeRole, setActiveRole] = useState("Candidate");
@@ -50,6 +52,11 @@ function Signin() {
 
     // Api fecth code
     onSubmit: async (values, { resetForm }) => {
+      if (!captchaToken) {
+        toast.error("Please verify captcha!");
+        return;
+      }
+
       setLoading(true);
 
       try {
@@ -62,6 +69,7 @@ function Signin() {
           payload = {
             can_email: values.email,
             can_password: values.password,
+            captchaToken: captchaToken,
           };
         } else {
           url = `${BASE_URL}hirelink_apis/employer/signin/tbl_employer`;
@@ -69,6 +77,7 @@ function Signin() {
           payload = {
             emp_email: values.email,
             emp_password: values.password,
+            captchaToken: captchaToken,
           };
         }
 
@@ -246,6 +255,14 @@ function Signin() {
                 )}
               </div>
 
+              <div className="my-3 d-flex justify-content-center">
+                <ReCAPTCHA
+                  sitekey="6LfE8EgsAAAAANyUHlqJ_RMe1Klg_WVpVx7NimPG"
+                  onChange={(token) => setCaptchaToken(token)}
+                  onExpired={() => setCaptchaToken(null)}
+                />
+              </div>
+
               {/* ROLE */}
               <div className="mt-3 mb-4">
                 <label className="small fw-medium d-block">Login as</label>
@@ -277,7 +294,7 @@ function Signin() {
               <button
                 type="submit"
                 className="btn btn-primary-auth w-100"
-                disabled={loading}
+                disabled={loading || !captchaToken}
               >
                 {loading
                   ? activeRole === "Candidate"

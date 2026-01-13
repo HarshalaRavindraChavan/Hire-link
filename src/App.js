@@ -99,8 +99,8 @@ function App() {
           <Route path="companies" element={<Company />} />
           <Route path="jobs" element={<Jobs />} />
           <Route path="job/:slug" element={<JobDetail />} />
-          <Route path="apply" element={<Apply />} />
-          <Route path="/profile/*" element={<Profile />} />
+          <Route path="apply/:job_id" element={<Apply />} />
+          <Route path="profile/*" element={<Profile />} />
           <Route path="notification" element={<Notification />} />
           <Route path="contacts" element={<Contacts />} />
           <Route path="about" element={<About />} />

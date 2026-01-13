@@ -10,6 +10,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { BASE_URL } from "../config/constants";
 import { saveFcmToken } from "./saveFcmToken";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ const Signup = () => {
   // ✅ FIX 1: activeRole state
   const [activeRole, setActiveRole] = useState("Candidate");
   const [loading, setLoading] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState(null);
 
   useEffect(() => {
     document.title = "Hirelink | Signup";
@@ -50,6 +52,11 @@ const Signup = () => {
 
   /* ---------------- SUBMIT ---------------- */
   const onSubmit = async (values) => {
+    if (!captchaToken) {
+      toast.error("Please verify captcha!");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -64,6 +71,7 @@ const Signup = () => {
           can_email: values.email,
           can_password: values.password,
           can_mobile: values.mobile,
+          captchaToken: captchaToken,
         };
       } else {
         // 🔹 Employer Signup API
@@ -73,6 +81,7 @@ const Signup = () => {
           emp_email: values.email,
           emp_password: values.password,
           emp_mobile: values.mobile,
+          captchaToken: captchaToken,
         };
       }
 
@@ -262,6 +271,14 @@ const Signup = () => {
                 </div>
               </div>
 
+              <div className="my-3 d-flex justify-content-center">
+                <ReCAPTCHA
+                  sitekey="6LfE8EgsAAAAANyUHlqJ_RMe1Klg_WVpVx7NimPG"
+                  onChange={(token) => setCaptchaToken(token)}
+                  onExpired={() => setCaptchaToken(null)}
+                />
+              </div>
+
               <div className="mt-2">
                 <label className="small fw-medium d-block ">Login as</label>
                 <div className="d-flex gap-2">
@@ -290,7 +307,7 @@ const Signup = () => {
               <button
                 type="submit"
                 className="btn btn-primary-signup w-100 mt-3 d-flex justify-content-center align-items-center gap-2"
-                disabled={loading}
+                disabled={loading || !captchaToken}
               >
                 {loading && (
                   <span className="spinner-border spinner-border-sm"></span>

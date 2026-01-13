@@ -61,7 +61,7 @@ function Jobs() {
   const toggleSaveJob = async (jobId) => {
     if (!candidate?.can_id) {
       toast.warn("Please login as Candidate to save jobs");
-      
+
       setTimeout(() => {
         navigate("/signin");
       }, 3000);
@@ -189,11 +189,7 @@ function Jobs() {
       return;
     }
 
-    navigate("/apply", {
-      state: {
-        job: selectedJob, // 👈 FULL JOB DATA
-      },
-    });
+    navigate(`/apply/${selectedJob.job_id}`);
   };
 
   return (

@@ -250,7 +250,7 @@ function Interview() {
 
                     <td>
                       <div className="fw-bold">
-                        Interview Type::{" "}
+                        Interview Type:{" "}
                         <span className="text-dark fw-normal">
                           {i.itv_type}
                         </span>

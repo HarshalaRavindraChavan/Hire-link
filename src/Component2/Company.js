@@ -101,7 +101,7 @@ function Company() {
         </a> */}
 
         {/* POPULAR COMPANIES */}
-        <h3 className="text-start mt-5 fw-bold ps-3">Popular companies</h3>
+        <h3 className="text-start mt-5 fw-bold ps-3">Popular Companies</h3>
 
         <div className="row mt-3 g-3 ps-3 pe-3">
           {popularCompanies.map((c, i) => (
@@ -113,10 +113,10 @@ function Company() {
                       ? `${BASE_URL}hirelink_apis/Uploads/${c.emp_com_logo}`
                       : "https://via.placeholder.com/100"
                   }
-                  width="100px"
+                  width="150px"
                   height="100px"
                   className="mb-2"
-                  style={{ borderRadius: "50%" }}
+                  style={{ borderRadius: "20%" }}
                   alt="logo"
                 />
                 <h6 className="mt-2 mb-1 fw-semibold">{c.emp_companyname}</h6>

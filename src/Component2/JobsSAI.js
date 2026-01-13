@@ -636,14 +636,14 @@ function JobsSAI() {
                       </div>
                     </div>
 
-                    <div className="d-flex align-items-center">
+                    {/* <div className="d-flex align-items-center">
                       <button
                         className="btn btn-success"
                         onClick={() => setShowScheduleModal(true)}
                       >
                         Schedule
                       </button>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               ))}

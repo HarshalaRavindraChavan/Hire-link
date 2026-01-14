@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import { BASE_URL } from "../config/constants";
-
+import SearchableDropdown from "./SearchableDropdown";
 
 const EmpProfile = () => {
   const [activeTab, setActiveTab] = useState("profile");
@@ -22,7 +22,7 @@ const EmpProfile = () => {
   const fetchStates = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdata/tbl_state`,
+        `${BASE_URL}hirelink_apis/candidate/getdata/tbl_state`
       );
 
       if (res.data?.status) {
@@ -386,18 +386,28 @@ const EmpProfile = () => {
 
                     <div className="col-md-4">
                       <label className="fw-semibold">State</label>
-                      <select
+                      {/* <select
                         className={fieldClass("state")}
                         value={formik.values.state}
                         onChange={handleStateChange}
                       >
                         <option value="">Select State</option>
+                       
                         {states.map((state) => (
                           <option key={state.state_id} value={state.state_id}>
                             {state.state_name}
                           </option>
                         ))}
-                      </select>
+                    
+                      </select> */}
+                      <SearchableDropdown
+                        value={formik.values.state}
+                        options={states}
+                        onChange={(value) => {
+                          formik.setFieldValue("state", value);
+                          handleStateChange({ target: { value } });
+                        }}
+                      />
                       <div className="invalid-feedback d-block">
                         {formik.errors.state}
                       </div>

@@ -39,6 +39,7 @@ import Applicant from "./Component/Applicant";
 import Login from "./Component/Login";
 import Registar from "./Component/Registar";
 import Verify from "./Component/Verify";
+import InterManage from "./Component/InterManage";
 
 /* ================= EMPLOYER ================= */
 import Header3 from "./Component3/Header";
@@ -140,6 +141,7 @@ function App() {
           <Route path="job" element={<Job />} />
           <Route path="candidate" element={<Candidates />} />
           <Route path="interview" element={<Interview />} />
+          <Route path="intermanage" element={<InterManage />} />
           <Route path="employe" element={<Employes />} />
           <Route path="applicant" element={<Applicant />} />
           <Route path="emp-profile" element={<EmpProfile />} />

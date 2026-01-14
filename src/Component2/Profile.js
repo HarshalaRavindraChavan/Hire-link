@@ -243,9 +243,8 @@ function Profile() {
 
       const lsData = JSON.parse(stored);
 
-      const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_candidate/can_id/${lsData.can_id}`
-      );
+      const res =
+        await axios.get`${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_candidate/can_id/${lsData.can_id}`();
 
       if (res.data?.status && res.data?.data?.length > 0) {
         const freshCandidate = res.data.data[0]; // ✅ DB latest data
@@ -425,26 +424,6 @@ function Profile() {
       return;
     }
 
-    // const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
-
-    // // ✅ SIZE LIMITS (KB → Bytes)
-    // const minSize = 30 * 1024; // 30 KB
-    // const maxSize = 50 * 1024; // 50 KB
-
-    // // ❌ TYPE VALIDATION
-    // if (!allowedTypes.includes(file.type)) {
-    //   toast.error("Only JPG, JPEG, PNG files are allowed");
-    //   e.target.value = "";
-    //   return;
-    // }
-
-    // // ❌ SIZE VALIDATION
-    // if (file.size < minSize || file.size > maxSize) {
-    //   toast.error("File size must be between 30 KB and 50 KB");
-    //   e.target.value = "";
-    //   return;
-    // }
-
     const formData = new FormData();
     formData.append(fieldName, file);
 
@@ -521,19 +500,19 @@ function Profile() {
   };
 
   const totalPoints = 1000;
-  const points = Number(candidate.can_score) || 0; // dynamic value
+  const points = Number(candidate.can_score) || 1000; // dynamic value
   const percentage = (points / totalPoints) * 100;
   // Smooth gradient ring (Green → Yellow → Red)
   const ringGradient = `
       conic-gradient(
-        #fa5b6b 0%,
+        #fa4f00 0%,
         #ffc107 40%,
-        #198754 100%
+        #0d7904 100%
       )
     `;
 
-  console.log("Candidate Full Data 👉", candidate);
-  console.log("Candidate Score 👉", candidate.can_score);
+  const scoreTextColor =
+    percentage < 40 ? "#fa4f00" : percentage < 70 ? "#ffc107" : "#0d7904";
 
   useEffect(() => {
     fetchCandidateProfile();
@@ -610,49 +589,66 @@ function Profile() {
             </div>
 
             {/* Progress Circle Center */}
-            <div className="d-flex justify-content-center mb-3">
+            <div className="d-flex justify-content-center mt-2 ">
               <div
                 style={{
-                  width: "120px",
-                  height: "120px",
-                  borderRadius: "50%",
-                  background: ringGradient,
                   display: "flex",
-                  justifyContent: "center",
+                  flexDirection: "column",
                   alignItems: "center",
-                  position: "relative",
                 }}
               >
-                {/* Progress Overlay (empty part cover) */}
+                {/* Ring Circle */}
                 <div
                   style={{
-                    width: "120px",
-                    height: "120px",
+                    width: "80px",
+                    height: "80px",
                     borderRadius: "50%",
-                    background: `conic-gradient(transparent ${percentage}%, #e9ecef ${percentage}%)`,
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                  }}
-                />
-
-                {/* Inner white circle */}
-                <div
-                  style={{
-                    width: "95px",
-                    height: "95px",
-                    borderRadius: "50%",
-                    background: "#fff",
+                    background: ringGradient,
                     display: "flex",
-                    flexDirection: "column",
                     justifyContent: "center",
                     alignItems: "center",
-                    zIndex: 2,
+                    position: "relative",
                   }}
                 >
-                  <h4 className="mb-0 fw-bold">{points}</h4>
-                  <small className="text-muted">/ {totalPoints}</small>
+                  {/* Progress Overlay (empty part cover) */}
+                  <div
+                    style={{
+                      width: "80px",
+                      height: "80px",
+                      borderRadius: "50%",
+                      background: `conic-gradient(transparent ${percentage}%, #e9ecef ${percentage}%)`,
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                    }}
+                  />
+
+                  {/* Inner white circle */}
+                  <div
+                    style={{
+                      width: "65px",
+                      height: "65px",
+                      borderRadius: "50%",
+                      background: "#fff",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      zIndex: 2,
+                    }}
+                  >
+                    <h4 className="mb-0 fw-bold">{points}</h4>
+                    <small className="text-muted">/ {totalPoints}</small>
+                  </div>
                 </div>
+
+                {/* ✅ Score Text Bottom */}
+                <p
+                  className="mt-0 mb-0 fw-semibold"
+                  style={{ color: scoreTextColor }}
+                >
+                  Score
+                </p>
               </div>
             </div>
           </div>

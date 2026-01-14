@@ -403,11 +403,18 @@ const EmpProfile = () => {
                       <SearchableDropdown
                         value={formik.values.state}
                         options={states}
+                        placeholder="Select State"
+                        searchPlaceholder="Search state..."
+                        labelKey="state_name"
+                        valueKey="state_id"
                         onChange={(value) => {
                           formik.setFieldValue("state", value);
+                          formik.setFieldValue("city", ""); // reset city
                           handleStateChange({ target: { value } });
                         }}
+                        // error={formik.errors.state}
                       />
+
                       <div className="invalid-feedback d-block">
                         {formik.errors.state}
                       </div>
@@ -437,17 +444,16 @@ const EmpProfile = () => {
                       <SearchableDropdown
                         value={formik.values.city}
                         options={cities}
-                        disabled={!formik.values.state}
                         placeholder={
-                          !formik.values.state
-                            ? "Select state first"
-                            : "Select City"
+                          formik.values.state
+                            ? "Select City"
+                            : "Select state first"
                         }
-                        getLabel={(city) => city.city_name}
-                        getValue={(city) => city.city_id}
+                        searchPlaceholder="Search city..."
+                        labelKey="city_name"
+                        valueKey="city_id"
                         onChange={(value) => {
                           formik.setFieldValue("city", value);
-                          handleCityChange({ target: { value } });
                         }}
                         // error={formik.errors.city}
                       />

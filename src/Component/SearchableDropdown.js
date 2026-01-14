@@ -1,12 +1,23 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./css/SearchableDropdown.css";
 
-const SearchableDropdown = ({ name, value, options, onChange, error }) => {
+const SearchableDropdown = ({
+  value,
+  options = [],
+  onChange,
+  error,
+  placeholder = "Select",
+  searchPlaceholder = "Search...",
+  labelKey = "name",
+  valueKey = "id",
+}) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const ref = useRef();
+  const ref = useRef(null);
 
-  const selectedOption = options.find(o => o.state_id === value);
+  const selectedOption = options.find(
+    (o) => o[valueKey] === value
+  );
 
   useEffect(() => {
     const handler = (e) => {
@@ -18,8 +29,10 @@ const SearchableDropdown = ({ name, value, options, onChange, error }) => {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const filteredOptions = options.filter(opt =>
-    opt.state_name.toLowerCase().includes(search.toLowerCase())
+  const filteredOptions = options.filter((opt) =>
+    opt[labelKey]
+      ?.toLowerCase()
+      .includes(search.toLowerCase())
   );
 
   return (
@@ -28,7 +41,9 @@ const SearchableDropdown = ({ name, value, options, onChange, error }) => {
         className="current"
         onClick={() => setOpen(!open)}
       >
-        {selectedOption ? selectedOption.state_name : "Select State"}
+        {selectedOption
+          ? selectedOption[labelKey]
+          : placeholder}
       </div>
 
       {open && (
@@ -37,7 +52,7 @@ const SearchableDropdown = ({ name, value, options, onChange, error }) => {
             <input
               type="text"
               className="dd-searchbox"
-              placeholder="Search state..."
+              placeholder={searchPlaceholder}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -45,29 +60,35 @@ const SearchableDropdown = ({ name, value, options, onChange, error }) => {
 
           <ul>
             {filteredOptions.length === 0 && (
-              <li className="option text-muted">No results</li> 
+              <li className="option text-muted">
+                No results
+              </li>
             )}
 
-            {filteredOptions.map(state => (
+            {filteredOptions.map((item) => (
               <li
-                key={state.state_id}
+                key={item[valueKey]}
                 className={`option ${
-                  value === state.state_id ? "selected" : ""
+                  value === item[valueKey] ? "selected" : ""
                 }`}
                 onClick={() => {
-                  onChange(state.state_id);
+                  onChange(item[valueKey]);
                   setOpen(false);
                   setSearch("");
                 }}
               >
-                {state.state_name}
+                {item[labelKey]}
               </li>
             ))}
           </ul>
         </div>
       )}
 
-      {error && <div className="invalid-feedback d-block">{error}</div>}
+      {error && (
+        <div className="invalid-feedback d-block">
+          {error}
+        </div>
+      )}
     </div>
   );
 };

@@ -210,7 +210,7 @@ function Interview() {
                           data-bs-toggle="dropdown"
                         >
                           {i.can_name}
-                          (Click here for edit)
+                          (Click here for Interview Update)
                         </span>
                         <ul className="dropdown-menu">
                           <li>

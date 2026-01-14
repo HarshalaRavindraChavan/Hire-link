@@ -253,7 +253,7 @@ function Applicant() {
                             setSelectedApplicant(app);
                           }}
                         >
-                          {app.can_name} (Click here for edit)
+                          {app.can_name} (Click here for Interview Schedule)
                         </span>
                       </div>
                       <div className="fw-bold ">

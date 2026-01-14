@@ -409,7 +409,7 @@ const EmpProfile = () => {
                         valueKey="state_id"
                         onChange={(value) => {
                           formik.setFieldValue("state", value);
-                          formik.setFieldValue("city", ""); // reset city
+                          formik.setFieldValue("city", ""); 
                           handleStateChange({ target: { value } });
                         }}
                         // error={formik.errors.state}

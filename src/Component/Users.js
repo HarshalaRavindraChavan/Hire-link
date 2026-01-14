@@ -21,9 +21,9 @@ function Users() {
   const [educationDetail, setEducationDetail] = useState("");
 
   const educationOptions = {
-    Diploma: ["D.Form"],
-    Graduation: ["B.Sc", "B.Form"],
-    "Post Graduation": ["M.Sc", "M.Form"],
+    Diploma: ["D.Pharm"],
+    Graduation: ["B.Sc", "B.Pharm"],
+    "Post Graduation": ["M.Sc", "M.Pharm"],
   };
 
   const [users, setUsers] = useState([]);

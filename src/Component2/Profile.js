@@ -234,6 +234,8 @@ function Profile() {
     can_sc3: "",
   });
 
+  const [isCategorySynced, setIsCategorySynced] = useState(false); // ✅ ADD THIS
+
   const fetchCandidateProfile = async () => {
     try {
       const stored = localStorage.getItem("candidate");
@@ -244,8 +246,9 @@ function Profile() {
 
       const lsData = JSON.parse(stored);
 
-      const res =
-        await axios.get`${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_candidate/can_id/${lsData.can_id}`();
+      const res = await axios.get(
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_candidate/can_id/${lsData.can_id}`
+      );
 
       if (res.data?.status && res.data?.data?.length > 0) {
         const freshCandidate = res.data.data[0]; // ✅ DB latest data
@@ -269,9 +272,42 @@ function Profile() {
     }
   };
 
+  // ✅ ONLY SCORE FETCH (does not overwrite whole profile)
+  const fetchCandidateScoreOnly = async () => {
+    try {
+      const stored = localStorage.getItem("candidate");
+      if (!stored) return;
+
+      const lsData = JSON.parse(stored);
+
+      const res = await axios.get(
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_candidate/can_id/${lsData.can_id}`
+      );
+
+      if (res.data?.status && res.data?.data?.length > 0) {
+        const freshCandidate = res.data.data[0];
+
+        // ✅ ONLY update score (बाकी profile जसाचा तसा)
+        setCandidate((prev) => {
+          const updated = {
+            ...prev,
+            can_score: freshCandidate.can_score,
+          };
+
+          localStorage.setItem("candidate", JSON.stringify(updated));
+          return updated;
+        });
+      }
+    } catch (err) {
+      console.error("Fetch score error", err);
+    }
+  };
+
   // 🔁 SYNC SAVED CATEGORY TO DROPDOWNS (IMPORTANT)
+  // ✅ SYNC only ONE time (so user selection won't override)
   useEffect(() => {
     if (!candidate || !candidate.can_id) return;
+    if (isCategorySynced) return;
 
     setEducationType(candidate.can_education_type || "");
     setEducationDetail(candidate.can_education_detail || "");
@@ -281,7 +317,9 @@ function Profile() {
     setSelectedSubCat1(candidate.can_sc1 || "");
     setSelectedSubCat2(candidate.can_sc2 || "");
     setSelectedSubCat3(candidate.can_sc3 || "");
-  }, [candidate]);
+
+    setIsCategorySynced(true);
+  }, [candidate, isCategorySynced]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -349,8 +387,6 @@ function Profile() {
 
       if (result?.status === true) {
         toast.success("Profile updated successfully ✅");
-
-        await fetchCandidateProfile();
 
         const stateName =
           states.find((s) => s.state_id == candidate.can_state)?.state_name ||
@@ -501,7 +537,7 @@ function Profile() {
   };
 
   const totalPoints = 1000;
-  const points = Number(candidate.can_score) || 1000; // dynamic value
+  const points = Number(candidate.can_score) || 0; // dynamic value
   const percentage = (points / totalPoints) * 100;
   // Smooth gradient ring (Green → Yellow → Red)
   const ringGradient = `
@@ -516,10 +552,12 @@ function Profile() {
     percentage < 40 ? "#fa4f00" : percentage < 70 ? "#ffc107" : "#0d7904";
 
   useEffect(() => {
+    // ✅ First time full profile load
     fetchCandidateProfile();
 
+    // ✅ After that only score refresh every 5 sec
     const interval = setInterval(() => {
-      fetchCandidateProfile();
+      fetchCandidateScoreOnly();
     }, 5000);
 
     return () => clearInterval(interval);
@@ -1167,7 +1205,16 @@ function Profile() {
                     <select
                       className="form-control form-select rounded-3"
                       value={selectedCategory}
-                      onChange={(e) => setSelectedCategory(e.target.value)}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setSelectedCategory(val);
+
+                        // ✅ reset next dropdowns
+                        setSelectedSubCategory("");
+                        setSelectedSubCat1("");
+                        setSelectedSubCat2("");
+                        setSelectedSubCat3("");
+                      }}
                     >
                       <option value="">Select Category</option>
                       {categories.map((cat) => (
@@ -1182,7 +1229,14 @@ function Profile() {
                     <select
                       className="form-control form-select rounded-3"
                       value={selectedSubCategory}
-                      onChange={(e) => setSelectedSubCategory(e.target.value)}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setSelectedSubCategory(val);
+
+                        setSelectedSubCat1("");
+                        setSelectedSubCat2("");
+                        setSelectedSubCat3("");
+                      }}
                       disabled={!selectedCategory || subCategories.length === 0}
                     >
                       <option value="">
@@ -1205,7 +1259,13 @@ function Profile() {
                     <select
                       className="form-control form-select rounded-3"
                       value={selectedSubCat1}
-                      onChange={(e) => setSelectedSubCat1(e.target.value)}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setSelectedSubCat1(val);
+
+                        setSelectedSubCat2("");
+                        setSelectedSubCat3("");
+                      }}
                       disabled={!selectedSubCategory || subCat1.length === 0}
                     >
                       <option value="">
@@ -1228,7 +1288,12 @@ function Profile() {
                     <select
                       className="form-control form-select rounded-3"
                       value={selectedSubCat2}
-                      onChange={(e) => setSelectedSubCat2(e.target.value)}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setSelectedSubCat2(val);
+
+                        setSelectedSubCat3("");
+                      }}
                       disabled={!selectedSubCat1 || subCat2.length === 0}
                     >
                       <option value="">

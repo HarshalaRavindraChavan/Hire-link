@@ -12,6 +12,7 @@ function JobsSAI() {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const [appliedJobIds, setAppliedJobIds] = useState([]);
 
   const candidate = JSON.parse(localStorage.getItem("candidate"));
   const candidateId = candidate?.can_id;
@@ -69,7 +70,14 @@ function JobsSAI() {
       console.log("Saved API:", res.data);
 
       if (res.data.status) {
-        setSavedJobs(res.data.data);
+        const savedList = res.data.data || [];
+
+        // ✅ remove jobs which are already applied
+        const filteredSaved = savedList.filter(
+          (job) => !appliedJobIds.includes(Number(job.job_id))
+        );
+
+        setSavedJobs(filteredSaved);
       }
     } catch (error) {
       console.error("Saved jobs fetch error", error);
@@ -97,6 +105,10 @@ function JobsSAI() {
 
       if (res.data.status) {
         setAppliedJobs(res.data.data);
+
+        // ✅ applied job_ids list तयार कर
+        const ids = res.data.data.map((item) => Number(item.job_id));
+        setAppliedJobIds(ids);
       }
     } catch (error) {
       console.error("Applied jobs fetch error", error);
@@ -104,6 +116,11 @@ function JobsSAI() {
       setAppliedLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (!candidateId) return;
+    fetchAppliedJobs(); // ✅ Always load applied first
+  }, [candidateId]);
 
   // interview jobs
   const [interviewJobs, setInterviewJobs] = useState([]);
@@ -144,7 +161,7 @@ function JobsSAI() {
     if (activeTab === "interviews") {
       fetchInterviewJobs();
     }
-  }, [activeTab, candidateId]);
+  }, [activeTab, candidateId]); // ✅ removed appliedJobIds
 
   // 🔗 URL ↔ TAB SYNC
   useEffect(() => {
@@ -186,7 +203,7 @@ function JobsSAI() {
           <ul className="status-list">
             <li className="status-item">
               <span className="icon green">←</span>
-              Show the last Indeed update
+              Show the last Hirelink update
             </li>
 
             <li className="status-item">
@@ -482,12 +499,14 @@ function JobsSAI() {
                     </div>
 
                     <div className="d-flex align-items-center gap-3 mt-2 mt-md-0">
-                      <button
-                        className="btn btn-success btn-sm"
-                        onClick={() => navigate(`/apply/${job.job_id}`)}
-                      >
-                        Apply now
-                      </button>
+                      {!appliedJobIds.includes(Number(job.job_id)) && (
+                        <button
+                          className="btn btn-success btn-sm"
+                          onClick={() => navigate(`/apply/${job.job_id}`)}
+                        >
+                          Apply now
+                        </button>
+                      )}
 
                       {/* <i className="fa fa-bookmark text-success"></i>
                       <i className="fa fa-ellipsis-vertical"></i> */}
@@ -554,6 +573,11 @@ function JobsSAI() {
           <UpdateStatusModal
             show={showModal}
             onClose={() => setShowModal(false)}
+          />
+
+          <ScheduleInterviewModal
+            show={showScheduleModal}
+            onClose={() => setShowScheduleModal(false)}
           />
 
           {/* INTERVIEWS */}
@@ -636,14 +660,14 @@ function JobsSAI() {
                       </div>
                     </div>
 
-                    {/* <div className="d-flex align-items-center">
+                    <div className="d-flex align-items-center">
                       <button
                         className="btn btn-success"
                         onClick={() => setShowScheduleModal(true)}
                       >
-                        Schedule
+                        Reschedule
                       </button>
-                    </div> */}
+                    </div>
                   </div>
                 </div>
               ))}

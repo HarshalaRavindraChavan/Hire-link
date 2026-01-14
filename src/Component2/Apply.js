@@ -14,6 +14,7 @@ function Apply() {
   const [loading, setLoading] = useState(false);
   const [profileUpdating, setProfileUpdating] = useState(false);
   const [resumeUploading, setResumeUploading] = useState(false);
+  const [alreadyApplied, setAlreadyApplied] = useState(false);
 
   // ✅ Education Options
   const educationOptions = {
@@ -109,11 +110,40 @@ function Apply() {
 
     fetchJobDetail();
     fetchCandidateProfile();
+    checkAlreadyApplied(); // ✅ ADD THIS
   }, [job_id]);
 
   /* ================= HANDLERS ================= */
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  /* ================= CHECK ALREADY APPLIED ================= */
+  const checkAlreadyApplied = async () => {
+    try {
+      const candidate = JSON.parse(localStorage.getItem("candidate"));
+      if (!candidate?.can_id) return;
+
+      const res = await axios.get(
+        `${BASE_URL}hirelink_apis/admin/getdatawhere/tbl_applied/apl_job_id/${job_id}`
+      );
+
+      if (res.data.status === true || res.data.status === "success") {
+        const appliedList = Array.isArray(res.data.data) ? res.data.data : [];
+
+        const found = appliedList.some(
+          (item) => Number(item.apl_candidate_id) === Number(candidate.can_id)
+        );
+
+        if (found) {
+          setAlreadyApplied(true);
+        } else {
+          setAlreadyApplied(false);
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handleEducationTypeChange = (e) => {
@@ -289,6 +319,11 @@ function Apply() {
     if (!candidate?.can_id) {
       toast.warn("Please login first");
       navigate("/signin");
+      return;
+    }
+
+    if (alreadyApplied) {
+      toast.warn("You already applied for this job ✅");
       return;
     }
 
@@ -502,9 +537,7 @@ function Apply() {
                 )}
 
                 {formData.can_resume && (
-                  <small className="text-success">
-                    ✅ Uploaded Resume
-                  </small>
+                  <small className="text-success">✅ Uploaded Resume</small>
                 )}
               </div>
             </div>
@@ -512,9 +545,13 @@ function Apply() {
             <button
               type="submit"
               className="btn btn-success w-100"
-              disabled={loading || profileUpdating || resumeUploading}
+              disabled={
+                loading || profileUpdating || resumeUploading || alreadyApplied
+              }
             >
-              {resumeUploading
+              {alreadyApplied
+                ? "Already Applied ✅"
+                : resumeUploading
                 ? "Uploading Resume..."
                 : profileUpdating
                 ? "Updating Profile..."

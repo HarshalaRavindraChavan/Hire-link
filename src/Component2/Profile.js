@@ -893,14 +893,22 @@ function Profile() {
                         </option>
                       ))}
                     </select> */}
+
                     <SearchableDropdown
-                        value={candidate.values.can_state}
-                        options={states}
-                        onChange={(value) => {
-                          candidate.setFieldValue("state", value);
-                          handleStateChange({ target: { value } });
-                        }}
-                      />
+                      value={candidate.can_state || ""}
+                      options={states}
+                      placeholder="Select State"
+                      searchPlaceholder="Search state..."
+                      getLabel={(s) => s.state_name}
+                      getValue={(s) => s.state_id}
+                      onChange={(value) => {
+                        setCandidate((prev) => ({
+                          ...prev,
+                          can_state: value,
+                        }));
+                        handleStateChange({ target: { value } });
+                      }}
+                    />
                   </div>
 
                   <div className="col-md-6">

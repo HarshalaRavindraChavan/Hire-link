@@ -8,8 +8,6 @@ import JobsSAI from "./JobsSAI";
 import { BASE_URL } from "../config/constants";
 
 function Profile() {
-  // ================= CATEGORY STATES =================
-
   // Main
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -33,6 +31,8 @@ function Profile() {
   // ================= EDUCATION =================
   const [educationType, setEducationType] = useState("");
   const [educationDetail, setEducationDetail] = useState("");
+
+  const navigate = useNavigate();
 
   const educationOptions = {
     Diploma: ["D.Form"],
@@ -233,24 +233,41 @@ function Profile() {
     can_sc3: "",
   });
 
-  // Login Check but not login to redirect Signin page
+  const fetchCandidateProfile = async () => {
+    try {
+      const stored = localStorage.getItem("candidate");
+      if (!stored) {
+        navigate("/signin");
+        return;
+      }
 
-  const navigate = useNavigate();
-  React.useEffect(() => {
-    const stored = localStorage.getItem("candidate");
+      const lsData = JSON.parse(stored);
 
-    if (!stored) {
-      navigate("/signin");
-      return;
+      const res = await axios.get(
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_candidate/can_id/${lsData.can_id}`
+      );
+
+      if (res.data?.status && res.data?.data?.length > 0) {
+        const freshCandidate = res.data.data[0]; // ✅ DB latest data
+
+        // ✅ if state exists then fetch cities
+        if (
+          freshCandidate?.can_state &&
+          freshCandidate.can_state !== candidate.can_state
+        ) {
+          fetchCities(freshCandidate.can_state);
+        }
+
+        // ✅ update state
+        setCandidate(freshCandidate);
+
+        // ✅ update localStorage also
+        localStorage.setItem("candidate", JSON.stringify(freshCandidate));
+      }
+    } catch (err) {
+      console.error("Fetch candidate error", err);
     }
-
-    const data = JSON.parse(stored);
-    setCandidate(data);
-
-    if (data?.can_state) {
-      fetchCities(data.can_state);
-    }
-  }, []);
+  };
 
   // 🔁 SYNC SAVED CATEGORY TO DROPDOWNS (IMPORTANT)
   useEffect(() => {
@@ -333,6 +350,8 @@ function Profile() {
       if (result?.status === true) {
         toast.success("Profile updated successfully ✅");
 
+        await fetchCandidateProfile();
+
         const stateName =
           states.find((s) => s.state_id == candidate.can_state)?.state_name ||
           "";
@@ -342,6 +361,8 @@ function Profile() {
 
         const updatedCandidate = {
           ...candidate,
+
+          can_score: result?.can_score || candidate.can_score,
 
           // ✅ IDs (DO NOT CHANGE)
           can_state: candidate.can_state,
@@ -499,6 +520,31 @@ function Profile() {
     }
   };
 
+  const totalPoints = 1000;
+  const points = Number(candidate.can_score) || 0; // dynamic value
+  const percentage = (points / totalPoints) * 100;
+  // Smooth gradient ring (Green → Yellow → Red)
+  const ringGradient = `
+      conic-gradient(
+        #fa5b6b 0%,
+        #ffc107 40%,
+        #198754 100%
+      )
+    `;
+
+  console.log("Candidate Full Data 👉", candidate);
+  console.log("Candidate Score 👉", candidate.can_score);
+
+  useEffect(() => {
+    fetchCandidateProfile();
+
+    const interval = setInterval(() => {
+      fetchCandidateProfile();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <>
       <ToastContainer
@@ -561,6 +607,53 @@ function Profile() {
               >
                 Change Password
               </button>
+            </div>
+
+            {/* Progress Circle Center */}
+            <div className="d-flex justify-content-center mb-3">
+              <div
+                style={{
+                  width: "120px",
+                  height: "120px",
+                  borderRadius: "50%",
+                  background: ringGradient,
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  position: "relative",
+                }}
+              >
+                {/* Progress Overlay (empty part cover) */}
+                <div
+                  style={{
+                    width: "120px",
+                    height: "120px",
+                    borderRadius: "50%",
+                    background: `conic-gradient(transparent ${percentage}%, #e9ecef ${percentage}%)`,
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                  }}
+                />
+
+                {/* Inner white circle */}
+                <div
+                  style={{
+                    width: "95px",
+                    height: "95px",
+                    borderRadius: "50%",
+                    background: "#fff",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    zIndex: 2,
+                  }}
+                >
+                  <h4 className="mb-0 fw-bold">{points}</h4>
+                  <small className="text-muted">/ {totalPoints}</small>
+                </div>
+              </div>
             </div>
           </div>
         </div>

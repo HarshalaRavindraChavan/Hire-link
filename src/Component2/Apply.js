@@ -335,7 +335,7 @@ function Apply() {
       <ToastContainer position="top-right" autoClose={3000} theme="colored" />
 
       <div className="container mt-5 mb-5">
-        <h3 className="fw-bold mb-3">Apply Job</h3>
+        <h3 className="fw-bold mb-3 ps-3">Apply Job</h3>
 
         {/* ✅ Job Info */}
         {job && (
@@ -473,8 +473,14 @@ function Apply() {
 
               {/* Resume Upload */}
               <div className="col-6 mb-3">
-                <label className="form-label fw-semibold">
+                {/* Desktop only */}
+                <label className="form-label fw-semibold d-none d-md-block">
                   Upload Resume (PDF Only)
+                </label>
+
+                {/* Mobile only */}
+                <label className="form-label fw-semibold d-block d-md-none">
+                  Upload Resume
                 </label>
 
                 <input
@@ -497,7 +503,7 @@ function Apply() {
 
                 {formData.can_resume && (
                   <small className="text-success">
-                    ✅ Uploaded Resume: {formData.can_resume}
+                    ✅ Uploaded Resume
                   </small>
                 )}
               </div>
@@ -514,7 +520,7 @@ function Apply() {
                 ? "Updating Profile..."
                 : loading
                 ? "Applying..."
-                : "Update Profile + Apply"}
+                : "Apply"}
             </button>
           </form>
         </div>

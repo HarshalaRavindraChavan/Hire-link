@@ -63,11 +63,7 @@ function JobDetail() {
       return;
     }
 
-    navigate("/apply", {
-      state: {
-        job: job, // same job object
-      },
-    });
+    navigate(`/apply/${job.job_id}`);
   };
 
   return (
@@ -338,7 +334,7 @@ function JobDetail() {
           Apply now
         </button>
 
-        <button
+        {/* <button
           style={{
             background: "#ffffff",
             color: "#b1b1b1",
@@ -349,7 +345,7 @@ function JobDetail() {
           }}
         >
           Save
-        </button>
+        </button> */}
       </div>
     </>
   );

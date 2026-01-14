@@ -106,7 +106,7 @@ function Company() {
         <div className="row mt-3 g-3 ps-3 pe-3">
           {popularCompanies.map((c, i) => (
             <div className="col-6 col-md-3" key={i}>
-              <div className="company-card">
+              <div className="company-card" style={{ height: "200px" }}>
                 <img
                   src={
                     c.emp_com_logo
@@ -116,7 +116,7 @@ function Company() {
                   width="150px"
                   height="100px"
                   className="mb-2"
-                  style={{ borderRadius: "20%" }}
+                  style={{ borderRadius: "20%", objectFit: "contain" }}
                   alt="logo"
                 />
                 <h6 className="mt-2 mb-1 fw-semibold">{c.emp_companyname}</h6>

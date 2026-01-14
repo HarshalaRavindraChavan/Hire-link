@@ -416,7 +416,7 @@ const EmpProfile = () => {
                     {/* citys */}
                     <div className="col-md-4">
                       <label className="fw-semibold">City</label>
-                      <select
+                      {/* <select
                         className={fieldClass("city")}
                         value={formik.values.city}
                         onChange={handleCityChange}
@@ -433,7 +433,24 @@ const EmpProfile = () => {
                             {city.city_name}
                           </option>
                         ))}
-                      </select>
+                      </select> */}
+                      <SearchableDropdown
+                        value={formik.values.city}
+                        options={cities}
+                        disabled={!formik.values.state}
+                        placeholder={
+                          !formik.values.state
+                            ? "Select state first"
+                            : "Select City"
+                        }
+                        getLabel={(city) => city.city_name}
+                        getValue={(city) => city.city_id}
+                        onChange={(value) => {
+                          formik.setFieldValue("city", value);
+                          handleCityChange({ target: { value } });
+                        }}
+                        // error={formik.errors.city}
+                      />
 
                       <div className="invalid-feedback d-block">
                         {formik.errors.city}

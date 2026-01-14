@@ -6,6 +6,7 @@ import { toast, ToastContainer } from "react-toastify";
 // import { resume } from "react-dom/server";
 import JobsSAI from "./JobsSAI";
 import { BASE_URL } from "../config/constants";
+import SearchableDropdown from "../Component/SearchableDropdown";
 
 function Profile() {
   // Main
@@ -842,7 +843,7 @@ function Profile() {
                 <div className="row g-2 mb-2">
                   <div className="col-md-6">
                     <label className="fw-semibold">State</label>
-                    <select
+                    {/* <select
                       className="form-control form-select"
                       value={candidate.can_state || ""}
                       onChange={handleStateChange}
@@ -853,7 +854,15 @@ function Profile() {
                           {state.state_name}
                         </option>
                       ))}
-                    </select>
+                    </select> */}
+                    <SearchableDropdown
+                        value={candidate.values.can_state}
+                        options={states}
+                        onChange={(value) => {
+                          candidate.setFieldValue("state", value);
+                          handleStateChange({ target: { value } });
+                        }}
+                      />
                   </div>
 
                   <div className="col-md-6">

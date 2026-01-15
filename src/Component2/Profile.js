@@ -895,7 +895,7 @@ function Profile() {
                     </select> */}
 
                     <SearchableDropdown
-                      value={candidate.can_state || ""}
+                      value={candidate.can_state}
                       options={states}
                       placeholder="Select State"
                       searchPlaceholder="Search state..."
@@ -911,26 +911,29 @@ function Profile() {
                     />
                   </div>
 
-                  <div className="col-md-6">
+                  <div className="col-md-6 mt-2">
                     <label className="fw-semibold">City</label>
-                    <select
-                      className="form-control form-select"
-                      value={candidate.can_city || ""}
-                      onChange={handleCityChange}
-                      disabled={!candidate.can_state}
-                    >
-                      <option value="">
-                        {!candidate.can_state
-                          ? "Select state first"
-                          : "Select City"}
-                      </option>
 
-                      {cities.map((city) => (
-                        <option key={city.city_id} value={city.city_id}>
-                          {city.city_name}
-                        </option>
-                      ))}
-                    </select>
+                    <SearchableDropdown
+                      value={candidate.can_city}
+                      options={cities}
+                      disabled={!candidate.can_state}
+                      placeholder={
+                        candidate.can_state
+                          ? "Select City"
+                          : "Select state first"
+                      }
+                      searchPlaceholder="Search city..."
+                      labelKey="city_name"
+                      valueKey="city_id"
+                      onChange={(value) => {
+                        setCandidate((prev) => ({
+                          ...prev,
+                          can_city: value,
+                        }));
+                        handleCityChange({ target: { value } });
+                      }}
+                    />
                   </div>
 
                   {/* <div className="col-md-6">

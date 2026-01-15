@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
-import { useForm } from "react-hook-form";
+import { useForm, Watch } from "react-hook-form";
 import axios from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -8,6 +8,7 @@ import Pagination from "./commenuse/Pagination";
 import { toast } from "react-toastify";
 import { BASE_URL } from "../config/constants";
 import TableSkeleton from "./commenuse/TableSkeleton";
+import SearchableDropdown from "./SearchableDropdown";
 
 function Users() {
   useEffect(() => {
@@ -363,6 +364,7 @@ function Users() {
     handleSubmit: handleEditSubmit,
     formState: { errors: editErrors },
     reset: resetEdit,
+    watch: editWatch, // ✅ ADD THIS LINE
     setValue: editSetValue,
   } = editForm;
 
@@ -774,7 +776,7 @@ function Users() {
                 </div>
 
                 {/* State */}
-                <div className="col-md-4">
+                {/* <div className="col-md-4">
                   <label className="fw-semibold">State</label>
                   <select
                     className="form-select form-control"
@@ -794,10 +796,29 @@ function Users() {
                     ))}
                   </select>
                   <p className="text-danger">{addErrors.state?.message}</p>
+                </div> */}
+
+                <div className="col-md-4">
+                  <label className="fw-semibold">State</label>
+
+                  <SearchableDropdown
+                    value={Watch("state")}
+                    options={states}
+                    placeholder="Select State"
+                    searchPlaceholder="Search state..."
+                    labelKey="state_name"
+                    valueKey="state_id"
+                    error={addErrors.state?.message}
+                    onChange={(stateId) => {
+                      addSetValue("state", stateId);
+                      addSetValue("city", "");
+                      fetchCities(stateId);
+                    }}
+                  />
                 </div>
 
                 {/* city */}
-                <div className="col-md-4">
+                {/* <div className="col-md-4">
                   <label className="fw-semibold">City</label>
                   <select
                     className="form-select form-control"
@@ -815,6 +836,26 @@ function Users() {
                     ))}
                   </select>
                   <p className="text-danger">{addErrors.city?.message}</p>
+                </div> */}
+
+                <div className="col-md-4">
+                  <label className="fw-semibold">City</label>
+
+                  <SearchableDropdown
+                    value={Watch("city")}
+                    options={cities}
+                    disabled={!cities.length}
+                    placeholder={
+                      cities.length ? "Select City" : "Select state first"
+                    }
+                    searchPlaceholder="Search city..."
+                    labelKey="city_name"
+                    valueKey="city_id"
+                    error={addErrors.city?.message}
+                    onChange={(cityId) => {
+                      addSetValue("city", cityId);
+                    }}
+                  />
                 </div>
 
                 {/* Location */}
@@ -1154,7 +1195,7 @@ function Users() {
                 </div>
 
                 {/* State */}
-                <div className="col-md-4">
+                {/* <div className="col-md-4">
                   <label className="fw-semibold">State</label>
                   <select
                     className="form-select form-control"
@@ -1174,27 +1215,44 @@ function Users() {
                     ))}
                   </select>
                   <p className="text-danger">{editErrors.state?.message}</p>
+                </div> */}
+
+                <div className="col-md-4 mt-2">
+                  <label className="fw-semibold">State</label>
+
+                  <SearchableDropdown
+                    options={states}
+                    value={editWatch("state")}
+                    labelKey="state_name"
+                    valueKey="state_id"
+                    placeholder="Select State"
+                    searchPlaceholder="Search state..."
+                    error={editErrors.state?.message}
+                    onChange={(stateId) => {
+                      editSetValue("state", stateId);
+                      editSetValue("city", "");
+                      fetchCities(stateId);
+                    }}
+                  />
                 </div>
 
                 {/* City */}
                 <div className="col-md-4">
                   <label className="fw-semibold">City</label>
-                  <select
-                    className="form-select form-control"
-                    {...editRegister("city")}
-                    disabled={!cities.length}
-                  >
-                    <option value="">
-                      {!cities.length ? "Select state first" : "Select City"}
-                    </option>
-                    {cities.map((c) => (
-                      <option key={c.city_id} value={c.city_id}>
-                        {c.city_name}
-                      </option>
-                    ))}
-                  </select>
 
-                  <p className="text-danger">{editErrors.city?.message}</p>
+                  <SearchableDropdown
+                    options={cities}
+                    value={editWatch("city")}
+                    disabled={!cities.length}
+                    placeholder={
+                      !cities.length ? "Select state first" : "Select City"
+                    }
+                    searchPlaceholder="Search city..."
+                    error={editErrors.city?.message}
+                    onChange={(cityId) => {
+                      editSetValue("city", cityId);
+                    }}
+                  />
                 </div>
 
                 {/* Join Date */}

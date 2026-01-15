@@ -879,38 +879,30 @@ function Profile() {
                 {/* BASIC DETAILS */}
                 <h6 className="fw-bold mb-2">Professional Information</h6>
                 <div className="row g-2 mb-2">
-                  <div className="col-md-6">
+                  
+                  {/* state */}
+                  <div className="col-md-6 mt-2">
                     <label className="fw-semibold">State</label>
-                    {/* <select
-                      className="form-control form-select"
-                      value={candidate.can_state || ""}
-                      onChange={handleStateChange}
-                    >
-                      <option value="">Select State</option>
-                      {states.map((state) => (
-                        <option key={state.state_id} value={state.state_id}>
-                          {state.state_name}
-                        </option>
-                      ))}
-                    </select> */}
 
                     <SearchableDropdown
                       value={candidate.can_state}
                       options={states}
                       placeholder="Select State"
                       searchPlaceholder="Search state..."
-                      getLabel={(s) => s.state_name}
-                      getValue={(s) => s.state_id}
+                      labelKey="state_name"
+                      valueKey="state_id"
                       onChange={(value) => {
                         setCandidate((prev) => ({
                           ...prev,
                           can_state: value,
+                          can_city: "", // reset city
                         }));
                         handleStateChange({ target: { value } });
                       }}
                     />
                   </div>
 
+                  {/* city */}
                   <div className="col-md-6 mt-2">
                     <label className="fw-semibold">City</label>
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
-import { useForm, Watch } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import axios from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -25,6 +25,7 @@ function Users() {
     Diploma: ["D.Pharm"],
     Graduation: ["B.Sc", "B.Pharm"],
     "Post Graduation": ["M.Sc", "M.Pharm"],
+    Other: [], // ✅ ADD
   };
 
   const [users, setUsers] = useState([]);
@@ -140,6 +141,7 @@ function Users() {
   const [User, setUser] = useState({
     user_aadhar_image: "",
     user_pan_image: "",
+    user_bankpassbook: "", // ✅ ADD THIS
   });
 
   /* ================= VALIDATION ================= */
@@ -185,6 +187,7 @@ function Users() {
     formState: { errors: addErrors },
     reset: resetAdd,
     setValue: addSetValue,
+    watch: addWatch, // ✅ ADD THIS
   } = addForm;
 
   /* ================= SUBMIT ================= */
@@ -219,7 +222,12 @@ function Users() {
         toast.success("User added successfully");
 
         resetAdd(); // form reset
-        setUser({ user_aadhar_image: "", user_pan_image: "" }); // reset file state
+        setUser({
+          user_aadhar_image: "",
+          user_pan_image: "",
+          user_bankpassbook: "",
+        });
+        // reset file state
         fetchUsers(); // refresh table
         setEducationType("");
         setEducationDetail("");
@@ -384,10 +392,11 @@ function Users() {
       state: user.user_state ?? "",
       city: user.user_city ?? "",
       joindate: user.user_joindate?.split("T")[0] ?? "",
-      // bankpassbook: user.user_bankpassbook ?? "",
       experience: user.user_experience ?? "",
       role: user.user_role ?? "",
       menus: user.user_menu_id ? user.user_menu_id.split(",") : [],
+      education_type: user.user_education_type ?? "", 
+      education_detail: user.user_education_detail ?? "",
     });
 
     // ✅ MOST IMPORTANT PART
@@ -802,7 +811,8 @@ function Users() {
                   <label className="fw-semibold">State</label>
 
                   <SearchableDropdown
-                    value={Watch("state")}
+                    className="form-select form-control"
+                    value={addWatch("state")} // ✅ FIX
                     options={states}
                     placeholder="Select State"
                     searchPlaceholder="Search state..."
@@ -810,8 +820,8 @@ function Users() {
                     valueKey="state_id"
                     error={addErrors.state?.message}
                     onChange={(stateId) => {
-                      addSetValue("state", stateId);
-                      addSetValue("city", "");
+                      addSetValue("state", stateId, { shouldValidate: true });
+                      addSetValue("city", "", { shouldValidate: true });
                       fetchCities(stateId);
                     }}
                   />
@@ -842,7 +852,8 @@ function Users() {
                   <label className="fw-semibold">City</label>
 
                   <SearchableDropdown
-                    value={Watch("city")}
+                    className="form-select form-control"
+                    value={addWatch("city")} // ✅ FIX
                     options={cities}
                     disabled={!cities.length}
                     placeholder={
@@ -853,7 +864,7 @@ function Users() {
                     valueKey="city_id"
                     error={addErrors.city?.message}
                     onChange={(cityId) => {
-                      addSetValue("city", cityId);
+                      addSetValue("city", cityId, { shouldValidate: true });
                     }}
                   />
                 </div>

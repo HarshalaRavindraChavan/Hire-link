@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
-import { useForm } from "react-hook-form";
+import { useForm, Watch } from "react-hook-form";
 import axios from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
@@ -8,7 +8,7 @@ import Pagination from "./commenuse/Pagination";
 import { toast, ToastContainer } from "react-toastify";
 import { BASE_URL } from "../config/constants";
 import TableSkeleton from "./commenuse/TableSkeleton";
-
+import SearchableDropdown from "./SearchableDropdown";
 
 function Jobs() {
   // tital of tab
@@ -1002,7 +1002,7 @@ function Jobs() {
                 </div>
 
                 {/* state */}
-                <div className="col-md-4">
+                {/* <div className="col-md-4">
                   <label className="fw-semibold">State</label>
                   <select
                     className="form-select form-control"
@@ -1022,10 +1022,25 @@ function Jobs() {
                     ))}
                   </select>
                   <p className="text-danger">{addErrors.job_state?.message}</p>
+                </div> */}
+
+                <div className="col-md-4">
+                  <label className="fw-semibold">State</label>
+
+                  <SearchableDropdown
+                    options={states}
+                    value={addWatch("job_state")}
+                    error={addErrors.job_state?.message}
+                    onChange={(stateId) => {
+                      setAddValue("job_state", stateId);
+                      setAddValue("job_city", "");
+                      fetchCities(stateId);
+                    }}
+                  />
                 </div>
 
                 {/* city */}
-                <div className="col-md-4">
+                {/* <div className="col-md-4">
                   <label className="fw-semibold">City</label>
                   <select
                     className="form-select form-control"
@@ -1043,6 +1058,19 @@ function Jobs() {
                     ))}
                   </select>
                   <p className="text-danger">{addErrors.job_city?.message}</p>
+                </div> */}
+                <div className="col-md-4">
+                  <label className="fw-semibold">City</label>
+
+                  <SearchableDropdown
+                    options={cities}
+                    value={addWatch("job_city")}
+                    disabled={!cities.length}
+                    error={addErrors.job_city?.message}
+                    onChange={(cityId) => {
+                      setAddValue("job_city", cityId);
+                    }}
+                  />
                 </div>
 
                 {/* Location */}
@@ -1460,31 +1488,23 @@ function Jobs() {
                 </div>
 
                 {/* State */}
-                <div className="col-md-4">
+                <div className="col-md-4 ">
                   <label className="fw-semibold">State</label>
-                  <select
-                    className="form-select form-control"
-                    {...editRegister("job_state")}
-                    onChange={(e) => {
-                      const stateId = e.target.value;
+
+                  <SearchableDropdown
+                    options={states}
+                    value={editWatch("job_state")}
+                    error={editErrors.job_state?.message}
+                    onChange={(stateId) => {
                       setEditValue("job_state", stateId);
                       setEditValue("job_city", "");
                       fetchCities(stateId);
                     }}
-                  >
-                    <option value="">Select State</option>
-                    {states.map((state) => (
-                      <option key={state.state_id} value={state.state_id}>
-                        {state.state_name}
-                      </option>
-                    ))}
-                  </select>
-
-                  <p className="text-danger">{editErrors.job_state?.message}</p>
+                  />
                 </div>
 
                 {/* City */}
-                <div className="col-md-4">
+                {/* <div className="col-md-4">
                   <label className="fw-semibold">City</label>
                   <select
                     className="form-select form-control"
@@ -1503,6 +1523,20 @@ function Jobs() {
                   </select>
 
                   <p className="text-danger">{editErrors.job_city?.message}</p>
+                </div> */}
+
+                <div className="col-md-4">
+                  <label className="fw-semibold">City</label>
+
+                  <SearchableDropdown
+                    options={cities}
+                    value={editWatch("job_city")}
+                    disabled={!cities.length}
+                    error={editErrors.job_city?.message}
+                    onChange={(cityId) => {
+                      setEditValue("job_city", cityId);
+                    }}
+                  />
                 </div>
 
                 {/* Eduction Type */}

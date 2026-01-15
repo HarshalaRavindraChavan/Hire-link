@@ -147,6 +147,7 @@ function Candidates() {
       can_name: data.fullname,
       can_email: data.email,
       can_mobile: data.mobile,
+      can_score: data.can_score,
       // can_city: data.location,
       // can_experience: data.experience,
       // can_skil: data.skill,
@@ -333,6 +334,13 @@ function Candidates() {
                         Mobile No:{" "}
                         <span className="text-dark fw-normal">
                           {maskMobile(candidate.can_mobile)}
+                        </span>
+                      </div>
+
+                      <div className="fw-bold">
+                        Candidate Score:{" "}
+                        <span className="text-dark fw-normal">
+                          {maskMobile(candidate.can_score)}
                         </span>
                       </div>
 

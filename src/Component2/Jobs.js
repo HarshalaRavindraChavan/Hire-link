@@ -101,7 +101,9 @@ function Jobs() {
     document.title = "Hirelink | Jobs";
 
     axios
-      .get(`${BASE_URL}hirelink_apis/candidate/getdata/tbl_job`)
+      .get(
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_job/job_status/Active`
+      )
       .then((res) => {
         if (res.data.status === "success") {
           setJobs(res.data.data); // ✅ THIS WAS MISSING
@@ -129,6 +131,9 @@ function Jobs() {
   }, [location.search]);
 
   const filteredJobs = jobs.filter((job) => {
+    // ✅ ONLY ACTIVE JOBS
+    if (job.job_status?.toLowerCase() !== "active") return false;
+
     const keyword = appliedKeyword.toLowerCase();
     const place = appliedPlace.toLowerCase();
 

@@ -322,8 +322,9 @@ function Interview() {
                               : (i.itv_status || "").trim() === "Confirmed"
                               ? "bg-primary"
                               : (i.itv_status || "").trim() ===
-                                  "Candidate Cancelled" ||
-                                (i.itv_status || "").trim() === "Cancelled"
+                                "Candidate Cancelled"
+                              ? "bg-danger"
+                              : (i.itv_status || "").trim() === "Cancelled"
                               ? "bg-danger"
                               : (i.itv_status || "").trim() === "Completed"
                               ? "bg-success"
@@ -335,8 +336,9 @@ function Interview() {
                             : (i.itv_status || "").trim() === "Confirmed"
                             ? "Scheduled"
                             : (i.itv_status || "").trim() ===
-                                "Candidate Cancelled" ||
-                              (i.itv_status || "").trim() === "Cancelled"
+                              "Candidate Cancelled"
+                            ? "Candidate Cancelled"
+                            : (i.itv_status || "").trim() === "Cancelled"
                             ? "Cancel"
                             : (i.itv_status || "").trim() === "Completed"
                             ? "Complete"

@@ -86,16 +86,16 @@ function Dashboard() {
       if (Number(role) === 100) {
         const [jobs, candidates, applicants, interviews] = await Promise.all([
           axios.get(
-            `https://norealtor.in/hirelink_apis/admin/countdatawhere/tbl_job/job_employer_id/${employerId}`
+            `${BASE_URL}hirelink_apis/admin/countdatawhere/tbl_job/job_employer_id/${employerId}`
           ),
           axios.get(
-            "https://norealtor.in/hirelink_apis/admin/countdata/tbl_candidate"
+            `${BASE_URL}hirelink_apis/admin/countdata/tbl_candidate`
           ),
           axios.get(
-            `https://norealtor.in/hirelink_apis/admin/countdatawhere/tbl_applied/apl_employer_id/${employerId}`
+            `${BASE_URL}hirelink_apis/admin/countdatawhere/tbl_applied/apl_employer_id/${employerId}`
           ),
           axios.get(
-            `https://norealtor.in/hirelink_apis/admin/countdatawhere/tbl_interview/itv_employer_id/${employerId}`
+            `${BASE_URL}hirelink_apis/admin/countdatawhere/tbl_interview/itv_employer_id/${employerId}`
           ),
         ]);
 

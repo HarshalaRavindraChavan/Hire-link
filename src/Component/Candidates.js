@@ -338,9 +338,9 @@ function Candidates() {
                       </div>
 
                       <div className="fw-bold">
-                        Candidate Score:{" "}
+                        Score:{" "}
                         <span className="text-dark fw-normal">
-                          {maskMobile(candidate.can_score)}
+                          {candidate.can_score}/1000
                         </span>
                       </div>
 
@@ -368,13 +368,25 @@ function Candidates() {
                       <div className="fw-bold">
                         Experience:{" "}
                         <span className="text-dark fw-normal">
-                          {candidate.can_experience} Year
+                          {candidate.can_experience || "N/A"} Year
                         </span>
                       </div>
                       <div className="fw-bold">
                         Skills:{" "}
                         <span className="text-dark fw-normal">
-                          {candidate.can_skill}
+                          {candidate.can_skill || "N/A"}
+                        </span>
+                      </div>
+                      <div className="fw-bold">
+                        Education Type:{" "}
+                        <span className="text-dark fw-normal">
+                          {candidate.can_education_type || "N/A"}
+                        </span>
+                      </div>
+                      <div className="fw-bold">
+                        Education:{" "}
+                        <span className="text-dark fw-normal">
+                          {candidate.can_education_details || "N/A"}
                         </span>
                       </div>
                     </td>

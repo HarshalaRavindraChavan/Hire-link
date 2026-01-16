@@ -195,8 +195,9 @@ const InterviewsPage = () => {
                                 ? "bg-warning"
                                 : item.itv_status === "Confirmed"
                                 ? "bg-primary"
-                                : item.itv_status === "Candidate Cancelled" ||
-                                  item.itv_status === "Cancelled"
+                                : item.itv_status === "Candidate Cancelled"
+                                ? "bg-danger"
+                                : item.itv_status === "Cancelled"
                                 ? "bg-danger"
                                 : item.itv_status === "Completed"
                                 ? "bg-success"
@@ -207,8 +208,9 @@ const InterviewsPage = () => {
                               ? "Awaiting candidate confirmation"
                               : item.itv_status === "Confirmed"
                               ? "Scheduled"
-                              : item.itv_status === "Candidate Cancelled" ||
-                                item.itv_status === "Cancelled"
+                              : item.itv_status === "Candidate Cancelled"
+                              ? "Candidate Cancelled"
+                              : item.itv_status === "Cancelled"
                               ? "Cancel"
                               : item.itv_status === "Completed"
                               ? "Complete"

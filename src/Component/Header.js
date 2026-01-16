@@ -2,7 +2,6 @@ import logo from "./logo/admin-logo.png";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../config/constants";
 
-
 function Sidebar() {
   const navigate = useNavigate();
 
@@ -362,11 +361,14 @@ function Sidebar() {
                 <div className="avatar-sm">
                   <img
                     src={com_logo}
+                    width="150px"
+                    height="100px"
+                    style={{ borderRadius: "20%", objectFit: "contain" }}
                     alt="..."
-                    className="avatar-img rounded-circle"
+                    className="avatar-img rounded-circle me-2"
                   />
                 </div>
-                <span className="fw-bold">
+                <span className="fw-bold ms-1">
                   {displayName
                     ?.split(" ")
                     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))

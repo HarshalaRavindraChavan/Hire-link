@@ -39,6 +39,8 @@ function Jobs() {
   const employerId = auth?.emp_id;
   //=================
 
+  const [timeNow, setTimeNow] = useState(Date.now());
+
   const [search, setSearch] = useState("");
   const [jobs, setJobs] = useState([]);
 
@@ -231,6 +233,9 @@ function Jobs() {
     }
 
     try {
+      const startTime = new Date();
+      const endTime = new Date(startTime.getTime() + 30 * 60 * 1000); // +30 min
+
       const payload = {
         job_title: data.job_title,
         job_company: auth?.emp_companyname,
@@ -240,11 +245,14 @@ function Jobs() {
         job_sc2: selectedSubCat2 || null,
         job_sc3: selectedSubCat3 || null,
 
+        job_processing_start: startTime.toISOString(),
+        job_processing_end: endTime.toISOString(),
+
         job_no_hiring: Number(data.job_no_hiring),
         job_type: data.job_type,
         job_salary: data.job_salary,
 
-        job_status: data.job_status || "0", // ✅ DEFAULT PENDING
+        job_status: data.job_status || "Processing", // ✅ DEFAULT Processing
 
         job_date: data.job_date,
         job_skills: data.job_skills,
@@ -556,6 +564,44 @@ function Jobs() {
     }
   };
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeNow(Date.now());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const alreadyUpdatedRef = useRef({});
+
+  const markJobActive = async (jobId) => {
+    try {
+      // ✅ already called असेल तर पुन्हा call नको
+      if (alreadyUpdatedRef.current[jobId]) return;
+
+      alreadyUpdatedRef.current[jobId] = true;
+
+      await axios.post(
+        `${BASE_URL}hirelink_apis/admin/updatedata/tbl_job/job_id/${jobId}`,
+        { job_status: "Active" }
+      );
+
+      fetchJobs();
+    } catch (err) {
+      console.log("Auto Active Error", err);
+    }
+  };
+
+  const formatTime = (ms) => {
+    if (ms <= 0) return "00:00";
+
+    const totalSeconds = Math.floor(ms / 1000);
+    const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
+    const seconds = String(totalSeconds % 60).padStart(2, "0");
+
+    return `${minutes}:${seconds}`;
+  };
+
   return (
     <>
       {/* TOAST */}
@@ -707,31 +753,31 @@ function Jobs() {
                       <div className="fw-bold ">
                         Main cate:{" "}
                         <span className="text-dark fw-normal">
-                          {job.mc_name}
+                          {job.mc_name || "N/A"}
                         </span>
                       </div>
                       <div className="fw-bold ">
                         Subcate :{" "}
                         <span className="text-dark fw-normal">
-                          {job.sc_name ?? "-"}
+                          {job.sc_name || "N/A"}
                         </span>
                       </div>
                       <div className="fw-bold ">
                         Subcate 1 :{" "}
                         <span className="text-dark fw-normal">
-                          {job.sc1_name ?? "-"}
+                          {job.sc1_name || "N/A"}
                         </span>
                       </div>
                       <div className="fw-bold ">
                         subcate 2 :{" "}
                         <span className="text-dark fw-normal">
-                          {job.sc2_name ?? "-"}
+                          {job.sc2_name || "N/A"}
                         </span>
                       </div>
                       <div className="fw-bold ">
                         subcate 3 :{" "}
                         <span className="text-dark fw-normal">
-                          {job.sc3_name ?? "-"}
+                          {job.sc3_name || "N/A"}
                         </span>
                       </div>
                     </td>
@@ -750,10 +796,30 @@ function Jobs() {
                       </div> */}
                     </td>
                     <td className="text-center">
-                      {job.job_status === "1" ? (
+                      {job.job_status === "Active" ? (
                         <span className="badge bg-success">Active</span>
                       ) : (
-                        <span className="badge bg-primary">Processing</span>
+                        (() => {
+                          const end = new Date(
+                            job.job_processing_end
+                          ).getTime();
+                          const diff = end - timeNow;
+
+                          if (diff <= 0) {
+                            // ✅ Auto update DB status
+                            markJobActive(job.job_id);
+
+                            return (
+                              <span className="badge bg-success">Active</span>
+                            );
+                          }
+
+                          return (
+                            <span className="badge bg-primary">
+                              Processing ({formatTime(diff)})
+                            </span>
+                          );
+                        })()
                       )}
                     </td>
                   </tr>

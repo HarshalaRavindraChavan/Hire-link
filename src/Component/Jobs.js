@@ -226,6 +226,28 @@ function Jobs() {
     watch: editWatch,
   } = editForm;
 
+  const toMySQLDateTimeIST = (date) => {
+    const istDate = new Date(
+      date.toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
+    );
+
+    const pad = (n) => String(n).padStart(2, "0");
+
+    return (
+      istDate.getFullYear() +
+      "-" +
+      pad(istDate.getMonth() + 1) +
+      "-" +
+      pad(istDate.getDate()) +
+      " " +
+      pad(istDate.getHours()) +
+      ":" +
+      pad(istDate.getMinutes()) +
+      ":" +
+      pad(istDate.getSeconds())
+    );
+  };
+
   const onSubmit = async (data) => {
     if (Number(role) !== 100) {
       toast.error("Only employer can add jobs");
@@ -245,14 +267,14 @@ function Jobs() {
         job_sc2: selectedSubCat2 || null,
         job_sc3: selectedSubCat3 || null,
 
-        job_processing_start: startTime.toISOString(),
-        job_processing_end: endTime.toISOString(),
+        job_processing_start: toMySQLDateTimeIST(startTime),
+        job_processing_end: toMySQLDateTimeIST(endTime),
 
         job_no_hiring: Number(data.job_no_hiring),
         job_type: data.job_type,
         job_salary: data.job_salary,
 
-        job_status: data.job_status || "Processing", // ✅ DEFAULT Processing
+        job_status: "Processing", // ✅ DEFAULT Processing
 
         job_date: data.job_date,
         job_skills: data.job_skills,
@@ -800,15 +822,30 @@ function Jobs() {
                         <span className="badge bg-success">Active</span>
                       ) : (
                         (() => {
-                          const end = new Date(
-                            job.job_processing_end
-                          ).getTime();
+                          const end = job.job_processing_end
+                            ? new Date(
+                                job.job_processing_end.replace(" ", "T")
+                              ).getTime()
+                            : null;
+
+                          if (!end || isNaN(end)) {
+                            return (
+                              <span className="badge bg-primary">
+                                Processing
+                              </span>
+                            );
+                          }
+
                           const diff = end - timeNow;
 
-                          if (diff <= 0) {
-                            // ✅ Auto update DB status
-                            markJobActive(job.job_id);
+                          // ✅ DEBUG LOGS
+                          console.log("END:", job.job_processing_end);
+                          console.log("END_TIME:", end);
+                          console.log("NOW:", timeNow);
+                          console.log("DIFF:", diff);
 
+                          if (diff <= 0 && job.job_status === "Processing") {
+                            markJobActive(job.job_id);
                             return (
                               <span className="badge bg-success">Active</span>
                             );
@@ -1068,23 +1105,6 @@ function Jobs() {
                   />
                   <span className="text-danger">
                     {addErrors.job_salary?.message}
-                  </span>
-                </div>
-
-                {/* Status */}
-                <div className="col-md-4 mb-2 position-relative">
-                  <label className="form-label fw-semibold">Status</label>
-                  <select
-                    {...addRegister("job_status")}
-                    className="form-control form-control-md rounded-3"
-                  >
-                    <option value="">Default (Processing)</option>
-                    <option value="0">Processing</option>
-                    <option value="1">Active</option>
-                  </select>
-
-                  <span className="text-danger">
-                    {addErrors.job_status?.message}
                   </span>
                 </div>
 
@@ -1556,8 +1576,8 @@ function Jobs() {
                     className="form-control form-control-md rounded-3"
                   >
                     <option value="">Select Status</option>
-                    <option value="1">Active</option>
-                    <option value="2">Pending</option>
+                    <option value="Active">Active</option>
+                    <option value="Closed">Closed</option>
                   </select>
                   <span className="text-danger">
                     {editErrors.job_status?.message}

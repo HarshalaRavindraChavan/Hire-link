@@ -13,15 +13,11 @@ function Contact() {
   const [contacts, setContact] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Pagination start
-  const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 100;
-  const lastIndex = currentPage * recordsPerPage;
-  const firstIndex = lastIndex - recordsPerPage;
-
-  const records = contacts.slice(firstIndex, lastIndex);
-  const nPages = Math.ceil(contacts.length / recordsPerPage);
-  // Pagination End
+  // Filter states
+  const [search, setSearch] = useState("");
+  const [subject, setSubject] = useState("");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
 
   //===================== Get All contact =================
 
@@ -47,6 +43,53 @@ function Contact() {
     }
   };
 
+  const filteredContacts = React.useMemo(() => {
+    return contacts.filter((c) => {
+      const searchValue = search.trim().toLowerCase();
+      const subjectValue = subject.trim().toLowerCase();
+
+      // 🔍 SEARCH FILTER
+      const matchesSearch =
+        !searchValue ||
+        c?.con_name?.toLowerCase().includes(searchValue) ||
+        c?.con_email?.toLowerCase().includes(searchValue) ||
+        c?.con_mobile?.toString().includes(searchValue) ||
+        c?.con_message?.toLowerCase().includes(searchValue) ||
+        c?.con_subject?.toLowerCase().includes(searchValue);
+
+      // 🏷 SUBJECT FILTER (separate)
+      const matchesSubject =
+        !subjectValue || c?.con_subject?.toLowerCase().includes(subjectValue);
+
+      // 📅 DATE FILTER
+      const addedDate = c?.con_added_date ? new Date(c.con_added_date) : null;
+      const from = fromDate ? new Date(fromDate) : null;
+      const to = toDate ? new Date(toDate) : null;
+
+      let matchesDate = true;
+      if (addedDate) {
+        if (from && to) matchesDate = addedDate >= from && addedDate <= to;
+        else if (from) matchesDate = addedDate >= from;
+        else if (to) matchesDate = addedDate <= to;
+      }
+
+      return matchesSearch && matchesSubject && matchesDate;
+    });
+  }, [contacts, search, subject, fromDate, toDate]);
+  // Pagination start
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 100;
+  const lastIndex = currentPage * recordsPerPage;
+  const firstIndex = lastIndex - recordsPerPage;
+
+  const records = filteredContacts.slice(firstIndex, lastIndex);
+  const nPages = Math.ceil(filteredContacts.length / recordsPerPage);
+  // Pagination End
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, subject, fromDate, toDate]);
+
   return (
     <>
       <div className="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
@@ -58,21 +101,50 @@ function Contact() {
       <div className="card shadow-sm p-3 border">
         <div className="row g-2 align-items-center mb-3">
           <div className="col-md-2">
-            <input className="form-control" placeholder="Enter Subject...." />
+            <input
+              className="form-control"
+              placeholder="Enter Subject...."
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+            />
           </div>
 
           <div className="col-6 col-md-2">
-            <input type="date" className="form-control" />
+            <input
+              type="date"
+              className="form-control"
+              value={fromDate}
+              onChange={(e) => setFromDate(e.target.value)}
+            />
           </div>
 
           <div className="col-6 col-md-2">
-            <input type="date" className="form-control" />
+            <input
+              type="date"
+              className="form-control"
+              value={toDate}
+              onChange={(e) => setToDate(e.target.value)}
+            />
           </div>
 
           <div className="col-12 col-md-3 d-flex justify-content-md-start justify-content-between">
-            <button className="btn px-4 me-2 btn-success">Submit</button>
+            <button
+              className="btn px-4 me-2 btn-success"
+              onClick={() => setCurrentPage(1)}
+            >
+              Submit
+            </button>
 
-            <button className="btn btn-light border px-3">
+            <button
+              className="btn btn-light border px-3"
+              onClick={() => {
+                setSearch("");
+                setSubject("");
+                setFromDate("");
+                setToDate("");
+                setCurrentPage(1);
+              }}
+            >
               <i className="fa fa-refresh"></i>
             </button>
           </div>
@@ -82,6 +154,8 @@ function Contact() {
               type="text"
               className="form-control"
               placeholder="Search..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
             />
           </div>
         </div>

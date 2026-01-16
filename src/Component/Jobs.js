@@ -624,6 +624,47 @@ function Jobs() {
     return `${minutes}:${seconds}`;
   };
 
+  // filter code
+  // const [search, setSearch] = useState("");
+  const [jobType, setJobType] = useState("");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
+
+  const filteredJobs = React.useMemo(() => {
+    return records.filter((job) => {
+      /* 🔍 SEARCH */
+      const searchText = search.toLowerCase().trim();
+      const matchesSearch =
+        !searchText ||
+        job?.job_title?.toLowerCase().includes(searchText) ||
+        job?.job_company?.toLowerCase().includes(searchText) ||
+        job?.mc_name?.toLowerCase().includes(searchText) ||
+        job?.sc_name?.toLowerCase().includes(searchText);
+
+      /* 🎯 JOB TYPE */
+      const matchesType = !jobType || job?.job_type === jobType;
+
+      /* 📅 DATE FILTER */
+      let matchesDate = true;
+      if (fromDate || toDate) {
+        const jobDate = job?.job_date
+          ? new Date(job.job_date.replace(" ", "T"))
+          : null;
+
+        const from = fromDate ? new Date(fromDate) : null;
+        const to = toDate ? new Date(toDate) : null;
+
+        if (jobDate) {
+          if (from && to) matchesDate = jobDate >= from && jobDate <= to;
+          else if (from) matchesDate = jobDate >= from;
+          else if (to) matchesDate = jobDate <= to;
+        }
+      }
+
+      return matchesSearch && matchesType && matchesDate;
+    });
+  }, [records, search, jobType, fromDate, toDate]);
+
   return (
     <>
       {/* TOAST */}
@@ -655,31 +696,47 @@ function Jobs() {
         <div className="row g-2 align-items-center mb-3">
           {/* Job Type */}
           <div className="col-12 col-md-2">
-            <select className="form-select form-control">
-              <option value="">Select Type</option>
-              <option>Full-time</option>
-              <option>Part-time</option>
-              <option>Internship</option>
-              <option>Remote</option>
-              <option>Contract</option>
-            </select>
+            <select
+              className="form-select form-control"
+              value={jobType}
+              onChange={(e) => setJobType(e.target.value)}
+            ></select>
           </div>
 
           {/* From Date */}
           <div className="col-6 col-md-2">
-            <input type="date" className="form-control" />
+            <input
+              type="date"
+              className="form-control"
+              value={fromDate}
+              onChange={(e) => setFromDate(e.target.value)}
+            />
           </div>
 
           {/* To Date */}
           <div className="col-6 col-md-2">
-            <input type="date" className="form-control" />
+            <input
+              type="date"
+              className="form-control"
+              value={toDate}
+              onChange={(e) => setToDate(e.target.value)}
+            />
           </div>
 
           {/* Submit + Reset */}
           <div className="col-12 col-md-3 d-flex justify-content-md-start justify-content-between">
             <button className="btn px-4 me-2 btn-success">Submit</button>
 
-            <button className="btn btn-light border px-3">
+            <button
+              className="btn btn-light border px-3"
+              onClick={() => {
+                setSearch("");
+                setJobType("");
+                setFromDate("");
+                setToDate("");
+                setCurrentPage(1);
+              }}
+            >
               <i className="fa fa-refresh"></i>
             </button>
           </div>
@@ -712,8 +769,9 @@ function Jobs() {
             <tbody>
               {loading ? (
                 <TableSkeleton rows={6} columns={5} />
-              ) : records.length > 0 ? (
-                records.map((job, index) => (
+              ) : filteredJobs.length > 0 ? (
+                filteredJobs.slice(firstIndex, lastIndex)
+                .map((job, index) => (
                   <tr key={job.job_id}>
                     <td>{firstIndex + index + 1}</td>
                     <td className="text-start fw-bold">

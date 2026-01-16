@@ -1,4 +1,4 @@
-import logo from "./logo/admin-logo.png";
+import logo from "./logo/avatar.jpeg";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../config/constants";
 
@@ -12,6 +12,7 @@ function Sidebar() {
   let displayName = "";
   let com_logo = logo;
   // let displayEmail = "";
+  const roleNum = Number(role);
 
   if (Number(role) === 100) {
     displayName = employer?.emp_name || "Employer";
@@ -19,14 +20,12 @@ function Sidebar() {
     if (employer?.emp_com_logo) {
       com_logo = `${BASE_URL}hirelink_apis/Uploads/${employer.emp_com_logo}`;
     } else {
-      com_logo =
-        "https://media.istockphoto.com/id/1553217327/vector/user-profile-icon-avatar-person-sign-profile-picture.jpg";
+      com_logo = logo;
     }
-  } else if (role === "1") {
+  } else if (roleNum >= 1 && roleNum <= 10) {
     displayName = "Admin";
     // displayEmail = "";
-    com_logo =
-      "https://media.istockphoto.com/id/1553217327/vector/user-profile-icon-avatar-person-sign-profile-picture.jpg";
+    com_logo = logo;
   }
 
   const handleLogout = () => {

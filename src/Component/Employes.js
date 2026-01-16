@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import image from "./logo/no image.jpg";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import Pagination from "./commenuse/Pagination";
@@ -421,30 +422,84 @@ function Employes() {
                           </ul>
                         </div>
                       </div> */}
-                        <b>Name:</b> {emp.emp_name} <br />
-                        <b>Email:</b> {maskEmail(emp.emp_email)} <br />
-                        <b>Mobile:</b> {maskMobile(emp.emp_mobile)} <br />
-                        <b>Location:</b> {emp.emp_location} <br />
-                        <b>City:</b> {emp.city_name} <br />
-                        <b>State:</b> {emp.state_name}
+                        <div className="fw-bold ">
+                          Name:{" "}
+                          <span className="text-dark fw-normal">
+                            {emp.emp_name}
+                          </span>
+                        </div>
+                        <div className="fw-bold ">
+                          Email:{" "}
+                          <span className="text-dark fw-normal">
+                            {maskEmail(emp.emp_email)}
+                          </span>
+                        </div>
+                        <div className="fw-bold ">
+                          Mobile:{" "}
+                          <span className="text-dark fw-normal">
+                            {maskMobile(emp.emp_mobile)}
+                          </span>
+                        </div>
                       </td>
 
                       {/* Company Details */}
                       <td style={{ width: "30%" }}>
-                        <b>Company:</b> {emp.emp_companyname} <br />
-                        <b>Website:</b> {emp.emp_website || "-"}
+                        <div className="fw-bold ">
+                          Company:{" "}
+                          <span className="text-dark fw-normal">
+                            {emp.emp_companyname}
+                          </span>
+                        </div>
+                        <div className="fw-bold ">
+                          Website:{" "}
+                          <span className="text-dark fw-normal">
+                            <a href={emp.emp_website}>Go To</a>
+                          </span>
+                        </div>
+                        <div className="fw-bold ">
+                          Location:{" "}
+                          <span className="text-dark fw-normal">
+                            {emp.emp_location}
+                          </span>
+                        </div>
+                        <div className="fw-bold ">
+                          City:{" "}
+                          <span className="text-dark fw-normal">
+                            {emp.city_name}
+                          </span>
+                        </div>
+                        <div className="fw-bold ">
+                          State:{" "}
+                          <span className="text-dark fw-normal">
+                            {emp.state_name}
+                          </span>
+                        </div>
                       </td>
 
                       {/* Social Media */}
                       <td style={{ width: "25%" }}>
-                        <b>LinkedIn:</b> {emp.emp_linkedin || "-"} <br />
-                        <b>Facebook:</b> {emp.emp_facebook || "-"} <br />
-                        <b>Instagram:</b> {emp.emp_instagram || "-"} <br />
-                        <b>YouTube:</b> {emp.emp_youtube || "-"}
+                        <div className="avatar avatar-xl">
+                          <img
+                            src={
+                              emp?.emp_com_logo
+                                ? `${BASE_URL}hirelink_apis/Uploads/${emp.emp_com_logo}`
+                                : image
+                            }
+                            alt="No Image"
+                            className="avatar-img rounded-circle"
+                          />
+                        </div>
                       </td>
 
                       {/* Registration Date */}
-                      <td className="text-center">{emp.emp_added_date}</td>
+                      <td className="text-center">
+                        <div className="fw-bold ">
+                          Added Date:{" "}
+                          <span className="text-dark fw-normal">
+                            {emp.emp_added_date || "N/A"}
+                          </span>
+                        </div>
+                      </td>
                     </tr>
                   ))
               ) : (

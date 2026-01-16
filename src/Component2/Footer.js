@@ -6,15 +6,15 @@ function Footer() {
   return (
     <footer className="footer mt-5">
       <div className="d-flex flex-wrap justify-content-center gap-3">
-        <NavLink to="/jobs">Browse jobs</NavLink>
-        <NavLink to="/companies">Browse companies</NavLink>
+        <NavLink to="/jobs">Browse Jobs</NavLink>
+        <NavLink to="/companies">Browse Companies</NavLink>
         {/* <NavLink to="/dashboard">Work at JobFinder</NavLink> */}
         {/* <NavLink to="/dashboard">Countries</NavLink> */}
         <NavLink to="/about">About</NavLink>
         <NavLink to="/help">Help</NavLink>
         <NavLink to="/candidate-terms-condition">Terms & Condition</NavLink>
-        <NavLink to="/employer">Post a job</NavLink>
-        <NavLink to="/candidate-return-policy">Return policy</NavLink>
+        <NavLink to="/employer">Post a Job</NavLink>
+        <NavLink to="/candidate-return-policy">Return Policy</NavLink>
         <NavLink to="/candidate-privacy-policies">Privacy & Policies</NavLink>
       </div>
 

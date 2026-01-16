@@ -230,7 +230,7 @@ function Interview() {
                       <td>{firstIndex + idx + 1}</td>
 
                       <td>
-                        <div className="dropdown d-inline ms-2">
+                        <div className="dropdown d-inline">
                           <span
                             className="text-primary fw-bold"
                             role="button"
@@ -286,7 +286,7 @@ function Interview() {
                           </span>
                         </div>
                         <div className="fw-bold">
-                          Company Name:{" "}
+                          Company:{" "}
                           <span className="text-dark fw-normal">
                             {i.job_company}
                           </span>

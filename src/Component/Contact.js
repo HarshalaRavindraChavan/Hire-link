@@ -208,12 +208,6 @@ function Contact() {
 
                     <td className="text-start">
                       <div className="fw-bold">
-                        Added By:{" "}
-                        <span className="text-dark fw-normal">
-                          {c.con_added_by}
-                        </span>
-                      </div>
-                      <div className="fw-bold">
                         Added Date:{" "}
                         <span className="text-dark fw-normal">
                           {c.con_added_date}

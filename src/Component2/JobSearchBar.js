@@ -105,7 +105,7 @@ function JobSearchBar({
           <i className="fa fa-search me-2"></i>
           <input
             className="form-control border-0"
-            placeholder="Job title, Company, Category"
+            placeholder="Job Title, Company, Category"
             value={searchKeyword}
             onChange={(e) => {
               setSearchKeyword(e.target.value);

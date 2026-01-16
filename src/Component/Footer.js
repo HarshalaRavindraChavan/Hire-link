@@ -6,8 +6,15 @@ function Footer() {
     >
       <p>
         © {new Date().getFullYear()} Hirelinkinfo.com | All Rights Reserved |
-        Design By <a href="https://www.esenceweb.com/"    target="_blank"
-          rel="noopener noreferrer">Ensenceweb IT</a>
+        Design By{" "}
+        <a
+          href="https://www.esenceweb.com/"
+          style={{ color: "#000" }}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Ensenceweb IT
+        </a>
       </p>
     </footer>
   );

@@ -825,13 +825,13 @@ function Jobs() {
 
                     <td className="text-start">
                       <div className="fw-bold ">
-                        Company Name:{" "}
+                        Company:{" "}
                         <span className="text-dark fw-normal">
                           {job.job_company}
                         </span>
                       </div>
                       <div className="fw-bold ">
-                        Main cate:{" "}
+                        Main Cate:{" "}
                         <span className="text-dark fw-normal">
                           {job.mc_name || "N/A"}
                         </span>
@@ -849,13 +849,13 @@ function Jobs() {
                         </span>
                       </div>
                       <div className="fw-bold ">
-                        subcate 2 :{" "}
+                        Subcate 2 :{" "}
                         <span className="text-dark fw-normal">
                           {job.sc2_name || "N/A"}
                         </span>
                       </div>
                       <div className="fw-bold ">
-                        subcate 3 :{" "}
+                        Subcate 3 :{" "}
                         <span className="text-dark fw-normal">
                           {job.sc3_name || "N/A"}
                         </span>

@@ -414,7 +414,7 @@ function Candidates() {
                     <td className="text-center">
                       {candidate.can_resume ? (
                         <a
-                          href={`https://norealtor.in/hirelink_apis/Uploads/${candidate.can_resume}`}
+                          href={`${BASE_URL}hirelink_apis/Uploads/${candidate.can_resume}`}
                           download
                           className="btn btn-sm btn-outline-success"
                         >

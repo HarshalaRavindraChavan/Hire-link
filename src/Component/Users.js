@@ -760,7 +760,7 @@ function Users() {
                           </span>
                         </div> */}
                         <div className="fw-bold ">
-                          Added Date:{"  "}
+                          Added:{"  "}
                           <span className="text-dark fw-normal">
                             {u.user_added_date}
                           </span>

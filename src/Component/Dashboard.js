@@ -34,7 +34,7 @@ function Dashboard() {
   }, []);
 
   const fetchCounts = async () => {
-    try {
+    try { 
       /* ================= ADMIN ================= */
 
       const roleNum = Number(role);

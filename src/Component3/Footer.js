@@ -49,7 +49,7 @@ export default function Footer() {
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink to="/employer-return-policy">Returnpolicy</NavLink>
+                  <NavLink to="/employer-return-policy">Return Policy</NavLink>
                 </li>
                 <li>
                   <NavLink to="/employer-privacy-policies">
@@ -70,7 +70,7 @@ export default function Footer() {
               <h5 className="fw-bold text-white mb-3">Employers</h5>
               <ul className="footer-links list-unstyled">
                 <li>
-                  <NavLink to="/employer">Post a job</NavLink>
+                  <NavLink to="/employer">Post a Job</NavLink>
                 </li>
                 {/* <li>
                   <a href="#">Products</a>
@@ -92,16 +92,16 @@ export default function Footer() {
               <h5 className="fw-bold text-white mb-3">Resources</h5>
               <ul className="footer-links list-unstyled">
                 <li>
-                  <a href="#">How to hire</a>
+                  <a href="#">How to Hire</a>
                 </li>
                 <li>
-                  <a href="#">Job description guide</a>
+                  <a href="#">Job Description Guide</a>
                 </li>
                 <li>
-                  <a href="#">Interview tips</a>
+                  <a href="#">Interview Tips</a>
                 </li>
                 <li>
-                  <a href="#">Hiring guide</a>
+                  <a href="#">Hiring Guide</a>
                 </li>
               </ul>
             </div>

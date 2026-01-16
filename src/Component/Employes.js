@@ -242,6 +242,47 @@ function Employes() {
     return `${maskedName}@${domain}`;
   };
 
+  // fileter code
+  // const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
+
+  const filteredRecords = React.useMemo(() => {
+    return records.filter((emp) => {
+      const searchValue = search.trim().toLowerCase();
+
+      /* 🔍 SEARCH FILTER */
+      const matchesSearch =
+        !searchValue ||
+        emp?.emp_name?.toLowerCase().includes(searchValue) ||
+        emp?.emp_email?.toLowerCase().includes(searchValue) ||
+        emp?.emp_mobile?.toString().includes(searchValue) ||
+        emp?.emp_companyname?.toLowerCase().includes(searchValue) ||
+        emp?.emp_location?.toLowerCase().includes(searchValue) ||
+        emp?.city_name?.toLowerCase().includes(searchValue) ||
+        emp?.state_name?.toLowerCase().includes(searchValue);
+
+      /* 🏷 CATEGORY FILTER */
+      const matchesCategory = !category || emp?.emp_category === category;
+
+      /* 📅 DATE FILTER */
+      const regDate = emp?.emp_added_date ? new Date(emp.emp_added_date) : null;
+
+      const from = fromDate ? new Date(fromDate) : null;
+      const to = toDate ? new Date(toDate) : null;
+
+      let matchesDate = true;
+      if (regDate) {
+        if (from && to) matchesDate = regDate >= from && regDate <= to;
+        else if (from) matchesDate = regDate >= from;
+        else if (to) matchesDate = regDate <= to;
+      }
+
+      return matchesSearch && matchesCategory && matchesDate;
+    });
+  }, [records, search, category, fromDate, toDate]);
+
   return (
     <>
       {/* HEADER */}
@@ -265,30 +306,51 @@ function Employes() {
         <div className="row g-2 align-items-center mb-3">
           {/* Category */}
           <div className="col-12 col-md-2">
-            <select className="form-select  form-control">
-              <option value="">Select Categor</option>
-              <option>IT</option>
-              <option>Finance</option>
-              <option>Marketing</option>
-              <option>HR</option>
+            <select
+              className="form-select form-control"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              <option value="">Select Category</option>
+              <option value="IT">IT</option>
+              <option value="Finance">Finance</option>
+              <option value="Marketing">Marketing</option>
+              <option value="HR">HR</option>
             </select>
           </div>
-
           {/* From Date */}
           <div className="col-6 col-md-2">
-            <input type="date" className="form-control" />
+            <input
+              type="date"
+              className="form-control"
+              value={fromDate}
+              onChange={(e) => setFromDate(e.target.value)}
+            />
           </div>
 
           {/* To Date */}
           <div className="col-6 col-md-2">
-            <input type="date" className="form-control" />
+            <input
+              type="date"
+              className="form-control"
+              value={toDate}
+              onChange={(e) => setToDate(e.target.value)}
+            />
           </div>
 
           {/* Submit + Reset */}
           <div className="col-12 col-md-3 d-flex justify-content-md-start justify-content-between">
             <button className="btn px-4 me-2 btn-success">Submit</button>
-
-            <button className="btn btn-light border px-3">
+            <button
+              className="btn btn-light border px-3"
+              onClick={() => {
+                setSearch("");
+                setCategory("");
+                setFromDate("");
+                setToDate("");
+                setCurrentPage(1);
+              }}
+            >
               <i className="fa fa-refresh"></i>
             </button>
           </div>
@@ -298,7 +360,7 @@ function Employes() {
             <input
               type="text"
               className="form-control"
-              placeholder="Search..."
+              placeholder="Search by name, email, company..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -321,16 +383,18 @@ function Employes() {
             <tbody>
               {loading ? (
                 <TableSkeleton rows={6} columns={5} />
-              ) : records.length > 0 ? (
-                records.map((emp, index) => (
-                  <tr key={emp.emp_id || index}>
-                    <td className="text-center fw-bold">
-                      {firstIndex + index + 1}
-                    </td>
+              ) : filteredRecords.length > 0 ? (
+                filteredRecords
+                  .slice(firstIndex, lastIndex)
+                  .map((emp, index) => (
+                    <tr key={emp.emp_id || index}>
+                      <td className="text-center fw-bold">
+                        {firstIndex + index + 1}
+                      </td>
 
-                    {/* User Details */}
-                    <td style={{ width: "35%" }}>
-                      {/* <div className="fw-bold">
+                      {/* User Details */}
+                      <td style={{ width: "35%" }}>
+                        {/* <div className="fw-bold">
                         Name:
                         <div className="dropdown d-inline ms-2">
                           <span
@@ -357,32 +421,32 @@ function Employes() {
                           </ul>
                         </div>
                       </div> */}
-                      <b>Name:</b> {emp.emp_name} <br />
-                      <b>Email:</b> {maskEmail(emp.emp_email)} <br />
-                      <b>Mobile:</b> {maskMobile(emp.emp_mobile)} <br />
-                      <b>Location:</b> {emp.emp_location} <br />
-                      <b>City:</b> {emp.city_name} <br />
-                      <b>State:</b> {emp.state_name}
-                    </td>
+                        <b>Name:</b> {emp.emp_name} <br />
+                        <b>Email:</b> {maskEmail(emp.emp_email)} <br />
+                        <b>Mobile:</b> {maskMobile(emp.emp_mobile)} <br />
+                        <b>Location:</b> {emp.emp_location} <br />
+                        <b>City:</b> {emp.city_name} <br />
+                        <b>State:</b> {emp.state_name}
+                      </td>
 
-                    {/* Company Details */}
-                    <td style={{ width: "30%" }}>
-                      <b>Company:</b> {emp.emp_companyname} <br />
-                      <b>Website:</b> {emp.emp_website || "-"}
-                    </td>
+                      {/* Company Details */}
+                      <td style={{ width: "30%" }}>
+                        <b>Company:</b> {emp.emp_companyname} <br />
+                        <b>Website:</b> {emp.emp_website || "-"}
+                      </td>
 
-                    {/* Social Media */}
-                    <td style={{ width: "25%" }}>
-                      <b>LinkedIn:</b> {emp.emp_linkedin || "-"} <br />
-                      <b>Facebook:</b> {emp.emp_facebook || "-"} <br />
-                      <b>Instagram:</b> {emp.emp_instagram || "-"} <br />
-                      <b>YouTube:</b> {emp.emp_youtube || "-"}
-                    </td>
+                      {/* Social Media */}
+                      <td style={{ width: "25%" }}>
+                        <b>LinkedIn:</b> {emp.emp_linkedin || "-"} <br />
+                        <b>Facebook:</b> {emp.emp_facebook || "-"} <br />
+                        <b>Instagram:</b> {emp.emp_instagram || "-"} <br />
+                        <b>YouTube:</b> {emp.emp_youtube || "-"}
+                      </td>
 
-                    {/* Registration Date */}
-                    <td className="text-center">{emp.emp_added_date}</td>
-                  </tr>
-                ))
+                      {/* Registration Date */}
+                      <td className="text-center">{emp.emp_added_date}</td>
+                    </tr>
+                  ))
               ) : (
                 <tr>
                   <td colSpan="5" className="text-center">

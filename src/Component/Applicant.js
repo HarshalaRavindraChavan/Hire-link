@@ -9,13 +9,11 @@ import Pagination from "./commenuse/Pagination";
 import { BASE_URL } from "../config/constants";
 import TableSkeleton from "./commenuse/TableSkeleton";
 
-
 function Applicant() {
   // tital of tab
   useEffect(() => {
     document.title = "Hirelink | Applicant";
   }, []);
-  
 
   const modalRef = useRef(null);
   const [selectedApplicant, setSelectedApplicant] = useState(null);
@@ -39,6 +37,11 @@ function Applicant() {
   const nPages = Math.ceil(users.length / recordsPerPage);
 
   //============================= Get Data Code ============================
+
+  // for filter state
+  const [jobType, setJobType] = useState("");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
 
   useEffect(() => {
     fetchJobs();
@@ -171,6 +174,42 @@ function Applicant() {
     return `${maskedName}@${domain}`;
   };
 
+  // fileter code
+  const filteredRecords = React.useMemo(() => {
+    return records.filter((app) => {
+      const searchValue = search.trim().toLowerCase();
+
+      /* 🔍 SEARCH */
+      const matchesSearch =
+        !searchValue ||
+        app?.can_name?.toLowerCase().includes(searchValue) ||
+        app?.can_email?.toLowerCase().includes(searchValue) ||
+        app?.can_mobile?.toString().includes(searchValue) ||
+        app?.job_title?.toLowerCase().includes(searchValue) ||
+        app?.job_company?.toLowerCase().includes(searchValue);
+
+      /* 💼 JOB TYPE */
+      const matchesJobType = !jobType || app?.job_type === jobType;
+
+      /* 📅 DATE */
+      const appliedDate = app?.apl_added_date
+        ? new Date(app.apl_added_date)
+        : null;
+
+      const from = fromDate ? new Date(fromDate) : null;
+      const to = toDate ? new Date(toDate) : null;
+
+      let matchesDate = true;
+      if (appliedDate) {
+        if (from && to) matchesDate = appliedDate >= from && appliedDate <= to;
+        else if (from) matchesDate = appliedDate >= from;
+        else if (to) matchesDate = appliedDate <= to;
+      }
+
+      return matchesSearch && matchesJobType && matchesDate;
+    });
+  }, [records, search, jobType, fromDate, toDate]);
+
   return (
     <>
       <div className="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
@@ -184,31 +223,47 @@ function Applicant() {
         <div className="row g-2 align-items-center mb-3">
           {/* Job Type */}
           <div className="col-12 col-md-2">
-            <select className="form-select form-control">
-              <option value="">Select Type</option>
-              <option>Full-time</option>
-              <option>Part-time</option>
-              <option>Internship</option>
-              <option>Remote</option>
-              <option>Contract</option>
-            </select>
+            <select
+              className="form-select form-control"
+              value={jobType}
+              onChange={(e) => setJobType(e.target.value)}
+            ></select>
           </div>
 
           {/* From Date */}
           <div className="col-6 col-md-2">
-            <input type="date" className="form-control" />
+            <input
+              type="date"
+              className="form-control"
+              value={fromDate}
+              onChange={(e) => setFromDate(e.target.value)}
+            />
           </div>
 
           {/* To Date */}
           <div className="col-6 col-md-2">
-            <input type="date" className="form-control" />
+            <input
+              type="date"
+              className="form-control"
+              value={toDate}
+              onChange={(e) => setToDate(e.target.value)}
+            />
           </div>
 
           {/* Submit + Reset */}
           <div className="col-12 col-md-3 d-flex justify-content-md-start justify-content-between">
             <button className="btn px-4 me-2 btn-success">Submit</button>
 
-            <button className="btn btn-light border px-3">
+            <button
+              className="btn btn-light border px-3"
+              onClick={() => {
+                setSearch("");
+                setJobType("");
+                setFromDate("");
+                setToDate("");
+                setCurrentPage(1);
+              }}
+            >
               <i className="fa fa-refresh"></i>
             </button>
           </div>
@@ -240,8 +295,10 @@ function Applicant() {
             <tbody>
               {loading ? (
                 <TableSkeleton rows={6} columns={4} />
-              ) : records.length > 0 ? (
-                records.map((app, index) => (
+              ) : filteredRecords.length > 0 ? (
+                
+                filteredRecords.slice(firstIndex, lastIndex)
+                .map((app, index) => (
                   <tr key={app.apl_id}>
                     <td>{firstIndex + index + 1}</td>
                     <td className="text-start fw-bold">
@@ -327,6 +384,7 @@ function Applicant() {
         </div>
       </div>
 
+      {/* model code */}
       <div
         className="modal fade"
         id="exampleModal"

@@ -19,6 +19,12 @@ function Candidates() {
   const [search, setSearch] = useState("");
   const [candidates, setCandidates] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // const [search, setSearch] = useState("");
+  const [experience, setExperience] = useState("");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
+
   //==================== get All candidate
   useEffect(() => {
     fetchCandidates();
@@ -90,47 +96,6 @@ function Candidates() {
     mobile: Yup.string()
       .matches(/^[0-9]{10}$/, "Enter valid 10-digit mobile number")
       .required("Mobile number is required"),
-
-    // location: Yup.string().required("Location / City is required"),
-
-    // experience: Yup.number()
-    //   .typeError("Experience must be a number")
-    //   .min(0, "Experience cannot be negative")
-    //   .max(50, "Invalid experience")
-    //   .required("Experience is required"),
-
-    // skill: Yup.string().required("Skills are required"),
-
-    // profilePhoto: Yup.mixed()
-    //   .required("Profile photo is required")
-    //   .test(
-    //     "fileType",
-    //     "Only JPG, JPEG, PNG allowed",
-    //     (value) =>
-    //       value &&
-    //       ["image/jpeg", "image/png", "image/jpg"].includes(value[0]?.type)
-    //   ),
-
-    // resume: Yup.mixed()
-    //   .required("Resume is required")
-    //   .test(
-    //     "fileType",
-    //     "Only PDF, DOC, DOCX allowed",
-    //     (value) =>
-    //       value &&
-    //       [
-    //         "application/pdf",
-    //         "application/msword",
-    //         "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    //       ].includes(value[0]?.type)
-    //   ),
-
-    // registrationDate: Yup.string().required("Registration date is required"),
-
-    // appliedJobsCount: Yup.number()
-    //   .typeError("Must be a number")
-    //   .min(0, "Cannot be negative")
-    //   .required("Applied jobs count is required"),
   });
 
   const {
@@ -203,6 +168,39 @@ function Candidates() {
     return `${maskedName}@${domain}`;
   };
 
+  // Filter Code
+  const filteredRecords = records.filter((candidate) => {
+    const searchValue = search.toLowerCase();
+
+    // 🔍 SEARCH FILTER
+    const matchesSearch =
+      candidate?.can_name?.toLowerCase().includes(searchValue) ||
+      candidate?.can_email?.toLowerCase().includes(searchValue) ||
+      candidate?.can_mobile?.includes(search) ||
+      candidate?.can_skill?.toLowerCase().includes(searchValue);
+
+    // 🎯 EXPERIENCE FILTER
+    const exp = Number(candidate?.can_experience || 0);
+    let matchesExperience = true;
+
+    if (experience === "0-1") matchesExperience = exp >= 0 && exp <= 1;
+    if (experience === "1-3") matchesExperience = exp >= 1 && exp <= 3;
+    if (experience === "3-5") matchesExperience = exp >= 3 && exp <= 5;
+    if (experience === "5+") matchesExperience = exp >= 5;
+
+    // 📅 DATE FILTER
+    const regDate = new Date(candidate?.register_date);
+    const from = fromDate ? new Date(fromDate) : null;
+    const to = toDate ? new Date(toDate) : null;
+
+    let matchesDate = true;
+    if (from && to) matchesDate = regDate >= from && regDate <= to;
+    else if (from) matchesDate = regDate >= from;
+    else if (to) matchesDate = regDate <= to;
+
+    return matchesSearch && matchesExperience && matchesDate;
+  });
+
   return (
     <>
       <div className="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
@@ -228,30 +226,52 @@ function Candidates() {
         <div className="row g-2 align-items-center mb-3">
           {/* Experience */}
           <div className="col-12 col-md-2">
-            <select className="form-select form-control">
-              <option value="">Select Experien</option>
-              <option>0–1 Years</option>
-              <option>1–3 Years</option>
-              <option>3–5 Years</option>
-              <option>5+ Years</option>
+            <select
+              className="form-select form-control"
+              value={experience}
+              onChange={(e) => setExperience(e.target.value)}
+            >
+              <option value="">Select Experience</option>
+              <option value="0-1">0–1 Years</option>
+              <option value="1-3">1–3 Years</option>
+              <option value="3-5">3–5 Years</option>
+              <option value="5+">5+ Years</option>
             </select>
           </div>
 
           {/* From Date */}
           <div className="col-6 col-md-2">
-            <input type="date" className="form-control" />
+            <input
+              type="date"
+              className="form-control"
+              value={fromDate}
+              onChange={(e) => setFromDate(e.target.value)}
+            />
           </div>
 
           {/* To Date */}
           <div className="col-6 col-md-2">
-            <input type="date" className="form-control" />
+            <input
+              type="date"
+              className="form-control"
+              value={toDate}
+              onChange={(e) => setToDate(e.target.value)}
+            />
           </div>
 
           {/* Submit + Reset */}
           <div className="col-12 col-md-3 d-flex justify-content-md-start justify-content-between">
             <button className="btn px-4 me-2 btn-success">Submit</button>
 
-            <button className="btn btn-light border px-3">
+            <button
+              className="btn btn-light border px-3"
+              onClick={() => {
+                setSearch("");
+                setExperience("");
+                setFromDate("");
+                setToDate("");
+              }}
+            >
               <i className="fa fa-refresh"></i>
             </button>
           </div>
@@ -284,8 +304,8 @@ function Candidates() {
             <tbody>
               {loading ? (
                 <TableSkeleton rows={6} columns={5} />
-              ) : records.length > 0 ? (
-                records.map((candidate, index) => (
+              ) : filteredRecords.length > 0 ? (
+                filteredRecords.map((candidate, index) => (
                   <tr key={candidate.can_id}>
                     <td className="text-center fw-bold">
                       {firstIndex + index + 1}

@@ -176,8 +176,11 @@ function Users() {
   const addForm = useForm({
     resolver: yupResolver(addschema),
     defaultValues: {
+      state: "",
+      city: "",
       adharupload: "",
       panupload: "",
+      bankpassbook: "",
     },
   });
 
@@ -365,6 +368,10 @@ function Users() {
   // ✅ EDIT FORM
   const editForm = useForm({
     resolver: yupResolver(editSchema),
+    defaultValues: {
+      state: "",
+      city: "",
+    },
   });
 
   const {
@@ -395,7 +402,7 @@ function Users() {
       experience: user.user_experience ?? "",
       role: user.user_role ?? "",
       menus: user.user_menu_id ? user.user_menu_id.split(",") : [],
-      education_type: user.user_education_type ?? "", 
+      education_type: user.user_education_type ?? "",
       education_detail: user.user_education_detail ?? "",
     });
 
@@ -1240,8 +1247,8 @@ function Users() {
                     searchPlaceholder="Search state..."
                     error={editErrors.state?.message}
                     onChange={(stateId) => {
-                      editSetValue("state", stateId);
-                      editSetValue("city", "");
+                      editSetValue("state", stateId, { shouldValidate: true });
+                      editSetValue("city", "", { shouldValidate: true });
                       fetchCities(stateId);
                     }}
                   />
@@ -1259,9 +1266,11 @@ function Users() {
                       !cities.length ? "Select state first" : "Select City"
                     }
                     searchPlaceholder="Search city..."
+                    labelKey="city_name"
+                    valueKey="city_id"
                     error={editErrors.city?.message}
                     onChange={(cityId) => {
-                      editSetValue("city", cityId);
+                      editSetValue("city", cityId, { shouldValidate: true });
                     }}
                   />
                 </div>

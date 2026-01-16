@@ -9,12 +9,29 @@ import { toast, ToastContainer } from "react-toastify";
 import { BASE_URL } from "../config/constants";
 import TableSkeleton from "./commenuse/TableSkeleton";
 import SearchableDropdown from "./SearchableDropdown";
+import { useNavigate } from "react-router-dom";
 
 function Jobs() {
   // tital of tab
   useEffect(() => {
     document.title = "Hirelink | Jobs";
   }, []);
+
+  // const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   const auth = JSON.parse(localStorage.getItem("auth"));
+
+  //   if (!auth || !auth?.role) {
+  //     navigate("/signin");
+  //     return;
+  //   }
+
+  //   const role = auth?.role;
+  //   if (!["1", "2", "3", "4", 100, "100"].includes(role)) {
+  //     navigate("/signin");
+  //   }
+  // }, [navigate]);
 
   // Login ckeck and role
   const auth = JSON.parse(localStorage.getItem("auth"));
@@ -179,6 +196,10 @@ function Jobs() {
 
   const addForm = useForm({
     resolver: yupResolver(validationSchema),
+    defaultValues: {
+      job_state: "",
+      job_city: "",
+    },
   });
 
   const editForm = useForm({
@@ -1030,6 +1051,8 @@ function Jobs() {
                   <SearchableDropdown
                     options={states}
                     value={addWatch("job_state")}
+                    labelKey="state_name"
+                    valueKey="state_id"
                     error={addErrors.job_state?.message}
                     onChange={(stateId) => {
                       setAddValue("job_state", stateId);
@@ -1065,6 +1088,8 @@ function Jobs() {
                   <SearchableDropdown
                     options={cities}
                     value={addWatch("job_city")}
+                    labelKey="city_name"
+                    valueKey="city_id"
                     disabled={!cities.length}
                     error={addErrors.job_city?.message}
                     onChange={(cityId) => {
@@ -1494,6 +1519,8 @@ function Jobs() {
                   <SearchableDropdown
                     options={states}
                     value={editWatch("job_state")}
+                    labelKey="state_name"
+                    valueKey="state_id"
                     error={editErrors.job_state?.message}
                     onChange={(stateId) => {
                       setEditValue("job_state", stateId);
@@ -1531,6 +1558,8 @@ function Jobs() {
                   <SearchableDropdown
                     options={cities}
                     value={editWatch("job_city")}
+                    labelKey="city_name"
+                    valueKey="city_id"
                     disabled={!cities.length}
                     error={editErrors.job_city?.message}
                     onChange={(cityId) => {

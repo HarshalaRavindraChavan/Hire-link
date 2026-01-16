@@ -6,6 +6,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { BASE_URL } from "../config/constants";
 import TableSkeleton from "./commenuse/TableSkeleton";
+import InterviewsPage from "./InterManage";
 
 function Interview() {
   useEffect(() => {
@@ -35,6 +36,7 @@ function Interview() {
   const watchInterviewType = watch("interviewType");
 
   /* ================= STATES ================= */
+  const [activeTab, setActiveTab] = useState("tab1"); // ✅ tab state
   const [search, setSearch] = useState("");
   const [interviews, setInterviews] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -181,117 +183,193 @@ function Interview() {
 
       <h3 className="fw-bold mb-3">Interview Details</h3>
 
-      <div className="card shadow-sm p-3 border">
-        <div className="table-responsive">
-          <table className="table table-bordered align-middle">
-            <thead className="table-light text-center">
-              <tr>
-                <th>ID</th>
-                <th>Candidate</th>
-                <th>Job</th>
-                <th>Interview</th>
-                <th>Status</th>
-              </tr>
-            </thead>
+      {/* ✅ Tabs Header (Only Employer) */}
+      {Number(role) === 100 && (
+        <ul className="nav nav-tabs mb-3">
+          <li className="nav-item">
+            <button
+              className={`nav-link ${activeTab === "tab1" ? "active" : ""}`}
+              onClick={() => setActiveTab("tab1")}
+            >
+              Table View
+            </button>
+          </li>
 
-            <tbody>
-              {loading ? (
-                <TableSkeleton rows={6} columns={5} />
-              ) : records.length ? (
-                records.map((i, idx) => (
-                  <tr key={i.itv_id}>
-                    <td>{firstIndex + idx + 1}</td>
+          <li className="nav-item">
+            <button
+              className={`nav-link ${activeTab === "tab2" ? "active" : ""}`}
+              onClick={() => setActiveTab("tab2")}
+            >
+              Interview Manage
+            </button>
+          </li>
+        </ul>
+      )}
 
-                    <td>
-                      <div className="dropdown d-inline ms-2">
+      {/* ✅ Tabs Content */}
+      {activeTab === "tab1" && (
+        <div className="card shadow-sm p-3 border">
+          <div className="table-responsive">
+            <table className="table table-bordered align-middle">
+              <thead className="table-light text-center">
+                <tr>
+                  <th>ID</th>
+                  <th>Candidate</th>
+                  <th>Job</th>
+                  <th>Interview</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {loading ? (
+                  <TableSkeleton rows={6} columns={5} />
+                ) : records.length ? (
+                  records.map((i, idx) => (
+                    <tr key={i.itv_id}>
+                      <td>{firstIndex + idx + 1}</td>
+
+                      <td>
+                        <div className="dropdown d-inline ms-2">
+                          <span
+                            className="text-primary fw-bold"
+                            role="button"
+                            data-bs-toggle="dropdown"
+                          >
+                            {i.can_name}
+                            (Interview Reschedule)
+                          </span>
+                          <ul className="dropdown-menu">
+                            <li>
+                              <button
+                                className="dropdown-item"
+                                onClick={() => openEditInterviewModal(i)}
+                              >
+                                Edit
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                className="dropdown-item text-danger"
+                                onClick={() => handleDeleteClick(i.itv_id)}
+                              >
+                                Delete
+                              </button>
+                            </li>
+                          </ul>
+                        </div>
+                        <div className="fw-bold">
+                          Score:{" "}
+                          <span className="text-dark fw-normal">
+                            {i.can_score}/1000
+                          </span>
+                        </div>
+                        <div className="fw-bold">
+                          Education Type:{" "}
+                          <span className="text-dark fw-normal">
+                            {i.can_education_type}
+                          </span>
+                        </div>
+                        <div className="fw-bold">
+                          Education:{" "}
+                          <span className="text-dark fw-normal">
+                            {i.can_education_detail}
+                          </span>
+                        </div>
+                      </td>
+
+                      <td>
+                        <div className="fw-bold">
+                          Job Title:{" "}
+                          <span className="text-dark fw-normal">
+                            {i.job_title}
+                          </span>
+                        </div>
+                        <div className="fw-bold">
+                          Company Name:{" "}
+                          <span className="text-dark fw-normal">
+                            {i.job_company}
+                          </span>
+                        </div>
+                      </td>
+
+                      <td>
+                        <div className="fw-bold">
+                          Interview Type:{" "}
+                          <span className="text-dark fw-normal">
+                            {i.itv_type}
+                          </span>
+                        </div>
+                        <div className="fw-bold">
+                          Interview Date:{" "}
+                          <span className="text-dark fw-normal">
+                            {i.itv_date}
+                          </span>
+                        </div>
+                        <div className="fw-bold">
+                          Interview Time:{" "}
+                          <span className="text-dark fw-normal">
+                            {i.itv_time}
+                          </span>
+                        </div>
+                      </td>
+
+                      <td>
                         <span
-                          className="text-primary fw-bold"
-                          role="button"
-                          data-bs-toggle="dropdown"
+                          className={`badge fw-bold ${
+                            (i.itv_status || "").trim() === "Pending"
+                              ? "bg-warning"
+                              : (i.itv_status || "").trim() === "Confirmed"
+                              ? "bg-primary"
+                              : (i.itv_status || "").trim() ===
+                                  "Candidate Cancelled" ||
+                                (i.itv_status || "").trim() === "Cancelled"
+                              ? "bg-danger"
+                              : (i.itv_status || "").trim() === "Completed"
+                              ? "bg-success"
+                              : "bg-secondary"
+                          }`}
                         >
-                          {i.can_name}
-                          (Click here for Interview Update)
+                          {(i.itv_status || "").trim() === "Pending"
+                            ? "Pending"
+                            : (i.itv_status || "").trim() === "Confirmed"
+                            ? "Scheduled"
+                            : (i.itv_status || "").trim() ===
+                                "Candidate Cancelled" ||
+                              (i.itv_status || "").trim() === "Cancelled"
+                            ? "Cancel"
+                            : (i.itv_status || "").trim() === "Completed"
+                            ? "Complete"
+                            : (i.itv_status || "").trim()}
                         </span>
-                        <ul className="dropdown-menu">
-                          <li>
-                            <button
-                              className="dropdown-item"
-                              onClick={() => openEditInterviewModal(i)}
-                            >
-                              Edit
-                            </button>
-                          </li>
-                          <li>
-                            <button
-                              className="dropdown-item text-danger"
-                              onClick={() => handleDeleteClick(i.itv_id)}
-                            >
-                              Delete
-                            </button>
-                          </li>
-                        </ul>
-                      </div>
-                    </td>
-
-                    <td>
-                      <div className="fw-bold">
-                        Job Title:{" "}
-                        <span className="text-dark fw-normal">
-                          {i.job_title}
-                        </span>
-                      </div>
-                      <div className="fw-bold">
-                        Company Name:{" "}
-                        <span className="text-dark fw-normal">
-                          {i.job_company}
-                        </span>
-                      </div>
-                    </td>
-
-                    <td>
-                      <div className="fw-bold">
-                        Interview Type:{" "}
-                        <span className="text-dark fw-normal">
-                          {i.itv_type}
-                        </span>
-                      </div>
-                      <div className="fw-bold">
-                        Interview Date:{" "}
-                        <span className="text-dark fw-normal">
-                          {i.itv_date}
-                        </span>
-                      </div>
-                      <div className="fw-bold">
-                        Interview Time:{" "}
-                        <span className="text-dark fw-normal">
-                          {i.itv_time}
-                        </span>
-                      </div>
-                    </td>
-
-                    <td>
-                      <span className="badge bg-info">{i.itv_status}</span>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5" className="text-center">
+                      No interviews found
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="5" className="text-center">
-                    No interviews found
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                )}
+              </tbody>
+            </table>
 
-          <Pagination
-            currentPage={currentPage}
-            totalPages={nPages}
-            onPageChange={setCurrentPage}
-          />
+            <Pagination
+              currentPage={currentPage}
+              totalPages={nPages}
+              onPageChange={setCurrentPage}
+            />
+          </div>
         </div>
-      </div>
+      )}
 
+      {/* ✅ Tab 2 */}
+      {Number(role) === 100 && activeTab === "tab2" && (
+        <div className="card shadow-sm p-3 border">
+          <InterviewsPage />
+        </div>
+      )}
       {/* ================= MODAL ================= */}
       <div className="modal fade" id="interviewexampleModal" tabIndex="-1">
         <div className="modal-dialog modal-lg modal-dialog-centered">
@@ -353,6 +431,7 @@ function Interview() {
                     <option value="Scheduled">Scheduled</option>
                     <option value="Completed">Completed</option>
                     <option value="Cancelled">Cancelled</option>
+                    <option value="Pending">Pending</option>
                   </select>
                 </div>
               </div>

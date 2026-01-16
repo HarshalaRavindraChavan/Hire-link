@@ -9,6 +9,7 @@ function JobsSAI() {
   const [activeTab, setActiveTab] = useState("saved");
   const [showModal, setShowModal] = useState(false);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
+  const [selectedInterview, setSelectedInterview] = useState(null);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -176,6 +177,22 @@ function JobsSAI() {
     }
   }, [location.pathname, navigate]);
 
+  const updateInterviewStatus = async (interviewId, newStatus) => {
+    try {
+      const res = await axios.post(
+        `${BASE_URL}hirelink_apis/admin/updatedata/tbl_interview/itv_id/${interviewId}`,
+        { itv_status: newStatus }
+      );
+
+      if (res.data.status) {
+        fetchInterviewJobs(); // ✅ refresh interview list
+        fetchAllCounts(); // ✅ refresh counts
+      }
+    } catch (error) {
+      console.error("Status update error:", error);
+    }
+  };
+
   function UpdateStatusModal({ show, onClose }) {
     if (!show) return null;
 
@@ -231,8 +248,21 @@ function JobsSAI() {
     );
   }
 
-  function ScheduleInterviewModal({ show, onClose }) {
-    if (!show) return null;
+  function ScheduleInterviewModal({ show, onClose, interview }) {
+    if (!show || !interview) return null;
+
+    const interviewDate = new Date(interview.itv_date).toLocaleDateString(
+      "en-IN",
+      { weekday: "long", day: "numeric", month: "long", year: "numeric" }
+    );
+
+    const interviewTime = new Date(
+      `1970-01-01T${interview.itv_time}`
+    ).toLocaleTimeString("en-IN", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
 
     return (
       <>
@@ -260,20 +290,12 @@ function JobsSAI() {
               <div className="modal-header border-0">
                 <div>
                   <h5 className="fw-bold mb-1">Schedule your interview</h5>
-                  <small className="text-muted">Step 1 of 2</small>
+                  <small className="text-muted">
+                    {interview.job_title} - {interview.job_company}
+                  </small>
                 </div>
 
                 <button className="btn-close" onClick={onClose}></button>
-              </div>
-
-              {/* PROGRESS BAR */}
-              <div className="px-3">
-                <div className="progress" style={{ height: "6px" }}>
-                  <div
-                    className="progress-bar bg-success"
-                    style={{ width: "50%" }}
-                  ></div>
-                </div>
               </div>
 
               {/* BODY */}
@@ -281,12 +303,21 @@ function JobsSAI() {
                 {/* INFO */}
                 <div className="mb-3">
                   <p className="mb-1">
-                    📞 <strong>This will be a phone interview</strong>
+                    📞 <strong>Interview type:</strong> {interview.itv_type}
                   </p>
 
-                  <p className="mb-1">
-                    📝 <strong>A note from Esenceweb IT:</strong>
-                  </p>
+                  {interview.itv_type === "Virtual Interview" && (
+                    <p className="mb-0">
+                      🔗 <strong>Meeting Link:</strong>{" "}
+                      <a
+                        href={interview.itv_meeting_link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Open Link
+                      </a>
+                    </p>
+                  )}
                 </div>
 
                 <hr />
@@ -298,12 +329,11 @@ function JobsSAI() {
                 </small>
 
                 <div className="border rounded p-3 mt-3 text-center">
-                  <p className="fw-semibold mb-1">
-                    Thursday, December 17, 2025
-                  </p>
+                  <p className="fw-semibold mb-1">{interviewDate}</p>
 
                   <p className="mb-3">
-                    09:00 AM – 09:30 AM <br />
+                    {interviewTime}
+                    <br />
                     <small className="text-muted">
                       India Standard Time (UTC +5:30)
                     </small>
@@ -311,9 +341,12 @@ function JobsSAI() {
 
                   <button
                     className="btn btn-success w-100"
-                    style={{ borderRadius: "6px" }}
+                    onClick={() => {
+                      updateInterviewStatus(interview.itv_id, "Confirmed");
+                      onClose();
+                    }}
                   >
-                    Continue
+                    Confirm
                   </button>
                 </div>
 
@@ -325,12 +358,19 @@ function JobsSAI() {
                     className="btn btn-outline-success w-100 mb-2"
                     style={{ borderRadius: "6px" }}
                   >
-                    Suggest a new time
+                    Reschedule Request
                   </button>
 
                   <button
                     className="btn btn-outline-danger w-100"
                     style={{ borderRadius: "6px" }}
+                    onClick={() => {
+                      updateInterviewStatus(
+                        interview.itv_id,
+                        "Candidate Cancelled"
+                      );
+                      onClose();
+                    }}
                   >
                     Decline interview
                   </button>
@@ -342,6 +382,7 @@ function JobsSAI() {
       </>
     );
   }
+
   //helper of lower case uparcase
   const toTitleCase = (text = "") => {
     return text
@@ -578,6 +619,7 @@ function JobsSAI() {
           <ScheduleInterviewModal
             show={showScheduleModal}
             onClose={() => setShowScheduleModal(false)}
+            interview={selectedInterview}
           />
 
           {/* INTERVIEWS */}
@@ -663,7 +705,10 @@ function JobsSAI() {
                     <div className="d-flex align-items-center">
                       <button
                         className="btn btn-success"
-                        onClick={() => setShowScheduleModal(true)}
+                        onClick={() => {
+                          setSelectedInterview(job); // ✅ clicked interview store
+                          setShowScheduleModal(true); // ✅ open modal
+                        }}
                       >
                         Reschedule
                       </button>

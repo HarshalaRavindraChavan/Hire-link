@@ -9,11 +9,14 @@ import Pagination from "./commenuse/Pagination";
 import { BASE_URL } from "../config/constants";
 import TableSkeleton from "./commenuse/TableSkeleton";
 
+
 function Applicant() {
   // tital of tab
   useEffect(() => {
     document.title = "Hirelink | Applicant";
   }, []);
+  
+
   const modalRef = useRef(null);
   const [selectedApplicant, setSelectedApplicant] = useState(null);
 
@@ -43,7 +46,7 @@ function Applicant() {
 
   const fetchJobs = async () => {
     try {
-      setLoading(true); 
+      setLoading(true);
       let res;
 
       if (["1", "2", "3", "4"].includes(role)) {
@@ -64,7 +67,7 @@ function Applicant() {
     } catch (error) {
       console.error("Jobs fetch error:", error);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
@@ -82,7 +85,7 @@ function Applicant() {
       otherwise: (schema) => schema.notRequired(),
     }),
     // interviewer: yup.string().required("Interviewer name is required"),
-    status: yup.string().required("Status is required"),
+    // status: yup.string().required("Status is required"),
     // createdDate: yup.string().required("Created date is required"),
   });
 
@@ -111,7 +114,7 @@ function Applicant() {
         itv_date: data.interviewDate,
         itv_meeting_link: data.meetingLink || "",
         itv_time: data.interviewTime,
-        itv_status: data.status,
+        itv_status: "Pending",
       };
 
       const res = await axios.post(
@@ -253,7 +256,7 @@ function Applicant() {
                             setSelectedApplicant(app);
                           }}
                         >
-                          {app.can_name} (Click here for Interview Schedule)
+                          {app.can_name} (Interview Schedule)
                         </span>
                       </div>
                       <div className="fw-bold ">
@@ -373,11 +376,14 @@ function Applicant() {
                   <label className="form-label fw-semibold">
                     Interview Date
                   </label>
+
                   <input
                     type="date"
                     className="form-control rounded-3"
+                    min={new Date().toISOString().split("T")[0]} // ✅ past date disable
                     {...register("interviewDate")}
                   />
+
                   <span className="text-danger">
                     {errors.interviewDate?.message}
                   </span>
@@ -419,7 +425,7 @@ function Applicant() {
                 )}
 
                 {/* Status */}
-                <div className="col-md-4 mb-2">
+                {/* <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">Status</label>
 
                   <select
@@ -427,13 +433,13 @@ function Applicant() {
                     {...register("status")}
                   >
                     <option value="">Select Status</option>
-                    <option value="Scheduled">Scheduled</option>
+                    <option value="ScheduPandingled">Panding</option>
                     <option value="Completed">Completed</option>
                     <option value="Cancelled">Cancelled</option>
                   </select>
 
                   <span className="text-danger">{errors.status?.message}</span>
-                </div>
+                </div> */}
               </div>
 
               <div className="modal-footer bg-light rounded-bottom-4 d-flex">

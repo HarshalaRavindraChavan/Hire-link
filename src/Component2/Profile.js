@@ -287,7 +287,7 @@ function Profile() {
       if (res.data?.status && res.data?.data?.length > 0) {
         const freshCandidate = res.data.data[0];
 
-        // ✅ ONLY update score (बाकी profile जसाचा तसा)
+        // ✅ ONLY update score 
         setCandidate((prev) => {
           const updated = {
             ...prev,

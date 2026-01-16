@@ -499,6 +499,55 @@ function Users() {
     return `${maskedName}@${domain}`;
   };
 
+  // filter code
+  const [search, setSearch] = useState("");
+  const [experience, setExperience] = useState("");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
+
+  const filteredRecords = React.useMemo(() => {
+    return records
+      .filter((u) => String(u.user_id) !== "1") // ✅ keep your old logic
+      .filter((u) => {
+        const searchValue = search.trim().toLowerCase();
+
+        /* 🔍 SEARCH */
+        const matchesSearch =
+          !searchValue ||
+          u?.user_name?.toLowerCase().includes(searchValue) ||
+          u?.user_email?.toLowerCase().includes(searchValue) ||
+          u?.user_mobile?.toString().includes(searchValue) ||
+          u?.user_location?.toLowerCase().includes(searchValue) ||
+          u?.city_name?.toLowerCase().includes(searchValue) ||
+          u?.state_name?.toLowerCase().includes(searchValue);
+
+        /* 🎯 EXPERIENCE */
+        let matchesExperience = true;
+        if (experience) {
+          const exp = Number(u?.user_experience || 0);
+          if (experience === "6 Month") matchesExperience = exp <= 1;
+          if (experience === "2 Year") matchesExperience = exp === 2;
+          if (experience === "3 Year") matchesExperience = exp === 3;
+          if (experience === "4 Year") matchesExperience = exp >= 4;
+        }
+
+        /* 📅 DATE */
+        const joinDate = u?.user_joindate ? new Date(u.user_joindate) : null;
+
+        const from = fromDate ? new Date(fromDate) : null;
+        const to = toDate ? new Date(toDate) : null;
+
+        let matchesDate = true;
+        if (joinDate) {
+          if (from && to) matchesDate = joinDate >= from && joinDate <= to;
+          else if (from) matchesDate = joinDate >= from;
+          else if (to) matchesDate = joinDate <= to;
+        }
+
+        return matchesSearch && matchesExperience && matchesDate;
+      });
+  }, [records, search, experience, fromDate, toDate]);
+
   return (
     <>
       {/* HEADER */}
@@ -520,26 +569,43 @@ function Users() {
       <div className="card shadow-sm p-3 border">
         <div className="row g-2 align-items-center mb-3">
           <div className="col-md-2">
-            <select className="form-select form-control">
-              <option value="">Select Experienc</option>
-              <option>6 Month</option>
-              <option>2 Year</option>
-              <option>3 Year</option>
-              <option>4 Year</option>
-            </select>
+            <select
+              className="form-select form-control"
+              value={experience}
+              onChange={(e) => setExperience(e.target.value)}
+            ></select>
           </div>
           <div className="col-6 col-md-2">
-            <input type="date" className="form-control" />
+            <input
+              type="date"
+              className="form-control"
+              value={fromDate}
+              onChange={(e) => setFromDate(e.target.value)}
+            />
           </div>
 
           <div className="col-6 col-md-2">
-            <input type="date" className="form-control" />
+            <input
+              type="date"
+              className="form-control"
+              value={toDate}
+              onChange={(e) => setToDate(e.target.value)}
+            />
           </div>
 
           <div className="col-12 col-md-3 d-flex justify-content-md-start justify-content-between">
             <button className="btn px-4 me-2 btn-success">Submit</button>
 
-            <button className="btn btn-light border px-3">
+            <button
+              className="btn btn-light border px-3"
+              onClick={() => {
+                setSearch("");
+                setExperience("");
+                setFromDate("");
+                setToDate("");
+                setCurrentPage(1);
+              }}
+            >
               <i className="fa fa-refresh"></i>
             </button>
           </div>
@@ -549,9 +615,12 @@ function Users() {
               type="text"
               className="form-control"
               placeholder="Search..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
             />
           </div>
         </div>
+
         <div className="table-responsive">
           <table className="table table-bordered align-middle">
             <thead className="table-light text-center">
@@ -567,8 +636,9 @@ function Users() {
             <tbody>
               {loading ? (
                 <TableSkeleton rows={6} columns={5} />
-              ) : records.length > 0 ? (
-                records
+              ) : filteredRecords.length > 0 ? (
+                filteredRecords
+                  .slice(firstIndex, lastIndex)
                   .filter((u) => String(u.user_id) !== "1")
                   .map((u, index) => (
                     <tr

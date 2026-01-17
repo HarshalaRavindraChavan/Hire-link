@@ -191,7 +191,7 @@ function Interview() {
               className={`nav-link ${activeTab === "tab1" ? "active" : ""}`}
               onClick={() => setActiveTab("tab1")}
             >
-              Table View
+              All
             </button>
           </li>
 

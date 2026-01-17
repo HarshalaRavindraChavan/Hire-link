@@ -567,46 +567,52 @@ function JobsSAI() {
                 <p className="text-center text-muted">No applied jobs found</p>
               )}
 
-              {appliedJobs.map((job) => (
-                <div className="card mb-3 p-3" key={job.job_id}>
-                  <div className="d-flex flex-column flex-md-row justify-content-between gap-3">
-                    <div className="d-flex gap-3">
-                      <div className="bg-light rounded p-3">
-                        <i className="fa fa-building fs-4 text-secondary"></i>
-                      </div>
-
-                      <div>
-                        {/* <span className="badge bg-success mb-1">
-                          {job.application_status}
-                        </span> */}
-
-                        <h6 className="fw-bold mb-1">
-                          {toTitleCase(job.job_title)}
-                        </h6>
-
-                        <p className="mb-0">{job.job_company}</p>
-
-                        <small className="text-muted">
-                          {job.city_name}, {job.state_name}
-                        </small>
-
-                        <p className="mb-0 text-muted">
-                          Applied {job.apl_added_date}
-                        </p>
-                      </div>
+              {/* {appliedJobs.map((job) => ( */}
+              <div
+                className="card mb-3 p-3"
+                //  key={job.job_id}
+              >
+                <div className="d-flex flex-column flex-md-row justify-content-between gap-3">
+                  <div className="d-flex gap-3">
+                    <div className="bg-light rounded p-3">
+                      <i className="fa fa-building fs-4 text-secondary"></i>
                     </div>
 
                     <div>
-                      <button
-                        className="btn btn-outline-success btn-sm"
-                        onClick={() => setShowModal(true)}
-                      >
-                        Update status
-                      </button>
+                      {/* <span className="badge bg-success mb-1">
+                          {job.application_status}
+                        </span> */}
+
+                      <h6 className="fw-bold mb-1">
+                        {/* {toTitleCase(job.job_title)} */}
+                      </h6>
+
+                      <p className="mb-0">
+                        {/* {job.job_company} */}
+                        </p>
+
+                      <small className="text-muted">
+                        {/* {job.city_name}, {job.state_name} */}
+                      </small>
+
+                      <p className="mb-0 text-muted">
+                        Applied 
+                        {/* {job.apl_added_date} */}
+                      </p>
                     </div>
                   </div>
+
+                  <div>
+                    <button
+                      className="btn btn-outline-success btn-sm"
+                      onClick={() => setShowModal(true)}
+                    >
+                      Update status
+                    </button>
+                  </div>
                 </div>
-              ))}
+              </div>
+              {/* ))} */}
             </>
           )}
 
@@ -633,10 +639,10 @@ function JobsSAI() {
                 </p>
               )}
 
-              {interviewJobs.map((job) => (
+              {/* {interviewJobs.map((job) => ( */}
                 <div
                   className="card p-4 position-relative mb-3"
-                  key={job.job_id}
+                  // key={job.job_id}
                 >
                   {/* TOP BADGE */}
                   <span
@@ -647,44 +653,46 @@ function JobsSAI() {
                   </span>
 
                   <h6 className="fw-bold mt-4">
-                    {new Date(job.itv_date).toLocaleDateString("en-IN", {
+                    {/* {new Date(job.itv_date).toLocaleDateString("en-IN", {
                       weekday: "long",
                       day: "numeric",
                       month: "long",
-                    })}
+                    })} */}
                   </h6>
 
                   <div className="d-flex flex-column flex-md-row justify-content-between gap-3">
                     <div>
                       <h6 className="fw-bold mb-1">
-                        {toTitleCase(job.job_title)}
+                        {/* {toTitleCase(job.job_title)} */} Backend Developer
                       </h6>
 
-                      <p className="mb-0">{job.job_company}</p>
+                      <p className="mb-0"> 
+                        {/* {job.job_company} */}Esenceweb IT
+                        </p>
 
                       <small className="text-muted">
-                        {job.city_name}, {job.state_name}
+                        {/* {job.city_name}, {job.state_name} */} Dhule, Maharashtra
                       </small>
 
                       <div className="mt-2">
                         <p className="mb-1">
-                          <i className="fa fa-clock me-2"></i>
-                          {new Date(
+                          <i className="fa fa-clock me-2"></i>12/12/2026
+                          {/* {new Date(
                             `1970-01-01T${job.itv_time}`
                           ).toLocaleTimeString("en-IN", {
                             hour: "numeric",
                             minute: "2-digit",
                             hour12: true,
-                          })}
+                          })} */}
                         </p>
 
                         <p className="mb-0">
-                          {job.itv_type === "Virtual Interview" ? (
+                          {/* {job.itv_type === "Virtual Interview" ? ( */}
                             <>
                               <i className="fa fa-video-camera me-2 text-success"></i>
 
                               <a
-                                href={job.itv_meeting_link}
+                                // href={job.itv_meeting_link}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-decoration-none fw-semibold"
@@ -692,12 +700,12 @@ function JobsSAI() {
                                 Virtual Interview
                               </a>
                             </>
-                          ) : (
-                            <>
+                          {/* ) : ( */}
+                            {/* <>
                               <i className="fa fa-map-marker me-2 text-success"></i>
                               In-Person Interview
-                            </>
-                          )}
+                            </> */}
+                          {/* )} */}
                         </p>
                       </div>
                     </div>
@@ -706,7 +714,7 @@ function JobsSAI() {
                       <button
                         className="btn btn-success"
                         onClick={() => {
-                          setSelectedInterview(job); // ✅ clicked interview store
+                          // setSelectedInterview(job); // ✅ clicked interview store
                           setShowScheduleModal(true); // ✅ open modal
                         }}
                       >
@@ -715,7 +723,7 @@ function JobsSAI() {
                     </div>
                   </div>
                 </div>
-              ))}
+              {/* )})} */}
             </>
           )}
         </div>

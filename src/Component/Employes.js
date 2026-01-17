@@ -376,7 +376,7 @@ function Employes() {
                 <th>ID</th>
                 <th>User Details</th>
                 <th>Company Details</th>
-                <th>Social Media</th>
+                <th>Logo</th>
                 <th>Registration Date</th>
               </tr>
             </thead>
@@ -477,7 +477,7 @@ function Employes() {
                       </td>
 
                       {/* Social Media */}
-                      <td style={{ width: "25%" }}>
+                      <td className="text-center">
                         <div className="avatar avatar-xl">
                           <img
                             src={
@@ -486,6 +486,7 @@ function Employes() {
                                 : image
                             }
                             alt="No Image"
+                            style={{ width: "60px", height: "60px" }}
                             className="avatar-img rounded-circle"
                           />
                         </div>

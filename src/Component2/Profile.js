@@ -236,41 +236,41 @@ function Profile() {
 
   const [isCategorySynced, setIsCategorySynced] = useState(false); // ✅ ADD THIS
 
-  const fetchCandidateProfile = async () => {
-    try {
-      const stored = localStorage.getItem("candidate");
-      if (!stored) {
-        navigate("/signin");
-        return;
-      }
+  // const fetchCandidateProfile = async () => {
+  //   try {
+  //     const stored = localStorage.getItem("candidate");
+  //     if (!stored) {
+  //       navigate("/signin");
+  //       return;
+  //     }
 
-      const lsData = JSON.parse(stored);
+  //     const lsData = JSON.parse(stored);
 
-      const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_candidate/can_id/${lsData.can_id}`
-      );
+  //     const res = await axios.get(
+  //       `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_candidate/can_id/${lsData.can_id}`
+  //     );
 
-      if (res.data?.status && res.data?.data?.length > 0) {
-        const freshCandidate = res.data.data[0]; // ✅ DB latest data
+  //     if (res.data?.status && res.data?.data?.length > 0) {
+  //       const freshCandidate = res.data.data[0]; // ✅ DB latest data
 
-        // ✅ if state exists then fetch cities
-        if (
-          freshCandidate?.can_state &&
-          freshCandidate.can_state !== candidate.can_state
-        ) {
-          fetchCities(freshCandidate.can_state);
-        }
+  //       // ✅ if state exists then fetch cities
+  //       if (
+  //         freshCandidate?.can_state &&
+  //         freshCandidate.can_state !== candidate.can_state
+  //       ) {
+  //         fetchCities(freshCandidate.can_state);
+  //       }
 
-        // ✅ update state
-        setCandidate(freshCandidate);
+  //       // ✅ update state
+  //       setCandidate(freshCandidate);
 
-        // ✅ update localStorage also
-        localStorage.setItem("candidate", JSON.stringify(freshCandidate));
-      }
-    } catch (err) {
-      console.error("Fetch candidate error", err);
-    }
-  };
+  //       // ✅ update localStorage also
+  //       localStorage.setItem("candidate", JSON.stringify(freshCandidate));
+  //     }
+  //   } catch (err) {
+  //     console.error("Fetch candidate error", err);
+  //   }
+  // };
 
   // ✅ ONLY SCORE FETCH (does not overwrite whole profile)
   const fetchCandidateScoreOnly = async () => {
@@ -303,7 +303,7 @@ function Profile() {
     }
   };
 
-  // 🔁 SYNC SAVED CATEGORY TO DROPDOWNS (IMPORTANT)
+
   // ✅ SYNC only ONE time (so user selection won't override)
   useEffect(() => {
     if (!candidate || !candidate.can_id) return;
@@ -553,7 +553,7 @@ function Profile() {
 
   useEffect(() => {
     // ✅ First time full profile load
-    fetchCandidateProfile();
+    // fetchCandidateProfile();
 
     // ✅ After that only score refresh every 5 sec
     const interval = setInterval(() => {

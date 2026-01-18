@@ -8,13 +8,10 @@ import { toast, ToastContainer } from "react-toastify";
 import Pagination from "./commenuse/Pagination";
 import { BASE_URL } from "../config/constants";
 import TableSkeleton from "./commenuse/TableSkeleton";
+import SEO from "../SEO";
+import { seoConfig } from "../config/seoConfig";
 
 function Applicant() {
-  // tital of tab
-  useEffect(() => {
-    document.title = "Hirelink | Applicant";
-  }, []);
-
   const modalRef = useRef(null);
   const [selectedApplicant, setSelectedApplicant] = useState(null);
 
@@ -212,6 +209,10 @@ function Applicant() {
 
   return (
     <>
+      <SEO
+        title={seoConfig.a_applicant.title}
+        description={seoConfig.a_applicant.description}
+      />
       <div className="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
         <div>
           <h3 className="fw-bold mb-3">Applieds</h3>
@@ -296,76 +297,76 @@ function Applicant() {
               {loading ? (
                 <TableSkeleton rows={6} columns={4} />
               ) : filteredRecords.length > 0 ? (
-                
-                filteredRecords.slice(firstIndex, lastIndex)
-                .map((app, index) => (
-                  <tr key={app.apl_id}>
-                    <td>{firstIndex + index + 1}</td>
-                    <td className="text-start fw-bold">
-                      <div className="fw-bold ">
-                        Name:{" "}
-                        <span
-                          className="text-primary fw-semibold"
-                          style={{ cursor: "pointer" }}
-                          data-bs-toggle="modal"
-                          data-bs-target="#exampleModal"
-                          onClick={() => {
-                            setSelectedApplicant(app);
-                          }}
-                        >
-                          {app.can_name} (Interview Schedule)
-                        </span>
-                      </div>
-                      <div className="fw-bold ">
-                        Email:{" "}
-                        <span className="text-dark fw-normal">
-                          {maskEmail(app.can_email)}
-                        </span>
-                      </div>
-                      <div className="fw-bold ">
-                        Mobile:{" "}
-                        <span className="text-dark fw-normal">
-                          {maskMobile(app.can_mobile)}
-                        </span>
-                      </div>
-                      <div className="fw-bold ">
-                        Experience:{" "}
-                        <span className="text-dark fw-normal">
-                          {app.can_experience} Year
-                        </span>
-                      </div>
-                    </td>
+                filteredRecords
+                  .slice(firstIndex, lastIndex)
+                  .map((app, index) => (
+                    <tr key={app.apl_id}>
+                      <td>{firstIndex + index + 1}</td>
+                      <td className="text-start fw-bold">
+                        <div className="fw-bold ">
+                          Name:{" "}
+                          <span
+                            className="text-primary fw-semibold"
+                            style={{ cursor: "pointer" }}
+                            data-bs-toggle="modal"
+                            data-bs-target="#exampleModal"
+                            onClick={() => {
+                              setSelectedApplicant(app);
+                            }}
+                          >
+                            {app.can_name} (Interview Schedule)
+                          </span>
+                        </div>
+                        <div className="fw-bold ">
+                          Email:{" "}
+                          <span className="text-dark fw-normal">
+                            {maskEmail(app.can_email)}
+                          </span>
+                        </div>
+                        <div className="fw-bold ">
+                          Mobile:{" "}
+                          <span className="text-dark fw-normal">
+                            {maskMobile(app.can_mobile)}
+                          </span>
+                        </div>
+                        <div className="fw-bold ">
+                          Experience:{" "}
+                          <span className="text-dark fw-normal">
+                            {app.can_experience} Year
+                          </span>
+                        </div>
+                      </td>
 
-                    <td className="text-start">
-                      <div className="fw-bold ">
-                        Job Title:{" "}
-                        <span className="text-dark fw-normal">
-                          {app.job_title}
-                        </span>
-                      </div>
-                      <div className="fw-bold ">
-                        Company:{" "}
-                        <span className="text-dark fw-normal">
-                          {app.job_company}
-                        </span>
-                      </div>
-                      <div className="fw-bold ">
-                        Employer:{" "}
-                        <span className="text-dark fw-normal">
-                          {app.emp_name}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="text-start">
-                      <div className="fw-bold ">
-                        Applied Date:{" "}
-                        <span className="text-dark fw-normal">
-                          {app.apl_added_date}
-                        </span>
-                      </div>
-                    </td>
-                  </tr>
-                ))
+                      <td className="text-start">
+                        <div className="fw-bold ">
+                          Job Title:{" "}
+                          <span className="text-dark fw-normal">
+                            {app.job_title}
+                          </span>
+                        </div>
+                        <div className="fw-bold ">
+                          Company:{" "}
+                          <span className="text-dark fw-normal">
+                            {app.job_company}
+                          </span>
+                        </div>
+                        <div className="fw-bold ">
+                          Employer:{" "}
+                          <span className="text-dark fw-normal">
+                            {app.emp_name}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="text-start">
+                        <div className="fw-bold ">
+                          Applied Date:{" "}
+                          <span className="text-dark fw-normal">
+                            {app.apl_added_date}
+                          </span>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
               ) : (
                 <tr>
                   <td colSpan="5" className="text-center text-muted">

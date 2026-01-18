@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import SEO from "../SEO";
+import { seoConfig } from "../config/seoConfig";
 import "../Component2/css/Notification.css";
 import axios from "axios";
 import { BASE_URL } from "../config/constants";
@@ -85,49 +87,55 @@ export default function NotificationPage() {
   };
 
   return (
-    <div className="notification-page">
-      {/* HEADER */}
-      <div className="notification-header">
-        <h2>Notifications</h2>
-        <span className="count">{notifications.length}</span>
+    <>
+      <SEO
+        title={seoConfig.notification.title}
+        description={seoConfig.notification.description}
+      />
+      <div className="notification-page">
+        {/* HEADER */}
+        <div className="notification-header">
+          <h2>Notifications</h2>
+          <span className="count">{notifications.length}</span>
+        </div>
+
+        {/* LIST */}
+        <div className="notification-list">
+          {notifications.length === 0 && (
+            <p className="text-muted">No notifications yet</p>
+          )}
+
+          {notifications.map((item) => (
+            <div
+              key={item.noti_id}
+              className={`notification-item ${
+                item.noti_is_read == 0 ? "unread" : ""
+              }`}
+              onClick={() => handleClick(item)}
+            >
+              {/* ICON */}
+              <div className="icon-box">
+                {item.noti_type === "interview" ? "📅" : "🔔"}
+              </div>
+
+              {/* CONTENT */}
+              <div className="notification-content">
+                <p className="title">{item.noti_title}</p>
+                <p className="message">{item.noti_message}</p>
+              </div>
+
+              {/* RIGHT SIDE */}
+              <div className="right">
+                <span className="time">
+                  {new Date(item.noti_created_date).toLocaleString()}
+                </span>
+
+                {item.noti_is_read == 0 && <span className="dot" />}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
-
-      {/* LIST */}
-      <div className="notification-list">
-        {notifications.length === 0 && (
-          <p className="text-muted">No notifications yet</p>
-        )}
-
-        {notifications.map((item) => (
-          <div
-            key={item.noti_id}
-            className={`notification-item ${
-              item.noti_is_read == 0 ? "unread" : ""
-            }`}
-            onClick={() => handleClick(item)}
-          >
-            {/* ICON */}
-            <div className="icon-box">
-              {item.noti_type === "interview" ? "📅" : "🔔"}
-            </div>
-
-            {/* CONTENT */}
-            <div className="notification-content">
-              <p className="title">{item.noti_title}</p>
-              <p className="message">{item.noti_message}</p>
-            </div>
-
-            {/* RIGHT SIDE */}
-            <div className="right">
-              <span className="time">
-                {new Date(item.noti_created_date).toLocaleString()}
-              </span>
-
-              {item.noti_is_read == 0 && <span className="dot" />}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
+    </>
   );
 }

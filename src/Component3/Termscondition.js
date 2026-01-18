@@ -1,11 +1,20 @@
 import "../Component3/css/Termcondition.css";
+import SEO from "../SEO";
+import { seoConfig } from "../config/seoConfig";
 import logo from "../Component2/logo/hirelink.png";
 
 function Termscondition() {
   return (
     <>
+      <SEO
+        title={seoConfig.e_term.title}
+        description={seoConfig.e_term.description}
+      />
       <div className="etc-body">
-        <div className="etc-wrapper" style={{ backgroundImage: `url(${logo})` }}>
+        <div
+          className="etc-wrapper"
+          style={{ backgroundImage: `url(${logo})` }}
+        >
           <div className="etc-container">
             <h1 className="etc-title fw-bold">Employer Terms & Conditions</h1>
             <h3 className="etc-heading">Objective</h3>

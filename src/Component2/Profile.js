@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import SEO from "../SEO";
+import { seoConfig } from "../config/seoConfig";
 import { useNavigate } from "react-router-dom";
 import "../Component2/css/Profile.css";
 import axios from "axios";
@@ -287,7 +289,7 @@ function Profile() {
       if (res.data?.status && res.data?.data?.length > 0) {
         const freshCandidate = res.data.data[0];
 
-        // ✅ ONLY update score 
+        // ✅ ONLY update score
         setCandidate((prev) => {
           const updated = {
             ...prev,
@@ -302,7 +304,6 @@ function Profile() {
       console.error("Fetch score error", err);
     }
   };
-
 
   // ✅ SYNC only ONE time (so user selection won't override)
   useEffect(() => {
@@ -553,7 +554,7 @@ function Profile() {
 
   useEffect(() => {
     // ✅ First time full profile load
-     fetchCandidateProfile();
+    fetchCandidateProfile();
 
     // ✅ After that only score refresh every 5 sec
     const interval = setInterval(() => {
@@ -565,6 +566,14 @@ function Profile() {
 
   return (
     <>
+      <SEO
+        title={`${seoConfig.c_profile.title} - ${candidate?.can_name
+          ?.split(" ")
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ")}`}
+        description={seoConfig.c_profile.description}
+      />
+
       <ToastContainer
         position="top-right"
         autoClose={3000}
@@ -879,7 +888,6 @@ function Profile() {
                 {/* BASIC DETAILS */}
                 <h6 className="fw-bold mb-2">Professional Information</h6>
                 <div className="row g-2 mb-2">
-                  
                   {/* state */}
                   <div className="col-md-6 mt-2">
                     <label className="fw-semibold">State</label>
@@ -1246,8 +1254,8 @@ function Profile() {
                         {!selectedCategory
                           ? "Select Main Category first"
                           : subCategories.length === 0
-                          ? "No sub categories available"
-                          : "Select"}
+                            ? "No sub categories available"
+                            : "Select"}
                       </option>
 
                       {subCategories.map((sub) => (
@@ -1275,8 +1283,8 @@ function Profile() {
                         {!selectedSubCategory
                           ? "Select Sub Category first"
                           : subCat1.length === 0
-                          ? "No sub category available"
-                          : "Select"}
+                            ? "No sub category available"
+                            : "Select"}
                       </option>
 
                       {subCat1.map((item) => (
@@ -1303,8 +1311,8 @@ function Profile() {
                         {!selectedSubCat1
                           ? "Select previous category first"
                           : subCat2.length === 0
-                          ? "No sub category available"
-                          : "Select"}
+                            ? "No sub category available"
+                            : "Select"}
                       </option>
 
                       {subCat2.map((item) => (
@@ -1325,8 +1333,8 @@ function Profile() {
                         {!selectedSubCat2
                           ? "Select previous category first"
                           : subCat3.length === 0
-                          ? "No sub category available"
-                          : "Select"}
+                            ? "No sub category available"
+                            : "Select"}
                       </option>
 
                       {subCat3.map((item) => (

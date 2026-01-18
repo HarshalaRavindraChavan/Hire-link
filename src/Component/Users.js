@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import SEO from "../SEO";
+import { seoConfig } from "../config/seoConfig";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
 import { useForm } from "react-hook-form";
 import axios from "axios";
@@ -11,10 +13,6 @@ import TableSkeleton from "./commenuse/TableSkeleton";
 import SearchableDropdown from "./SearchableDropdown";
 
 function Users() {
-  useEffect(() => {
-    document.title = "Hirelink | Users";
-  }, []);
-
   const [loading, setLoading] = useState(false);
 
   // ================= EDUCATION =================
@@ -213,7 +211,7 @@ function Users() {
       user_menu_id: data.menus.join(","),
       user_aadhar_image: User.user_aadhar_image,
       user_pan_image: User.user_pan_image,
-      user_status:"Active",
+      user_status: "Active",
     };
 
     try {
@@ -584,6 +582,10 @@ function Users() {
 
   return (
     <>
+      <SEO
+        title={seoConfig.a_user.title}
+        description={seoConfig.a_user.description}
+      />
       {/* HEADER */}
       <div className="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
         <h3 className="fw-bold mb-3">Users</h3>

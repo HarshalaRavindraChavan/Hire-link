@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
+import SEO from "../SEO";
+import { seoConfig } from "../config/seoConfig";
 import axios from "axios";
 import Pagination from "./commenuse/Pagination";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
@@ -9,10 +11,6 @@ import TableSkeleton from "./commenuse/TableSkeleton";
 import InterviewsPage from "./InterManage";
 
 function Interview() {
-  useEffect(() => {
-    document.title = "Hirelink | Interview";
-  }, []);
-
   /* ================= FORM ================= */
   const {
     register,
@@ -179,6 +177,10 @@ function Interview() {
   /* ================= UI ================= */
   return (
     <>
+      <SEO
+        title={seoConfig.a_interview.title}
+        description={seoConfig.a_interview.description}
+      />
       <ToastContainer position="top-right" autoClose={3000} theme="colored" />
 
       <h3 className="fw-bold mb-3">Interview Details</h3>
@@ -326,33 +328,38 @@ function Interview() {
                             (i.itv_status || "").trim() === "Pending"
                               ? "bg-warning"
                               : (i.itv_status || "").trim() === "Confirmed"
-                              ? "bg-primary"
-                              : (i.itv_status || "").trim() ===
-                                "Candidate Cancelled"
-                              ? "bg-danger"
-                              : (i.itv_status || "").trim() === "Not Attended"
-                              ? "bg-dark"
-                              : (i.itv_status || "").trim() === "Cancelled"
-                              ? "bg-danger"
-                              : (i.itv_status || "").trim() === "Completed"
-                              ? "bg-success"
-                              : "bg-secondary"
+                                ? "bg-primary"
+                                : (i.itv_status || "").trim() ===
+                                    "Candidate Cancelled"
+                                  ? "bg-danger"
+                                  : (i.itv_status || "").trim() ===
+                                      "Not Attended"
+                                    ? "bg-dark"
+                                    : (i.itv_status || "").trim() ===
+                                        "Cancelled"
+                                      ? "bg-danger"
+                                      : (i.itv_status || "").trim() ===
+                                          "Completed"
+                                        ? "bg-success"
+                                        : "bg-secondary"
                           }`}
                         >
                           {(i.itv_status || "").trim() === "Pending"
                             ? "Pending"
                             : (i.itv_status || "").trim() === "Confirmed"
-                            ? "Scheduled"
-                            : (i.itv_status || "").trim() ===
-                              "Candidate Cancelled"
-                            ? "Candidate Cancelled"
-                            : (i.itv_status || "").trim() === "Cancelled"
-                            ? "Cancel"
-                            : (i.itv_status || "").trim() === "Not Attended"
-                            ? "Not Attended"
-                            : (i.itv_status || "").trim() === "Completed"
-                            ? "Complete"
-                            : (i.itv_status || "").trim()}
+                              ? "Scheduled"
+                              : (i.itv_status || "").trim() ===
+                                  "Candidate Cancelled"
+                                ? "Candidate Cancelled"
+                                : (i.itv_status || "").trim() === "Cancelled"
+                                  ? "Cancel"
+                                  : (i.itv_status || "").trim() ===
+                                      "Not Attended"
+                                    ? "Not Attended"
+                                    : (i.itv_status || "").trim() ===
+                                        "Completed"
+                                      ? "Complete"
+                                      : (i.itv_status || "").trim()}
                         </span>
                       </td>
                     </tr>

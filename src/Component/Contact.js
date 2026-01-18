@@ -3,13 +3,10 @@ import Pagination from "./commenuse/Pagination";
 import axios from "axios";
 import { BASE_URL } from "../config/constants";
 import TableSkeleton from "./commenuse/TableSkeleton";
+import SEO from "../SEO";
+import { seoConfig } from "../config/seoConfig";
 
 function Contact() {
-  // Correct way: set tab title
-  useEffect(() => {
-    document.title = "Hirelink | Contact";
-  }, []);
-
   const [contacts, setContact] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -92,6 +89,10 @@ function Contact() {
 
   return (
     <>
+    <SEO
+        title={seoConfig.a_contact.title}
+        description={seoConfig.a_contact.description}
+      />
       <div className="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
         <div>
           <h3 className="fw-bold mb-3">Contacts</h3>

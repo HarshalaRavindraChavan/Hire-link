@@ -1,11 +1,20 @@
 import "../Component2/css/Termcondition.css";
+import SEO from "../SEO";
+import { seoConfig } from "../config/seoConfig";
 import logo from "../Component2/logo/hirelink.png";
 
 function Termscondition() {
   return (
     <>
+      <SEO
+        title={seoConfig.c_term.title}
+        description={seoConfig.c_term.description}
+      />
       <div className="ctc-body">
-        <div className="ctc-wrapper" style={{ backgroundImage: `url(${logo})` }}>
+        <div
+          className="ctc-wrapper"
+          style={{ backgroundImage: `url(${logo})` }}
+        >
           <div className="ctc-container">
             <h1 className="ctc-title fw-bold">Candidate Terms & Conditions</h1>
             <h3 className="ctc-heading">Objective</h3>

@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import SEO from "../SEO";
+import { seoConfig } from "../config/seoConfig";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
@@ -106,8 +108,6 @@ function Apply() {
   };
 
   useEffect(() => {
-    document.title = "Hirelink | Apply";
-
     fetchJobDetail();
     fetchCandidateProfile();
     checkAlreadyApplied(); // ✅ ADD THIS
@@ -367,6 +367,10 @@ function Apply() {
 
   return (
     <>
+      <SEO
+        title={`${seoConfig.c_apply.title} - ${job.job_title}`}
+        description={seoConfig.c_apply.description}
+      />
       <ToastContainer position="top-right" autoClose={3000} theme="colored" />
 
       <div className="container mt-5 mb-5">
@@ -552,12 +556,12 @@ function Apply() {
               {alreadyApplied
                 ? "Already Applied ✅"
                 : resumeUploading
-                ? "Uploading Resume..."
-                : profileUpdating
-                ? "Updating Profile..."
-                : loading
-                ? "Applying..."
-                : "Apply"}
+                  ? "Uploading Resume..."
+                  : profileUpdating
+                    ? "Updating Profile..."
+                    : loading
+                      ? "Applying..."
+                      : "Apply"}
             </button>
           </form>
         </div>

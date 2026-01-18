@@ -1,9 +1,15 @@
 import "../Component3/css/Privacypolicies.css";
+import SEO from "../SEO";
+import { seoConfig } from "../config/seoConfig";
 import logo from "../Component2/logo/hirelink.png";
 
 function Returnpolicy() {
   return (
     <>
+     <SEO
+        title={seoConfig.e_return.title}
+        description={seoConfig.e_return.description}
+      />
       <div className="erp-body">
         <div
           className="erp-wrapper"

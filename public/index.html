@@ -1,98 +1,95 @@
-  <!DOCTYPE html>
-  <html lang="en">
-    <head>
-      <meta charset="utf-8" />
-      <link rel="icon" href="%PUBLIC_URL%/hirelinkicon.ico" />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <meta name="theme-color" content="#000000" />
-      <meta
-        name="description"
-        content="Web site created using create-react-app"
-      />
-      <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/hirelinkicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Hirelink Job Portal" />
 
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
 
-<link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-<!-- <link rel="manifest" href="/manifest.json" /> -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <!-- <link rel="manifest" href="/manifest.json" /> -->
 
-      <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-      />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
 
-      <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
-      />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
 
-      <!-- Fonts and icons -->
-      <script src="assets/js/plugin/webfont/webfont.min.js"></script>
-      <script>
-        WebFont.load({
-          google: { families: ["Public Sans:300,400,500,600,700"] },
-          custom: {
-            families: [
-              "Font Awesome 5 Solid",
-              "Font Awesome 5 Regular",
-              "Font Awesome 5 Brands",
-              "simple-line-icons",
-            ],
-            urls: ["assets/css/fonts.min.css"],
-          },
-          active: function () {
-            sessionStorage.fonts = true;
-          },
-        });
-      </script>
-      <link rel="stylesheet" href="/assets/css/bootstrap.min.css" />
-      <link rel="stylesheet" href="/assets/css/plugins.min.css" />
-      <link rel="stylesheet" href="/assets/css/kaiadmin.min.css" />
-      <link rel="stylesheet" href="/assets/css/demo.css" />
+    <!-- Fonts and icons -->
+    <script src="assets/js/plugin/webfont/webfont.min.js"></script>
+    <script>
+      WebFont.load({
+        google: { families: ["Public Sans:300,400,500,600,700"] },
+        custom: {
+          families: [
+            "Font Awesome 5 Solid",
+            "Font Awesome 5 Regular",
+            "Font Awesome 5 Brands",
+            "simple-line-icons",
+          ],
+          urls: ["assets/css/fonts.min.css"],
+        },
+        active: function () {
+          sessionStorage.fonts = true;
+        },
+      });
+    </script>
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/css/plugins.min.css" />
+    <link rel="stylesheet" href="/assets/css/kaiadmin.min.css" />
+    <link rel="stylesheet" href="/assets/css/demo.css" />
 
-      <title>Hirelink | Home</title>
+    <title>Hirelink | Home</title>
 
-      <style>
-        .pagination {
-          display: flex;
-          gap: 6px;
-        }
+    <style>
+      .pagination {
+        display: flex;
+        gap: 6px;
+      }
 
-        .pagination .page-item {
-          list-style: none;
-        }
+      .pagination .page-item {
+        list-style: none;
+      }
 
-        .pagination .page-link {
-          border: none;
-          background: #f1f3f5;
-          color: #333;
-          padding: 8px 14px;
-          border-radius: 6px;
-          font-weight: 500;
-          transition: all 0.3s ease;
-        }
+      .pagination .page-link {
+        border: none;
+        background: #f1f3f5;
+        color: #333;
+        padding: 8px 14px;
+        border-radius: 6px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
 
-        .pagination .page-link:hover {
-          background: #0d6efd;
-          color: white;
-          transform: translateY(-2px);
-        }
+      .pagination .page-link:hover {
+        background: #0d6efd;
+        color: white;
+        transform: translateY(-2px);
+      }
 
-        .pagination .page-item.active .page-link {
-          background: #0d6efd;
-          color: white;
-          box-shadow: 0px 3px 10px rgba(13, 110, 253, 0.5);
-        }
+      .pagination .page-item.active .page-link {
+        background: #0d6efd;
+        color: white;
+        box-shadow: 0px 3px 10px rgba(13, 110, 253, 0.5);
+      }
 
-        .pagination .page-item.disabled .page-link {
-          opacity: 0.5;
-          cursor: not-allowed;
-        }
-      </style>
-    </head>
-    <body>
-      <noscript>You need to enable JavaScript to run this app.</noscript>
-      <div id="root"></div>
-      <!--
+      .pagination .page-item.disabled .page-link {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <!--
         This HTML file is a template.
         If you open it directly in the browser, you will see an empty page.
 
@@ -103,10 +100,10 @@
         To create a production bundle, use `npm run build` or `yarn build`.
       -->
 
-      <script src="/assets/js/core/jquery-3.7.1.min.js"></script>
-      <script src="/assets/js/core/popper.min.js"></script>
-      <script src="/assets/js/core/bootstrap.min.js"></script>
-      <script src="/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
-      <script src="/assets/js/kaiadmin.min.js"></script>
-    </body>
-  </html>
+    <script src="/assets/js/core/jquery-3.7.1.min.js"></script>
+    <script src="/assets/js/core/popper.min.js"></script>
+    <script src="/assets/js/core/bootstrap.min.js"></script>
+    <script src="/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+    <script src="/assets/js/kaiadmin.min.js"></script>
+  </body>
+</html>

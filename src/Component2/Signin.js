@@ -1,4 +1,6 @@
 import { NavLink, useNavigate } from "react-router-dom";
+import SEO from "../SEO";
+import { seoConfig } from "../config/seoConfig";
 import { useState, useEffect } from "react";
 import "../Component2/css/Signin.css";
 import logo from "../Component2/Image/logo.png";
@@ -20,11 +22,6 @@ function Signin() {
 
   // ✅ FIX 1: activeRole state
   const [activeRole, setActiveRole] = useState("Candidate");
-
-  useEffect(() => {
-    document.title = "Hirelink | Signin";
-  }, []);
-
   useEffect(() => {
     if (activeRole === "Candidate") {
       localStorage.removeItem("auth");
@@ -134,6 +131,10 @@ function Signin() {
 
   return (
     <>
+      <SEO
+        title={seoConfig.signin.title}
+        description={seoConfig.signin.description}
+      />
       {/* TOAST */}
       <ToastContainer
         position="top-right"

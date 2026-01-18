@@ -1,9 +1,15 @@
 import "../Component2/css/Returnpolicy.css";
+import SEO from "../SEO";
+import { seoConfig } from "../config/seoConfig";
 import logo from "../Component2/logo/hirelink.png";
 
 function Returnpolicy() {
   return (
     <>
+     <SEO
+        title={seoConfig.c_return.title}
+        description={seoConfig.c_return.description}
+      />
       <div className="crp-body">
         <div
           className="crp-wrapper"

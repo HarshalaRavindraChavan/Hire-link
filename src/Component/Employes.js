@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import SEO from "../SEO";
+import { seoConfig } from "../config/seoConfig";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
 import { useForm } from "react-hook-form";
 import axios from "axios";
@@ -11,11 +13,6 @@ import { BASE_URL } from "../config/constants";
 import TableSkeleton from "./commenuse/TableSkeleton";
 
 function Employes() {
-  // tital of tab
-  useEffect(() => {
-    document.title = "Hirelink | Employers";
-  }, []);
-
   const auth = JSON.parse(localStorage.getItem("auth") || "{}");
   const isAdmin = Number(auth?.role) === 1;
 
@@ -321,6 +318,10 @@ function Employes() {
 
   return (
     <>
+    <SEO
+        title={seoConfig.a_employers.title}
+        description={seoConfig.a_employers.description}
+      />
       {/* HEADER */}
       <div className="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
         <h3 className="fw-bold mb-3">Employers</h3>
@@ -417,7 +418,7 @@ function Employes() {
 
             <tbody>
               {loading ? (
-                <TableSkeleton rows={6} columns={5} />
+                <TableSkeleton rows={6} columns={4} />
               ) : filteredRecords.length > 0 ? (
                 filteredRecords
                   .slice(firstIndex, lastIndex)

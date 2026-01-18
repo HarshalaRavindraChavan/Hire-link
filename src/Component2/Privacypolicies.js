@@ -1,9 +1,15 @@
 import "../Component2/css/Privacypolicies.css";
+import SEO from "../SEO";
+import { seoConfig } from "../config/seoConfig";
 import logo from "../Component2/logo/hirelink.png";
 
 function PrivacyPolicies() {
   return (
     <>
+      <SEO
+        title={seoConfig.c_privacy.title}
+        description={seoConfig.c_privacy.description}
+      />
       <div className="cpp-body">
         <div
           className="cpp-wrapper"

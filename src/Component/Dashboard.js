@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from "react";
+import SEO from "../SEO";
+import { seoConfig } from "../config/seoConfig";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../config/constants";
 
-
 function Dashboard() {
   const navigate = useNavigate();
-
-  /* ---------------- Page Title ---------------- */
-  useEffect(() => {
-    document.title = "Hirelink | Dashboard";
-  }, []);
 
   /* ---------------- Auth ---------------- */
   const auth = JSON.parse(localStorage.getItem("auth"));
@@ -34,7 +30,7 @@ function Dashboard() {
   }, []);
 
   const fetchCounts = async () => {
-    try { 
+    try {
       /* ================= ADMIN ================= */
 
       const roleNum = Number(role);
@@ -48,27 +44,13 @@ function Dashboard() {
           contacts,
           users,
         ] = await Promise.all([
-          axios.get(
-            `${BASE_URL}hirelink_apis/admin/countdata/tbl_job`,
-          ),
-          axios.get(
-            `${BASE_URL}hirelink_apis/admin/countdata/tbl_candidate`,
-          ),
-          axios.get(
-            `${BASE_URL}hirelink_apis/admin/countdata/tbl_applied`,
-          ),
-          axios.get(
-            `${BASE_URL}hirelink_apis/admin/countdata/tbl_interview`,
-          ),
-          axios.get(
-            `${BASE_URL}hirelink_apis/admin/countdata/tbl_employer`,
-          ),
-          axios.get(
-            `${BASE_URL}hirelink_apis/admin/countdata/tbl_contact`,
-          ),
-          axios.get(
-            `${BASE_URL}hirelink_apis/admin/countdata/tbl_user`,
-          ),
+          axios.get(`${BASE_URL}hirelink_apis/admin/countdata/tbl_job`),
+          axios.get(`${BASE_URL}hirelink_apis/admin/countdata/tbl_candidate`),
+          axios.get(`${BASE_URL}hirelink_apis/admin/countdata/tbl_applied`),
+          axios.get(`${BASE_URL}hirelink_apis/admin/countdata/tbl_interview`),
+          axios.get(`${BASE_URL}hirelink_apis/admin/countdata/tbl_employer`),
+          axios.get(`${BASE_URL}hirelink_apis/admin/countdata/tbl_contact`),
+          axios.get(`${BASE_URL}hirelink_apis/admin/countdata/tbl_user`),
         ]);
 
         setCounts({
@@ -88,9 +70,7 @@ function Dashboard() {
           axios.get(
             `${BASE_URL}hirelink_apis/admin/countdatawhere/tbl_job/job_employer_id/${employerId}`
           ),
-          axios.get(
-            `${BASE_URL}hirelink_apis/admin/countdata/tbl_candidate`
-          ),
+          axios.get(`${BASE_URL}hirelink_apis/admin/countdata/tbl_candidate`),
           axios.get(
             `${BASE_URL}hirelink_apis/admin/countdatawhere/tbl_applied/apl_employer_id/${employerId}`
           ),
@@ -113,6 +93,10 @@ function Dashboard() {
 
   return (
     <>
+      <SEO
+        title={seoConfig.Dashboard.title}
+        description={seoConfig.Dashboard.description}
+      />
       {/* ---------------- Header ---------------- */}
       <div className="d-flex align-items-center pt-2 pb-4">
         <h3 className="fw-bold text-dark">Dashboard</h3>

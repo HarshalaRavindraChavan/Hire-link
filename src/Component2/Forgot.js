@@ -1,4 +1,6 @@
 import logo from "../Component2/Image/logo.png";
+import SEO from "../SEO";
+import { seoConfig } from "../config/seoConfig";
 import { NavLink } from "react-router-dom";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -6,13 +8,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 
 function Forgot() {
-  useEffect(() => {
-    document.title = "Hirelink | Forgot Password";
-  }, []);
-
   // Validation Schema (NO if/else)
   const validationSchema = Yup.object({
-    email: Yup.string().email("Invalid email").required("Enter Regiter Email Address"),
+    email: Yup.string()
+      .email("Invalid email")
+      .required("Enter Regiter Email Address"),
   });
 
   const {
@@ -30,6 +30,10 @@ function Forgot() {
 
   return (
     <>
+      <SEO
+        title={seoConfig.forgot_password.title}
+        description={seoConfig.forgot_password.description}
+      />
       <div className="bg-light d-flex justify-content-center align-items-center vh-100">
         <div
           className="card shadow p-4 m-2"

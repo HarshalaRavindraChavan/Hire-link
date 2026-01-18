@@ -11,6 +11,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { BASE_URL } from "../config/constants";
 import { saveFcmToken } from "./saveFcmToken";
 import ReCAPTCHA from "react-google-recaptcha";
+import SEO from "../SEO";
+import { seoConfig } from "../config/seoConfig";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -19,10 +21,6 @@ const Signup = () => {
   const [activeRole, setActiveRole] = useState("Candidate");
   const [loading, setLoading] = useState(false);
   const [captchaToken, setCaptchaToken] = useState(null);
-
-  useEffect(() => {
-    document.title = "Hirelink | Signup";
-  }, []);
 
   /* ---------------- VALIDATION ---------------- */
   const validationSchema = Yup.object({
@@ -133,6 +131,10 @@ const Signup = () => {
   /* ---------------- JSX ---------------- */
   return (
     <>
+      <SEO
+        title={seoConfig.signup.title}
+        description={seoConfig.signup.description}
+      />
       {/* TOAST */}
       <ToastContainer
         position="top-right"

@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import SEO from "../SEO";
+import { seoConfig } from "../config/seoConfig";
 import { useNavigate } from "react-router-dom";
 import "./css/Login.css";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -15,12 +17,6 @@ import { BASE_URL } from "../config/constants";
 function Login() {
   const navigate = useNavigate();
   const [successMsg, setSuccessMsg] = useState("");
-
-  useEffect(() => {
-    console.log("Login component mounted");
-    document.title = "Hirelink | Admin Login";
-  }, []);
-
   const formik = useFormik({
     initialValues: {
       user_email: "",
@@ -101,6 +97,10 @@ function Login() {
 
   return (
     <>
+      <SEO
+        title={seoConfig.a_login.title}
+        description={seoConfig.a_login.description}
+      />
       {/* TOAST */}
       <ToastContainer
         position="top-right"

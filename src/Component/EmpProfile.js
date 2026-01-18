@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import SEO from "../SEO";
+import { seoConfig } from "../config/seoConfig";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
@@ -274,6 +276,18 @@ const EmpProfile = () => {
 
   return (
     <>
+      <SEO
+        title={`${seoConfig.emp_profile.title} - ${
+          employer?.emp_name
+            ? employer.emp_name
+                .split(" ")
+                .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(" ")
+            : "Employer"
+        }`}
+        description={seoConfig.emp_profile.description}
+      />
+
       <ToastContainer position="top-right" autoClose={3000} theme="colored" />
       <div className="container-fluid py-4">
         <div className="container">
@@ -409,7 +423,7 @@ const EmpProfile = () => {
                         valueKey="state_id"
                         onChange={(value) => {
                           formik.setFieldValue("state", value);
-                          formik.setFieldValue("city", ""); 
+                          formik.setFieldValue("city", "");
                           handleStateChange({ target: { value } });
                         }}
                         // error={formik.errors.state}

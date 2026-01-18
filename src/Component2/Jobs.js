@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import SEO from "../SEO";
+import { seoConfig } from "../config/seoConfig";
 import axios from "axios";
 import JobSearchBar from "./JobSearchBar";
 import "../Component2/css/Jobs.css";
@@ -98,8 +100,6 @@ function Jobs() {
   };
 
   useEffect(() => {
-    document.title = "Hirelink | Jobs";
-
     axios
       .get(
         `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_job/job_status/Active`
@@ -199,6 +199,10 @@ function Jobs() {
 
   return (
     <>
+      <SEO
+        title={seoConfig.c_jobs.title}
+        description={seoConfig.c_jobs.description}
+      />
       <ToastContainer
         position="top-right"
         autoClose={3000}

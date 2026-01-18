@@ -9,13 +9,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
 import { BASE_URL } from "../config/constants";
 import TableSkeleton from "./commenuse/TableSkeleton";
+import SEO from "../SEO";
+import { seoConfig } from "../config/seoConfig";
 
 function Candidates() {
-  // tital of tab
-  useEffect(() => {
-    document.title = "Hirelink | Candidates";
-  }, []);
-
   const auth = JSON.parse(localStorage.getItem("auth") || "{}");
   const isAdmin = Number(auth?.role) === 1;
 
@@ -238,6 +235,10 @@ function Candidates() {
 
   return (
     <>
+    <SEO
+        title={seoConfig.a_candidates.title}
+        description={seoConfig.a_candidates.description}
+      />
       <div className="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
         <div>
           <h3 className="fw-bold mb-3">Candidates</h3>

@@ -1,14 +1,16 @@
 import { NavLink } from "react-router-dom";
+import SEO from "../SEO";
+import { seoConfig } from "../config/seoConfig";
 import { useEffect } from "react";
 import "../Component3/css/Employer.css";
 
 function Employer() {
-  useEffect(() => {
-    document.title = "Hirelink | Employer";
-  }, []);
-
   return (
     <>
+     <SEO
+        title={seoConfig.e_employers.title}
+        description={seoConfig.e_employers.description}
+      />
       {/* <!-- ================= HERO SECTION ================= --> */}
       <section className="hero-section" id="get-started">
         <div className="container">

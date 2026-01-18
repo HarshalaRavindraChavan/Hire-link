@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
+import SEO from "../SEO";
+import { seoConfig } from "../config/seoConfig";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
 import { useForm, Watch } from "react-hook-form";
 import axios from "axios";
@@ -12,11 +14,6 @@ import SearchableDropdown from "./SearchableDropdown";
 import { useNavigate } from "react-router-dom";
 
 function Jobs() {
-  // tital of tab
-  useEffect(() => {
-    document.title = "Hirelink | Jobs";
-  }, []);
-
   // const navigate = useNavigate();
 
   // useEffect(() => {
@@ -667,6 +664,10 @@ function Jobs() {
 
   return (
     <>
+      <SEO
+        title={seoConfig.a_jobs.title}
+        description={seoConfig.a_jobs.description}
+      />
       {/* TOAST */}
       <ToastContainer
         position="top-right"
@@ -770,8 +771,7 @@ function Jobs() {
               {loading ? (
                 <TableSkeleton rows={6} columns={5} />
               ) : filteredJobs.length > 0 ? (
-                filteredJobs.slice(firstIndex, lastIndex)
-                .map((job, index) => (
+                filteredJobs.slice(firstIndex, lastIndex).map((job, index) => (
                   <tr key={job.job_id}>
                     <td>{firstIndex + index + 1}</td>
                     <td className="text-start fw-bold">

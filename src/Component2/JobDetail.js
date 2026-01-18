@@ -1,4 +1,6 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import SEO from "../SEO";
+import { seoConfig } from "../config/seoConfig";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
@@ -68,6 +70,10 @@ function JobDetail() {
 
   return (
     <>
+      <SEO
+        title={`${seoConfig.c_jobdetail.title} - ${job.job_title}`}
+        description={seoConfig.c_jobdetail.description}
+      />
       <ToastContainer
         position="top-right"
         autoClose={3000}

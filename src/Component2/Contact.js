@@ -1,4 +1,6 @@
 import { useFormik } from "formik";
+import SEO from "../SEO";
+import { seoConfig } from "../config/seoConfig";
 import * as Yup from "yup";
 import "../Component2/css/Contacts.css"; // ✔ YOU ASKED TO ADD THIS
 import axios from "axios";
@@ -58,6 +60,10 @@ export default function Contact() {
 
   return (
     <>
+     <SEO
+        title={seoConfig.c_contact.title}
+        description={seoConfig.c_contact.description}
+      />
       {/* TOAST */}
       <ToastContainer
         position="top-right"

@@ -213,6 +213,7 @@ function Users() {
       user_menu_id: data.menus.join(","),
       user_aadhar_image: User.user_aadhar_image,
       user_pan_image: User.user_pan_image,
+      user_status:"Active",
     };
 
     try {
@@ -548,6 +549,39 @@ function Users() {
       });
   }, [records, search, experience, fromDate, toDate]);
 
+  //Status Update Function
+  const handleStatusChange = async (userId, newStatus) => {
+    try {
+      // ✅ optional: loader show
+      setLoading(true);
+
+      const res = await axios.post(
+        `${BASE_URL}hirelink_apis/admin/updatedata/tbl_user/user_id/${userId}`,
+        {
+          user_status: newStatus,
+        }
+      );
+
+      if (res.data?.status === true) {
+        toast.success(`Status updated to ${newStatus} ✅`);
+
+        // ✅ UI instant update without refetch
+        setUsers((prev) =>
+          prev.map((u) =>
+            u.user_id === userId ? { ...u, user_status: newStatus } : u
+          )
+        );
+      } else {
+        toast.error("Status update failed ❌");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Server error ❌");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       {/* HEADER */}
@@ -753,12 +787,42 @@ function Users() {
                       </td>
                       {/* Activity Detail */}
                       <td className="text-start">
-                        {/* <div className="fw-bold ">
-                          Added By:{"  "}
+                        <div className="fw-bold">
+                          Status:{" "}
                           <span className="text-dark fw-normal">
-                            {u.user_added_by}
+                            {/* ✅ Admin can change */}
+                            {Number(
+                              JSON.parse(localStorage.getItem("auth"))?.role
+                            ) === 1 ? (
+                              <select
+                                className={`form-select form-select-sm d-inline w-auto ${
+                                  u.user_status === "Active"
+                                    ? "border-success"
+                                    : "border-danger"
+                                }`}
+                                value={u.user_status}
+                                onChange={(e) =>
+                                  handleStatusChange(u.user_id, e.target.value)
+                                }
+                              >
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                              </select>
+                            ) : (
+                              /* ❌ Non admin only view */
+                              <span
+                                className={`badge ${
+                                  u.user_status === "Active"
+                                    ? "bg-success"
+                                    : "bg-danger"
+                                } ms-2`}
+                              >
+                                {u.user_status}
+                              </span>
+                            )}
                           </span>
-                        </div> */}
+                        </div>
+
                         <div className="fw-bold ">
                           Added:{"  "}
                           <span className="text-dark fw-normal">

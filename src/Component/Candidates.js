@@ -16,6 +16,9 @@ function Candidates() {
     document.title = "Hirelink | Candidates";
   }, []);
 
+  const auth = JSON.parse(localStorage.getItem("auth") || "{}");
+  const isAdmin = Number(auth?.role) === 1;
+
   const [search, setSearch] = useState("");
   const [candidates, setCandidates] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -144,6 +147,38 @@ function Candidates() {
       }
     } catch {
       toast.error("Something went wrong");
+    }
+  };
+
+  //Status Update Function
+  const handleCandidateStatusChange = async (canId, newStatus) => {
+    try {
+      setLoading(true);
+
+      const res = await axios.post(
+        `${BASE_URL}hirelink_apis/admin/updatedata/tbl_candidate/can_id/${canId}`,
+        {
+          can_status: newStatus,
+        }
+      );
+
+      if (res.data?.status === true) {
+        toast.success(`Status updated to ${newStatus} ✅`);
+
+        // ✅ instant UI update
+        setCandidates((prev) =>
+          prev.map((c) =>
+            c.can_id === canId ? { ...c, can_status: newStatus } : c
+          )
+        );
+      } else {
+        toast.error("Status update failed ❌");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Server error ❌");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -392,12 +427,6 @@ function Candidates() {
                         </span>
                       </div>
                       <div className="fw-bold">
-                        Skills:{" "}
-                        <span className="text-dark fw-normal">
-                          {candidate.can_skill || "N/A"}
-                        </span>
-                      </div>
-                      <div className="fw-bold">
                         Education Type:{" "}
                         <span className="text-dark fw-normal">
                           {candidate.can_education_type || "N/A"}
@@ -406,8 +435,42 @@ function Candidates() {
                       <div className="fw-bold">
                         Education:{" "}
                         <span className="text-dark fw-normal">
-                          {candidate.can_education_details || "N/A"}
+                          {candidate.can_education_detail || "N/A"}
                         </span>
+                      </div>
+                      <div className="fw-bold">
+                        Skills:{" "}
+                        <span className="text-dark fw-normal">
+                          {candidate.can_skill || "N/A"}
+                        </span>
+                      </div>
+                      <div className="fw-bold">
+                        Status:{" "}
+                        {isAdmin ? (
+                          <select
+                            className="form-select form-select-sm d-inline w-auto ms-2"
+                            value={candidate.can_status || "Inactive"}
+                            onChange={(e) =>
+                              handleCandidateStatusChange(
+                                candidate.can_id,
+                                e.target.value
+                              )
+                            }
+                          >
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                          </select>
+                        ) : (
+                          <span
+                            className={`badge ms-2 ${
+                              candidate.can_status === "Active"
+                                ? "bg-success"
+                                : "bg-danger"
+                            }`}
+                          >
+                            {candidate.can_status || "N/A"}
+                          </span>
+                        )}
                       </div>
                     </td>
 

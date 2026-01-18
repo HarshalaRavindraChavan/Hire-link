@@ -71,6 +71,7 @@ const Signup = () => {
           can_email: values.email,
           can_password: values.password,
           can_mobile: values.mobile,
+          can_status: "Active",
           captchaToken: captchaToken,
         };
       } else {
@@ -81,6 +82,7 @@ const Signup = () => {
           emp_email: values.email,
           emp_password: values.password,
           emp_mobile: values.mobile,
+          emp_status: "Active",
           captchaToken: captchaToken,
         };
       }

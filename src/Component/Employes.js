@@ -16,6 +16,9 @@ function Employes() {
     document.title = "Hirelink | Employers";
   }, []);
 
+  const auth = JSON.parse(localStorage.getItem("auth") || "{}");
+  const isAdmin = Number(auth?.role) === 1;
+
   const [search, setSearch] = useState("");
   const [employer, setEmployer] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -284,6 +287,38 @@ function Employes() {
     });
   }, [records, search, category, fromDate, toDate]);
 
+  //Status Update Fuction
+  const handleEmployerStatusChange = async (empId, newStatus) => {
+    try {
+      setLoading(true);
+
+      const res = await axios.post(
+        `${BASE_URL}hirelink_apis/admin/updatedata/tbl_employer/emp_id/${empId}`,
+        {
+          emp_status: newStatus,
+        }
+      );
+
+      if (res.data?.status === true) {
+        toast.success(`Status updated to ${newStatus} ✅`);
+
+        // ✅ instant UI update
+        setEmployer((prev) =>
+          prev.map((e) =>
+            e.emp_id === empId ? { ...e, emp_status: newStatus } : e
+          )
+        );
+      } else {
+        toast.error("Status update failed ❌");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Server error ❌");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       {/* HEADER */}
@@ -376,7 +411,6 @@ function Employes() {
                 <th>ID</th>
                 <th>User Details</th>
                 <th>Company Details</th>
-                <th>Logo</th>
                 <th>Registration Date</th>
               </tr>
             </thead>
@@ -476,22 +510,6 @@ function Employes() {
                         </div>
                       </td>
 
-                      {/* Social Media */}
-                      <td className="text-center">
-                        <div className="avatar avatar-xl">
-                          <img
-                            src={
-                              emp?.emp_com_logo
-                                ? `${BASE_URL}hirelink_apis/Uploads/${emp.emp_com_logo}`
-                                : image
-                            }
-                            alt="No Image"
-                            style={{ width: "60px", height: "60px" }}
-                            className="avatar-img rounded-circle"
-                          />
-                        </div>
-                      </td>
-
                       {/* Registration Date */}
                       <td className="text-center">
                         <div className="fw-bold ">
@@ -499,6 +517,34 @@ function Employes() {
                           <span className="text-dark fw-normal">
                             {emp.emp_added_date || "N/A"}
                           </span>
+                        </div>
+                        <div className="fw-bold">
+                          Status:{" "}
+                          {isAdmin ? (
+                            <select
+                              className="form-select form-select-sm d-inline w-auto ms-2"
+                              value={emp.emp_status || "Inactive"}
+                              onChange={(e) =>
+                                handleEmployerStatusChange(
+                                  emp.emp_id,
+                                  e.target.value
+                                )
+                              }
+                            >
+                              <option value="Active">Active</option>
+                              <option value="Inactive">Inactive</option>
+                            </select>
+                          ) : (
+                            <span
+                              className={`badge ms-2 ${
+                                emp.emp_status === "Active"
+                                  ? "bg-success"
+                                  : "bg-danger"
+                              }`}
+                            >
+                              {emp.emp_status || "N/A"}
+                            </span>
+                          )}
                         </div>
                       </td>
                     </tr>

@@ -107,7 +107,6 @@ function JobsSAI() {
       if (res.data.status) {
         setAppliedJobs(res.data.data);
 
-        // ✅ applied job_ids list तयार कर
         const ids = res.data.data.map((item) => Number(item.job_id));
         setAppliedJobIds(ids);
       }
@@ -193,6 +192,20 @@ function JobsSAI() {
     }
   };
 
+  const getCandidateInterviewBadge = (status) => {
+    const s = (status || "").trim();
+
+    if (s === "Pending")
+      return { text: "Waiting for your confirmation", cls: "bg-warning" };
+    if (s === "Confirmed") return { text: "Confirmed", cls: "bg-success" };
+    if (s === "Candidate Cancelled")
+      return { text: "You Declined", cls: "bg-danger" };
+    if (s === "Reschedule Request")
+      return { text: "Reschedule Requested", cls: "bg-info" };
+
+    return { text: s || "Unknown", cls: "bg-secondary" };
+  };
+
   function UpdateStatusModal({ show, onClose }) {
     if (!show) return null;
 
@@ -218,8 +231,10 @@ function JobsSAI() {
           </div>
 
           <ul className="status-list">
-            <li className="status-item" 
-              onClick={() => setShowOfferForm(prev => !prev)}>
+            <li
+              className="status-item"
+              onClick={() => setShowOfferForm((prev) => !prev)}
+            >
               <span className="icon green">
                 <i className="fa fa-undo"></i>
               </span>
@@ -252,98 +267,96 @@ function JobsSAI() {
   }
 
   //  Show the last Hirelink update
-const [showOfferForm, setShowOfferForm] = useState(false);
-const [offerFile, setOfferFile] = useState(null);
-const [joiningDate, setJoiningDate] = useState("");
-const [errors, setErrors] = useState({});
+  const [showOfferForm, setShowOfferForm] = useState(false);
+  const [offerFile, setOfferFile] = useState(null);
+  const [joiningDate, setJoiningDate] = useState("");
+  const [errors, setErrors] = useState({});
 
+  const handleOfferSubmit = () => {
+    const newErrors = {};
 
-const handleOfferSubmit = () => {
-  const newErrors = {};
+    if (!offerFile) {
+      newErrors.offerFile = "Offer letter is required";
+    }
 
-  if (!offerFile) {
-    newErrors.offerFile = "Offer letter is required";
+    if (!joiningDate) {
+      newErrors.joiningDate = "Joining date is required";
+    }
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      console.log("Offer File:", offerFile);
+      console.log("Joining Date:", joiningDate);
+
+      // API CALL HERE (FormData)
+
+      setShowOfferForm(false);
+    }
+  };
+
+  {
+    showOfferForm && (
+      <div className="offer-inline-wrapper mt-3">
+        <h6 className="fw-bold mb-3">Offer Details</h6>
+
+        {/* OFFER LETTER */}
+        <div className="mb-3">
+          <label className="form-label fw-semibold">
+            Offer Letter <span className="text-danger">*</span>
+          </label>
+
+          <input
+            type="file"
+            className={`form-control ${errors.offerFile ? "is-invalid" : ""}`}
+            accept=".pdf,.doc,.docx"
+            onChange={(e) => setOfferFile(e.target.files[0])}
+          />
+
+          {errors.offerFile && (
+            <small className="text-danger">{errors.offerFile}</small>
+          )}
+        </div>
+
+        {/* JOINING DATE */}
+        <div className="mb-3">
+          <label className="form-label fw-semibold">
+            Joining Date <span className="text-danger">*</span>
+          </label>
+
+          <input
+            type="date"
+            className={`form-control ${errors.joiningDate ? "is-invalid" : ""}`}
+            value={joiningDate}
+            onChange={(e) => setJoiningDate(e.target.value)}
+          />
+
+          {errors.joiningDate && (
+            <small className="text-danger">{errors.joiningDate}</small>
+          )}
+        </div>
+
+        {/* ACTIONS */}
+        <div className="d-flex flex-column flex-sm-row gap-2 justify-content-end">
+          <button
+            className="btn btn-outline-secondary btn-sm w-100 w-sm-auto"
+            onClick={() => setShowOfferForm(false)}
+          >
+            Cancel
+          </button>
+
+          <button
+            className="btn btn-success btn-sm w-100 w-sm-auto"
+            onClick={handleOfferSubmit}
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    );
   }
 
-  if (!joiningDate) {
-    newErrors.joiningDate = "Joining date is required";
-  }
-
-  setErrors(newErrors);
-
-  if (Object.keys(newErrors).length === 0) {
-    console.log("Offer File:", offerFile);
-    console.log("Joining Date:", joiningDate);
-
-    // API CALL HERE (FormData)
-
-    setShowOfferForm(false);
-  }
-};
-
-
-{showOfferForm && (
-  <div className="offer-inline-wrapper mt-3">
-
-    <h6 className="fw-bold mb-3">Offer Details</h6>
-
-    {/* OFFER LETTER */}
-    <div className="mb-3">
-      <label className="form-label fw-semibold">
-        Offer Letter <span className="text-danger">*</span>
-      </label>
-
-      <input
-        type="file"
-        className={`form-control ${errors.offerFile ? "is-invalid" : ""}`}
-        accept=".pdf,.doc,.docx"
-        onChange={(e) => setOfferFile(e.target.files[0])}
-      />
-
-      {errors.offerFile && (
-        <small className="text-danger">{errors.offerFile}</small>
-      )}
-    </div>
-
-    {/* JOINING DATE */}
-    <div className="mb-3">
-      <label className="form-label fw-semibold">
-        Joining Date <span className="text-danger">*</span>
-      </label>
-
-      <input
-        type="date"
-        className={`form-control ${errors.joiningDate ? "is-invalid" : ""}`}
-        value={joiningDate}
-        onChange={(e) => setJoiningDate(e.target.value)}
-      />
-
-      {errors.joiningDate && (
-        <small className="text-danger">{errors.joiningDate}</small>
-      )}
-    </div>
-
-    {/* ACTIONS */}
-    <div className="d-flex flex-column flex-sm-row gap-2 justify-content-end">
-      <button
-        className="btn btn-outline-secondary btn-sm w-100 w-sm-auto"
-        onClick={() => setShowOfferForm(false)}
-      >
-        Cancel
-      </button>
-
-      <button
-        className="btn btn-success btn-sm w-100 w-sm-auto"
-        onClick={handleOfferSubmit}
-      >
-        Save
-      </button>
-    </div>
-  </div>
-)}
-
-// end model
-
+  // end model
 
   function ScheduleInterviewModal({ show, onClose, interview }) {
     if (!show || !interview) return null;
@@ -664,50 +677,47 @@ const handleOfferSubmit = () => {
                 <p className="text-center text-muted">No applied jobs found</p>
               )}
 
-              {/* {appliedJobs.map((job) => ( */}
-              <div
-                className="card mb-3 p-3"
-                //  key={job.job_id}
-              >
-                <div className="d-flex flex-column flex-md-row justify-content-between gap-3">
-                  <div className="d-flex gap-3">
-                    <div className="bg-light rounded p-3">
-                      <i className="fa fa-building fs-4 text-secondary"></i>
-                    </div>
+              {appliedJobs.map((job) => (
+                <div className="card mb-3 p-3" key={job.job_id}>
+                  <div className="d-flex flex-column flex-md-row justify-content-between gap-3">
+                    <div className="d-flex gap-3">
+                      <div className="bg-light rounded p-3">
+                        <i className="fa fa-building fs-4 text-secondary"></i>
+                      </div>
 
-                    <div>
-                      {/* <span className="badge bg-success mb-1">
+                      <div>
+                        {/* <span className="badge bg-success mb-1">
                           {job.application_status}
                         </span> */}
 
-                      <h6 className="fw-bold mb-1">
-                        {/* {toTitleCase(job.job_title)} */}
-                      </h6>
+                        <h6 className="fw-bold mb-1">
+                          {toTitleCase(job.job_title)}
+                        </h6>
 
-                      <p className="mb-0">{/* {job.job_company} */}</p>
+                        <p className="mb-0">{job.job_company}</p>
 
-                      <small className="text-muted">
-                        {/* {job.city_name}, {job.state_name} */}
-                      </small>
+                        <small className="text-muted">
+                          {job.city_name}, {job.state_name}
+                        </small>
 
-                      <p className="mb-0 text-muted">
-                        Applied
-                        {/* {job.apl_added_date} */}
-                      </p>
+                        <p className="mb-0 text-muted">
+                          Applied
+                          {job.apl_added_date}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div>
+                      <button
+                        className="btn btn-outline-success btn-sm"
+                        onClick={() => setShowModal(true)}
+                      >
+                        Update status
+                      </button>
                     </div>
                   </div>
-
-                  <div>
-                    <button
-                      className="btn btn-outline-success btn-sm"
-                      onClick={() => setShowModal(true)}
-                    >
-                      Update status
-                    </button>
-                  </div>
                 </div>
-              </div>
-              {/* ))} */}
+              ))}
             </>
           )}
 
@@ -734,54 +744,134 @@ const handleOfferSubmit = () => {
                 </p>
               )}
 
-              <div className="card shadow-sm mb-3">
-                <div className="row g-0 align-items-center">
-                  {/* MIDDLE DETAILS */}
-                  <div className="col-12 col-md-7 p-3">
-                    <span className="badge bg-success mb-2">
-                      Interview Scheduled
-                    </span>
+              {interviewJobs.map((job) => (
+                <div className="card shadow-sm mb-3" key={job.job_id}>
+                  <div className="row g-0 align-items-center">
+                    {/* MIDDLE DETAILS */}
+                    <div className="col-12 col-md-7 p-3">
+                      <span
+                        className={`badge ${
+                          getCandidateInterviewBadge(job.itv_status).cls
+                        } mb-2`}
+                      >
+                        {getCandidateInterviewBadge(job.itv_status).text}
+                      </span>
 
-                    <h6 className="fw-bold mb-1">Backend Developer</h6>
+                      <h6 className="fw-bold mb-1">
+                        {toTitleCase(job.job_title)}
+                      </h6>
 
-                    <p
-                      className="mb-0 fw-semibold text-muted"
-                      style={{ fontWeight: "bold" }}
-                    >
-                      Esenceweb IT
-                    </p>
+                      <p
+                        className="mb-0 fw-semibold text-muted"
+                        style={{ fontWeight: "bold" }}
+                      >
+                        {job.job_company}
+                      </p>
 
-                    <small className="text-muted d-block">
-                      <i className="fa fa-map-marker me-1"></i>
-                      Dhule, Maharashtra
-                    </small>
-                  </div>
-
-                  {/* RIGHT ACTION */}
-                  <div className="col-12 col-md-5 p-3 d-flex flex-column justify-content-between align-items-start align-items-md-end text-md-end gap-2">
-                    {/* TIME */}
-                    <div className="d-flex align-items-center gap-2">
-                      <i className="fa fa-clock text-success"></i>
-                      <small className="fw-semibold">10:30 AM</small>
+                      <small className="text-muted d-block">
+                        <i className="fa fa-map-marker me-1"></i>
+                        {job.city_name}, {job.state_name}
+                      </small>
                     </div>
 
-                    {/* INTERVIEW TYPE */}
-                    <div className="fw-semibold text-success">
-                      <i className="fa fa-video-camera me-2"></i>
-                      Virtual Interview
-                    </div>
+                    {/* RIGHT ACTION */}
+                    <div className="col-12 col-md-5 p-3 d-flex flex-column justify-content-between align-items-start align-items-md-end text-md-end gap-2">
+                      {/* TIME */}
+                      <div className="d-flex align-items-center gap-2">
+                        <i className="fa fa-clock text-success"></i>
+                        <small className="fw-semibold">
+                          {new Date(
+                            `1970-01-01T${job.itv_time}`
+                          ).toLocaleTimeString("en-IN", {
+                            hour: "numeric",
+                            minute: "2-digit",
+                            hour12: true,
+                          })}
+                        </small>
+                      </div>
 
-                    {/* RESCHEDULE BUTTON */}
-                    <button
-                      className="btn btn-success btn-sm px-4"
-                      style={{ minWidth: "140px" }}
-                      onClick={() => setShowScheduleModal(true)}
-                    >
-                      Reschedule
-                    </button>
+                      {/* INTERVIEW TYPE */}
+                      <div className="fw-semibold text-success">
+                        {job.itv_type === "Virtual Interview" ? (
+                          <>
+                            <i className="fa fa-video-camera me-2"></i>
+                            <a
+                              href={job.itv_meeting_link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-decoration-none fw-semibold"
+                            >
+                              Virtual Interview
+                            </a>
+                          </>
+                        ) : (
+                          <>
+                            <i className="fa fa-map-marker me-2"></i>
+                            In-Person Interview
+                          </>
+                        )}
+                      </div>
+
+                      {/* RESCHEDULE BUTTON */}
+                      {/* ✅ Candidate Status Badge */}
+                      <div>
+                        <span
+                          className={`badge ${
+                            getCandidateInterviewBadge(job.itv_status).cls
+                          }`}
+                        >
+                          {getCandidateInterviewBadge(job.itv_status).text}
+                        </span>
+                      </div>
+
+                      {/* ✅ Candidate Actions */}
+                      {job.itv_status === "Pending" ? (
+                        <div className="d-flex gap-2 flex-wrap justify-content-end">
+                          <button
+                            className="btn btn-success btn-sm"
+                            onClick={() =>
+                              updateInterviewStatus(job.itv_id, "Confirmed")
+                            }
+                          >
+                            Confirm
+                          </button>
+
+                          <button
+                            className="btn btn-outline-warning btn-sm"
+                            onClick={() =>
+                              updateInterviewStatus(
+                                job.itv_id,
+                                "Reschedule Request"
+                              )
+                            }
+                          >
+                            Reschedule Request
+                          </button>
+
+                          <button
+                            className="btn btn-outline-danger btn-sm"
+                            onClick={() =>
+                              updateInterviewStatus(
+                                job.itv_id,
+                                "Candidate Cancelled"
+                              )
+                            }
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          className="btn btn-secondary btn-sm px-4"
+                          disabled
+                        >
+                          {getCandidateInterviewBadge(job.itv_status).text}
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
+              ))}
             </>
           )}
         </div>

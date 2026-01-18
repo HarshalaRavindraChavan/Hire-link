@@ -191,7 +191,7 @@ function Interview() {
               className={`nav-link ${activeTab === "tab1" ? "active" : ""}`}
               onClick={() => setActiveTab("tab1")}
             >
-              All
+              Table View
             </button>
           </li>
 
@@ -309,7 +309,13 @@ function Interview() {
                         <div className="fw-bold">
                           Interview Time:{" "}
                           <span className="text-dark fw-normal">
-                            {i.itv_time}
+                            {new Date(
+                              `1970-01-01T${i.itv_time}`
+                            ).toLocaleTimeString("en-IN", {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              hour12: true,
+                            })}
                           </span>
                         </div>
                       </td>
@@ -324,6 +330,8 @@ function Interview() {
                               : (i.itv_status || "").trim() ===
                                 "Candidate Cancelled"
                               ? "bg-danger"
+                              : (i.itv_status || "").trim() === "Not Attended"
+                              ? "bg-dark"
                               : (i.itv_status || "").trim() === "Cancelled"
                               ? "bg-danger"
                               : (i.itv_status || "").trim() === "Completed"
@@ -340,6 +348,8 @@ function Interview() {
                             ? "Candidate Cancelled"
                             : (i.itv_status || "").trim() === "Cancelled"
                             ? "Cancel"
+                            : (i.itv_status || "").trim() === "Not Attended"
+                            ? "Not Attended"
                             : (i.itv_status || "").trim() === "Completed"
                             ? "Complete"
                             : (i.itv_status || "").trim()}
@@ -369,7 +379,7 @@ function Interview() {
       {/* ✅ Tab 2 */}
       {Number(role) === 100 && activeTab === "tab2" && (
         <div className="card shadow-sm p-3 border">
-          <InterviewsPage />
+          <InterviewsPage openEditInterviewModal={openEditInterviewModal} />
         </div>
       )}
       {/* ================= MODAL ================= */}
@@ -430,10 +440,7 @@ function Interview() {
                   <label>Status</label>
                   <select className="form-control" {...register("status")}>
                     <option value="">Select</option>
-                    <option value="Scheduled">Scheduled</option>
-                    <option value="Completed">Completed</option>
-                    <option value="Cancelled">Cancelled</option>
-                    <option value="Pending">Pending</option>
+                    <option value="Rescheduled">Rescheduled</option>
                   </select>
                 </div>
               </div>

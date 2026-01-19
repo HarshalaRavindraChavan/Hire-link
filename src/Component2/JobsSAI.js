@@ -26,13 +26,13 @@ function JobsSAI() {
     try {
       const [savedRes, appliedRes, interviewRes] = await Promise.all([
         axios.get(
-          `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_save_job/save_candidate_id/${candidateId}`
+          `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_save_job/save_candidate_id/${candidateId}`,
         ),
         axios.get(
-          `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_applied/apl_candidate_id/${candidateId}`
+          `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_applied/apl_candidate_id/${candidateId}`,
         ),
         axios.get(
-          `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_interview/itv_candidate_id/${candidateId}`
+          `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_interview/itv_candidate_id/${candidateId}`,
         ),
       ]);
 
@@ -65,7 +65,7 @@ function JobsSAI() {
       setLoading(true);
 
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_save_job/save_candidate_id/${candidateId}`
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_save_job/save_candidate_id/${candidateId}`,
       );
 
       console.log("Saved API:", res.data);
@@ -75,7 +75,7 @@ function JobsSAI() {
 
         // ✅ remove jobs which are already applied
         const filteredSaved = savedList.filter(
-          (job) => !appliedJobIds.includes(Number(job.job_id))
+          (job) => !appliedJobIds.includes(Number(job.job_id)),
         );
 
         setSavedJobs(filteredSaved);
@@ -99,7 +99,7 @@ function JobsSAI() {
       setAppliedLoading(true);
 
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_applied/apl_candidate_id/${candidateId}`
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_applied/apl_candidate_id/${candidateId}`,
       );
 
       console.log("Applied API:", res.data);
@@ -134,7 +134,7 @@ function JobsSAI() {
       setInterviewLoading(true);
 
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_interview/itv_candidate_id/${candidateId}`
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_interview/itv_candidate_id/${candidateId}`,
       );
 
       if (res.data.status) {
@@ -180,7 +180,7 @@ function JobsSAI() {
     try {
       const res = await axios.post(
         `${BASE_URL}hirelink_apis/admin/updatedata/tbl_interview/itv_id/${interviewId}`,
-        { itv_status: newStatus }
+        { itv_status: newStatus },
       );
 
       if (res.data.status) {
@@ -198,10 +198,15 @@ function JobsSAI() {
     if (s === "Pending")
       return { text: "Waiting for your confirmation", cls: "bg-warning" };
     if (s === "Confirmed") return { text: "Confirmed", cls: "bg-success" };
+    if (s === "Completed") return { text: "Completed", cls: "bg-success" };
+    if (s === "Rejected") return { text: "Rejected", cls: "bg-danger" };
+    if (s === "Hold") return { text: "Hold", cls: "bg-warning" };
+    if (s === "Cancelled") return { text: "Cancelled", cls: "bg-danger" };
     if (s === "Candidate Cancelled")
       return { text: "You Declined", cls: "bg-danger" };
+    if (s === "Not Attended") return { text: "Not Attended", cls: "bg-dark" };
     if (s === "Reschedule Request")
-      return { text: "Reschedule Requested", cls: "bg-info" };
+      return { text: "Reschedule Process.....", cls: "bg-primary" };
 
     return { text: s || "Unknown", cls: "bg-secondary" };
   };
@@ -261,6 +266,65 @@ function JobsSAI() {
               No longer interested
             </li>
           </ul>
+
+          {showOfferForm && (
+            <div className="offer-inline-wrapper mt-3">
+              <h6 className="fw-bold mb-3">Offer Details</h6>
+
+              {/* OFFER LETTER */}
+              <div className="mb-3">
+                <label className="form-label fw-semibold">
+                  Offer Letter <span className="text-danger">*</span>
+                </label>
+
+                <input
+                  type="file"
+                  className={`form-control ${errors.offerFile ? "is-invalid" : ""}`}
+                  accept=".pdf,.doc,.docx"
+                  onChange={(e) => setOfferFile(e.target.files[0])}
+                />
+
+                {errors.offerFile && (
+                  <small className="text-danger">{errors.offerFile}</small>
+                )}
+              </div>
+
+              {/* JOINING DATE */}
+              <div className="mb-3">
+                <label className="form-label fw-semibold">
+                  Joining Date <span className="text-danger">*</span>
+                </label>
+
+                <input
+                  type="date"
+                  className={`form-control ${errors.joiningDate ? "is-invalid" : ""}`}
+                  value={joiningDate}
+                  onChange={(e) => setJoiningDate(e.target.value)}
+                />
+
+                {errors.joiningDate && (
+                  <small className="text-danger">{errors.joiningDate}</small>
+                )}
+              </div>
+
+              {/* ACTIONS */}
+              <div className="d-flex flex-column flex-sm-row gap-2 justify-content-end">
+                <button
+                  className="btn btn-outline-secondary btn-sm w-100 w-sm-auto"
+                  onClick={() => setShowOfferForm(false)}
+                >
+                  Cancel
+                </button>
+
+                <button
+                  className="btn btn-success btn-sm w-100 w-sm-auto"
+                  onClick={handleOfferSubmit}
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -295,67 +359,6 @@ function JobsSAI() {
     }
   };
 
-  {
-    showOfferForm && (
-      <div className="offer-inline-wrapper mt-3">
-        <h6 className="fw-bold mb-3">Offer Details</h6>
-
-        {/* OFFER LETTER */}
-        <div className="mb-3">
-          <label className="form-label fw-semibold">
-            Offer Letter <span className="text-danger">*</span>
-          </label>
-
-          <input
-            type="file"
-            className={`form-control ${errors.offerFile ? "is-invalid" : ""}`}
-            accept=".pdf,.doc,.docx"
-            onChange={(e) => setOfferFile(e.target.files[0])}
-          />
-
-          {errors.offerFile && (
-            <small className="text-danger">{errors.offerFile}</small>
-          )}
-        </div>
-
-        {/* JOINING DATE */}
-        <div className="mb-3">
-          <label className="form-label fw-semibold">
-            Joining Date <span className="text-danger">*</span>
-          </label>
-
-          <input
-            type="date"
-            className={`form-control ${errors.joiningDate ? "is-invalid" : ""}`}
-            value={joiningDate}
-            onChange={(e) => setJoiningDate(e.target.value)}
-          />
-
-          {errors.joiningDate && (
-            <small className="text-danger">{errors.joiningDate}</small>
-          )}
-        </div>
-
-        {/* ACTIONS */}
-        <div className="d-flex flex-column flex-sm-row gap-2 justify-content-end">
-          <button
-            className="btn btn-outline-secondary btn-sm w-100 w-sm-auto"
-            onClick={() => setShowOfferForm(false)}
-          >
-            Cancel
-          </button>
-
-          <button
-            className="btn btn-success btn-sm w-100 w-sm-auto"
-            onClick={handleOfferSubmit}
-          >
-            Save
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   // end model
 
   function ScheduleInterviewModal({ show, onClose, interview }) {
@@ -363,11 +366,11 @@ function JobsSAI() {
 
     const interviewDate = new Date(interview.itv_date).toLocaleDateString(
       "en-IN",
-      { weekday: "long", day: "numeric", month: "long", year: "numeric" }
+      { weekday: "long", day: "numeric", month: "long", year: "numeric" },
     );
 
     const interviewTime = new Date(
-      `1970-01-01T${interview.itv_time}`
+      `1970-01-01T${interview.itv_time}`,
     ).toLocaleTimeString("en-IN", {
       hour: "numeric",
       minute: "2-digit",
@@ -477,7 +480,7 @@ function JobsSAI() {
                     onClick={() => {
                       updateInterviewStatus(
                         interview.itv_id,
-                        "Candidate Cancelled"
+                        "Candidate Cancelled",
                       );
                       onClose();
                     }}
@@ -724,7 +727,10 @@ function JobsSAI() {
           {/* Modal */}
           <UpdateStatusModal
             show={showModal}
-            onClose={() => setShowModal(false)}
+            onClose={() => {
+              setShowModal(false);
+              setShowOfferForm(false);
+            }}
           />
 
           <ScheduleInterviewModal
@@ -778,10 +784,13 @@ function JobsSAI() {
                     <div className="col-12 col-md-5 p-3 d-flex flex-column justify-content-between align-items-start align-items-md-end text-md-end gap-2">
                       {/* TIME */}
                       <div className="d-flex align-items-center gap-2">
+                        <i className="fa-solid fa-calender"></i>
+                        <small className="fw-semibold">{job.itv_date}</small>
+
                         <i className="fa fa-clock text-success"></i>
                         <small className="fw-semibold">
                           {new Date(
-                            `1970-01-01T${job.itv_time}`
+                            `1970-01-01T${job.itv_time}`,
                           ).toLocaleTimeString("en-IN", {
                             hour: "numeric",
                             minute: "2-digit",
@@ -814,7 +823,7 @@ function JobsSAI() {
 
                       {/* RESCHEDULE BUTTON */}
                       {/* ✅ Candidate Status Badge */}
-                      <div>
+                      {/* <div>
                         <span
                           className={`badge ${
                             getCandidateInterviewBadge(job.itv_status).cls
@@ -822,10 +831,10 @@ function JobsSAI() {
                         >
                           {getCandidateInterviewBadge(job.itv_status).text}
                         </span>
-                      </div>
+                      </div> */}
 
                       {/* ✅ Candidate Actions */}
-                      {job.itv_status === "Pending" ? (
+                      {job.itv_status === "Pending" && (
                         <div className="d-flex gap-2 flex-wrap justify-content-end">
                           <button
                             className="btn btn-success btn-sm"
@@ -841,7 +850,7 @@ function JobsSAI() {
                             onClick={() =>
                               updateInterviewStatus(
                                 job.itv_id,
-                                "Reschedule Request"
+                                "Reschedule Request",
                               )
                             }
                           >
@@ -853,20 +862,13 @@ function JobsSAI() {
                             onClick={() =>
                               updateInterviewStatus(
                                 job.itv_id,
-                                "Candidate Cancelled"
+                                "Candidate Cancelled",
                               )
                             }
                           >
                             Cancel
                           </button>
                         </div>
-                      ) : (
-                        <button
-                          className="btn btn-secondary btn-sm px-4"
-                          disabled
-                        >
-                          {getCandidateInterviewBadge(job.itv_status).text}
-                        </button>
                       )}
                     </div>
                   </div>

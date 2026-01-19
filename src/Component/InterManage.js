@@ -319,7 +319,7 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
                                 : item.itv_status === "Rejected"
                                 ? "bg-danger"
                                 : item.itv_status === "Hold"
-                                ? "bg-secondary"
+                                ? "bg-warning"
                                 : item.itv_status === "Not Attended"
                                 ? "bg-dark"
                                 : item.itv_status === "Appointed"

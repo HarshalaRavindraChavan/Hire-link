@@ -66,13 +66,13 @@ function Interview() {
       let res;
       if (["1", "2", "3", "4"].includes(role)) {
         res = await axios.get(
-          `${BASE_URL}hirelink_apis/admin/getdata/tbl_interview`
+          `${BASE_URL}hirelink_apis/admin/getdata/tbl_interview`,
         );
       }
 
       if (Number(role) === 100) {
         res = await axios.get(
-          `${BASE_URL}hirelink_apis/employer/getdatawhere/tbl_interview/itv_employer_id/${employerId}`
+          `${BASE_URL}hirelink_apis/employer/getdatawhere/tbl_interview/itv_employer_id/${employerId}`,
         );
       }
 
@@ -101,7 +101,7 @@ function Interview() {
   const confirmDelete = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/deletedata/tbl_interview/itv_id/${deleteId}`
+        `${BASE_URL}hirelink_apis/admin/deletedata/tbl_interview/itv_id/${deleteId}`,
       );
       if (res.data.status) {
         toast.success("Interview deleted successfully");
@@ -142,12 +142,12 @@ function Interview() {
 
     try {
       const payload = {
-        candidate_id: Number(data.candidate_id),
-        job_id: Number(data.job_id),
-        interview_type: data.interviewType,
-        interview_date: data.interviewDate,
-        interview_time: data.interviewTime,
-        meeting_link:
+        itv_candidate_id: Number(data.candidate_id),
+        itv_job_id: Number(data.job_id),
+        itv_type: data.interviewType,
+        itv_date: data.interviewDate,
+        itv_time: data.interviewTime,
+        itv_meeting_link:
           data.interviewType === "Virtual Interview"
             ? data.meetingLink || ""
             : "",
@@ -157,14 +157,14 @@ function Interview() {
       const res = await axios.post(
         `${BASE_URL}hirelink_apis/admin/updatedata/tbl_interview/itv_id/${editInterviewId}`,
         payload,
-        { headers: { "Content-Type": "application/json" } }
+        { headers: { "Content-Type": "application/json" } },
       );
 
       if (res.data.status) {
         toast.success("Interview updated successfully ✅");
         fetchInterviews();
         window.bootstrap.Modal.getInstance(
-          document.getElementById("interviewexampleModal")
+          document.getElementById("interviewexampleModal"),
         ).hide();
       } else {
         toast.error("Update failed ❌");
@@ -241,7 +241,7 @@ function Interview() {
                             {i.can_name}
                             (Interview Reschedule)
                           </span>
-                          <ul className="dropdown-menu">
+                          {/* <ul className="dropdown-menu">
                             <li>
                               <button
                                 className="dropdown-item"
@@ -258,7 +258,7 @@ function Interview() {
                                 Delete
                               </button>
                             </li>
-                          </ul>
+                          </ul> */}
                         </div>
                         <div className="fw-bold">
                           Score:{" "}
@@ -312,7 +312,7 @@ function Interview() {
                           Interview Time:{" "}
                           <span className="text-dark fw-normal">
                             {new Date(
-                              `1970-01-01T${i.itv_time}`
+                              `1970-01-01T${i.itv_time}`,
                             ).toLocaleTimeString("en-IN", {
                               hour: "2-digit",
                               minute: "2-digit",

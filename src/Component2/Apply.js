@@ -45,7 +45,7 @@ function Apply() {
   const fetchJobDetail = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_job/job_id/${job_id}`
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_job/job_id/${job_id}`,
       );
 
       if (res?.data?.status === true || res?.data?.status === "success") {
@@ -68,7 +68,7 @@ function Apply() {
       if (!candidateLS?.can_id) return;
 
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_candidate/can_id/${candidateLS.can_id}`
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_candidate/can_id/${candidateLS.can_id}`,
       );
 
       if (res.data.status === true || res.data.status === "success") {
@@ -98,7 +98,7 @@ function Apply() {
           JSON.stringify({
             ...candidateLS,
             ...cData,
-          })
+          }),
         );
       }
     } catch (error) {
@@ -125,14 +125,14 @@ function Apply() {
       if (!candidate?.can_id) return;
 
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/getdatawhere/tbl_applied/apl_job_id/${job_id}`
+        `${BASE_URL}hirelink_apis/admin/getdatawhere/tbl_applied/apl_job_id/${job_id}`,
       );
 
       if (res.data.status === true || res.data.status === "success") {
         const appliedList = Array.isArray(res.data.data) ? res.data.data : [];
 
         const found = appliedList.some(
-          (item) => Number(item.apl_candidate_id) === Number(candidate.can_id)
+          (item) => Number(item.apl_candidate_id) === Number(candidate.can_id),
         );
 
         if (found) {
@@ -176,7 +176,7 @@ function Apply() {
     try {
       const res = await axios.post(
         `${BASE_URL}hirelink_apis/candidate/fileupload`,
-        formDataFile
+        formDataFile,
       );
 
       if (res.data.status === true || res.data.status === "success") {
@@ -195,7 +195,7 @@ function Apply() {
           JSON.stringify({
             ...oldCand,
             can_resume: filename,
-          })
+          }),
         );
 
         toast.success("Resume uploaded successfully ✅");
@@ -267,7 +267,7 @@ function Apply() {
         payload,
         {
           headers: { "Content-Type": "application/json" },
-        }
+        },
       );
 
       if (res.data.status === true || res.data.status === "success") {
@@ -348,7 +348,7 @@ function Apply() {
       const res = await axios.post(
         `${BASE_URL}hirelink_apis/admin/insert/tbl_applied`,
         payload,
-        { headers: { "Content-Type": "application/json" } }
+        { headers: { "Content-Type": "application/json" } },
       );
 
       if (res.data.status === true || res.data.status === "success") {
@@ -367,10 +367,12 @@ function Apply() {
 
   return (
     <>
-      <SEO
-        title={`${seoConfig.c_apply.title} - ${job.job_title}`}
-        description={seoConfig.c_apply.description}
-      />
+      {job && (
+        <SEO
+          title={`${seoConfig.c_apply.title} - ${job.job_title}`}
+          description={seoConfig.c_apply.description}
+        />
+      )}
       <ToastContainer position="top-right" autoClose={3000} theme="colored" />
 
       <div className="container mt-5 mb-5">
@@ -461,7 +463,7 @@ function Apply() {
                           <option key={item} value={item}>
                             {item}
                           </option>
-                        )
+                        ),
                       )}
                     </select>
                   </div>

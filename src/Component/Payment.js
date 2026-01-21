@@ -9,58 +9,54 @@ function PaymentPage() {
 
   const user = JSON.parse(localStorage.getItem("paymentUser"));
 
-  // 🔐 Protect payment page
   useEffect(() => {
     if (!user) {
       navigate("/signup");
     }
   }, []);
 
-  // 💰 Amount by role
-  const amount =
-    user?.role === "Employer" ? 5000 : 300; 
-
-  const displayAmount =
-    user?.role === "Employer" ? "₹5000" : "₹300";
+  const displayAmount = user?.role === "Employer" ? "₹5000" : "₹300";
 
   const openRazorpay = async () => {
     try {
-      // 1️⃣ Create order (backend decides final amount)
+      // ✅ 1) Create order (backend decides amount)
       const { data } = await axios.post(
         `${BASE_URL}hirelink_apis/payment/create-order`,
         {
           email: user.email,
           role: user.role,
-          amount: amount,
-        }
+        },
       );
 
+      if (!data.status) {
+        toast.error(data.message || "Order create failed");
+        return;
+      }
+
       const options = {
-        key: "rzp_test_S6R1KcyZUZIQxd",
+        key: data.key, // ✅ backend key
         amount: data.amount,
-        currency: "INR",
+        currency: data.currency,
         name: "HireLink",
         description: "Account Activation Fee",
         order_id: data.id,
 
         handler: async function (response) {
-          // 2️⃣ Verify payment
+          // ✅ 2) Verify payment
           const verify = await axios.post(
             `${BASE_URL}hirelink_apis/payment/verify`,
             {
               ...response,
               email: user.email,
               role: user.role,
-              amount: amount,
-            }
+            },
           );
 
           if (verify.data.status === true) {
             localStorage.setItem("paymentDone", "true");
-
             toast.success("Payment successful!");
 
-            // ✅ Final redirect
+            // ✅ redirect after payment
             if (user.role === "Candidate") {
               navigate("/profile");
             } else {
@@ -92,9 +88,7 @@ function PaymentPage() {
       <div className="card shadow p-4 text-center" style={{ maxWidth: 420 }}>
         <h4 className="mb-2">Complete Your Payment</h4>
 
-        <p className="text-muted mb-3">
-          {user?.role} Account Activation
-        </p>
+        <p className="text-muted mb-3">{user?.role} Account Activation</p>
 
         <h3 className="mb-3">{displayAmount}</h3>
 

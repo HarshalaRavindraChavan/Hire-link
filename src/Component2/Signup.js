@@ -164,11 +164,11 @@ const onSubmit = async (values) => {
     const { data } = await axios.post(url, payload);
 
     if (data.status === true) {
-      toast.success("Account created! Please verify your email");
+      toast.success("Signup successful! Complete payment");
 
-      // ✅ store ONLY verification info
+      // ✅ store payment user info
       localStorage.setItem(
-        "pendingVerification",
+        "paymentUser",
         JSON.stringify({
           email: values.email,
           role: activeRole,
@@ -177,10 +177,10 @@ const onSubmit = async (values) => {
 
       reset();
 
-      // ✅ redirect to email verification page
+      // ✅ Redirect to payment page
       setTimeout(() => {
-        navigate("/verify");
-      }, 1200);
+        navigate("/payment");
+      }, 1000);
     } else {
       toast.error(data.message || "Signup failed");
     }
@@ -190,6 +190,7 @@ const onSubmit = async (values) => {
     setLoading(false);
   }
 };
+
 
 
   /* ---------------- JSX ---------------- */

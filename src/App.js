@@ -48,6 +48,7 @@ import Employer from "./Component3/Employer";
 import Eprivacypolicies from "./Component3/Privacypolicies";
 import Etermscondition from "./Component3/Termscondition";
 import Ereturnpolicy from "./Component3/Returnpolicy";
+import PaymentPage from "./Component/Payment";
 
 /* ================= USER LAYOUT ================= */
 const UserLayout = () => (
@@ -106,6 +107,9 @@ function App() {
           <Route path="contacts" element={<Contacts />} />
           <Route path="about" element={<About />} />
           <Route path="help" element={<Help />} />
+
+          <Route path="payment" element={<PaymentPage />} />
+
           <Route path="candidate-return-policy" element={<Creturnpolicy />} />
           <Route
             path="candidate-privacy-policies"

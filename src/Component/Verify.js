@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import SEO from "../SEO";
 import { seoConfig } from "../config/seoConfig";
 import { BASE_URL } from "../config/constants";
+import { useNavigate } from "react-router-dom";
 
 function Verify() {
+  const navigate = useNavigate();
+
   const [code, setCode] = useState("");
   const email = "harshal@gmail.com";
 
@@ -23,7 +26,8 @@ function Verify() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Submitted Code: ", code);
+      navigate("/payment");
+
   };
 
   return (

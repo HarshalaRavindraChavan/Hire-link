@@ -49,84 +49,148 @@ const Signup = () => {
   });
 
   /* ---------------- SUBMIT ---------------- */
-  const onSubmit = async (values) => {
-    if (!captchaToken) {
-      toast.error("Please verify captcha!");
-      return;
+  // const onSubmit = async (values) => {
+  //   if (!captchaToken) {
+  //     toast.error("Please verify captcha!");
+  //     return;
+  //   }
+
+  //   setLoading(true);
+
+  //   try {
+  //     let url = "";
+  //     let payload = {};
+
+  //     if (activeRole === "Candidate") {
+  //       // 🔹 Candidate Signup API
+  //       url = `${BASE_URL}hirelink_apis/candidate/signup/tbl_candidate`;
+  //       payload = {
+  //         can_name: values.fullname,
+  //         can_email: values.email,
+  //         can_password: values.password,
+  //         can_mobile: values.mobile,
+  //         can_status: "Active",
+  //         captchaToken: captchaToken,
+  //       };
+  //     } else {
+  //       // 🔹 Employer Signup API
+  //       url = `${BASE_URL}hirelink_apis/employer/signup/tbl_employer`;
+  //       payload = {
+  //         emp_name: values.fullname,
+  //         emp_email: values.email,
+  //         emp_password: values.password,
+  //         emp_mobile: values.mobile,
+  //         emp_status: "Active",
+  //         captchaToken: captchaToken,
+  //       };
+  //     }
+
+  //     const response = await axios.post(url, payload);
+  //     const data = response.data;
+
+  //     if (data.status === true) {
+  //       toast.success(`${activeRole} account created successfully!`);
+
+  //       // 🔹 Store & Redirect based on role
+  //       if (activeRole === "Candidate") {
+  //         localStorage.setItem("candidate", JSON.stringify(data.data));
+  //         saveFcmToken(data.data.can_id);
+
+  //         setTimeout(() => navigate("/profile"), 1200);
+  //       } else {
+  //         // 🔹 Auth (role & permission)
+  //         localStorage.setItem(
+  //           "auth",
+  //           JSON.stringify({
+  //             role: 100,
+  //             emp_id: data.data.emp_id,
+  //             emp_companyname: data.data.emp_companyname,
+  //           })
+  //         );
+
+  //         // 🔹 FULL employer table data
+  //         localStorage.setItem(
+  //           "employer",
+  //           JSON.stringify(data.data) // 🔥 full row
+  //         );
+
+  //         setTimeout(() => navigate("/emp-profile"), 1200);
+  //       }
+
+  //       reset(); // ✅ react-hook-form correct reset
+  //     } else {
+  //       toast.error(data.message || "Signup failed");
+  //     }
+  //   } catch (error) {
+  //     toast.error(error.response?.data?.message || "Server error. Try again.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+
+const onSubmit = async (values) => {
+  if (!captchaToken) {
+    toast.error("Please verify captcha!");
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    let url = "";
+    let payload = {};
+
+    if (activeRole === "Candidate") {
+      url = `${BASE_URL}hirelink_apis/candidate/signup/tbl_candidate`;
+      payload = {
+        can_name: values.fullname,
+        can_email: values.email,
+        can_password: values.password,
+        can_mobile: values.mobile,
+        captchaToken,
+      };
+    } else {
+      url = `${BASE_URL}hirelink_apis/employer/signup/tbl_employer`;
+      payload = {
+        emp_name: values.fullname,
+        emp_email: values.email,
+        emp_password: values.password,
+        emp_mobile: values.mobile,
+        captchaToken,
+      };
     }
 
-    setLoading(true);
+    const { data } = await axios.post(url, payload);
 
-    try {
-      let url = "";
-      let payload = {};
+    if (data.status === true) {
+      toast.success("Account created! Please verify your email");
 
-      if (activeRole === "Candidate") {
-        // 🔹 Candidate Signup API
-        url = `${BASE_URL}hirelink_apis/candidate/signup/tbl_candidate`;
-        payload = {
-          can_name: values.fullname,
-          can_email: values.email,
-          can_password: values.password,
-          can_mobile: values.mobile,
-          can_status: "Active",
-          captchaToken: captchaToken,
-        };
-      } else {
-        // 🔹 Employer Signup API
-        url = `${BASE_URL}hirelink_apis/employer/signup/tbl_employer`;
-        payload = {
-          emp_name: values.fullname,
-          emp_email: values.email,
-          emp_password: values.password,
-          emp_mobile: values.mobile,
-          emp_status: "Active",
-          captchaToken: captchaToken,
-        };
-      }
+      // ✅ store ONLY verification info
+      localStorage.setItem(
+        "pendingVerification",
+        JSON.stringify({
+          email: values.email,
+          role: activeRole,
+        })
+      );
 
-      const response = await axios.post(url, payload);
-      const data = response.data;
+      reset();
 
-      if (data.status === true) {
-        toast.success(`${activeRole} account created successfully!`);
-
-        // 🔹 Store & Redirect based on role
-        if (activeRole === "Candidate") {
-          localStorage.setItem("candidate", JSON.stringify(data.data));
-          saveFcmToken(data.data.can_id);
-
-          setTimeout(() => navigate("/profile"), 1200);
-        } else {
-          // 🔹 Auth (role & permission)
-          localStorage.setItem(
-            "auth",
-            JSON.stringify({
-              role: 100,
-              emp_id: data.data.emp_id,
-              emp_companyname: data.data.emp_companyname,
-            })
-          );
-
-          // 🔹 FULL employer table data
-          localStorage.setItem(
-            "employer",
-            JSON.stringify(data.data) // 🔥 full row
-          );
-
-          setTimeout(() => navigate("/emp-profile"), 1200);
-        }
-
-        reset(); // ✅ react-hook-form correct reset
-      } else {
-        toast.error(data.message || "Signup failed");
-      }
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Server error. Try again.");
-    } finally {
-      setLoading(false);
+      // ✅ redirect to email verification page
+      setTimeout(() => {
+        navigate("/verify");
+      }, 1200);
+    } else {
+      toast.error(data.message || "Signup failed");
     }
-  };
+  } catch (error) {
+    toast.error(error.response?.data?.message || "Server error");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   /* ---------------- JSX ---------------- */
   return (

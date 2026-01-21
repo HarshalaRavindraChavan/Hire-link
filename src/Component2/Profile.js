@@ -66,7 +66,7 @@ function Profile() {
   const fetchStates = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdata/tbl_state`
+        `${BASE_URL}hirelink_apis/candidate/getdata/tbl_state`,
       );
 
       if (res.data?.status) {
@@ -80,7 +80,7 @@ function Profile() {
   const fetchCities = async (stateId) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_city/city_state_id/${stateId}`
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_city/city_state_id/${stateId}`,
       );
 
       if (res.data?.status) {
@@ -124,7 +124,7 @@ function Profile() {
   const fetchCategories = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdata/tbl_main_category`
+        `${BASE_URL}hirelink_apis/candidate/getdata/tbl_main_category`,
       );
       setCategories(res.data.data || []);
     } catch (err) {
@@ -145,7 +145,7 @@ function Profile() {
   const fetchSubCategories = async (mc_id) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_subcategory/sc_mc_id/${mc_id}`
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_subcategory/sc_mc_id/${mc_id}`,
       );
       setSubCategories(res.data.data || []);
     } catch (err) {
@@ -166,7 +166,7 @@ function Profile() {
   const fetchSubCat1 = async (sc_id) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_subcategory_1/sc1_sc_id/${sc_id}`
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_subcategory_1/sc1_sc_id/${sc_id}`,
       );
       setSubCat1(res.data.data || []);
     } catch (err) {
@@ -187,7 +187,7 @@ function Profile() {
   const fetchSubCat2 = async (sc1_id) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_subcategory_2/sc2_sc1_id/${sc1_id}`
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_subcategory_2/sc2_sc1_id/${sc1_id}`,
       );
       setSubCat2(res.data.data || []);
     } catch (err) {
@@ -208,7 +208,7 @@ function Profile() {
   const fetchSubCat3 = async (sc2_id) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_subcategory_3/sc3_sc2_id/${sc2_id}`
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_subcategory_3/sc3_sc2_id/${sc2_id}`,
       );
       setSubCat3(res.data.data || []);
     } catch (err) {
@@ -236,6 +236,9 @@ function Profile() {
     can_sc3: "",
   });
 
+  const [isAadharLocked, setIsAadharLocked] = useState(false);
+  const [isPanLocked, setIsPanLocked] = useState(false);
+
   const [isCategorySynced, setIsCategorySynced] = useState(false); // ✅ ADD THIS
 
   const fetchCandidateProfile = async () => {
@@ -249,7 +252,7 @@ function Profile() {
       const lsData = JSON.parse(stored);
 
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_candidate/can_id/${lsData.can_id}`
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_candidate/can_id/${lsData.can_id}`,
       );
 
       if (res.data?.status && res.data?.data?.length > 0) {
@@ -268,6 +271,8 @@ function Profile() {
 
         // ✅ update localStorage also
         localStorage.setItem("candidate", JSON.stringify(freshCandidate));
+        setIsAadharLocked((freshCandidate.can_aadhar || "").length === 12);
+        setIsPanLocked((freshCandidate.can_pan || "").length === 10);
       }
     } catch (err) {
       console.error("Fetch candidate error", err);
@@ -283,22 +288,27 @@ function Profile() {
       const lsData = JSON.parse(stored);
 
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_candidate/can_id/${lsData.can_id}`
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_candidate/can_id/${lsData.can_id}`,
       );
 
       if (res.data?.status && res.data?.data?.length > 0) {
         const freshCandidate = res.data.data[0];
 
         // ✅ ONLY update score
-        setCandidate((prev) => {
-          const updated = {
-            ...prev,
-            can_score: freshCandidate.can_score,
-          };
+        // setCandidate((prev) => {
+        //   const updated = {
+        //     ...prev,
+        //     can_score: freshCandidate.can_score,
+        //   };
 
-          localStorage.setItem("candidate", JSON.stringify(updated));
-          return updated;
-        });
+        //   localStorage.setItem("candidate", JSON.stringify(updated));
+        //   return updated;
+        // });
+
+        setCandidate((prev) => ({
+          ...prev,
+          can_score: freshCandidate.can_score,
+        }));
       }
     } catch (err) {
       console.error("Fetch score error", err);
@@ -354,6 +364,18 @@ function Profile() {
       }
     }
 
+    // ✅ AADHAR VALIDATION (12 digits required)
+    if (!candidate.can_aadhar || candidate.can_aadhar.length !== 12) {
+      toast.error("Aadhar must be exactly 12 digits");
+      return;
+    }
+
+    // ✅ PAN VALIDATION (10 characters required)
+    if (!candidate.can_pan || candidate.can_pan.length !== 10) {
+      toast.error("PAN must be exactly 10 characters");
+      return;
+    }
+
     const categoryPayload = {};
     if (selectedCategory) categoryPayload.can_mc = selectedCategory;
     if (selectedSubCategory) categoryPayload.can_sc = selectedSubCategory;
@@ -362,28 +384,32 @@ function Profile() {
     if (selectedSubCat3) categoryPayload.can_sc3 = selectedSubCat3;
 
     try {
+      const payload = {
+        can_experience: candidate.can_experience,
+        can_skill: candidate.can_skill,
+        can_about: candidate.can_about,
+        can_state: candidate.can_state,
+        can_city: candidate.can_city,
+
+        ...categoryPayload,
+
+        can_resume: candidate.can_resume,
+        can_cv: candidate.can_cv,
+
+        can_education_type: candidate.can_education_type,
+        can_education_detail: candidate.can_education_detail,
+      };
+
+      // ✅ Aadhar/PAN only send if not locked
+      if (!isAadharLocked) payload.can_aadhar = candidate.can_aadhar;
+      if (!isPanLocked) payload.can_pan = candidate.can_pan;
+
+      
       const response = await axios.post(
         `${BASE_URL}hirelink_apis/candidate/updatedata/tbl_candidate/can_id/${candidate.can_id}`,
-        {
-          can_experience: candidate.can_experience,
-          can_skill: candidate.can_skill,
-          can_about: candidate.can_about,
-          can_state: candidate.can_state,
-          can_city: candidate.can_city,
-          // ✅ SAVE CATEGORY HERE
-          ...categoryPayload,
-          can_aadhar: candidate.can_aadhar,
-          can_pan: candidate.can_pan,
-          can_resume: candidate.can_resume,
-          can_cv: candidate.can_cv,
-          can_education_type: candidate.can_education_type,
-          can_education_detail: candidate.can_education_detail,
-        },
-        {
-          headers: { "Content-Type": "application/json" },
-        }
+        payload,
+        { headers: { "Content-Type": "application/json" } },
       );
-
       const result = response.data;
 
       if (result?.status === true) {
@@ -433,6 +459,12 @@ function Profile() {
         setCandidate(updatedCandidate);
         localStorage.setItem("candidate", JSON.stringify(updatedCandidate));
 
+        // ✅ LOCK ONLY AFTER SUCCESSFUL UPDATE ✅
+        if ((updatedCandidate.can_aadhar || "").length === 12)
+          setIsAadharLocked(true);
+        if ((updatedCandidate.can_pan || "").length === 10)
+          setIsPanLocked(true);
+
         setTimeout(() => {
           const modalEl = document.getElementById("editProfileModal");
           if (modalEl && window.bootstrap) {
@@ -468,7 +500,7 @@ function Profile() {
     try {
       const res = await axios.post(
         `${BASE_URL}hirelink_apis/candidate/fileupload`,
-        formData
+        formData,
       );
 
       if (res.data.status) {
@@ -515,7 +547,7 @@ function Profile() {
           candidate_id: candidate.can_id, // ✅ FIXED
           current_password: currentPassword,
           new_password: newPassword,
-        }
+        },
       );
 
       if (response.data?.status) {
@@ -868,7 +900,8 @@ function Profile() {
                       {candidate.can_name
                         ?.split(" ")
                         .map(
-                          (word) => word.charAt(0).toUpperCase() + word.slice(1)
+                          (word) =>
+                            word.charAt(0).toUpperCase() + word.slice(1),
                         )
                         .join(" ")}
                     </h5>
@@ -1006,16 +1039,26 @@ function Profile() {
                       type="text"
                       className="form-control"
                       placeholder="Enter 12-digit Aadhar number"
-                      value={candidate.can_aadhar}
+                      value={candidate.can_aadhar || ""}
                       maxLength={12}
+                      disabled={
+                        isAadharLocked ||
+                        (candidate.can_aadhar || "").length === 12
+                      }
                       onChange={(e) => {
-                        const value = e.target.value.replace(/\D/g, "");
+                        const value = e.target.value.replace(/\D/g, ""); // only numbers
                         setCandidate((prev) => ({
                           ...prev,
                           can_aadhar: value,
                         }));
                       }}
                     />
+
+                    {isAadharLocked && (
+                      <small className="text-danger">
+                        Aadhar number once saved cannot be changed.
+                      </small>
+                    )}
                   </div>
                   {/* pan number */}
                   <div className="col-md-6">
@@ -1027,17 +1070,28 @@ function Profile() {
                       type="text"
                       className="form-control"
                       placeholder="Enter PAN number (ABCDE1234F)"
-                      value={candidate.can_pan}
+                      value={candidate.can_pan || ""}
                       maxLength={10}
                       style={{ textTransform: "uppercase" }}
+                      disabled={
+                        isPanLocked || (candidate.can_pan || "").length === 10
+                      }
                       onChange={(e) => {
-                        const value = e.target.value.toUpperCase();
+                        const value = e.target.value
+                          .toUpperCase()
+                          .replace(/[^A-Z0-9]/g, "");
                         setCandidate((prev) => ({
                           ...prev,
                           can_pan: value,
                         }));
                       }}
                     />
+
+                    {isPanLocked && (
+                      <small className="text-danger">
+                        PAN number once saved cannot be changed.
+                      </small>
+                    )}
                   </div>
 
                   <div className="col-md-6">

@@ -151,7 +151,7 @@ function Interview() {
           data.interviewType === "Virtual Interview"
             ? data.meetingLink || ""
             : "",
-        status: data.status,
+        itv_status: data.status,
       };
 
       const res = await axios.post(
@@ -193,7 +193,7 @@ function Interview() {
               className={`nav-link ${activeTab === "tab1" ? "active" : ""}`}
               onClick={() => setActiveTab("tab1")}
             >
-              Table View
+              All
             </button>
           </li>
 
@@ -239,7 +239,7 @@ function Interview() {
                             data-bs-toggle="dropdown"
                           >
                             {i.can_name}
-                            (Interview Reschedule)
+                            {/* (Interview Reschedule) */}
                           </span>
                           {/* <ul className="dropdown-menu">
                             <li>

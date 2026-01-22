@@ -26,7 +26,7 @@ function PaymentPage() {
 
       // 1️⃣ Create order from backend
       const { data } = await axios.post(
-        `${BASE_URL}hirelink_apis/payment/create-order`,
+        `${BASE_URL}hirelink_apis/payment/create-order`
         {
           email: user.email,
           role: user.role,

@@ -128,70 +128,69 @@ const Signup = () => {
   //   }
   // };
 
-
-const onSubmit = async (values) => {
-  if (!captchaToken) {
-    toast.error("Please verify captcha!");
-    return;
-  }
-
-  setLoading(true);
-
-  try {
-    let url = "";
-    let payload = {};
-
-    if (activeRole === "Candidate") {
-      url = `${BASE_URL}hirelink_apis/candidate/signup/tbl_candidate`;
-      payload = {
-        can_name: values.fullname,
-        can_email: values.email,
-        can_password: values.password,
-        can_mobile: values.mobile,
-        captchaToken,
-      };
-    } else {
-      url = `${BASE_URL}hirelink_apis/employer/signup/tbl_employer`;
-      payload = {
-        emp_name: values.fullname,
-        emp_email: values.email,
-        emp_password: values.password,
-        emp_mobile: values.mobile,
-        captchaToken,
-      };
+  const onSubmit = async (values) => {
+    if (!captchaToken) {
+      toast.error("Please verify captcha!");
+      return;
     }
 
-    const { data } = await axios.post(url, payload);
+    setLoading(true);
 
-    if (data.status === true) {
-      toast.success("Signup successful! Complete payment");
+    try {
+      let url = "";
+      let payload = {};
 
-      // ✅ store payment user info
-      localStorage.setItem(
-        "paymentUser",
-        JSON.stringify({
-          email: values.email,
-          role: activeRole,
-        })
-      );
+      if (activeRole === "Candidate") {
+        url = `${BASE_URL}hirelink_apis/candidate/signup/tbl_candidate`;
+        payload = {
+          can_name: values.fullname,
+          can_email: values.email,
+          can_password: values.password,
+          can_mobile: values.mobile,
+          can_status: "Active",
+          captchaToken,
+        };
+      } else {
+        url = `${BASE_URL}hirelink_apis/employer/signup/tbl_employer`;
+        payload = {
+          emp_name: values.fullname,
+          emp_email: values.email,
+          emp_password: values.password,
+          emp_mobile: values.mobile,
+          emp_status: "Active",
+          captchaToken,
+        };
+      }
 
-      reset();
+      const { data } = await axios.post(url, payload);
 
-      // ✅ Redirect to payment page
-      setTimeout(() => {
-        navigate("/payment");
-      }, 1000);
-    } else {
-      toast.error(data.message || "Signup failed");
+      if (data.status === true) {
+        toast.success("Signup successful! Complete payment");
+
+        // ✅ store payment user info
+        localStorage.setItem(
+          "paymentUser",
+          JSON.stringify({
+            email: values.email,
+            role: activeRole,
+          }),
+        );
+
+        reset();
+
+        // ✅ Redirect to payment page
+        setTimeout(() => {
+          navigate("/payment");
+        }, 1000);
+      } else {
+        toast.error(data.message || "Signup failed");
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Server error");
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    toast.error(error.response?.data?.message || "Server error");
-  } finally {
-    setLoading(false);
-  }
-};
-
-
+  };
 
   /* ---------------- JSX ---------------- */
   return (

@@ -3,6 +3,7 @@ import SEO from "../SEO";
 import { seoConfig } from "../config/seoConfig";
 import "../Component2/css/Help.css";
 
+
 function Help() {
   const [activeTab, setActiveTab] = useState("Candidate");
 
@@ -12,6 +13,7 @@ function Help() {
         title={seoConfig.help.title}
         description={seoConfig.help.description}
       />
+      
       <div className="hl-tabs-wrapper mt-5">
         {/* Tabs Header */}
         <div className="hl-tabs-header">

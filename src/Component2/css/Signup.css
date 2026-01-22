@@ -1,58 +1,58 @@
-/* :root {
-  --hl-yellow: #ffd60a;
-  --hl-green: #22c55e;
-  --hl-dark: #0f172a;
-} */
+  /* :root {
+    --hl-yellow: #ffd60a;
+    --hl-green: #22c55e;
+    --hl-dark: #0f172a;
+  } */
 
-/* LEFT SIDE PANEL GRADIENT */
-.signup-brand-panel {
-  background: radial-gradient(circle at top left, #22c55e, #111827) !important;
-}
+  /* LEFT SIDE PANEL GRADIENT */
+  .signup-brand-panel {
+    background: radial-gradient(circle at top left, #22c55e, #111827) !important;
+  }
 
-/* PRIMARY BUTTON */
-.btn-primary-signup {
-  background: #22c55e;
-  border-radius: 50px;
-  color: #fff;
-}
+  /* PRIMARY BUTTON */
+  .btn-primary-signup {
+    background: #22c55e;
+    border-radius: 50px;
+    color: #fff;
+  }
 
-.btn-primary-signup:hover {
-  background: #fbfcfd;
-}
+  .btn-primary-signup:hover {
+    background: #fbfcfd;
+  }
 
-/* OUTLINE BUTTON FOR LOGIN */
-.btn-outline-auth {
-  border-radius: 50px;
-  border: 1px solid #d4d4d8;
-}
+  /* OUTLINE BUTTON FOR LOGIN */
+  .btn-outline-auth {
+    border-radius: 50px;
+    border: 1px solid #d4d4d8;
+  }
 
-/* ROLE SELECTOR PILLS */
-.role-pill {
-  border: 1px solid #d4d4d8;
-  border-radius: 50px;
-  background: #f9fafb;
-  padding: 6px 14px;
-  font-size: 0.8rem;
-  cursor: pointer;
-}
+  /* ROLE SELECTOR PILLS */
+  .role-pill {
+    border: 1px solid #d4d4d8;
+    border-radius: 50px;
+    background: #f9fafb;
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    cursor: pointer;
+  }
 
-.role-pill.active {
-  background: #0f172a;
-  color: #fff;
-  border-color: #0f172a;
-}
+  .role-pill.active {
+    background: #0f172a;
+    color: #fff;
+    border-color: #0f172a;
+  }
 
-/* ROUNDED INPUT FIELDS */
-.form-control {
-  border-radius: 12px;
-}
+  /* ROUNDED INPUT FIELDS */
+  .form-control {
+    border-radius: 12px;
+  }
 
-input::placeholder {
-  color: #9ca3af !important;
-  opacity: 1 !important;
-  font-size: 14px;
-}
+  input::placeholder {
+    color: #9ca3af !important;
+    opacity: 1 !important;
+    font-size: 14px;
+  }
 
-p {
-  font-size: 13px;
-}
+  p {
+    font-size: 13px;
+  }

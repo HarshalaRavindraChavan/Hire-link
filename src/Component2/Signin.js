@@ -87,9 +87,11 @@ function Signin() {
           if (activeRole === "Candidate") {
             localStorage.setItem("candidate", JSON.stringify(data.data));
             saveFcmToken(data.data.can_id);
-            setTimeout(() => {
+            if (data.payment_status === "success") {
               navigate("/profile");
-            }, 1200); //  1.2 sec delay
+            } else {
+              navigate("/payment");
+            }
           } else {
             localStorage.setItem(
               "auth",
@@ -98,13 +100,13 @@ function Signin() {
                 emp_id: data.data.emp_id,
                 emp_companyname: data.data.emp_companyname,
                 emp_com_logo: data.data.emp_com_logo,
-              })
+              }),
             );
 
             // 🔹 FULL employer table data
             localStorage.setItem(
               "employer",
-              JSON.stringify(data.data) // 🔥 full row
+              JSON.stringify(data.data), // 🔥 full row
             );
 
             setTimeout(() => {
@@ -118,7 +120,7 @@ function Signin() {
         }
       } catch (error) {
         toast.error(
-          error.response?.data?.message || "Invalid email or password"
+          error.response?.data?.message || "Invalid email or password",
         );
       } finally {
         setLoading(false);

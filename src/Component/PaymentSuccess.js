@@ -9,7 +9,17 @@ function PaymentSuccess() {
   useEffect(() => {
     if (!payment) {
       navigate("/signin");
+      return;
     }
+
+    // ⏳ auto redirect after 3 sec
+    const timer = setTimeout(() => {
+      payment.role === "Candidate"
+        ? navigate("/profile")
+        : navigate("/emp-profile");
+    }, 3000);
+
+    return () => clearTimeout(timer);
   }, [payment, navigate]);
 
   if (!payment) return null;
@@ -27,7 +37,6 @@ function PaymentSuccess() {
     doc.text(`Role: ${payment.role}`, 20, 70);
     doc.text(`Amount Paid: ${payment.amount}`, 20, 80);
     doc.text(`Date: ${payment.date}`, 20, 90);
-
     doc.text("Status: Payment Successful ✅", 20, 110);
 
     doc.save("HireLink_Payment_Receipt.pdf");
@@ -40,22 +49,10 @@ function PaymentSuccess() {
         <p className="text-muted mt-2">Thank you for completing your payment</p>
 
         <div className="border rounded p-3 mt-3 text-start">
-          <p>
-            <strong>Amount:</strong> 
-            {/* {payment.amount} */}
-          </p>
-          <p>
-            <strong>Email:</strong> 
-            {/* {payment.email} */}
-          </p>
-          <p>
-            <strong>Role:</strong> 
-            {/* {payment.role} */}
-          </p>
-          <p>
-            <strong>Date:</strong>
-             {/* {payment.date} */}
-          </p>
+          <p><strong>Amount:</strong> {payment.amount}</p>
+          <p><strong>Email:</strong> {payment.email}</p>
+          <p><strong>Role:</strong> {payment.role}</p>
+          <p><strong>Date:</strong> {payment.date}</p>
         </div>
 
         <button
@@ -65,14 +62,7 @@ function PaymentSuccess() {
           📄 Generate PDF Receipt
         </button>
 
-        {/* <button
-          className="btn btn-success w-100 mt-2"
-          onClick={() =>
-            navigate(payment.role === "Candidate" ? "/profile" : "/emp-profile")
-          }
-        >
-          Go to Dashboard
-        </button> */}
+        <p className="text-muted mt-2">Redirecting to dashboard...</p>
       </div>
     </div>
   );

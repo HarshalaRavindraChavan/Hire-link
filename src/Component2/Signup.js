@@ -140,6 +140,7 @@ const Signup = () => {
       let url = "";
       let payload = {};
 
+      // ✅ Role wise API + payload
       if (activeRole === "Candidate") {
         url = `${BASE_URL}hirelink_apis/candidate/signup/tbl_candidate`;
         payload = {
@@ -148,7 +149,7 @@ const Signup = () => {
           can_password: values.password,
           can_mobile: values.mobile,
           can_status: "Active",
-          captchaToken,
+          captchaToken: captchaToken,
         };
       } else {
         url = `${BASE_URL}hirelink_apis/employer/signup/tbl_employer`;
@@ -158,14 +159,38 @@ const Signup = () => {
           emp_password: values.password,
           emp_mobile: values.mobile,
           emp_status: "Active",
-          captchaToken,
+          captchaToken: captchaToken,
         };
       }
 
-      const { data } = await axios.post(url, payload);
+      const response = await axios.post(url, payload);
+      const data = response.data;
 
       if (data.status === true) {
-        toast.success("Signup successful! Complete payment");
+        toast.success(`${activeRole} Signup successful! Complete payment ✅`);
+
+        // ✅ Store full data in localStorage (same as your first code)
+        if (activeRole === "Candidate") {
+          localStorage.setItem("candidate", JSON.stringify(data.data));
+
+          // ✅ FCM token (optional)
+          if (data.data?.can_id) {
+            saveFcmToken(data.data.can_id);
+          }
+        } else {
+          // ✅ auth store (same as old code)
+          localStorage.setItem(
+            "auth",
+            JSON.stringify({
+              role: 100,
+              emp_id: data.data.emp_id,
+              emp_companyname: data.data.emp_companyname,
+            }),
+          );
+
+          // ✅ full employer row store
+          localStorage.setItem("employer", JSON.stringify(data.data));
+        }
 
         // ✅ store payment user info
         localStorage.setItem(
@@ -186,7 +211,7 @@ const Signup = () => {
         toast.error(data.message || "Signup failed");
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "Server error");
+      toast.error(error.response?.data?.message || "Server error. Try again.");
     } finally {
       setLoading(false);
     }

@@ -110,7 +110,7 @@ function App() {
           <Route path="help" element={<Help />} />
 
           <Route path="payment" element={<PaymentPage />} />
-          <Route path="/payment-success" element={<PaymentSuccess/>} />
+          <Route path="payment-success" element={<PaymentSuccess/>} />
 
           <Route path="candidate-return-policy" element={<Creturnpolicy />} />
           <Route

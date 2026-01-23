@@ -8,7 +8,7 @@ function PaymentSuccess() {
 
   useEffect(() => {
     if (!payment) {
-      navigate("/payment-success");
+      navigate("/signin");
     }
   }, [payment, navigate]);
 
@@ -37,15 +37,21 @@ function PaymentSuccess() {
     <div className="container d-flex justify-content-center align-items-center vh-100">
       <div className="card shadow p-4 text-center" style={{ maxWidth: 500 }}>
         <h2 className="text-success">Payment Successful 🎉</h2>
-        <p className="text-muted mt-2">
-          Thank you for completing your payment
-        </p>
+        <p className="text-muted mt-2">Thank you for completing your payment</p>
 
         <div className="border rounded p-3 mt-3 text-start">
-          <p><strong>Amount:</strong> {payment.amount}</p>
-          <p><strong>Email:</strong> {payment.email}</p>
-          <p><strong>Role:</strong> {payment.role}</p>
-          <p><strong>Date:</strong> {payment.date}</p>
+          <p>
+            <strong>Amount:</strong> {payment.amount}
+          </p>
+          <p>
+            <strong>Email:</strong> {payment.email}
+          </p>
+          <p>
+            <strong>Role:</strong> {payment.role}
+          </p>
+          <p>
+            <strong>Date:</strong> {payment.date}
+          </p>
         </div>
 
         <button

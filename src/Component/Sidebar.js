@@ -8,7 +8,7 @@ function Sidebar() {
   const assignedMenuIds = auth?.menu_ids || [];
 
   // Employer fixed menus
-  const employerMenuIds = [1, 2, 3, 4, 5, 11];
+  const employerMenuIds = [1, 2, 3, 4, 5, 11,12];
   const allMenus = [
     { id: 1, label: "Dashboard", path: "/dashboard", icon: "fas fa-home" },
     { id: 2, label: "Jobs", path: "/job", icon: "fa fa-briefcase" },
@@ -31,6 +31,7 @@ function Sidebar() {
     { id: 9, label: "Contacts", path: "/contact", icon: "fa fa-headphones" },
     { id: 10, label: "Users", path: "/user", icon: "fa fa-user" },
     { id: 11, label: "Profile", path: "/emp-profile", icon: "fa fa-user" },
+    { id: 12, label: "Staff", path: "/staff", icon: "fa fa-user" },
   ];
 
   // ================= MENU LOGIC =================

@@ -50,6 +50,7 @@ import Etermscondition from "./Component3/Termscondition";
 import Ereturnpolicy from "./Component3/Returnpolicy";
 import PaymentPage from "./Component/Payment";
 import PaymentSuccess from "./Component/PaymentSuccess";
+import Staff from "./Component/Staff";
 
 /* ================= USER LAYOUT ================= */
 const UserLayout = () => (
@@ -155,6 +156,8 @@ function App() {
           <Route path="offer" element={<Offer />} />
           <Route path="contact" element={<Contact />} />
           <Route path="user" element={<Users />} />
+         <Route path="staff" element={<Staff />} />
+
         </Route>
       </Routes>
     </BrowserRouter>

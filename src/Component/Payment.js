@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../config/constants";
@@ -8,14 +8,53 @@ function PaymentPage() {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("paymentUser"));
 
+  const [loading, setLoading] = useState(false);
+  const [displayAmount, setDisplayAmount] = useState("₹0");
+  const [orderData, setOrderData] = useState(null);
+
   useEffect(() => {
     if (!user) {
       toast.error("User not found. Please signup again.");
       navigate("/signup");
+      return;
     }
-  }, [user, navigate]);
 
-  const displayAmount = user?.role === "Employer" ? "₹5000" : "₹300";
+    // ✅ create order once & get amount from backend
+    const createOrder = async () => {
+      try {
+        setLoading(true);
+
+        const { data } = await axios.post(
+          `${BASE_URL}hirelink_apis/payment/create-order`,
+          {
+            email: user.email,
+            role: user.role,
+          },
+        );
+
+        if (!data.status) {
+          toast.error(data.message || "Order creation failed");
+          setLoading(false);
+          return;
+        }
+
+        setOrderData(data);
+
+        // ✅ backend कडून amount येतो paisa मध्ये (example: 500000)
+        // convert to rupees
+        const amountInRupees = data.amount / 100;
+        setDisplayAmount(`₹${amountInRupees}`);
+
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to create order");
+        setLoading(false);
+      }
+    };
+
+    createOrder();
+  }, [user, navigate]);
 
   const openRazorpay = async () => {
     try {
@@ -24,30 +63,20 @@ function PaymentPage() {
         return;
       }
 
-      // 1️⃣ Create order from backend
-      const { data } = await axios.post(
-        `${BASE_URL}hirelink_apis/payment/create-order`,
-        {
-          email: user.email,
-          role: user.role,
-        },
-      );
-
-      if (!data.status) {
-        toast.error(data.message || "Order creation failed");
+      if (!orderData) {
+        toast.error("Order not ready, please wait...");
         return;
       }
 
       const options = {
-        key: data.key,
-        amount: data.amount,
-        currency: data.currency,
+        key: orderData.key,
+        amount: orderData.amount,
+        currency: orderData.currency,
         name: "HireLink",
-        description: "Account Activation Fee",
-        order_id: data.id,
+        description: "Payment",
+        order_id: orderData.id,
 
         handler: async (response) => {
-          // 2️⃣ Verify payment
           const verify = await axios.post(
             `${BASE_URL}hirelink_apis/payment/verify`,
             {
@@ -63,7 +92,6 @@ function PaymentPage() {
             toast.success("Payment successful 🎉");
             localStorage.setItem("paymentDone", "true");
 
-            // ✅ Save payment details for Success page & PDF
             localStorage.setItem(
               "paymentDetails",
               JSON.stringify({
@@ -71,19 +99,12 @@ function PaymentPage() {
                 orderId: response.razorpay_order_id,
                 email: user.email,
                 role: user.role,
-                amount: displayAmount,
+                amount: displayAmount, // ✅ backend amount
                 date: new Date().toLocaleString(),
               }),
             );
 
             navigate("/payment-success");
-
-            // 3️⃣ Redirect based on role
-            // if (user.role === "Candidate") {
-            //   navigate("/profile");
-            // } else {
-            //   navigate("/emp-profile");
-            // }
           } else {
             toast.error("Payment verification failed");
           }
@@ -110,11 +131,16 @@ function PaymentPage() {
     <div className="container d-flex justify-content-center align-items-center vh-100">
       <div className="card shadow p-4 text-center" style={{ maxWidth: 420 }}>
         <h4>Complete Your Payment</h4>
-        <p className="text-muted">{user?.role} Account Activation</p>
-        <h3>{displayAmount}</h3>
+        <p className="text-muted">{user?.role} Payment</p>
 
-        <button className="btn btn-primary w-100 mt-3" onClick={openRazorpay}>
-          Pay Now
+        <h3>{loading ? "Loading..." : displayAmount}</h3>
+
+        <button
+          className="btn btn-primary w-100 mt-3"
+          onClick={openRazorpay}
+          disabled={loading}
+        >
+          {loading ? "Please wait..." : "Pay Now"}
         </button>
       </div>
     </div>

@@ -1,6 +1,21 @@
+import React from "react";
 import logo from "../Component2/logo/hirelink.png";
 
-function Receipt() {
+function Receipt({ payment }) {
+  if (!payment) return null;
+
+  const receiptNo =
+    payment.receiptNo || `RCPT-${new Date().getTime().toString().slice(-8)}`;
+
+  const paymentForText =
+    payment.paymentFor ||
+    (payment.role === "Candidate"
+      ? "Candidate Signup Fee"
+      : "Employer Signup Fee");
+
+  const unitPrice = payment.baseAmount || payment.amount || "₹0";
+  const total = payment.amount || "₹0";
+
   return (
     <div
       style={{
@@ -10,6 +25,7 @@ function Receipt() {
       }}
     >
       <div
+        id="receipt-print-area"
         style={{
           maxWidth: "600px",
           margin: "0 auto",
@@ -61,16 +77,12 @@ function Receipt() {
 
           <div style={{ textAlign: "right" }}>
             <div
-              style={{
-                fontWeight: 700,
-                fontSize: "14px",
-                color: "#b37c07",
-              }}
+              style={{ fontWeight: 700, fontSize: "14px", color: "#b37c07" }}
             >
               RECEIPT
             </div>
             <div style={{ fontSize: "12px", marginTop: "6px" }}>
-              #RCPT-20250911
+              #{receiptNo}
             </div>
           </div>
         </div>
@@ -90,10 +102,16 @@ function Receipt() {
             >
               Billed To
             </div>
+
             <div style={{ fontSize: "13px", marginTop: "6px" }}>
-              Harshal Mahajan <br />
-              harshal@example.com <br />
-              +91-99999-99999
+              {/* {payment.name || "User"} <br /> */}
+              {payment.email || "-"} <br />
+              {/* {payment.phone || "-"} */}
+            </div>
+
+            <div style={{ fontSize: "12px", color: "#777", marginTop: "8px" }}>
+              <strong>Order ID:</strong> {payment.orderId || "-"} <br />
+              <strong>Payment ID:</strong> {payment.paymentId || "-"}
             </div>
           </div>
 
@@ -104,8 +122,12 @@ function Receipt() {
               Date
             </div>
             <div style={{ fontSize: "13px", marginTop: "6px" }}>
-              11 September 2025
+              {payment.date || new Date().toLocaleDateString()}
             </div>
+
+            {/* <div style={{ fontSize: "12px", color: "#777", marginTop: "8px" }}>
+              <strong>Role:</strong> {payment.role || "-"}
+            </div> */}
           </div>
         </div>
 
@@ -121,30 +143,28 @@ function Receipt() {
             <thead>
               <tr style={{ backgroundColor: "#1a6433", color: "#fff" }}>
                 <th style={th}>Description</th>
-                <th style={thRight}>Qty</th>
                 <th style={thRight}>Unit Price</th>
                 <th style={thRight}>Total</th>
               </tr>
             </thead>
+
             <tbody>
-              {[["Employer Signup Fee", 1, "₹5,000.00", "₹5,000.00"]].map(
-                (row, i) => (
-                  <tr key={i}>
-                    {row.map((cell, idx) => (
-                      <td
-                        key={idx}
-                        style={{
-                          padding: "12px 8px",
-                          textAlign: idx === 0 ? "left" : "right",
-                          borderTop: "1px solid #eee",
-                        }}
-                      >
-                        {cell}
-                      </td>
-                    ))}
-                  </tr>
-                )
-              )}
+              {[[paymentForText, unitPrice, total]].map((row, i) => (
+                <tr key={i}>
+                  {row.map((cell, idx) => (
+                    <td
+                      key={idx}
+                      style={{
+                        padding: "12px 8px",
+                        textAlign: idx === 0 ? "left" : "right",
+                        borderTop: "1px solid #eee",
+                      }}
+                    >
+                      {cell}
+                    </td>
+                  ))}
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
@@ -152,9 +172,9 @@ function Receipt() {
         {/* Total */}
         <div style={{ padding: "0 24px 20px" }}>
           <div style={{ maxWidth: "250px", marginLeft: "auto" }}>
-            <Row label="Subtotal" value="₹5,000.00" />
-            <Row label="GST (18%)" value="₹900.00" />
-            <Row label="Total" value="₹5,900.00" bold bg="#f2f8f4" />
+            <Row label="Subtotal" value={payment.subtotal || total} />
+            <Row label="GST" value={payment.gst || "Included"} />
+            <Row label="Total" value={total} bold bg="#f2f8f4" />
           </div>
         </div>
 
@@ -167,16 +187,18 @@ function Receipt() {
           }}
         >
           <strong>Notes:</strong>
-          <p>
-            This receipt confirms successful Employer account activation on
-            Hirelinkinfo. Payment is non-refundable.
+          <p style={{ marginTop: "8px" }}>
+            This receipt confirms successful payment on Hirelinkinfo. Payment is
+            non-refundable.
           </p>
+
           <p>
             Support:{" "}
             <a href="mailto:support@hirelinkinfo.com">
               support@hirelinkinfo.com
             </a>
           </p>
+
           <div style={{ fontSize: "12px", color: "#999" }}>
             GSTIN: 27AAAA0000A1Z5
           </div>

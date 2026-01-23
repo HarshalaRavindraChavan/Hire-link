@@ -1,68 +1,163 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+import Receipt from "../Component2/Receipt";
 
 function PaymentSuccess() {
   const navigate = useNavigate();
-  const payment = JSON.parse(localStorage.getItem("paymentDetails"));
+  const [payment, setPayment] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!payment) {
+    const saved = JSON.parse(localStorage.getItem("paymentDetails"));
+
+    if (!saved) {
       navigate("/signin");
       return;
     }
 
-    // ⏳ auto redirect after 3 sec
-    const timer = setTimeout(() => {
-      payment.role === "Candidate"
-        ? navigate("/profile")
-        : navigate("/emp-profile");
-    }, 3000);
+    const finalPayment = {
+      ...saved,
+      receiptNo: saved.receiptNo || `RCPT-${Date.now().toString().slice(-8)}`,
+      paymentFor:
+        saved.paymentFor ||
+        (saved.role === "Candidate"
+          ? "Candidate Signup Fee"
+          : "Employer Signup Fee"),
+      date: saved.date || new Date().toLocaleString(),
+    };
 
-    return () => clearTimeout(timer);
-  }, [payment, navigate]);
+    setPayment(finalPayment);
+  }, [navigate]);
 
   if (!payment) return null;
 
-  const generatePDF = () => {
-    const doc = new jsPDF();
+  const makeSafeFileName = (text = "") => {
+    return text
+      .toString()
+      .trim()
+      .replace(/\s+/g, "-")
+      .replace(/[^\w\-]/g, "")
+      .replace(/\-+/g, "-");
+  };
 
-    doc.setFontSize(18);
-    doc.text("Payment Receipt", 20, 20);
+  const getFileDate = () => {
+    const d = new Date();
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  };
 
-    doc.setFontSize(12);
-    doc.text(`Payment ID: ${payment.paymentId}`, 20, 40);
-    doc.text(`Order ID: ${payment.orderId}`, 20, 50);
-    doc.text(`Email: ${payment.email}`, 20, 60);
-    doc.text(`Role: ${payment.role}`, 20, 70);
-    doc.text(`Amount Paid: ${payment.amount}`, 20, 80);
-    doc.text(`Date: ${payment.date}`, 20, 90);
-    doc.text("Status: Payment Successful ✅", 20, 110);
+  const generatePDF = async () => {
+    try {
+      setLoading(true);
 
-    doc.save("HireLink_Payment_Receipt.pdf");
+      const receiptElement = document.getElementById("receipt-print-area");
+      if (!receiptElement) {
+        alert("Receipt UI not found!");
+        setLoading(false);
+        return;
+      }
+
+      // ✅ capture receipt UI exactly as it is
+      const canvas = await html2canvas(receiptElement, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "#ffffff",
+      });
+
+      const imgData = canvas.toDataURL("image/png");
+
+      // ✅ create pdf
+      const pdf = new jsPDF("p", "mm", "a4");
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+
+      const imgWidth = pdfWidth;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      // ✅ multi-page support (if receipt height is bigger)
+      while (heightLeft > 0) {
+        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+        heightLeft -= pdfHeight;
+
+        if (heightLeft > 0) {
+          position -= pdfHeight;
+          pdf.addPage();
+        }
+      }
+
+      // ✅ PDF name format: Description-Receipt-Date.pdf
+      const desc = makeSafeFileName(payment.paymentFor || "Payment");
+      const fileDate = getFileDate();
+      const fileName = `${desc}-Receipt-${fileDate}.pdf`;
+
+      pdf.save(fileName);
+
+      // ✅ redirect ONLY after pdf generated/downloaded
+      if (payment.role === "Candidate") navigate("/profile");
+      else navigate("/emp-profile");
+    } catch (err) {
+      console.log(err);
+      alert("PDF generate failed!");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="container d-flex justify-content-center align-items-center vh-100">
-      <div className="card shadow p-4 text-center" style={{ maxWidth: 500 }}>
+      {/* ✅ Payment Success UI ONLY */}
+      <div className="card shadow p-4 text-center" style={{ maxWidth: 520 }}>
         <h2 className="text-success">Payment Successful 🎉</h2>
-        <p className="text-muted mt-2">Thank you for completing your payment</p>
+        <p className="text-muted mt-2">
+          PDF Receipt download करून पुढे जाईल ✅
+        </p>
 
         <div className="border rounded p-3 mt-3 text-start">
-          <p><strong>Amount:</strong> {payment.amount}</p>
-          <p><strong>Email:</strong> {payment.email}</p>
-          <p><strong>Role:</strong> {payment.role}</p>
-          <p><strong>Date:</strong> {payment.date}</p>
+          <p>
+            <strong>Email:</strong> {payment.email}
+          </p>
+          <p>
+            <strong>Role:</strong> {payment.role}
+          </p>
+          <p>
+            <strong>Payment For:</strong> {payment.paymentFor}
+          </p>
+          <p>
+            <strong>Amount:</strong> {payment.amount}
+          </p>
         </div>
 
         <button
-          className="btn btn-outline-success w-100 mt-3"
+          className="btn btn-success w-100 mt-3"
           onClick={generatePDF}
+          disabled={loading}
         >
-          📄 Generate PDF Receipt
+          {loading ? "Generating PDF..." : "📄 Download Receipt PDF & Continue"}
         </button>
 
-        <p className="text-muted mt-2">Redirecting to dashboard...</p>
+        <p className="text-muted mt-2" style={{ fontSize: 13 }}>
+          Redirect फक्त PDF download नंतर होईल ✅
+        </p>
+      </div>
+
+      {/* ✅ Receipt UI Hidden (User ला दिसणार नाही पण PDF capture होईल) */}
+      <div
+        style={{
+          position: "fixed",
+          left: "-9999px",
+          top: 0,
+          width: "700px",
+          background: "#fff",
+        }}
+      >
+        <Receipt payment={payment} />
       </div>
     </div>
   );

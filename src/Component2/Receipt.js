@@ -12,7 +12,7 @@ function Receipt({ payment }) {
     (payment.role === "Candidate"
       ? "Candidate Signup Fee"
       : "Employer Signup Fee");
-1;
+
   const unitPrice = payment.baseAmount || payment.amount || "₹0";
   const total = payment.amount || "₹0";
 
@@ -173,6 +173,7 @@ function Receipt({ payment }) {
         <div style={{ padding: "0 24px 20px" }}>
           <div style={{ maxWidth: "250px", marginLeft: "auto" }}>
             <Row label="Subtotal" value={payment.subtotal || total} />
+            <Row label="GST" value={payment.gst || "Included"} />
             <Row label="Total" value={total} bold bg="#f2f8f4" />
           </div>
         </div>
@@ -198,9 +199,9 @@ function Receipt({ payment }) {
             </a>
           </p>
 
-          {/* <div style={{ fontSize: "12px", color: "#999" }}>
+          <div style={{ fontSize: "12px", color: "#999" }}>
             GSTIN: 27AAAA0000A1Z5
-          </div> */}
+          </div>
         </div>
       </div>
     </div>

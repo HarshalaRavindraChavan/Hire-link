@@ -30,7 +30,7 @@ function PaymentPage() {
         {
           email: user.email,
           role: user.role,
-        }
+        },
       );
 
       if (!data.status) {
@@ -56,12 +56,27 @@ function PaymentPage() {
               razorpay_signature: response.razorpay_signature,
               email: user.email,
               role: user.role,
-            }
+            },
           );
 
           if (verify.data.status) {
             toast.success("Payment successful 🎉");
             localStorage.setItem("paymentDone", "true");
+
+            // ✅ Save payment details for Success page & PDF
+            localStorage.setItem(
+              "paymentDetails",
+              JSON.stringify({
+                paymentId: response.razorpay_payment_id,
+                orderId: response.razorpay_order_id,
+                email: user.email,
+                role: user.role,
+                amount: displayAmount,
+                date: new Date().toLocaleString(),
+              }),
+            );
+
+            navigate("/payment-success");
 
             // 3️⃣ Redirect based on role
             if (user.role === "Candidate") {
@@ -85,7 +100,6 @@ function PaymentPage() {
 
       const rzp = new window.Razorpay(options);
       rzp.open();
-
     } catch (error) {
       console.error(error);
       toast.error("Payment failed. Please try again.");
@@ -99,10 +113,7 @@ function PaymentPage() {
         <p className="text-muted">{user?.role} Account Activation</p>
         <h3>{displayAmount}</h3>
 
-        <button
-          className="btn btn-primary w-100 mt-3"
-          onClick={openRazorpay}
-        >
+        <button className="btn btn-primary w-100 mt-3" onClick={openRazorpay}>
           Pay Now
         </button>
       </div>

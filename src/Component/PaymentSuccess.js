@@ -41,16 +41,20 @@ function PaymentSuccess() {
 
         <div className="border rounded p-3 mt-3 text-start">
           <p>
-            <strong>Amount:</strong> {payment.amount}
+            <strong>Amount:</strong> 
+            {/* {payment.amount} */}
           </p>
           <p>
-            <strong>Email:</strong> {payment.email}
+            <strong>Email:</strong> 
+            {/* {payment.email} */}
           </p>
           <p>
-            <strong>Role:</strong> {payment.role}
+            <strong>Role:</strong> 
+            {/* {payment.role} */}
           </p>
           <p>
-            <strong>Date:</strong> {payment.date}
+            <strong>Date:</strong>
+             {/* {payment.date} */}
           </p>
         </div>
 
@@ -61,14 +65,14 @@ function PaymentSuccess() {
           📄 Generate PDF Receipt
         </button>
 
-        <button
+        {/* <button
           className="btn btn-success w-100 mt-2"
           onClick={() =>
             navigate(payment.role === "Candidate" ? "/profile" : "/emp-profile")
           }
         >
           Go to Dashboard
-        </button>
+        </button> */}
       </div>
     </div>
   );

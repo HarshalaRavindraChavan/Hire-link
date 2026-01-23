@@ -79,11 +79,11 @@ function PaymentPage() {
             navigate("/payment-success");
 
             // 3️⃣ Redirect based on role
-            if (user.role === "Candidate") {
-              navigate("/profile");
-            } else {
-              navigate("/emp-profile");
-            }
+            // if (user.role === "Candidate") {
+            //   navigate("/profile");
+            // } else {
+            //   navigate("/emp-profile");
+            // }
           } else {
             toast.error("Payment verification failed");
           }

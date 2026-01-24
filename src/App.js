@@ -96,6 +96,8 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgot" element={<Forgot />} />
         <Route path="/receipt" element={<Receipt />} />
+        <Route path="/payment" element={<PaymentPage />} />
+        <Route path="/payment-success" element={<PaymentSuccess />} />
 
         {/* ---------- USER ---------- */}
         <Route element={<UserLayout />}>
@@ -109,9 +111,6 @@ function App() {
           <Route path="contacts" element={<Contacts />} />
           <Route path="about" element={<About />} />
           <Route path="help" element={<Help />} />
-
-          <Route path="payment" element={<PaymentPage />} />
-          <Route path="payment-success" element={<PaymentSuccess/>} />
 
           <Route path="candidate-return-policy" element={<Creturnpolicy />} />
           <Route
@@ -156,8 +155,7 @@ function App() {
           <Route path="offer" element={<Offer />} />
           <Route path="contact" element={<Contact />} />
           <Route path="user" element={<Users />} />
-         <Route path="staff" element={<Staff />} />
-
+          <Route path="staff" element={<Staff />} />
         </Route>
       </Routes>
     </BrowserRouter>

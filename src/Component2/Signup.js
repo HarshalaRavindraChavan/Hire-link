@@ -18,7 +18,7 @@ const Signup = () => {
   const navigate = useNavigate();
 
   // ✅ FIX 1: activeRole state
-  const [activeRole, setActiveRole] = useState("Candidate");
+  const [activeRole, setActiveRole] = useState("candidate");
   const [loading, setLoading] = useState(false);
   const [captchaToken, setCaptchaToken] = useState(null);
 
@@ -141,7 +141,7 @@ const Signup = () => {
       let payload = {};
 
       // ✅ Role wise API + payload
-      if (activeRole === "Candidate") {
+      if (activeRole === "candidate") {
         url = `${BASE_URL}hirelink_apis/candidate/signup/tbl_candidate`;
         payload = {
           can_name: values.fullname,
@@ -149,6 +149,7 @@ const Signup = () => {
           can_password: values.password,
           can_mobile: values.mobile,
           can_status: "Active",
+          can_pay_status: "Pending",
           captchaToken: captchaToken,
         };
       } else {
@@ -159,6 +160,7 @@ const Signup = () => {
           emp_password: values.password,
           emp_mobile: values.mobile,
           emp_status: "Active",
+          emp_pay_status: "Pending",
           captchaToken: captchaToken,
         };
       }
@@ -170,8 +172,9 @@ const Signup = () => {
         toast.success(`${activeRole} Signup successful! Complete payment ✅`);
 
         // ✅ Store full data in localStorage (same as your first code)
-        if (activeRole === "Candidate") {
-          localStorage.setItem("candidate", JSON.stringify(data.data));
+        if (activeRole === "candidate") {
+          //store data after signup
+          // localStorage.setItem("candidate", JSON.stringify(data.data));
 
           // ✅ FCM token (optional)
           if (data.data?.can_id) {
@@ -189,7 +192,7 @@ const Signup = () => {
           );
 
           // ✅ full employer row store
-          localStorage.setItem("employer", JSON.stringify(data.data));
+          // localStorage.setItem("employer", JSON.stringify(data.data));
         }
 
         // ✅ store payment user info
@@ -198,6 +201,7 @@ const Signup = () => {
           JSON.stringify({
             email: values.email,
             role: activeRole,
+            for: "Account Creat",
           }),
         );
 
@@ -378,9 +382,9 @@ const Signup = () => {
                   <button
                     type="button"
                     className={`role-pill ${
-                      activeRole === "Candidate" ? "active" : ""
+                      activeRole === "candidate" ? "active" : ""
                     }`}
-                    onClick={() => setActiveRole("Candidate")}
+                    onClick={() => setActiveRole("candidate")}
                   >
                     Candidate
                   </button>
@@ -388,9 +392,9 @@ const Signup = () => {
                   <button
                     type="button"
                     className={`role-pill ${
-                      activeRole === "Employer" ? "active" : ""
+                      activeRole === "employer" ? "active" : ""
                     }`}
-                    onClick={() => setActiveRole("Employer")}
+                    onClick={() => setActiveRole("employer")}
                   >
                     Employer / Recruiter
                   </button>

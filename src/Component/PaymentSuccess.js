@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
 import Receipt from "../Component2/Receipt";
+import { toast } from "react-toastify";
 
 function PaymentSuccess() {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ function PaymentSuccess() {
       receiptNo: saved.receiptNo || `RCPT-${Date.now().toString().slice(-8)}`,
       paymentFor:
         saved.paymentFor ||
-        (saved.role === "Candidate"
+        (saved.role?.toLowerCase() === "candidate"
           ? "Candidate Signup Fee"
           : "Employer Signup Fee"),
       date: saved.date || new Date().toLocaleString(),
@@ -30,8 +30,6 @@ function PaymentSuccess() {
 
     setPayment(finalPayment);
   }, [navigate]);
-
-  if (!payment) return null;
 
   const makeSafeFileName = (text = "") => {
     return text
@@ -50,113 +48,73 @@ function PaymentSuccess() {
     return `${yyyy}-${mm}-${dd}`;
   };
 
-  const generatePDF = async () => {
+  const downloadPDF = async () => {
     try {
       setLoading(true);
 
       const receiptElement = document.getElementById("receipt-print-area");
       if (!receiptElement) {
-        alert("Receipt UI not found!");
-        setLoading(false);
+        toast.error("Receipt UI not found!");
         return;
       }
 
-      // ✅ capture receipt UI exactly as it is
-      const canvas = await html2canvas(receiptElement, {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: "#ffffff",
+      // ✅ REAL PDF (not canvas image)
+      const pdf = new jsPDF("p", "mm", "a4");
+
+      await pdf.html(receiptElement, {
+        x: 10,
+        y: 10,
+        width: 190, // A4 usable width
+        windowWidth: 600, // must match hidden receipt div width
+        autoPaging: "text",
       });
 
-      const imgData = canvas.toDataURL("image/png");
-
-      // ✅ create pdf
-      const pdf = new jsPDF("p", "mm", "a4");
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-
-      const imgWidth = pdfWidth;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      let heightLeft = imgHeight;
-      let position = 0;
-
-      // ✅ multi-page support (if receipt height is bigger)
-      while (heightLeft > 0) {
-        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-        heightLeft -= pdfHeight;
-
-        if (heightLeft > 0) {
-          position -= pdfHeight;
-          pdf.addPage();
-        }
-      }
-
-      // ✅ PDF name format: Description-Receipt-Date.pdf
-      const desc = makeSafeFileName(payment.paymentFor || "Payment");
+      const desc = makeSafeFileName(payment?.paymentFor || "Payment");
       const fileDate = getFileDate();
       const fileName = `${desc}-Receipt-${fileDate}.pdf`;
 
       pdf.save(fileName);
 
-      // ✅ redirect ONLY after pdf generated/downloaded
-      if (payment.role === "Candidate") navigate("/profile");
-      else navigate("/emp-profile");
+      toast.success("Receipt downloaded ✅ Redirecting to login in 5 sec...");
+
+      setTimeout(() => {
+        navigate("/signin");
+      }, 5000);
     } catch (err) {
       console.log(err);
-      alert("PDF generate failed!");
+      toast.error("PDF download failed!");
     } finally {
       setLoading(false);
     }
   };
 
+  if (!payment) return null;
+
   return (
     <div className="container d-flex justify-content-center align-items-center vh-100">
-      {/* ✅ Payment Success UI ONLY */}
-      <div className="card shadow p-4 text-center" style={{ maxWidth: 520 }}>
-        <h2 className="text-success">Payment Successful 🎉</h2>
-        <p className="text-muted mt-2">
-          PDF Receipt download करून पुढे जाईल ✅
-        </p>
+      {/* ✅ Only Download button UI */}
+      <div className="card shadow p-4 text-center" style={{ maxWidth: 420 }}>
+        <h3 className="text-success mb-1">Payment Successful 🎉</h3>
 
-        <div className="border rounded p-3 mt-3 text-start">
-          <p>
-            <strong>Email:</strong> {payment.email}
-          </p>
-          <p>
-            <strong>Role:</strong> {payment.role}
-          </p>
-          <p>
-            <strong>Payment For:</strong> {payment.paymentFor}
-          </p>
-          <p>
-            <strong>Amount:</strong> {payment.amount}
-          </p>
-        </div>
+        <p className="text-muted" style={{ fontSize: 14 }}>
+          Download your receipt and you will be redirected to Login page.
+        </p>
 
         <button
-          className="btn btn-success w-100 mt-3"
-          onClick={generatePDF}
+          className="btn btn-success w-100 mt-2"
+          onClick={downloadPDF}
           disabled={loading}
         >
-          {loading ? "Generating PDF..." : "📄 Download Receipt PDF & Continue"}
+          {loading ? "Generating PDF..." : "📄 Download Receipt PDF"}
         </button>
 
-        <p className="text-muted mt-2" style={{ fontSize: 13 }}>
-          Redirect फक्त PDF download नंतर होईल ✅
-        </p>
+        <small className="text-muted d-block mt-2">
+          Redirecting in 5 seconds...
+        </small>
       </div>
 
-      {/* ✅ Receipt UI Hidden (User ला दिसणार नाही पण PDF capture होईल) */}
-      <div
-        style={{
-          position: "fixed",
-          left: "-9999px",
-          top: 0,
-          width: "700px",
-          background: "#fff",
-        }}
-      >
+      {/* ✅ Hidden Receipt UI (for PDF only) */}
+      <div className="d-none" style={{ width: "700px", background: "#fff" }}>
         <Receipt payment={payment} />
       </div>
     </div>

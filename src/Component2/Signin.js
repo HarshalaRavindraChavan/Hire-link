@@ -21,9 +21,9 @@ function Signin() {
   const [captchaToken, setCaptchaToken] = useState(null);
 
   // ✅ FIX 1: activeRole state
-  const [activeRole, setActiveRole] = useState("Candidate");
+  const [activeRole, setActiveRole] = useState("candidate");
   useEffect(() => {
-    if (activeRole === "Candidate") {
+    if (activeRole === "candidate") {
       localStorage.removeItem("auth");
       localStorage.removeItem("employer");
     } else {
@@ -47,7 +47,6 @@ function Signin() {
         .required("Password is required"),
     }),
 
-    // Api fecth code
     onSubmit: async (values, { resetForm }) => {
       if (!captchaToken) {
         toast.error("Please verify captcha!");
@@ -60,9 +59,8 @@ function Signin() {
         let url = "";
         let payload = {};
 
-        if (activeRole === "Candidate") {
+        if (activeRole === "candidate") {
           url = `${BASE_URL}hirelink_apis/candidate/signin/tbl_candidate`;
-
           payload = {
             can_email: values.email,
             can_password: values.password,
@@ -70,7 +68,6 @@ function Signin() {
           };
         } else {
           url = `${BASE_URL}hirelink_apis/employer/signin/tbl_employer`;
-
           payload = {
             emp_email: values.email,
             emp_password: values.password,
@@ -81,17 +78,18 @@ function Signin() {
         const response = await axios.post(url, payload);
         const data = response.data;
 
+        // ✅ ✅ 1) LOGIN SUCCESS => Store data and navigate
         if (data.status === true) {
           toast.success("Login successful!");
 
-          if (activeRole === "Candidate") {
+          if (activeRole === "candidate") {
             localStorage.setItem("candidate", JSON.stringify(data.data));
-            saveFcmToken(data.data.can_id);
-            if (data.payment_status === "success") {
-              navigate("/profile");
-            } else {
-              navigate("/payment");
+
+            if (data.data?.can_id) {
+              saveFcmToken(data.data.can_id);
             }
+
+            navigate("/profile");
           } else {
             localStorage.setItem(
               "auth",
@@ -103,25 +101,58 @@ function Signin() {
               }),
             );
 
-            // 🔹 FULL employer table data
-            localStorage.setItem(
-              "employer",
-              JSON.stringify(data.data), // 🔥 full row
-            );
+            localStorage.setItem("employer", JSON.stringify(data.data));
 
-            setTimeout(() => {
-              navigate("/emp-profile");
-            }, 1200);
+            navigate("/emp-profile");
           }
 
           resetForm();
-        } else {
-          toast.error(data.message || "Login failed");
+          return;
         }
+
+        // ✅ ✅ 2) PAYMENT REQUIRED => Don't store candidate/employer, go payment
+        if (data.payment_required === true) {
+          toast.error(
+            data.message || "Payment pending. Please complete payment.",
+          );
+
+          localStorage.setItem(
+            "paymentUser",
+            JSON.stringify({
+              email: values.email,
+              role: activeRole.toLowerCase(), // ✅ must be "candidate" / "employer"
+            }),
+          );
+
+          navigate("/payment");
+          return;
+        }
+
+        // ✅ ✅ 3) Normal fail
+        toast.error(data.message || "Login failed");
       } catch (error) {
-        toast.error(
-          error.response?.data?.message || "Invalid email or password",
-        );
+        const errData = error.response?.data;
+
+        // ✅ Payment pending -> redirect to payment
+        if (errData?.payment_required === true) {
+          toast.error(
+            errData.message || "Payment pending. Please complete payment.",
+          );
+
+          localStorage.setItem(
+            "paymentUser",
+            JSON.stringify({
+              email: values.email,
+              role: activeRole.toLowerCase(),
+              for: "Account Creat",
+            }),
+          );
+
+          navigate("/payment");
+          return;
+        }
+
+        toast.error(errData?.message || "Invalid email or password");
       } finally {
         setLoading(false);
       }
@@ -274,9 +305,9 @@ function Signin() {
                   <button
                     type="button"
                     className={`role-pill ${
-                      activeRole === "Candidate" ? "active" : ""
+                      activeRole === "candidate" ? "active" : ""
                     }`}
-                    onClick={() => setActiveRole("Candidate")}
+                    onClick={() => setActiveRole("candidate")}
                   >
                     Candidate
                   </button>
@@ -284,9 +315,9 @@ function Signin() {
                   <button
                     type="button"
                     className={`role-pill ${
-                      activeRole === "Employer" ? "active" : ""
+                      activeRole === "employer" ? "active" : ""
                     }`}
-                    onClick={() => setActiveRole("Employer")}
+                    onClick={() => setActiveRole("employer")}
                   >
                     Employer / Recruiter
                   </button>
@@ -300,7 +331,7 @@ function Signin() {
                 disabled={loading || !captchaToken}
               >
                 {loading
-                  ? activeRole === "Candidate"
+                  ? activeRole === "candidate"
                     ? "Logging in as Candidate..."
                     : "Logging in as Employer..."
                   : "Login"}

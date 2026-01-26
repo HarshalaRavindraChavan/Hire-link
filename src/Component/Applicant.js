@@ -287,7 +287,7 @@ function Applicant() {
             <thead className="table-light text-center">
               <tr className="text-center">
                 <th className="fs-6 fw-bold">ID</th>
-                <th className="fs-6 fw-bold">Applyer Detail</th>
+                <th className="fs-6 fw-bold">Applicant Detail</th>
                 <th className="fs-6 fw-bold">Applied Job</th>
                 <th className="fs-6 fw-bold">Other Detail</th>
               </tr>

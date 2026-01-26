@@ -7,12 +7,20 @@ function Sidebar() {
 
   const auth = JSON.parse(localStorage.getItem("auth"));
   const employer = JSON.parse(localStorage.getItem("employer"));
+  const admin = JSON.parse(localStorage.getItem("admin"));
 
   const role = auth?.role;
   let displayName = "";
   let com_logo = logo;
   // let displayEmail = "";
   const roleNum = Number(role);
+
+  const roleNames = {
+    1: "Super Admin",
+    2: "Sub Admin",
+    3: "Backend",
+    4: "Accountant",
+  };
 
   if (Number(role) === 100) {
     displayName = employer?.emp_name || "Employer";
@@ -23,8 +31,7 @@ function Sidebar() {
       com_logo = logo;
     }
   } else if (roleNum >= 1 && roleNum <= 10) {
-    displayName = "Admin";
-    // displayEmail = "";
+    displayName = roleNames[roleNum];
     com_logo = logo;
   }
 
@@ -404,7 +411,7 @@ function Sidebar() {
                             ?.split(" ")
                             .map(
                               (word) =>
-                                word.charAt(0).toUpperCase() + word.slice(1)
+                                word.charAt(0).toUpperCase() + word.slice(1),
                             )
                             .join(" ")}
                         </h5>

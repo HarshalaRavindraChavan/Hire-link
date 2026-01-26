@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
 import image from "./logo/no image.jpg";
 import Pagination from "./commenuse/Pagination";
@@ -19,11 +20,37 @@ function Candidates() {
   const [search, setSearch] = useState("");
   const [candidates, setCandidates] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   // const [search, setSearch] = useState("");
   const [experience, setExperience] = useState("");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
+
+  useEffect(() => {
+    const paymentUser = JSON.parse(localStorage.getItem("paymentUser") || "{}");
+    const paymentDone = localStorage.getItem("paymentDone");
+
+    if (
+      paymentDone === "true" &&
+      paymentUser?.role === "resume_download" &&
+      paymentUser?.resumeFile
+    ) {
+      const fileUrl = `${BASE_URL}hirelink_apis/Uploads/${paymentUser.resumeFile}`;
+
+      // ✅ Direct download
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.setAttribute("download", paymentUser.resumeFile);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // ✅ Clear payment flags
+      localStorage.removeItem("paymentDone");
+      localStorage.removeItem("paymentUser");
+    }
+  }, []);
 
   //==================== get All candidate
   useEffect(() => {
@@ -34,7 +61,7 @@ function Candidates() {
     try {
       setLoading(true);
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/getdata/tbl_candidate`
+        `${BASE_URL}hirelink_apis/admin/getdata/tbl_candidate`,
       );
 
       if (res.data.status === true) {
@@ -70,7 +97,7 @@ function Candidates() {
   const confirmDelete = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/deletedata/tbl_candidate/can_id/${deleteId}`
+        `${BASE_URL}hirelink_apis/admin/deletedata/tbl_candidate/can_id/${deleteId}`,
       );
 
       if (res.data.status === true) {
@@ -124,7 +151,7 @@ function Candidates() {
     try {
       const res = await axios.post(
         `${BASE_URL}hirelink_apis/admin/insert/tbl_candidate`,
-        payload
+        payload,
       );
 
       if (res.data.status) {
@@ -156,7 +183,7 @@ function Candidates() {
         `${BASE_URL}hirelink_apis/admin/updatedata/tbl_candidate/can_id/${canId}`,
         {
           can_status: newStatus,
-        }
+        },
       );
 
       if (res.data?.status === true) {
@@ -165,8 +192,8 @@ function Candidates() {
         // ✅ instant UI update
         setCandidates((prev) =>
           prev.map((c) =>
-            c.can_id === canId ? { ...c, can_status: newStatus } : c
-          )
+            c.can_id === canId ? { ...c, can_status: newStatus } : c,
+          ),
         );
       } else {
         toast.error("Status update failed ❌");
@@ -221,7 +248,7 @@ function Candidates() {
     if (experience === "5+") matchesExperience = exp >= 5;
 
     // 📅 DATE FILTER
-    const regDate = new Date(candidate?.register_date);
+    const regDate = new Date(candidate?.can_added_date);
     const from = fromDate ? new Date(fromDate) : null;
     const to = toDate ? new Date(toDate) : null;
 
@@ -233,9 +260,68 @@ function Candidates() {
     return matchesSearch && matchesExperience && matchesDate;
   });
 
+  const handleResumeDownload = async (candidate) => {
+    try {
+      const employer = JSON.parse(localStorage.getItem("employer") || "{}");
+
+      if (!employer?.emp_email) {
+        toast.error("Please login as Employer first!");
+        navigate("/signin");
+        return;
+      }
+
+      if (!candidate?.can_id || !candidate?.can_resume) {
+        toast.error("Resume not available!");
+        return;
+      }
+
+      // ✅ Check payment done for this employer + this candidate
+      const checkRes = await axios.post(
+        `${BASE_URL}hirelink_apis/payment/check-resume-payment`,
+        {
+          email: employer.emp_email,
+          candidate_id: candidate.can_id,
+        },
+      );
+
+      // ✅ If paid => download resume now
+      if (checkRes.data?.status === true && checkRes.data?.paid === true) {
+        const fileUrl = `${BASE_URL}hirelink_apis/Uploads/${candidate.can_resume}`;
+
+        const link = document.createElement("a");
+        link.href = fileUrl;
+        link.setAttribute("download", candidate.can_resume);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        return;
+      }
+
+      // ❌ Not paid => redirect to payment page
+      toast.error("Pay ₹60 to download this resume");
+
+      localStorage.setItem(
+        "paymentUser",
+        JSON.stringify({
+          email: employer.emp_email,
+          role: "resume_download",
+          for: "Resume Download",
+          candidate_id: candidate.can_id,
+          resumeFile: candidate.can_resume,
+          returnTo: "/candidate",
+        }),
+      );
+
+      navigate("/payment");
+    } catch (err) {
+      console.log(err);
+      toast.error("Payment check failed!");
+    }
+  };
+
   return (
     <>
-    <SEO
+      <SEO
         title={seoConfig.a_candidates.title}
         description={seoConfig.a_candidates.description}
       />
@@ -454,7 +540,7 @@ function Candidates() {
                             onChange={(e) =>
                               handleCandidateStatusChange(
                                 candidate.can_id,
-                                e.target.value
+                                e.target.value,
                               )
                             }
                           >
@@ -477,14 +563,14 @@ function Candidates() {
 
                     <td className="text-center">
                       {candidate.can_resume ? (
-                        <a
-                          href={`${BASE_URL}hirelink_apis/Uploads/${candidate.can_resume}`}
-                          download
+                        <button
+                          type="button"
                           className="btn btn-sm btn-outline-success"
+                          onClick={() => handleResumeDownload(candidate)}
                         >
                           <i className="fas fa-download me-1"></i>
                           Download
-                        </a>
+                        </button>
                       ) : (
                         <span className="text-muted">No Resume</span>
                       )}

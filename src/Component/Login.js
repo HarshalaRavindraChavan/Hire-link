@@ -62,9 +62,11 @@ function Login() {
             JSON.stringify({
               role: response.data.data.user_role,
               user_id: response.data.data.user_id,
-              menu_ids: menuIds, // 👈 STANDARD NAME
+              menu_ids: menuIds, 
             })
           );
+
+          localStorage.setItem("admin", JSON.stringify(data.data));
 
           // ✅ SUCCESS TOAST
           toast.success("Login successful! Redirecting...");

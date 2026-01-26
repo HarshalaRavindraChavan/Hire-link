@@ -17,15 +17,32 @@ function PaymentPage() {
 
   const createOrder = async () => {
     try {
+      
+      if (!user?.role) {
+        toast.error("Role missing");
+        return;
+      }
+
       setErrorMsg("");
       setLoading(true);
 
+      const roleLower = String(user.role).toLowerCase();
+
+      // ✅ payload तयार कर
+      const payload = {
+        email: user.email,
+        role: roleLower,
+        for: user.for,
+      };
+
+      // ✅ फक्त resume_download असेल तेव्हाच candidate_id add कर
+      if (roleLower === "resume_download") {
+        payload.candidate_id = user.candidate_id;
+      }
+
       const { data } = await axios.post(
         `${BASE_URL}hirelink_apis/payment/create-order`,
-        {
-          email: user.email,
-          role: user.role,
-        },
+        payload,
       );
 
       if (!data.status) {
@@ -44,7 +61,6 @@ function PaymentPage() {
     } catch (error) {
       console.error(error);
 
-      // ✅ 503 special message
       if (error?.response?.status === 503) {
         setErrorMsg("Server down (503). Please try again after sometime.");
         toast.error("Server down (503). Please try again.");
@@ -92,16 +108,24 @@ function PaymentPage() {
         order_id: orderData.id,
 
         handler: async (response) => {
+          const roleLower = String(user.role).toLowerCase();
+
+          const verifyPayload = {
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_signature: response.razorpay_signature,
+            email: user.email,
+            role: roleLower,
+            for: user.for,
+          };
+
+          if (roleLower === "resume_download") {
+            verifyPayload.candidate_id = user.candidate_id;
+          }
+
           const verify = await axios.post(
             `${BASE_URL}hirelink_apis/payment/verify`,
-            {
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_signature: response.razorpay_signature,
-              email: user.email,
-              role: user.role,
-              for: user.for,
-            },
+            verifyPayload,
           );
 
           if (verify.data.status) {
@@ -114,7 +138,7 @@ function PaymentPage() {
                 paymentId: response.razorpay_payment_id,
                 orderId: response.razorpay_order_id,
                 email: user.email,
-                role: user.role,
+                role: String(user.role).toLowerCase(),
                 for: user.for,
                 amount: displayAmount,
                 date: new Date().toLocaleString(),

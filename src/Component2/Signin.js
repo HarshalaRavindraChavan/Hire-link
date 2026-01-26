@@ -133,6 +133,22 @@ function Signin() {
       } catch (error) {
         const errData = error.response?.data;
 
+        // ✅ OTP required -> redirect verify
+        if (errData?.otp_required === true) {
+          toast.error(errData.message || "OTP verification required");
+
+          localStorage.setItem(
+            "verifyUser",
+            JSON.stringify({
+              email: errData.email || values.email,
+              role: activeRole,
+            }),
+          );
+
+          navigate("/verify");
+          return;
+        }
+
         // ✅ Payment pending -> redirect to payment
         if (errData?.payment_required === true) {
           toast.error(

@@ -168,8 +168,8 @@ const Signup = () => {
       const response = await axios.post(url, payload);
       const data = response.data;
 
-      if (data.status === true) {
-        toast.success(`${activeRole} Signup successful! Complete payment ✅`);
+      if (data?.status === true || data?.status === "success") {
+        toast.success("Signup successful! OTP sent to your email ✅");
 
         // ✅ Store full data in localStorage (same as your first code)
         if (activeRole === "candidate") {
@@ -180,36 +180,36 @@ const Signup = () => {
           if (data.data?.can_id) {
             saveFcmToken(data.data.can_id);
           }
-        } else {
-          // ✅ auth store (same as old code)
-          localStorage.setItem(
-            "auth",
-            JSON.stringify({
-              role: 100,
-              emp_id: data.data.emp_id,
-              emp_companyname: data.data.emp_companyname,
-            }),
-          );
-
-          // ✅ full employer row store
-          // localStorage.setItem("employer", JSON.stringify(data.data));
         }
+        // else {
+        //   // ✅ auth store (same as old code)
+        //   localStorage.setItem(
+        //     "auth",
+        //     JSON.stringify({
+        //       role: 100,
+        //       emp_id: data.data.emp_id,
+        //       emp_companyname: data.data.emp_companyname,
+        //     }),
+        //   );
+
+        //   // ✅ full employer row store
+        //   // localStorage.setItem("employer", JSON.stringify(data.data));
+        // }
 
         // ✅ store payment user info
         localStorage.setItem(
-          "paymentUser",
+          "verifyUser",
           JSON.stringify({
             email: values.email,
             role: activeRole,
-            for: "Account Creat",
           }),
         );
 
         reset();
 
-        // ✅ Redirect to payment page
+        // ✅ go to verify page first
         setTimeout(() => {
-          navigate("/payment");
+          navigate("/verify");
         }, 1000);
       } else {
         toast.error(data.message || "Signup failed");

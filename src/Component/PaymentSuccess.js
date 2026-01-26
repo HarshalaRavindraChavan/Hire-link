@@ -9,6 +9,8 @@ function PaymentSuccess() {
   const [payment, setPayment] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const [count, setCount] = useState(null); // ✅ countdown state
+
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("paymentDetails"));
 
@@ -24,12 +26,32 @@ function PaymentSuccess() {
         saved.paymentFor ||
         (saved.role?.toLowerCase() === "candidate"
           ? "Candidate Signup Fee"
-          : "Employer Signup Fee"),
+          : saved.role?.toLowerCase() === "employer"
+            ? "Employer Signup Fee"
+            : saved.role?.toLowerCase() === "resume_download"
+              ? "Resume Download Fee"
+              : "Payment"),
       date: saved.date || new Date().toLocaleString(),
     };
 
     setPayment(finalPayment);
   }, [navigate]);
+
+  // ✅ countdown चालवणारा effect
+  useEffect(() => {
+    if (count === null) return;
+    if (count === 0) {
+      const paymentUser = JSON.parse(
+        localStorage.getItem("paymentUser") || "{}",
+      );
+      const returnTo = paymentUser?.returnTo || "/signin";
+      navigate(returnTo);
+      return;
+    }
+
+    const timer = setTimeout(() => setCount((c) => c - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [count, navigate]);
 
   const makeSafeFileName = (text = "") => {
     return text
@@ -50,6 +72,9 @@ function PaymentSuccess() {
 
   const downloadPDF = async () => {
     try {
+      // ✅ click करताच countdown start
+      if (count === null) setCount(5);
+
       setLoading(true);
 
       const receiptElement = document.getElementById("receipt-print-area");
@@ -58,14 +83,13 @@ function PaymentSuccess() {
         return;
       }
 
-      // ✅ REAL PDF (not canvas image)
       const pdf = new jsPDF("p", "mm", "a4");
 
       await pdf.html(receiptElement, {
         x: 10,
         y: 10,
-        width: 190, // A4 usable width
-        windowWidth: 600, // must match hidden receipt div width
+        width: 190,
+        windowWidth: 600,
         autoPaging: "text",
       });
 
@@ -74,12 +98,6 @@ function PaymentSuccess() {
       const fileName = `${desc}-Receipt-${fileDate}.pdf`;
 
       pdf.save(fileName);
-
-      toast.success("Receipt downloaded ✅ Redirecting to login in 5 sec...");
-
-      setTimeout(() => {
-        navigate("/signin");
-      }, 5000);
     } catch (err) {
       console.log(err);
       toast.error("PDF download failed!");
@@ -92,7 +110,6 @@ function PaymentSuccess() {
 
   return (
     <div className="container d-flex justify-content-center align-items-center vh-100">
-      {/* ✅ Only Download button UI */}
       <div className="card shadow p-4 text-center" style={{ maxWidth: 420 }}>
         <h3 className="text-success mb-1">Payment Successful 🎉</h3>
 
@@ -108,9 +125,12 @@ function PaymentSuccess() {
           {loading ? "Generating PDF..." : "📄 Download Receipt PDF"}
         </button>
 
-        <small className="text-muted d-block mt-2">
-          Redirecting in 5 seconds...
-        </small>
+        {/* ✅ countdown show only after download click */}
+        {count !== null ? (
+          <small className="text-muted d-block mt-2">
+            Redirecting in {count} seconds...
+          </small>
+        ) : null}
       </div>
 
       {/* ✅ Hidden Receipt UI (for PDF only) */}

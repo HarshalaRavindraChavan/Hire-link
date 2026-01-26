@@ -62,7 +62,7 @@ function Jobs() {
   const fetchStates = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdata/tbl_state`
+        `${BASE_URL}hirelink_apis/candidate/getdata/tbl_state`,
       );
 
       if (res.data?.status) {
@@ -76,7 +76,7 @@ function Jobs() {
   const fetchCities = async (stateId, selectedCity = null) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_city/city_state_id/${stateId}`
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_city/city_state_id/${stateId}`,
       );
 
       if (res.data?.status) {
@@ -118,7 +118,7 @@ function Jobs() {
       // EMPLOYER → ONLY HIS DATA
       if (Number(role) === 100) {
         res = await axios.get(
-          `${BASE_URL}hirelink_apis/employer/getdatawhere/tbl_job/job_employer_id/${employerId}`
+          `${BASE_URL}hirelink_apis/employer/getdatawhere/tbl_job/job_employer_id/${employerId}`,
         );
       }
 
@@ -156,7 +156,7 @@ function Jobs() {
   const confirmDelete = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/deletedata/tbl_job/job_id/${deleteId}`
+        `${BASE_URL}hirelink_apis/admin/deletedata/tbl_job/job_id/${deleteId}`,
       );
 
       if (res.data.status === true) {
@@ -225,7 +225,7 @@ function Jobs() {
 
   const toMySQLDateTimeIST = (date) => {
     const istDate = new Date(
-      date.toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
+      date.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
     );
 
     const pad = (n) => String(n).padStart(2, "0");
@@ -287,7 +287,7 @@ function Jobs() {
 
       const res = await axios.post(
         `${BASE_URL}hirelink_apis/admin/insert/tbl_job`,
-        payload
+        payload,
       );
 
       if (res.data?.status === true) {
@@ -312,14 +312,14 @@ function Jobs() {
         modal.hide();
       } else {
         toast.error(
-          res.data?.message || "Failed to add job. Please try again."
+          res.data?.message || "Failed to add job. Please try again.",
         );
       }
     } catch (error) {
       console.error("Add job error:", error);
 
       toast.error(
-        error.response?.data?.message || "Failed to add job. Please try again."
+        error.response?.data?.message || "Failed to add job. Please try again.",
       );
     }
   };
@@ -376,7 +376,7 @@ function Jobs() {
   const fetchCategories = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/getdata/tbl_main_category`
+        `${BASE_URL}hirelink_apis/admin/getdata/tbl_main_category`,
       );
       setCategories(res.data.data || []);
     } catch (err) {
@@ -397,7 +397,7 @@ function Jobs() {
   const fetchSubCategories = async (mc_id) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/getdatawhere/tbl_subcategory/sc_mc_id/${mc_id}`
+        `${BASE_URL}hirelink_apis/admin/getdatawhere/tbl_subcategory/sc_mc_id/${mc_id}`,
       );
       setSubCategories(res.data.data || []);
     } catch (err) {
@@ -418,7 +418,7 @@ function Jobs() {
   const fetchSubCat1 = async (sc_id) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/getdatawhere/tbl_subcategory_1/sc1_sc_id/${sc_id}`
+        `${BASE_URL}hirelink_apis/admin/getdatawhere/tbl_subcategory_1/sc1_sc_id/${sc_id}`,
       );
       setSubCat1(res.data.data || []);
     } catch (err) {
@@ -439,7 +439,7 @@ function Jobs() {
   const fetchSubCat2 = async (sc1_id) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/getdatawhere/tbl_subcategory_2/sc2_sc1_id/${sc1_id}`
+        `${BASE_URL}hirelink_apis/admin/getdatawhere/tbl_subcategory_2/sc2_sc1_id/${sc1_id}`,
       );
       setSubCat2(res.data.data || []);
     } catch (err) {
@@ -460,7 +460,7 @@ function Jobs() {
   const fetchSubCat3 = async (sc2_id) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/getdatawhere/tbl_subcategory_3/sc3_sc2_id/${sc2_id}`
+        `${BASE_URL}hirelink_apis/admin/getdatawhere/tbl_subcategory_3/sc3_sc2_id/${sc2_id}`,
       );
       setSubCat3(res.data.data || []);
     } catch (err) {
@@ -560,7 +560,7 @@ function Jobs() {
 
       const response = await axios.post(
         `${BASE_URL}hirelink_apis/admin/updatedata/tbl_job/job_id/${editJobId}`,
-        payload
+        payload,
       );
 
       if (response?.data?.status === true) {
@@ -602,7 +602,7 @@ function Jobs() {
 
       await axios.post(
         `${BASE_URL}hirelink_apis/admin/updatedata/tbl_job/job_id/${jobId}`,
-        { job_status: "Active" }
+        { job_status: "Active" },
       );
 
       fetchJobs();
@@ -876,13 +876,15 @@ function Jobs() {
                       </div> */}
                     </td>
                     <td className="text-center">
-                      {job.job_status === "Active" ? (
+                      {job.job_status === "Closed" ? (
+                        <span className="badge bg-danger">Closed</span>
+                      ) : job.job_status === "Active" ? (
                         <span className="badge bg-success">Active</span>
                       ) : (
                         (() => {
                           const end = job.job_processing_end
                             ? new Date(
-                                job.job_processing_end.replace(" ", "T")
+                                job.job_processing_end.replace(" ", "T"),
                               ).getTime()
                             : null;
 
@@ -895,12 +897,6 @@ function Jobs() {
                           }
 
                           const diff = end - timeNow;
-
-                          // ✅ DEBUG LOGS
-                          console.log("END:", job.job_processing_end);
-                          console.log("END_TIME:", end);
-                          console.log("NOW:", timeNow);
-                          console.log("DIFF:", diff);
 
                           if (diff <= 0 && job.job_status === "Processing") {
                             markJobActive(job.job_id);
@@ -1019,7 +1015,7 @@ function Jobs() {
                       handleSelectChange(
                         "job_sc",
                         e.target.value,
-                        setSelectedSubCategory
+                        setSelectedSubCategory,
                       )
                     }
                     disabled={!selectedCategory || subCategories.length === 0}
@@ -1045,7 +1041,7 @@ function Jobs() {
                       handleSelectChange(
                         "job_sc1",
                         e.target.value,
-                        setSelectedSubCat1
+                        setSelectedSubCat1,
                       )
                     }
                     disabled={!selectedSubCategory || subCat1.length === 0}
@@ -1077,7 +1073,7 @@ function Jobs() {
                       handleSelectChange(
                         "job_sc2",
                         e.target.value,
-                        setSelectedSubCat2
+                        setSelectedSubCat2,
                       )
                     }
                     disabled={!selectedSubCat1 || subCat2.length === 0}
@@ -1103,7 +1099,7 @@ function Jobs() {
                       handleSelectChange(
                         "job_sc3",
                         e.target.value,
-                        setSelectedSubCat3
+                        setSelectedSubCat3,
                       )
                     }
                     disabled={!selectedSubCat2 || subCat3.length === 0}
@@ -1479,7 +1475,7 @@ function Jobs() {
                       handleSelectChange(
                         "job_sc",
                         e.target.value,
-                        setSelectedSubCategory
+                        setSelectedSubCategory,
                       )
                     }
                     disabled={!selectedCategory || subCategories.length === 0}
@@ -1505,7 +1501,7 @@ function Jobs() {
                       handleSelectChange(
                         "job_sc1",
                         e.target.value,
-                        setSelectedSubCat1
+                        setSelectedSubCat1,
                       )
                     }
                     disabled={!selectedSubCategory || subCat1.length === 0}
@@ -1537,7 +1533,7 @@ function Jobs() {
                       handleSelectChange(
                         "job_sc2",
                         e.target.value,
-                        setSelectedSubCat2
+                        setSelectedSubCat2,
                       )
                     }
                     disabled={!selectedSubCat1 || subCat2.length === 0}
@@ -1563,7 +1559,7 @@ function Jobs() {
                       handleSelectChange(
                         "job_sc3",
                         e.target.value,
-                        setSelectedSubCat3
+                        setSelectedSubCat3,
                       )
                     }
                     disabled={!selectedSubCat2 || subCat3.length === 0}

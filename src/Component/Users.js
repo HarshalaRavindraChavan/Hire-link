@@ -259,8 +259,8 @@ function Users() {
 
     // helper to reset RHF value
     const resetRHF = () => {
-      if (field === "user_aadhar_image") addSetValue("adharupload", "");
-      if (field === "user_pan_image") addSetValue("panupload", "");
+      // if (field === "user_aadhar_image") addSetValue("adharupload", "");
+      // if (field === "user_pan_image") addSetValue("panupload", "");
       if (field === "user_bankpassbook") addSetValue("bankpassbook", "");
     };
 
@@ -319,13 +319,13 @@ function Users() {
         }));
 
         // React Hook Form hidden field
-        if (field === "user_aadhar_image") {
-          addSetValue("adharupload", filename, { shouldValidate: true });
-        }
+        // if (field === "user_aadhar_image") {
+        //   addSetValue("adharupload", filename, { shouldValidate: true });
+        // }
 
-        if (field === "user_pan_image") {
-          addSetValue("panupload", filename, { shouldValidate: true });
-        }
+        // if (field === "user_pan_image") {
+        //   addSetValue("panupload", filename, { shouldValidate: true });
+        // }
 
         if (field === "user_bankpassbook") {
           addSetValue("bankpassbook", filename, { shouldValidate: true });
@@ -1036,7 +1036,7 @@ function Users() {
                 </div>
 
                 {/* Aadhaar */}
-                {/* <div className="col-md-4">
+                <div className="col-md-4">
                   <label className="fw-semibold">Adhar Number</label>
                   <input
                     type="text"
@@ -1045,10 +1045,10 @@ function Users() {
                     placeholder="Enter Adhar Number"
                   />
                   <p className="text-danger">{addErrors.adhar?.message}</p>
-                </div> */}
+                </div>
 
                 {/* PAN */}
-                {/* <div className="col-md-4">
+                <div className="col-md-4">
                   <label className="fw-semibold">PAN Number</label>
                   <input
                     type="text"
@@ -1057,10 +1057,10 @@ function Users() {
                     placeholder="Enter PAN Number"
                   />
                   <p className="text-danger">{addErrors.pan?.message}</p>
-                </div> */}
+                </div>
 
                 {/* Aadhaar Upload */}
-                <div className="col-md-4">
+                {/* <div className="col-md-4">
                   <label className="fw-semibold">
                     Aadhar Card Upload
                     {User.user_aadhar_image && (
@@ -1077,10 +1077,10 @@ function Users() {
                   <p className="text-danger">
                     {addErrors.adharupload?.message}
                   </p>
-                </div>
+                </div> */}
 
                 {/* PAN Upload */}
-                <div className="col-md-4">
+                {/* <div className="col-md-4">
                   <label className="fw-semibold">
                     PAN Card Upload
                     {User.user_pan_image && (
@@ -1094,7 +1094,7 @@ function Users() {
                   />
                   <input type="hidden" {...addRegister("panupload")} />
                   <p className="text-danger">{addErrors.panupload?.message}</p>
-                </div>
+                </div> */}
 
                 {/* Back Upload */}
                 <div className="col-md-4">

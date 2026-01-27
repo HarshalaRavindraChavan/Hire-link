@@ -1184,10 +1184,10 @@ function Staff() {
                     className="form-select form-control"
                   >
                     <option value="">Selete Role</option>
-                    <option value="1">Super Admin</option>
                     <option value="2">Sub Admin</option>
                     <option value="3">Backend</option>
                     <option value="4">Accountant</option>
+                    <option value="5">Other</option>
                   </select>
                   <p className="text-danger">{addErrors.role?.message}</p>
                 </div>
@@ -1205,9 +1205,7 @@ function Staff() {
                     <option value="3">Candidate</option>
                     <option value="4">Applicant</option>
                     <option value="5">Interview</option>
-                    <option value="6">Employer</option>
-                    <option value="9">Contact</option>
-                    <option value="10">User</option>
+                    <option value="12">Staff</option>
                   </select>
                   <p className="text-danger">{addErrors.menus?.message}</p>
                 </div>

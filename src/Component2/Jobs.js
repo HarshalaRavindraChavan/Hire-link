@@ -41,7 +41,7 @@ function Jobs() {
   const fetchSavedJobs = async (canId) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/saved-jobs/${canId}`
+        `${BASE_URL}hirelink_apis/candidate/saved-jobs/${canId}`,
       );
 
       if (res.data.status) {
@@ -82,14 +82,14 @@ function Jobs() {
       if (isSaved) {
         await axios.post(
           `${BASE_URL}hirelink_apis/candidate/unsave-job`,
-          payload
+          payload,
         );
         setSavedJobs((prev) => prev.filter((id) => id !== Number(jobId)));
         toast.info("Job removed");
       } else {
         await axios.post(
           `${BASE_URL}hirelink_apis/candidate/save-job`,
-          payload
+          payload,
         );
         setSavedJobs((prev) => [...prev, Number(jobId)]);
         toast.success("Job saved ❤️");
@@ -102,7 +102,7 @@ function Jobs() {
   useEffect(() => {
     axios
       .get(
-        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_job/job_status/Active`
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_job/job_status/Active`,
       )
       .then((res) => {
         if (res.data.status === "success") {
@@ -323,7 +323,7 @@ function Jobs() {
 
                 <button
                   type="button"
-                  className="apply-btn mt-0 mb-5"
+                  className="apply-btn mt-0 mb-3"
                   onClick={handleApplyClick}
                 >
                   Apply Now
@@ -337,7 +337,7 @@ function Jobs() {
                 </p>
                 <h6 className="fw-bold mt-3 fs-6">Skills</h6>
                 <p className="small">{selectedJob.job_skills}</p>
-                <div className="d-flex gap-2 mb-3">
+                {/* <div className="d-flex gap-2 mb-3">
                   <button className="btn btn-outline-primary btn-sm">
                     Yes
                   </button>
@@ -345,7 +345,7 @@ function Jobs() {
                     No
                   </button>
                   <button className="btn btn-outline-dark btn-sm">Skip</button>
-                </div>
+                </div> */}
                 <hr /> <h6 className="fw-bold fs-5">Job details</h6>
                 <p>
                   <strong>Pay:</strong> {selectedJob.job_salary} month

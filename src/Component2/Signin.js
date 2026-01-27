@@ -96,6 +96,7 @@ function Signin() {
               JSON.stringify({
                 role: 100,
                 emp_id: data.data.emp_id,
+                emp_email: data.data.emp_email,
                 emp_companyname: data.data.emp_companyname,
                 emp_com_logo: data.data.emp_com_logo,
               }),

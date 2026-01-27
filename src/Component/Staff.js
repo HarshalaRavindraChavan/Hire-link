@@ -7,13 +7,23 @@ import axios from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Pagination from "./commenuse/Pagination";
-import { toast } from "react-toastify";
 import { BASE_URL } from "../config/constants";
 import TableSkeleton from "./commenuse/TableSkeleton";
 import SearchableDropdown from "./SearchableDropdown";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Staff() {
+  const auth = JSON.parse(localStorage.getItem("auth"));
+  const employer = JSON.parse(localStorage.getItem("employer"));
+
+  const role = auth?.role;
+  const employerId = auth?.emp_id;
+
+  const employerEmail = auth?.emp_email || employer?.emp_email;
+
   const [loading, setLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // ================= EDUCATION =================
   const [educationType, setEducationType] = useState("");
@@ -23,10 +33,11 @@ function Staff() {
     Diploma: ["D.Pharm"],
     Graduation: ["B.Sc", "B.Pharm"],
     "Post Graduation": ["M.Sc", "M.Pharm"],
-    Other: [], // ✅ ADD
+    Other: [],
   };
 
   const [users, setUsers] = useState([]);
+
   // ================= STATE & CITY =================
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
@@ -38,7 +49,7 @@ function Staff() {
   const fetchStates = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdata/tbl_state`
+        `${BASE_URL}hirelink_apis/candidate/getdata/tbl_state`,
       );
 
       if (res.data?.status) {
@@ -52,14 +63,13 @@ function Staff() {
   const fetchCities = async (stateId, selectedCity = null) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_city/city_state_id/${stateId}`
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_city/city_state_id/${stateId}`,
       );
 
       if (res.data?.status) {
         const cityData = res.data.data || [];
         setCities(cityData);
 
-        // ✅ IMPORTANT: wait till cities set, then set city
         if (selectedCity) {
           setTimeout(() => {
             editSetValue("city", selectedCity, {
@@ -74,24 +84,38 @@ function Staff() {
     }
   };
 
-  //========user add============
-
+  // ================= GET STAFF =================
   useEffect(() => {
     fetchUsers();
+    // eslint-disable-next-line
   }, []);
 
   const fetchUsers = async () => {
     try {
       setLoading(true);
 
-      const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/getdata/tbl_user`
-      );
-      if (res.data.status === true) {
-        setUsers(res.data.data);
+      let res;
+
+      // ✅ ADMIN / SUBADMIN / BACKEND / ACCOUNTANT → ALL STAFF
+      if (["1", "2", "3", "4", "5"].includes(String(role))) {
+        res = await axios.get(
+          `${BASE_URL}hirelink_apis/admin/getdata/tbl_staff`,
+        );
+      }
+
+      // ✅ EMPLOYER → ONLY HIS STAFF
+      if (Number(role) === 100) {
+        res = await axios.get(
+          `${BASE_URL}hirelink_apis/admin/getdatawhere/tbl_staff/staff_employer_id/${employerId}`,
+        );
+      }
+
+      if (res?.data?.status === true) {
+        setUsers(res.data.data || []);
       }
     } catch (err) {
       console.error(err);
+      toast.error("Failed to load staff ❌");
     } finally {
       setLoading(false);
     }
@@ -101,12 +125,11 @@ function Staff() {
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 100;
 
-  const filteredUsers = users.filter((u) => String(u.user_id) !== "1");
-
   const lastIndex = currentPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
-  const records = filteredUsers.slice(firstIndex, lastIndex);
-  const nPages = Math.ceil(filteredUsers.length / recordsPerPage);
+
+  const records = users.slice(firstIndex, lastIndex);
+  const nPages = Math.ceil(users.length / recordsPerPage);
 
   /* ================= DELETE ================= */
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -120,7 +143,7 @@ function Staff() {
   const confirmDelete = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/deletedata/tbl_user/user_id/${deleteId}`
+        `${BASE_URL}hirelink_apis/admin/deletedata/tbl_staff/staff_id/${deleteId}`,
       );
 
       if (res.data.status === true) {
@@ -128,18 +151,18 @@ function Staff() {
         setDeleteId(null);
         fetchUsers();
       } else {
-        toast.error("Delete failed");
+        toast.error("Delete failed ❌");
       }
     } catch (err) {
-      toast.error("Delete error");
+      toast.error("Delete error ❌");
     }
   };
 
   /* ================= FILE STATE ================= */
   const [User, setUser] = useState({
-    user_aadhar_image: "",
-    user_pan_image: "",
-    user_bankpassbook: "", // ✅ ADD THIS
+    staff_aadhar_image: "",
+    staff_pan_image: "",
+    staff_bankpassbook: "",
   });
 
   /* ================= VALIDATION ================= */
@@ -150,10 +173,7 @@ function Staff() {
       .string()
       .matches(/^\d{10}$/)
       .required(),
-    password: yup
-      .string()
-      .min(6, "Minimum 6 characters")
-      .required("Password is required"),
+    password: yup.string().min(6, "Minimum 6 characters").required(),
     location: yup.string().required(),
     address: yup.string().required(),
     state: yup.string().required(),
@@ -165,7 +185,6 @@ function Staff() {
     experience: yup.string().required(),
     education_type: yup.string().required("Education Type is required"),
     education_detail: yup.string().required("Education Detail is required"),
-
     role: yup.string().required(),
     menus: yup.array().min(1).required(),
   });
@@ -188,63 +207,129 @@ function Staff() {
     formState: { errors: addErrors },
     reset: resetAdd,
     setValue: addSetValue,
-    watch: addWatch, // ✅ ADD THIS
+    watch: addWatch,
   } = addForm;
+
+  useEffect(() => {
+    const paid = localStorage.getItem("paymentDone");
+
+    if (paid === "true") {
+      resetAdd();
+
+      const modalEl = document.getElementById("exampleModal");
+      const modalInstance = window.bootstrap.Modal.getInstance(modalEl);
+      modalInstance?.hide();
+
+      localStorage.removeItem("paymentDone");
+    }
+  }, []);
 
   /* ================= SUBMIT ================= */
   const onSubmit = async (data) => {
-    const payload = {
-      user_name: data.fullname,
-      user_email: data.email,
-      user_password: data.password,
-      user_mobile: data.mobile,
-      user_location: data.location,
-      user_address: data.address,
-      user_state: data.state,
-      user_city: data.city,
-      user_joindate: data.joindate,
-      user_bankpassbook: data.bankpassbook,
-      user_experience: data.experience,
-      user_education_type: data.education_type,
-      user_education_detail: data.education_detail,
-      user_role: data.role,
-      user_menu_id: data.menus.join(","),
-      user_aadhar_image: User.user_aadhar_image,
-      user_pan_image: User.user_pan_image,
-      user_status: "Active",
-    };
+    if (isSubmitting) return; // ✅ double click block
+
+    setIsSubmitting(true); // ✅ disable + spinner start
 
     try {
-      const res = await axios.post(
-        `${BASE_URL}hirelink_apis/admin/insert/tbl_user`,
-        payload
+      // ✅ Role check
+      if (Number(role) !== 100) {
+        toast.error("Only Employer can add staff ❌");
+        setIsSubmitting(false);
+        return;
+      }
+
+      // ✅ Employer Id check
+      if (!employerId) {
+        toast.error("Employer ID missing ❌");
+        setIsSubmitting(false);
+        return;
+      }
+
+      // ✅ Employer Email check
+      if (!employerEmail) {
+        toast.error("Employer email missing ❌");
+        setIsSubmitting(false);
+        return;
+      }
+
+      // ✅ 1) DUPLICATE CHECK BEFORE PAYMENT
+      const dupRes = await axios.post(
+        `${BASE_URL}hirelink_apis/admin/checkStaffDuplicate`,
+        {
+          email: data.email,
+          mobile: data.mobile,
+        },
       );
 
-      if (res.data.status) {
-        toast.success("User added successfully");
-
-        resetAdd(); // form reset
-        setUser({
-          user_aadhar_image: "",
-          user_pan_image: "",
-          user_bankpassbook: "",
-        });
-        // reset file state
-        fetchUsers(); // refresh table
-        setEducationType("");
-        setEducationDetail("");
-
-        const modal = document.getElementById("exampleModal");
-        const bsModal =
-          window.bootstrap.Modal.getInstance(modal) ||
-          new window.bootstrap.Modal(modal);
-
-        bsModal.hide(); // close modal
-      } else {
-        toast.error("User not added");
+      // ✅ If duplicate found -> stop here (NO PAYMENT)
+      if (dupRes.data?.emailExists) {
+        toast.error("This email is already registered ❌");
+        setIsSubmitting(false);
+        return;
       }
-    } catch {
-      toast.error("Something went wrong");
+
+      if (dupRes.data?.mobileExists) {
+        toast.error("This mobile number is already registered ❌");
+        setIsSubmitting(false);
+        return;
+      }
+
+      // ✅ 2) Create Payload
+      const payload = {
+        staff_name: data.fullname,
+        staff_email: data.email,
+        staff_mobile: data.mobile,
+        staff_password: data.password,
+        staff_location: data.location,
+        staff_address: data.address,
+        staff_state: data.state,
+        staff_city: data.city,
+        staff_joindate: data.joindate,
+        staff_experience: data.experience,
+        staff_education_type: data.education_type,
+        staff_education_detail: data.education_detail,
+        staff_role: data.role,
+        staff_menu_id: data.menus.join(","),
+        staff_aadhar_image: User.staff_aadhar_image,
+        staff_pan_image: User.staff_pan_image,
+        staff_bankpassbook: User.staff_bankpassbook,
+        staff_status: "Active",
+        staff_employer_id: employerId,
+        staff_added_by: employerId,
+      };
+
+      // ✅ 3) Save Staff data temporarily
+      localStorage.setItem("pendingStaff", JSON.stringify(payload));
+
+      // ✅ 4) Save Payment User
+      localStorage.setItem(
+        "paymentUser",
+        JSON.stringify({
+          email: employerEmail,
+          role: "employer_staff",
+          for: "staff_add",
+          employer_id: employerId,
+          returnTo: "/staff",
+        }),
+      );
+
+      // ✅ 5) Close modal
+      const modal = document.getElementById("exampleModal");
+      const bsModal =
+        window.bootstrap.Modal.getInstance(modal) ||
+        new window.bootstrap.Modal(modal);
+
+      bsModal.hide();
+
+      // ✅ 6) Redirect to payment
+      window.location.href = "/payment";
+    } catch (err) {
+      console.error("Staff Submit Error:", err);
+
+      const msg = err?.response?.data?.message;
+
+      toast.error(msg || "Something went wrong ❌");
+      setIsSubmitting(false);
     }
   };
 
@@ -253,81 +338,69 @@ function Staff() {
     const file = e.target.files[0];
     if (!file) return;
 
-    const minSize = 30 * 1024; // 30KB
-    const maxSize = 50 * 1024; // 50KB
+    const minSize = 30 * 1024;
+    const maxSize = 50 * 1024;
     const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
 
-    // helper to reset RHF value
     const resetRHF = () => {
-      if (field === "user_aadhar_image") addSetValue("adharupload", "");
-      if (field === "user_pan_image") addSetValue("panupload", "");
-      if (field === "user_bankpassbook") addSetValue("bankpassbook", "");
+      if (field === "staff_aadhar_image") addSetValue("adharupload", "");
+      if (field === "staff_pan_image") addSetValue("panupload", "");
+      if (field === "staff_bankpassbook") addSetValue("bankpassbook", "");
     };
 
-    // ❌ file type check
     if (!allowedTypes.includes(file.type)) {
       toast.error("Invalid file type ❌ Only JPG / JPEG / PNG allowed");
       e.target.value = "";
       resetRHF();
-
       return;
     }
 
-    // ❌ file too small
     if (file.size < minSize) {
       toast.error(
         `File too small ❌ (${Math.round(
-          file.size / 1024
-        )}KB). Minimum 30KB required`
+          file.size / 1024,
+        )}KB). Minimum 30KB required`,
       );
       e.target.value = "";
       resetRHF();
-
       return;
     }
 
-    // ❌ file too large
     if (file.size > maxSize) {
       toast.error(
         `File too large ❌ (${Math.round(
-          file.size / 1024
-        )}KB). Maximum 50KB allowed`
+          file.size / 1024,
+        )}KB). Maximum 50KB allowed`,
       );
       e.target.value = "";
       resetRHF();
-
       return;
     }
 
-    // ✅ valid file → upload
     const formData = new FormData();
     formData.append(field, file);
 
     try {
       const res = await axios.post(
         `${BASE_URL}hirelink_apis/admin/fileupload`,
-        formData
+        formData,
       );
 
       if (res.data.status) {
         const filename = res.data.files[field];
 
-        // ✔ icon UI state
         setUser((prev) => ({
           ...prev,
           [field]: filename,
         }));
 
-        // React Hook Form hidden field
-        if (field === "user_aadhar_image") {
+        if (field === "staff_aadhar_image") {
           addSetValue("adharupload", filename, { shouldValidate: true });
         }
-
-        if (field === "user_pan_image") {
+        if (field === "staff_pan_image") {
           addSetValue("panupload", filename, { shouldValidate: true });
         }
-
-        if (field === "user_bankpassbook") {
+        if (field === "staff_bankpassbook") {
           addSetValue("bankpassbook", filename, { shouldValidate: true });
         }
 
@@ -342,8 +415,7 @@ function Staff() {
     }
   };
 
-  // Edit model code
-
+  // ================= EDIT =================
   const editSchema = yup.object({
     fullname: yup.string().required(),
     email: yup.string().email().required(),
@@ -356,7 +428,6 @@ function Staff() {
     state: yup.string().required(),
     city: yup.string().required(),
     joindate: yup.date().required(),
-    // bankpassbook: yup.string().required(),
     experience: yup.string().required(),
     education_type: yup.string().required("Education Type is required"),
     education_detail: yup.string().required("Education Detail is required"),
@@ -364,7 +435,6 @@ function Staff() {
     menus: yup.array().min(1).required(),
   });
 
-  // ✅ EDIT FORM
   const editForm = useForm({
     resolver: yupResolver(editSchema),
     defaultValues: {
@@ -378,7 +448,7 @@ function Staff() {
     handleSubmit: handleEditSubmit,
     formState: { errors: editErrors },
     reset: resetEdit,
-    watch: editWatch, // ✅ ADD THIS LINE
+    watch: editWatch,
     setValue: editSetValue,
   } = editForm;
 
@@ -387,34 +457,33 @@ function Staff() {
   const openEditUserModal = (user) => {
     if (!user) return;
 
-    setEditUserId(user.user_id);
+    setEditUserId(user.staff_id);
 
     resetEdit({
-      fullname: user.user_name ?? "",
-      email: user.user_email ?? "",
-      mobile: user.user_mobile ?? "",
-      location: user.user_location ?? "",
-      address: user.user_address ?? "",
-      state: user.user_state ?? "",
-      city: user.user_city ?? "",
-      joindate: user.user_joindate?.split("T")[0] ?? "",
-      experience: user.user_experience ?? "",
-      role: user.user_role ?? "",
-      menus: user.user_menu_id ? user.user_menu_id.split(",") : [],
-      education_type: user.user_education_type ?? "",
-      education_detail: user.user_education_detail ?? "",
+      fullname: user.staff_name ?? "",
+      email: user.staff_email ?? "",
+      mobile: user.staff_mobile ?? "",
+      location: user.staff_location ?? "",
+      address: user.staff_address ?? "",
+      state: user.staff_state ?? "",
+      city: user.staff_city ?? "",
+      joindate: user.staff_joindate?.split("T")[0] ?? "",
+      experience: user.staff_experience ?? "",
+      role: user.staff_role ?? "",
+      menus: user.staff_menu_id ? user.staff_menu_id.split(",") : [],
+      education_type: user.staff_education_type ?? "",
+      education_detail: user.staff_education_detail ?? "",
     });
 
-    // ✅ MOST IMPORTANT PART
-    if (user.user_state && user.user_city) {
-      fetchCities(user.user_state, user.user_city);
+    if (user.staff_state && user.staff_city) {
+      fetchCities(user.staff_state, user.staff_city);
     }
 
-    setEducationType(user.user_education_type ?? "");
-    setEducationDetail(user.user_education_detail ?? "");
+    setEducationType(user.staff_education_type ?? "");
+    setEducationDetail(user.staff_education_detail ?? "");
 
-    editSetValue("education_type", user.user_education_type ?? "");
-    editSetValue("education_detail", user.user_education_detail ?? "");
+    editSetValue("education_type", user.staff_education_type ?? "");
+    editSetValue("education_detail", user.staff_education_detail ?? "");
 
     const modalEl = document.getElementById("editUserModal");
     const modal =
@@ -426,7 +495,7 @@ function Staff() {
 
   const handleUpdateUser = async (data) => {
     if (!editUserId) {
-      toast.error("User ID missing");
+      toast.error("Staff ID missing ❌");
       return;
     }
 
@@ -434,56 +503,53 @@ function Staff() {
       setLoading(true);
 
       const payload = {
-        user_name: data.fullname,
-        user_email: data.email,
-        user_mobile: data.mobile,
-        user_location: data.location,
-        user_address: data.address,
-        user_state: data.state,
-        user_city: data.city,
-        user_joindate: data.joindate,
-        // user_bankpassbook: data.bankpassbook,
-        user_experience: data.experience,
-        user_education_type: data.education_type,
-        user_education_detail: data.education_detail,
-        user_role: data.role,
-        user_menu_id: Array.isArray(data.menus)
+        staff_name: data.fullname,
+        staff_email: data.email,
+        staff_mobile: data.mobile,
+        staff_location: data.location,
+        staff_address: data.address,
+        staff_state: data.state,
+        staff_city: data.city,
+        staff_joindate: data.joindate,
+        staff_experience: data.experience,
+        staff_education_type: data.education_type,
+        staff_education_detail: data.education_detail,
+        staff_role: data.role,
+        staff_menu_id: Array.isArray(data.menus)
           ? data.menus.join(",")
           : data.menus,
       };
 
       const response = await axios.post(
-        `${BASE_URL}hirelink_apis/admin/updatedata/tbl_user/user_id/${editUserId}`,
-        payload
+        `${BASE_URL}hirelink_apis/admin/updatedata/tbl_staff/staff_id/${editUserId}`,
+        payload,
       );
 
       if (response?.data?.status === true) {
-        toast.success("User updated successfully ✅");
+        toast.success("Staff updated successfully ✅");
         fetchUsers();
-
         setCities([]);
 
         const modalEl = document.getElementById("editUserModal");
         const modalInstance = window.bootstrap.Modal.getInstance(modalEl);
         modalInstance?.hide();
       } else {
-        toast.error("User update failed");
+        toast.error("Staff update failed ❌");
       }
     } catch (error) {
-      console.error("User Update Error:", error);
-      toast.error("Server error");
+      console.error("Staff Update Error:", error);
+      toast.error("Server error ❌");
     } finally {
       setLoading(false);
     }
   };
 
-  // mobile number star code
+  // ================= MASK =================
   const maskMobile = (mobile) => {
     if (!mobile) return "";
     return "******" + mobile.slice(-4);
   };
 
-  // email hide code
   const maskEmail = (email) => {
     if (!email) return "";
 
@@ -498,76 +564,69 @@ function Staff() {
     return `${maskedName}@${domain}`;
   };
 
-  // filter code
+  // ================= FILTER =================
   const [search, setSearch] = useState("");
   const [experience, setExperience] = useState("");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 
   const filteredRecords = React.useMemo(() => {
-    return records
-      .filter((u) => String(u.user_id) !== "1") // ✅ keep your old logic
-      .filter((u) => {
-        const searchValue = search.trim().toLowerCase();
+    return records.filter((u) => {
+      const searchValue = search.trim().toLowerCase();
 
-        /* 🔍 SEARCH */
-        const matchesSearch =
-          !searchValue ||
-          u?.user_name?.toLowerCase().includes(searchValue) ||
-          u?.user_email?.toLowerCase().includes(searchValue) ||
-          u?.user_mobile?.toString().includes(searchValue) ||
-          u?.user_location?.toLowerCase().includes(searchValue) ||
-          u?.city_name?.toLowerCase().includes(searchValue) ||
-          u?.state_name?.toLowerCase().includes(searchValue);
+      const matchesSearch =
+        !searchValue ||
+        u?.staff_name?.toLowerCase().includes(searchValue) ||
+        u?.staff_email?.toLowerCase().includes(searchValue) ||
+        u?.staff_mobile?.toString().includes(searchValue) ||
+        u?.staff_location?.toLowerCase().includes(searchValue) ||
+        u?.city_name?.toLowerCase().includes(searchValue) ||
+        u?.state_name?.toLowerCase().includes(searchValue);
 
-        /* 🎯 EXPERIENCE */
-        let matchesExperience = true;
-        if (experience) {
-          const exp = Number(u?.user_experience || 0);
-          if (experience === "6 Month") matchesExperience = exp <= 1;
-          if (experience === "2 Year") matchesExperience = exp === 2;
-          if (experience === "3 Year") matchesExperience = exp === 3;
-          if (experience === "4 Year") matchesExperience = exp >= 4;
-        }
+      let matchesExperience = true;
+      if (experience) {
+        const exp = Number(u?.staff_experience || 0);
+        if (experience === "6 Month") matchesExperience = exp <= 1;
+        if (experience === "2 Year") matchesExperience = exp === 2;
+        if (experience === "3 Year") matchesExperience = exp === 3;
+        if (experience === "4 Year") matchesExperience = exp >= 4;
+      }
 
-        /* 📅 DATE */
-        const joinDate = u?.user_joindate ? new Date(u.user_joindate) : null;
+      const joinDate = u?.staff_joindate ? new Date(u.staff_joindate) : null;
 
-        const from = fromDate ? new Date(fromDate) : null;
-        const to = toDate ? new Date(toDate) : null;
+      const from = fromDate ? new Date(fromDate) : null;
+      const to = toDate ? new Date(toDate) : null;
 
-        let matchesDate = true;
-        if (joinDate) {
-          if (from && to) matchesDate = joinDate >= from && joinDate <= to;
-          else if (from) matchesDate = joinDate >= from;
-          else if (to) matchesDate = joinDate <= to;
-        }
+      let matchesDate = true;
+      if (joinDate) {
+        if (from && to) matchesDate = joinDate >= from && joinDate <= to;
+        else if (from) matchesDate = joinDate >= from;
+        else if (to) matchesDate = joinDate <= to;
+      }
 
-        return matchesSearch && matchesExperience && matchesDate;
-      });
+      return matchesSearch && matchesExperience && matchesDate;
+    });
   }, [records, search, experience, fromDate, toDate]);
 
-  //Status Update Function
-  const handleStatusChange = async (userId, newStatus) => {
+  // ================= STATUS CHANGE =================
+  const handleStatusChange = async (staffId, newStatus) => {
     try {
-      // ✅ optional: loader show
       setLoading(true);
 
       const res = await axios.post(
-        `${BASE_URL}hirelink_apis/admin/updatedata/tbl_user/user_id/${userId}`,
+        `${BASE_URL}hirelink_apis/admin/updatedata/tbl_staff/staff_id/${staffId}`,
         {
-          user_status: newStatus,
-        }
+          staff_status: newStatus,
+        },
       );
 
       if (res.data?.status === true) {
         toast.success(`Status updated to ${newStatus} ✅`);
 
-        // ✅ UI instant update without refetch
         setUsers((prev) =>
           prev.map((u) =>
-            u.user_id === userId ? { ...u, user_status: newStatus } : u
-          )
+            u.staff_id === staffId ? { ...u, staff_status: newStatus } : u,
+          ),
         );
       } else {
         toast.error("Status update failed ❌");
@@ -582,23 +641,32 @@ function Staff() {
 
   return (
     <>
+      <ToastContainer position="top-right" autoClose={3000} theme="colored" />
+
       <SEO
-        title={seoConfig.a_user.title}
-        description={seoConfig.a_user.description}
+        title={`${seoConfig.a_staff.title} of ${employer?.emp_companyname
+          ?.split(" ")
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ")}`}
+        description={seoConfig.a_staff.description}
       />
+
       {/* HEADER */}
       <div className="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
-        <h3 className="fw-bold mb-3">Users</h3>
+        <h3 className="fw-bold mb-3">Staff</h3>
 
-        <div className="ms-auto">
-          <button
-            data-bs-toggle="modal"
-            data-bs-target="#exampleModal"
-            className="btn btn-success"
-          >
-            <i className="fa fa-plus"></i> Add User
-          </button>
-        </div>
+        {/* ✅ ONLY EMPLOYER CAN ADD */}
+        {Number(role) === 100 && (
+          <div className="ms-auto">
+            <button
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+              className="btn btn-success"
+            >
+              <i className="fa fa-plus"></i> Add Staff
+            </button>
+          </div>
+        )}
       </div>
 
       {/* TABLE */}
@@ -611,6 +679,7 @@ function Staff() {
               onChange={(e) => setExperience(e.target.value)}
             ></select>
           </div>
+
           <div className="col-6 col-md-2">
             <input
               type="date"
@@ -662,9 +731,9 @@ function Staff() {
             <thead className="table-light text-center">
               <tr className="text-center">
                 <th className="fs-6 fw-bold">ID</th>
-                <th className="fs-6 fw-bold">User Detail</th>
-                <th className="fs-6 fw-bold">User ID Proof</th>
-                <th className="fs-6 fw-bold">User Address</th>
+                <th className="fs-6 fw-bold">Staff Detail</th>
+                <th className="fs-6 fw-bold">Staff Proof</th>
+                <th className="fs-6 fw-bold">Staff Address</th>
                 <th className="fs-6 fw-bold">Activity Detail</th>
               </tr>
             </thead>
@@ -673,176 +742,152 @@ function Staff() {
               {loading ? (
                 <TableSkeleton rows={6} columns={5} />
               ) : filteredRecords.length > 0 ? (
-                filteredRecords
-                  .slice(firstIndex, lastIndex)
-                  .filter((u) => String(u.user_id) !== "1")
-                  .map((u, index) => (
-                    <tr
-                      key={u.user_id || index}
-                      className="text-center align-middle"
-                    >
-                      <td className="text-center fw-bold">
-                        {firstIndex + index + 1}
-                      </td>
-                      {/* <td className="text-center">{u.user_id}</td> */}
-                      <td className="text-start">
-                        <div className="fw-bold">
-                          Name:
-                          <div className="dropdown d-inline ms-2">
-                            <span
-                              className="fw-bold text-primary"
-                              role="button"
-                              data-bs-toggle="dropdown"
+                filteredRecords.map((u, index) => (
+                  <tr
+                    key={u.staff_id || index}
+                    className="text-center align-middle"
+                  >
+                    <td className="text-center fw-bold">
+                      {firstIndex + index + 1}
+                    </td>
+
+                    <td className="text-start">
+                      <div className="fw-bold">
+                        Name:
+                        <div className="dropdown d-inline ms-2">
+                          <span
+                            className="fw-bold text-primary"
+                            role="button"
+                            data-bs-toggle="dropdown"
+                          >
+                            {u.staff_name}
+                          </span>
+
+                          <ul className="dropdown-menu shadow">
+                            <li>
+                              <button
+                                className="dropdown-item"
+                                onClick={() => openEditUserModal(u)}
+                              >
+                                <i className="fas fa-edit me-2"></i> Edit
+                              </button>
+                            </li>
+
+                            <li>
+                              <button
+                                className="dropdown-item text-danger"
+                                onClick={() => handleDeleteClick(u.staff_id)}
+                              >
+                                <i className="fas fa-trash me-2"></i>Delete
+                              </button>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+
+                      <div className="fw-bold">
+                        Email:{" "}
+                        <span className="text-dark fw-normal">
+                          {maskEmail(u.staff_email)}
+                        </span>
+                      </div>
+
+                      <div className="fw-bold">
+                        Mobile No:{" "}
+                        <span className="text-dark fw-normal">
+                          {maskMobile(u.staff_mobile)}
+                        </span>
+                      </div>
+
+                      <div className="fw-bold">
+                        Experience:{" "}
+                        <span className="text-dark fw-normal">
+                          {u.staff_experience} Year
+                        </span>
+                      </div>
+                    </td>
+
+                    <td className="text-start">
+                      <div className="fw-bold">
+                        Join:{" "}
+                        <span className="text-dark fw-normal">
+                          {u.staff_joindate?.split("T")[0]}
+                        </span>
+                      </div>
+                    </td>
+
+                    <td className="text-start">
+                      <div className="fw-bold">
+                        Location:{" "}
+                        <span className="text-dark fw-normal">
+                          {u.staff_location}
+                        </span>
+                      </div>
+                      <div className="fw-bold">
+                        Address:{" "}
+                        <span className="text-dark fw-normal">
+                          {u.staff_address}
+                        </span>
+                      </div>
+                      <div className="fw-bold">
+                        City:{" "}
+                        <span className="text-dark fw-normal">
+                          {u.city_name}
+                        </span>
+                      </div>
+                      <div className="fw-bold">
+                        State:{" "}
+                        <span className="text-dark fw-normal">
+                          {u.state_name}
+                        </span>
+                      </div>
+                    </td>
+
+                    <td className="text-start">
+                      <div className="fw-bold">
+                        Status:{" "}
+                        <span className="text-dark fw-normal">
+                          {Number(role) === 1 ? (
+                            <select
+                              className={`form-select form-select-sm d-inline w-auto ${
+                                u.staff_status === "Active"
+                                  ? "border-success"
+                                  : "border-danger"
+                              }`}
+                              value={u.staff_status}
+                              onChange={(e) =>
+                                handleStatusChange(u.staff_id, e.target.value)
+                              }
                             >
-                              {u.user_name}
+                              <option value="Active">Active</option>
+                              <option value="Inactive">Inactive</option>
+                            </select>
+                          ) : (
+                            <span
+                              className={`badge ${
+                                u.staff_status === "Active"
+                                  ? "bg-success"
+                                  : "bg-danger"
+                              } ms-2`}
+                            >
+                              {u.staff_status}
                             </span>
-                            <ul className="dropdown-menu shadow">
-                              <li>
-                                <button
-                                  className="dropdown-item"
-                                  onClick={() => openEditUserModal(u)}
-                                >
-                                  <i className="fas fa-edit me-2"></i> Edit
-                                </button>
-                              </li>
-                              <li>
-                                <button
-                                  className="dropdown-item text-danger"
-                                  onClick={() => handleDeleteClick(u.user_id)}
-                                >
-                                  <i className="fas fa-trash me-2"></i>Delete
-                                </button>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-
-                        <div className="fw-bold">
-                          Email:{" "}
-                          <span className="text-dark fw-normal">
-                            {maskEmail(u.user_email)}
-                          </span>
-                        </div>
-
-                        <div className="fw-bold">
-                          Mobile No:{" "}
-                          <span className="text-dark fw-normal">
-                            {maskMobile(u.user_mobile)}
-                          </span>
-                        </div>
-
-                        <div className="fw-bold">
-                          Experience:{"  "}
-                          <span className="text-dark fw-normal">
-                            {u.user_experience} Year
-                          </span>
-                        </div>
-                      </td>
-
-                      {/* User Id Proof */}
-                      <td className="text-start">
-                        {/* <div className="fw-bold">
-                          Aadhar No:{"  "}
-                          <span className="text-dark fw-normal">
-                            {u.user_adhar}
-                          </span>
-                        </div> */}
-                        {/* <div className="fw-bold">
-                          Pan Card No:{"  "}
-                          <span className="text-dark fw-normal">
-                            {u.user_pan}
-                          </span>
-                        </div> */}
-                        <div className="fw-bold">
-                          Join:{" "}
-                          <span className="text-dark fw-normal">
-                            {u.user_joindate?.split("T")[0]}
-                          </span>
-                        </div>
-                      </td>
-                      {/* Address */}
-                      <td className="text-start">
-                        <div className="fw-bold">
-                          Location:{"  "}
-                          <span className="text-dark fw-normal">
-                            {u.user_location}
-                          </span>
-                        </div>
-                        <div className="fw-bold">
-                          Address:{"  "}
-                          <span className="text-dark fw-normal">
-                            {u.user_address}
-                          </span>
-                        </div>
-                        <div className="fw-bold">
-                          City:{"  "}
-                          <span className="text-dark fw-normal">
-                            {u.city_name}
-                          </span>
-                        </div>
-                        <div className="fw-bold">
-                          State:{"  "}
-                          <span className="text-dark fw-normal">
-                            {u.state_name}
-                          </span>
-                        </div>
-                      </td>
-                      {/* Activity Detail */}
-                      <td className="text-start">
-                        <div className="fw-bold">
-                          Status:{" "}
-                          <span className="text-dark fw-normal">
-                            {/* ✅ Admin can change */}
-                            {Number(
-                              JSON.parse(localStorage.getItem("auth"))?.role
-                            ) === 1 ? (
-                              <select
-                                className={`form-select form-select-sm d-inline w-auto ${
-                                  u.user_status === "Active"
-                                    ? "border-success"
-                                    : "border-danger"
-                                }`}
-                                value={u.user_status}
-                                onChange={(e) =>
-                                  handleStatusChange(u.user_id, e.target.value)
-                                }
-                              >
-                                <option value="Active">Active</option>
-                                <option value="Inactive">Inactive</option>
-                              </select>
-                            ) : (
-                              /* ❌ Non admin only view */
-                              <span
-                                className={`badge ${
-                                  u.user_status === "Active"
-                                    ? "bg-success"
-                                    : "bg-danger"
-                                } ms-2`}
-                              >
-                                {u.user_status}
-                              </span>
-                            )}
-                          </span>
-                        </div>
-
-                        <div className="fw-bold ">
-                          Added:{"  "}
-                          <span className="text-dark fw-normal">
-                            {u.user_added_date}
-                          </span>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
+                          )}
+                        </span>
+                      </div>
+                    </td>
+                  </tr>
+                ))
               ) : (
                 <tr>
-                  <td colSpan="6" className="text-center text-muted py-3">
+                  <td colSpan="5" className="text-center text-muted py-3">
                     No data available
                   </td>
                 </tr>
               )}
             </tbody>
           </table>
+
           {/* Pagination */}
           <Pagination
             currentPage={currentPage}
@@ -852,12 +897,12 @@ function Staff() {
         </div>
       </div>
 
-      {/* ADD USER MODAL */}
+      {/* ADD STAFF MODAL */}
       <div className="modal fade" id="exampleModal" tabIndex="-1">
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content rounded-4">
             <div className="modal-header bg-success text-white">
-              <h5 className="modal-title fw-bold">Add User</h5>
+              <h5 className="modal-title fw-bold">Add Staff</h5>
               <i
                 className="fa-regular fa-circle-xmark"
                 data-bs-dismiss="modal"
@@ -903,7 +948,7 @@ function Staff() {
                   <p className="text-danger">{addErrors.mobile?.message}</p>
                 </div>
 
-                {/* password */}
+                {/* Password */}
                 <div className="col-md-4">
                   <label className="fw-semibold">Password</label>
                   <input
@@ -928,34 +973,10 @@ function Staff() {
                 </div>
 
                 {/* State */}
-                {/* <div className="col-md-4">
-                  <label className="fw-semibold">State</label>
-                  <select
-                    className="form-select form-control"
-                    {...addRegister("state")}
-                    onChange={(e) => {
-                      const stateId = e.target.value;
-                      addSetValue("state", stateId);
-                      addSetValue("city", ""); // ✅ reset city
-                      fetchCities(stateId); // ✅ fetch cities
-                    }}
-                  >
-                    <option value="">Select State</option>
-                    {states.map((state) => (
-                      <option key={state.state_id} value={state.state_id}>
-                        {state.state_name}
-                      </option>
-                    ))}
-                  </select>
-                  <p className="text-danger">{addErrors.state?.message}</p>
-                </div> */}
-
                 <div className="col-md-4">
                   <label className="fw-semibold">State</label>
-
                   <SearchableDropdown
-                    className="form-select form-control"
-                    value={addWatch("state")} // ✅ FIX
+                    value={addWatch("state")}
                     options={states}
                     placeholder="Select State"
                     searchPlaceholder="Search state..."
@@ -970,33 +991,11 @@ function Staff() {
                   />
                 </div>
 
-                {/* city */}
-                {/* <div className="col-md-4">
-                  <label className="fw-semibold">City</label>
-                  <select
-                    className="form-select form-control"
-                    {...addRegister("city")}
-                    disabled={!cities.length}
-                  >
-                    <option value="">
-                      {!cities.length ? "Select state first" : "Select City"}
-                    </option>
-
-                    {cities.map((city) => (
-                      <option key={city.city_id} value={city.city_id}>
-                        {city.city_name}
-                      </option>
-                    ))}
-                  </select>
-                  <p className="text-danger">{addErrors.city?.message}</p>
-                </div> */}
-
+                {/* City */}
                 <div className="col-md-4">
                   <label className="fw-semibold">City</label>
-
                   <SearchableDropdown
-                    className="form-select form-control"
-                    value={addWatch("city")} // ✅ FIX
+                    value={addWatch("city")}
                     options={cities}
                     disabled={!cities.length}
                     placeholder={
@@ -1035,45 +1034,20 @@ function Staff() {
                   <p className="text-danger">{addErrors.joindate?.message}</p>
                 </div>
 
-                {/* Aadhaar */}
-                {/* <div className="col-md-4">
-                  <label className="fw-semibold">Adhar Number</label>
-                  <input
-                    type="text"
-                    {...addRegister("adhar")}
-                    className="form-control"
-                    placeholder="Enter Adhar Number"
-                  />
-                  <p className="text-danger">{addErrors.adhar?.message}</p>
-                </div> */}
-
-                {/* PAN */}
-                {/* <div className="col-md-4">
-                  <label className="fw-semibold">PAN Number</label>
-                  <input
-                    type="text"
-                    {...addRegister("pan")}
-                    className="form-control"
-                    placeholder="Enter PAN Number"
-                  />
-                  <p className="text-danger">{addErrors.pan?.message}</p>
-                </div> */}
-
                 {/* Aadhaar Upload */}
                 <div className="col-md-4">
                   <label className="fw-semibold">
                     Aadhar Card Upload
-                    {User.user_aadhar_image && (
+                    {User.staff_aadhar_image && (
                       <i className="fa-solid fa-circle-check text-success ms-2"></i>
                     )}
                   </label>
                   <input
                     type="file"
                     className="form-control"
-                    onChange={(e) => uploadFile(e, "user_aadhar_image")}
+                    onChange={(e) => uploadFile(e, "staff_aadhar_image")}
                   />
                   <input type="hidden" {...addRegister("adharupload")} />
-
                   <p className="text-danger">
                     {addErrors.adharupload?.message}
                   </p>
@@ -1083,51 +1057,37 @@ function Staff() {
                 <div className="col-md-4">
                   <label className="fw-semibold">
                     PAN Card Upload
-                    {User.user_pan_image && (
+                    {User.staff_pan_image && (
                       <i className="fa-solid fa-circle-check text-success ms-2"></i>
                     )}
                   </label>
                   <input
                     type="file"
                     className="form-control"
-                    onChange={(e) => uploadFile(e, "user_pan_image")}
+                    onChange={(e) => uploadFile(e, "staff_pan_image")}
                   />
                   <input type="hidden" {...addRegister("panupload")} />
                   <p className="text-danger">{addErrors.panupload?.message}</p>
                 </div>
 
-                {/* Back Upload */}
+                {/* Bank Upload */}
                 <div className="col-md-4">
                   <label className="fw-semibold">
                     BankPassbook Upload
-                    {User.user_bankpassbook && (
+                    {User.staff_bankpassbook && (
                       <i className="fa-solid fa-circle-check text-success ms-2"></i>
                     )}
                   </label>
                   <input
                     type="file"
                     className="form-control"
-                    onChange={(e) => uploadFile(e, "user_bankpassbook")}
+                    onChange={(e) => uploadFile(e, "staff_bankpassbook")}
                   />
                   <input type="hidden" {...addRegister("bankpassbook")} />
                   <p className="text-danger">
                     {addErrors.bankpassbook?.message}
                   </p>
                 </div>
-
-                {/* Bank */}
-                {/* <div className="col-md-4">
-                  <label className="fw-semibold">Bank Passbook</label>
-                  <input
-                    type="text"
-                    {...addRegister("bankpassbook")}
-                    className="form-control"
-                    placeholder="Enter Bank Details"
-                  />
-                  <p className="text-danger">
-                    {addErrors.bankpassbook?.message}
-                  </p>
-                </div> */}
 
                 {/* Education Type */}
                 <div className="col-md-4">
@@ -1246,8 +1206,6 @@ function Staff() {
                     <option value="4">Applicant</option>
                     <option value="5">Interview</option>
                     <option value="6">Employer</option>
-                    {/* <option value="7">Packages</option>
-                    <option value="8">Offers</option> */}
                     <option value="9">Contact</option>
                     <option value="10">User</option>
                   </select>
@@ -1264,8 +1222,19 @@ function Staff() {
                   Cancel
                 </button>
 
-                <button type="submit" className="btn btn-success px-4 ms-auto">
-                  Submit
+                <button
+                  type="submit"
+                  className="btn btn-success px-4 ms-auto"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm me-2"></span>
+                      Please wait...
+                    </>
+                  ) : (
+                    "Submit"
+                  )}
                 </button>
               </div>
             </form>
@@ -1273,12 +1242,12 @@ function Staff() {
         </div>
       </div>
 
-      {/* Edit Model Code*/}
+      {/* EDIT MODAL (Same UI, only mapping fixed) */}
       <div className="modal fade" id="editUserModal" tabIndex="-1">
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content rounded-4">
             <div className="modal-header bg-success text-white">
-              <h5 className="modal-title fw-bold">Edit User</h5>
+              <h5 className="modal-title fw-bold">Edit Staff</h5>
               <i
                 className="fa-regular fa-circle-xmark"
                 data-bs-dismiss="modal"
@@ -1288,7 +1257,6 @@ function Staff() {
 
             <form onSubmit={handleEditSubmit(handleUpdateUser)}>
               <div className="modal-body row">
-                {/* Full Name */}
                 <div className="col-md-4">
                   <label className="fw-semibold">Full Name</label>
                   <input
@@ -1300,7 +1268,6 @@ function Staff() {
                   <p className="text-danger">{editErrors.fullname?.message}</p>
                 </div>
 
-                {/* Email */}
                 <div className="col-md-4">
                   <label className="fw-semibold">Email</label>
                   <input
@@ -1312,7 +1279,6 @@ function Staff() {
                   <p className="text-danger">{editErrors.email?.message}</p>
                 </div>
 
-                {/* Mobile */}
                 <div className="col-md-4">
                   <label className="fw-semibold">Mobile</label>
                   <input
@@ -1324,7 +1290,6 @@ function Staff() {
                   <p className="text-danger">{editErrors.mobile?.message}</p>
                 </div>
 
-                {/* Location */}
                 <div className="col-md-4">
                   <label className="fw-semibold">Location</label>
                   <input
@@ -1336,7 +1301,6 @@ function Staff() {
                   <p className="text-danger">{editErrors.location?.message}</p>
                 </div>
 
-                {/* Address */}
                 <div className="col-md-4">
                   <label className="fw-semibold">Address</label>
                   <input
@@ -1348,32 +1312,8 @@ function Staff() {
                   <p className="text-danger">{editErrors.address?.message}</p>
                 </div>
 
-                {/* State */}
-                {/* <div className="col-md-4">
-                  <label className="fw-semibold">State</label>
-                  <select
-                    className="form-select form-control"
-                    {...editRegister("state")}
-                    onChange={(e) => {
-                      const stateId = e.target.value;
-                      editSetValue("state", stateId);
-                      editSetValue("city", "");
-                      fetchCities(stateId);
-                    }}
-                  >
-                    <option value="">Select State</option>
-                    {states.map((s) => (
-                      <option key={s.state_id} value={s.state_id}>
-                        {s.state_name}
-                      </option>
-                    ))}
-                  </select>
-                  <p className="text-danger">{editErrors.state?.message}</p>
-                </div> */}
-
                 <div className="col-md-4 mt-2">
                   <label className="fw-semibold">State</label>
-
                   <SearchableDropdown
                     options={states}
                     value={editWatch("state")}
@@ -1390,10 +1330,8 @@ function Staff() {
                   />
                 </div>
 
-                {/* City */}
                 <div className="col-md-4">
                   <label className="fw-semibold">City</label>
-
                   <SearchableDropdown
                     options={cities}
                     value={editWatch("city")}
@@ -1411,7 +1349,6 @@ function Staff() {
                   />
                 </div>
 
-                {/* Join Date */}
                 <div className="col-md-4">
                   <label className="fw-semibold">Join Date</label>
                   <input
@@ -1422,21 +1359,6 @@ function Staff() {
                   <p className="text-danger">{editErrors.joindate?.message}</p>
                 </div>
 
-                {/* Bank */}
-                {/* <div className="col-md-4">
-                  <label className="fw-semibold">Bank Passbook</label>
-                  <input
-                    type="text"
-                    {...editRegister("bankpassbook")}
-                    className="form-control"
-                    placeholder="Enter Bank Details"
-                  />
-                  <p className="text-danger">
-                    {editErrors.bankpassbook?.message}
-                  </p>
-                </div> */}
-
-                {/* Education Type */}
                 <div className="col-md-4">
                   <label className="fw-semibold">Education Type</label>
                   <select
@@ -1466,7 +1388,6 @@ function Staff() {
                   </p>
                 </div>
 
-                {/* Education Detail */}
                 <div className="col-md-4">
                   <label className="fw-semibold">Education Detail</label>
 
@@ -1509,7 +1430,6 @@ function Staff() {
                   </p>
                 </div>
 
-                {/* Experience */}
                 <div className="col-md-4">
                   <label className="fw-semibold">Experience</label>
                   <input
@@ -1523,7 +1443,6 @@ function Staff() {
                   </p>
                 </div>
 
-                {/* Role */}
                 <div className="col-md-4">
                   <label className="fw-semibold">Role</label>
                   <select
@@ -1531,15 +1450,14 @@ function Staff() {
                     className="form-select form-control"
                   >
                     <option value="">Selete Role</option>
-                    <option value="1">Super Admin</option>
                     <option value="2">Sub Admin</option>
                     <option value="3">Backend</option>
                     <option value="4">Accountant</option>
+                    <option value="5">Other</option>
                   </select>
                   <p className="text-danger">{editErrors.role?.message}</p>
                 </div>
 
-                {/* Menus */}
                 <div className="col-md-4">
                   <label className="fw-semibold">Menus</label>
                   <select
@@ -1552,11 +1470,7 @@ function Staff() {
                     <option value="3">Candidate</option>
                     <option value="4">Applicant</option>
                     <option value="5">Interview</option>
-                    <option value="6">Employer</option>
-                    {/* <option value="7">Packages</option>
-                    <option value="8">Offers</option> */}
-                    <option value="9">Contact</option>
-                    <option value="10">User</option>
+                    <option value="12">Staff</option>
                   </select>
                   <p className="text-danger">{editErrors.menus?.message}</p>
                 </div>

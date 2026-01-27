@@ -30,22 +30,30 @@ function PaymentSuccess() {
             ? "Employer Signup Fee"
             : saved.role?.toLowerCase() === "resume_download"
               ? "Resume Download Fee"
-              : "Payment"),
+              : saved.role?.toLowerCase() === "employer_staff"
+                ? "Extended Staff Fee"
+                : "Payment"),
       date: saved.date || new Date().toLocaleString(),
     };
 
     setPayment(finalPayment);
   }, [navigate]);
 
-  // ✅ countdown चालवणारा effect
   useEffect(() => {
     if (count === null) return;
+
     if (count === 0) {
       const paymentUser = JSON.parse(
         localStorage.getItem("paymentUser") || "{}",
       );
+
       const returnTo = paymentUser?.returnTo || "/signin";
+
       navigate(returnTo);
+
+      localStorage.removeItem("paymentUser");
+      localStorage.removeItem("paymentDone");
+
       return;
     }
 
@@ -72,7 +80,7 @@ function PaymentSuccess() {
 
   const downloadPDF = async () => {
     try {
-      // ✅ click करताच countdown start
+      
       if (count === null) setCount(5);
 
       setLoading(true);

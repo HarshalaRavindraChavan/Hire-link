@@ -48,6 +48,12 @@ export const seoConfig = {
       "Manage all platform users, monitor account details, and control access using Hirelink admin panel.",
   },
 
+  a_staff: {
+    title: "Hirelink | Staff",
+    description:
+      "Manage all staff, monitor account details, and control access using Hirelink admin panel.",
+  },
+
   emp_profile: {
     title: "Hirelink | Profile of",
     description:

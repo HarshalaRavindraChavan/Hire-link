@@ -17,9 +17,9 @@ function PaymentPage() {
 
   const createOrder = async () => {
     try {
-      
-      if (!user?.role) {
-        toast.error("Role missing");
+      if (!user?.email || !user?.role) {
+        toast.error("Payment session expired. Please add staff again.");
+        setErrorMsg("Payment session expired. Please add staff again.");
         return;
       }
 
@@ -33,6 +33,7 @@ function PaymentPage() {
         email: user.email,
         role: roleLower,
         for: user.for,
+        employer_id: user.employer_id || null, // ✅ NEW
       };
 
       // ✅ फक्त resume_download असेल तेव्हाच candidate_id add कर
@@ -74,9 +75,9 @@ function PaymentPage() {
   };
 
   useEffect(() => {
-    if (!user) {
-      toast.error("User not found. Please signup again.");
-      navigate("/signup");
+    if (!user?.email || !user?.role) {
+      toast.error("Payment session expired. Please add staff again.");
+      navigate("/staff");
       return;
     }
 
@@ -130,6 +131,36 @@ function PaymentPage() {
 
           if (verify.data.status) {
             toast.success("Payment successful 🎉");
+            const pendingStaff = JSON.parse(
+              localStorage.getItem("pendingStaff"),
+            );
+
+            if (String(user.role).toLowerCase() === "employer_staff") {
+              if (!pendingStaff) {
+                toast.error("Staff data missing ❌");
+                return;
+              }
+
+              try {
+                const insertRes = await axios.post(
+                  `${BASE_URL}hirelink_apis/admin/insert/tbl_staff`,
+                  pendingStaff,
+                );
+
+                if (insertRes.data.status) {
+                  toast.success("Staff added successfully ✅");
+                  localStorage.removeItem("pendingStaff");
+                } else {
+                  toast.error("Payment done but staff not added ❌");
+                  return;
+                }
+              } catch (err) {
+                console.error(err);
+                toast.error("Payment done but staff insert failed ❌");
+                return;
+              }
+            }
+
             localStorage.setItem("paymentDone", "true");
 
             localStorage.setItem(

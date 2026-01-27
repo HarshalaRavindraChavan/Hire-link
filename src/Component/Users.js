@@ -38,7 +38,7 @@ function Users() {
   const fetchStates = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdata/tbl_state`
+        `${BASE_URL}hirelink_apis/candidate/getdata/tbl_state`,
       );
 
       if (res.data?.status) {
@@ -52,7 +52,7 @@ function Users() {
   const fetchCities = async (stateId, selectedCity = null) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_city/city_state_id/${stateId}`
+        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_city/city_state_id/${stateId}`,
       );
 
       if (res.data?.status) {
@@ -85,7 +85,7 @@ function Users() {
       setLoading(true);
 
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/getdata/tbl_user`
+        `${BASE_URL}hirelink_apis/admin/getdata/tbl_user`,
       );
       if (res.data.status === true) {
         setUsers(res.data.data);
@@ -120,7 +120,7 @@ function Users() {
   const confirmDelete = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/deletedata/tbl_user/user_id/${deleteId}`
+        `${BASE_URL}hirelink_apis/admin/deletedata/tbl_user/user_id/${deleteId}`,
       );
 
       if (res.data.status === true) {
@@ -144,30 +144,47 @@ function Users() {
 
   /* ================= VALIDATION ================= */
   const addschema = yup.object({
-    fullname: yup.string().required(),
-    email: yup.string().email().required(),
+    fullname: yup.string().required("Full name is required"),
+
+    email: yup.string().email("Invalid email").required("Email is required"),
+
     mobile: yup
       .string()
-      .matches(/^\d{10}$/)
-      .required(),
+      .matches(/^\d{10}$/, "Mobile number must be 10 digits")
+      .required("Mobile number is required"),
+
     password: yup
       .string()
       .min(6, "Minimum 6 characters")
       .required("Password is required"),
-    location: yup.string().required(),
-    address: yup.string().required(),
-    state: yup.string().required(),
-    city: yup.string().required(),
-    joindate: yup.date().required(),
-    adharupload: yup.string().required("Aadhar upload required"),
-    panupload: yup.string().required("PAN upload required"),
-    bankpassbook: yup.string().required("BackPassbook upload required"),
-    experience: yup.string().required(),
+
+    location: yup.string().required("Location is required"),
+    address: yup.string().required("Address is required"),
+    state: yup.string().required("State is required"),
+    city: yup.string().required("City is required"),
+    joindate: yup.date().required("Join date is required"),
+    
+    adhar: yup
+      .string()
+      .required("Aadhar number is required")
+      .matches(/^[0-9]{12}$/, "Aadhar number must be 12 digits"),
+
+    pan: yup
+      .string()
+      .required("PAN number is required")
+      .matches(
+        /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/,
+        "Invalid PAN number (eg: ABCDE1234F)",
+      ),
+
+    bankpassbook: yup.string().required("Bank passbook upload is required"),
+    experience: yup.string().required("Experience is required"),
     education_type: yup.string().required("Education Type is required"),
     education_detail: yup.string().required("Education Detail is required"),
 
-    role: yup.string().required(),
-    menus: yup.array().min(1).required(),
+    role: yup.string().required("Role is required"),
+
+    menus: yup.array().min(1, "Select at least one menu").required(),
   });
 
   // ✅ ADD FORM
@@ -212,14 +229,14 @@ function Users() {
       // user_aadhar_image: User.user_aadhar_image,
       // user_pan_image: User.user_pan_image,
       user_aadhar: User.adhar,
-      user_pan_image : User.pan,
+      user_pan: User.pan,
       user_status: "Active",
     };
 
     try {
       const res = await axios.post(
         `${BASE_URL}hirelink_apis/admin/insert/tbl_user`,
-        payload
+        payload,
       );
 
       if (res.data.status) {
@@ -255,8 +272,8 @@ function Users() {
     const file = e.target.files[0];
     if (!file) return;
 
-    const minSize = 30 * 1024; 
-    const maxSize = 50 * 1024; 
+    const minSize = 30 * 1024;
+    const maxSize = 50 * 1024;
     const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
 
     // helper to reset RHF value
@@ -279,8 +296,8 @@ function Users() {
     if (file.size < minSize) {
       toast.error(
         `File too small ❌ (${Math.round(
-          file.size / 1024
-        )}KB). Minimum 30KB required`
+          file.size / 1024,
+        )}KB). Minimum 30KB required`,
       );
       e.target.value = "";
       resetRHF();
@@ -292,8 +309,8 @@ function Users() {
     if (file.size > maxSize) {
       toast.error(
         `File too large ❌ (${Math.round(
-          file.size / 1024
-        )}KB). Maximum 50KB allowed`
+          file.size / 1024,
+        )}KB). Maximum 50KB allowed`,
       );
       e.target.value = "";
       resetRHF();
@@ -308,7 +325,7 @@ function Users() {
     try {
       const res = await axios.post(
         `${BASE_URL}hirelink_apis/admin/fileupload`,
-        formData
+        formData,
       );
 
       if (res.data.status) {
@@ -456,7 +473,7 @@ function Users() {
 
       const response = await axios.post(
         `${BASE_URL}hirelink_apis/admin/updatedata/tbl_user/user_id/${editUserId}`,
-        payload
+        payload,
       );
 
       if (response?.data?.status === true) {
@@ -559,7 +576,7 @@ function Users() {
         `${BASE_URL}hirelink_apis/admin/updatedata/tbl_user/user_id/${userId}`,
         {
           user_status: newStatus,
-        }
+        },
       );
 
       if (res.data?.status === true) {
@@ -568,8 +585,8 @@ function Users() {
         // ✅ UI instant update without refetch
         setUsers((prev) =>
           prev.map((u) =>
-            u.user_id === userId ? { ...u, user_status: newStatus } : u
-          )
+            u.user_id === userId ? { ...u, user_status: newStatus } : u,
+          ),
         );
       } else {
         toast.error("Status update failed ❌");
@@ -796,7 +813,7 @@ function Users() {
                           <span className="text-dark fw-normal">
                             {/* ✅ Admin can change */}
                             {Number(
-                              JSON.parse(localStorage.getItem("auth"))?.role
+                              JSON.parse(localStorage.getItem("auth"))?.role,
                             ) === 1 ? (
                               <select
                                 className={`form-select form-select-sm d-inline w-auto ${
@@ -957,7 +974,7 @@ function Users() {
 
                   <SearchableDropdown
                     className="form-select form-control"
-                    value={addWatch("state")} 
+                    value={addWatch("state")}
                     options={states}
                     placeholder="Select State"
                     searchPlaceholder="Search state..."
@@ -998,7 +1015,7 @@ function Users() {
 
                   <SearchableDropdown
                     className="form-select form-control"
-                    value={addWatch("city")} 
+                    value={addWatch("city")}
                     options={cities}
                     disabled={!cities.length}
                     placeholder={

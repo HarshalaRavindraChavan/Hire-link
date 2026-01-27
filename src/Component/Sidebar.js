@@ -8,7 +8,7 @@ function Sidebar() {
   const assignedMenuIds = auth?.menu_ids || [];
 
   // Employer fixed menus
-  const employerMenuIds = [1, 2, 3, 4, 5, 11,12];
+  const employerMenuIds = [1, 2, 3, 4, 5, 11, 12];
   const allMenus = [
     { id: 1, label: "Dashboard", path: "/dashboard", icon: "fas fa-home" },
     { id: 2, label: "Jobs", path: "/job", icon: "fa fa-briefcase" },
@@ -43,11 +43,11 @@ function Sidebar() {
     finalMenus = allMenus.filter((menu) => employerMenuIds.includes(menu.id));
   } else if (role === "1") {
     // 🔓 Admin → ALL menus EXCEPT Profile (id 11)
-    finalMenus = allMenus.filter((menu) => menu.id !== 11);
+    finalMenus = allMenus.filter((menu) => menu.id !== 11 && menu.id !== 12);
   } else {
     // 👤 Other users → assigned menus EXCEPT Profile
     finalMenus = allMenus.filter(
-      (menu) => assignedMenuIds.includes(menu.id) && menu.id !== 11
+      (menu) => assignedMenuIds.includes(menu.id) && menu.id !== 11,
     );
   }
 

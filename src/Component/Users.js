@@ -137,8 +137,8 @@ function Users() {
 
   /* ================= FILE STATE ================= */
   const [User, setUser] = useState({
-    user_aadhar_image: "",
-    user_pan_image: "",
+    // user_aadhar_image: "",
+    // user_pan_image: "",
     user_bankpassbook: "", // ✅ ADD THIS
   });
 
@@ -176,8 +176,8 @@ function Users() {
     defaultValues: {
       state: "",
       city: "",
-      adharupload: "",
-      panupload: "",
+      // adharupload: "",
+      // panupload: "",
       bankpassbook: "",
     },
   });
@@ -209,8 +209,10 @@ function Users() {
       user_education_detail: data.education_detail,
       user_role: data.role,
       user_menu_id: data.menus.join(","),
-      user_aadhar_image: User.user_aadhar_image,
-      user_pan_image: User.user_pan_image,
+      // user_aadhar_image: User.user_aadhar_image,
+      // user_pan_image: User.user_pan_image,
+      user_aadhar: User.adhar,
+      user_pan_image : User.pan,
       user_status: "Active",
     };
 
@@ -225,8 +227,8 @@ function Users() {
 
         resetAdd(); // form reset
         setUser({
-          user_aadhar_image: "",
-          user_pan_image: "",
+          // user_aadhar_image: "",
+          // user_pan_image: "",
           user_bankpassbook: "",
         });
         // reset file state
@@ -253,8 +255,8 @@ function Users() {
     const file = e.target.files[0];
     if (!file) return;
 
-    const minSize = 30 * 1024; // 30KB
-    const maxSize = 50 * 1024; // 50KB
+    const minSize = 30 * 1024; 
+    const maxSize = 50 * 1024; 
     const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
 
     // helper to reset RHF value
@@ -955,7 +957,7 @@ function Users() {
 
                   <SearchableDropdown
                     className="form-select form-control"
-                    value={addWatch("state")} // ✅ FIX
+                    value={addWatch("state")} 
                     options={states}
                     placeholder="Select State"
                     searchPlaceholder="Search state..."
@@ -996,7 +998,7 @@ function Users() {
 
                   <SearchableDropdown
                     className="form-select form-control"
-                    value={addWatch("city")} // ✅ FIX
+                    value={addWatch("city")} 
                     options={cities}
                     disabled={!cities.length}
                     placeholder={

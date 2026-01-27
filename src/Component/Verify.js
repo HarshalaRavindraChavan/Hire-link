@@ -1,132 +1,164 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import SEO from "../SEO";
 import { seoConfig } from "../config/seoConfig";
 import { BASE_URL } from "../config/constants";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
+import "../Component/css/Verify.css";
+import logo from "./logo/hirelink.png";
 
 function Verify() {
   const navigate = useNavigate();
+  const inputsRef = useRef([]);
 
-  const [code, setCode] = useState("");
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState(""); // ✅ candidate / employer
+  const [role, setRole] = useState("");
   const [loading, setLoading] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(0);
+  const [shake, setShake] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
 
+  const OTP_EXPIRY_KEY = "otpExpiryTime";
+  const RESEND_LIMIT_KEY = "otpResendCount";
+  const RESEND_TIME_KEY = "otpResendTime";
+
+  // ================= LOAD EMAIL =================
+  // useEffect(() => {
+  //   const verifyUser = JSON.parse(localStorage.getItem("verifyUser"));
+  //   if (!verifyUser?.email || !verifyUser?.role) {
+  //     toast.error("Session expired. Please signup again.");
+  //     navigate("/signup");
+  //     return;
+  //   }
+  //   setEmail(verifyUser.email);
+  //   setRole(verifyUser.role);
+  // }, [navigate]);
+
+  // ================= OTP TIMER =================
   useEffect(() => {
-    const verifyUser = JSON.parse(localStorage.getItem("verifyUser"));
-
-    if (verifyUser?.email && verifyUser?.role) {
-      setEmail(verifyUser.email);
-      setRole(verifyUser.role);
-    } else {
-      toast.error("No email found. Please signup again.");
-      navigate("/signup");
+    let expiry = localStorage.getItem(OTP_EXPIRY_KEY);
+    if (!expiry) {
+      expiry = Date.now() + 5 * 60 * 1000;
+      localStorage.setItem(OTP_EXPIRY_KEY, expiry);
     }
-  }, [navigate]);
 
-  const maskEmail = (email) => {
-    if (!email) return "";
-    const [name, domain] = email.split("@");
-    if (!domain) return email;
+    const interval = setInterval(() => {
+      const diff = Math.floor((expiry - Date.now()) / 1000);
+      setTimeLeft(diff > 0 ? diff : 0);
+    }, 1000);
 
-    const maskedName =
-      name.length <= 2
-        ? name[0] + "*"
-        : name.slice(0, 3) + "*".repeat(name.length - 3);
+    return () => clearInterval(interval);
+  }, []);
 
-    return `${maskedName}@${domain}`;
+  // ================= RESEND RATE LIMIT =================
+  useEffect(() => {
+    const lastTime = localStorage.getItem(RESEND_TIME_KEY);
+    if (!lastTime) return;
+
+    const diff = Math.floor((Date.now() - lastTime) / 1000);
+    if (diff < 60) {
+      setResendCooldown(60 - diff);
+    }
+
+    const interval = setInterval(() => {
+      setResendCooldown((p) => (p > 0 ? p - 1 : 0));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // ================= HELPERS =================
+  const formatTime = (s) =>
+    `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, "0")}`;
+
+  const handleOtpChange = (value, index) => {
+    if (!/^\d?$/.test(value)) return;
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
+
+    if (value && index < 5) inputsRef.current[index + 1].focus();
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (code.length !== 6) {
-      toast.error("Enter valid 6 digit OTP");
-      return;
+  const handleKeyDown = (e, index) => {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
+      inputsRef.current[index - 1].focus();
     }
+  };
 
-    if (!email || !role) {
-      toast.error("Verification details missing. Please signup again.");
-      navigate("/signup");
-      return;
-    }
+  // ================= AUTO SUBMIT =================
+  useEffect(() => {
+    if (otp.join("").length === 6 && timeLeft > 0) verifyOtp();
+  }, [otp]); // eslint-disable-line
 
+  // ================= VERIFY =================
+  const verifyOtp = async () => {
+    if (loading) return;
     setLoading(true);
 
     try {
-      let url = "";
-      let payload = {};
+      const payload =
+        role === "candidate"
+          ? { can_email: email, otp: otp.join("") }
+          : { emp_email: email, otp: otp.join("") };
 
-      if (role === "candidate") {
-        url = `${BASE_URL}hirelink_apis/candidate/verifyEmailOtp`;
-        payload = { can_email: email, otp: code };
-      } else {
-        url = `${BASE_URL}hirelink_apis/employer/verifyEmailOtp`;
-        payload = { emp_email: email, otp: code };
-      }
+      const url =
+        role === "candidate"
+          ? `${BASE_URL}hirelink_apis/candidate/verifyEmailOtp`
+          : `${BASE_URL}hirelink_apis/employer/verifyEmailOtp`;
 
       const res = await axios.post(url, payload);
-      const data = res.data;
 
-      if (data.status === true) {
+      if (res.data?.status) {
         toast.success("Email verified successfully ✅");
-
-        // ✅ store payment user info for payment page
-        localStorage.setItem(
-          "paymentUser",
-          JSON.stringify({
-            email: email,
-            role: role,
-            for: "Account Creat",
-          }),
-        );
-
-        // ✅ clear verifyUser
-        localStorage.removeItem("verifyUser");
-
-        setTimeout(() => {
-          navigate("/payment");
-        }, 800);
+        localStorage.removeItem(OTP_EXPIRY_KEY);
+        navigate("/payment");
       } else {
-        toast.error(data.message || "OTP verification failed");
+        throw new Error();
       }
-    } catch (error) {
-      toast.error(error.response?.data?.message || "OTP verification failed");
+    } catch {
+      setShake(true);
+      setTimeout(() => setShake(false), 400);
+      toast.error("Invalid OTP");
+      setOtp(["", "", "", "", "", ""]);
+      inputsRef.current[0].focus();
     } finally {
       setLoading(false);
     }
   };
 
-  // ✅ Resend OTP
+  // ================= RESEND OTP =================
   const resendOtp = async () => {
-    if (!email || !role) {
-      toast.error("Verification details missing. Please signup again.");
-      navigate("/signup");
+    if (resendCooldown > 0) return;
+
+    const count = Number(localStorage.getItem(RESEND_LIMIT_KEY)) || 0;
+    if (count >= 3) {
+      toast.error("Too many resend attempts. Try after some time.");
       return;
     }
 
     try {
-      let url = "";
-      let payload = {};
+      const payload =
+        role === "candidate" ? { can_email: email } : { emp_email: email };
 
-      if (role === "candidate") {
-        url = `${BASE_URL}hirelink_apis/candidate/resendOtp`;
-        payload = { can_email: email };
-      } else {
-        url = `${BASE_URL}hirelink_apis/employer/resendOtp`;
-        payload = { emp_email: email };
-      }
+      const url =
+        role === "candidate"
+          ? `${BASE_URL}hirelink_apis/candidate/resendOtp`
+          : `${BASE_URL}hirelink_apis/employer/resendOtp`;
 
-      const res = await axios.post(url, payload);
+      await axios.post(url, payload);
 
-      if (res.data?.status === true) {
-        toast.success("OTP resent to email ✅");
-      } else {
-        toast.error(res.data?.message || "Failed to resend OTP");
-      }
-    } catch (error) {
+      toast.success("OTP resent successfully ✅");
+
+      localStorage.setItem(RESEND_LIMIT_KEY, count + 1);
+      localStorage.setItem(RESEND_TIME_KEY, Date.now());
+
+      setResendCooldown(60);
+      setTimeLeft(300);
+      localStorage.setItem(OTP_EXPIRY_KEY, Date.now() + 300000);
+    } catch {
       toast.error("Failed to resend OTP");
     }
   };
@@ -137,60 +169,68 @@ function Verify() {
         title={seoConfig.verify.title}
         description={seoConfig.verify.description}
       />
-      <ToastContainer position="top-right" autoClose={3000} theme="colored" />
+      <ToastContainer />
 
-      <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
-        <div className="card shadow p-4" style={{ width: "420px" }}>
-          <div className="text-center mb-3">
-            <h2 className="fw-bold text-success">Hirelink</h2>
+      <div className="vh-100 d-flex align-items-center justify-content-center bg-light">
+        <div
+          className="card p-4 shadow"
+          style={{ maxWidth: 420, width: "100%" }}
+        >
+          <div style={{ textAlign: "center" }}>
+            <img
+              src={logo}
+              style={{ width: "100px", height: "100px" }}
+              alt="logo"
+            />
           </div>
 
-          <h5 className="text-center fw-bold mb-3">Email Verification</h5>
-
-          <p className="text-center" style={{ color: "#928f8fff" }}>
-            OTP sent to: <br />
-            <b>{maskEmail(email)}</b>
+          <p className="text-center text-muted" aria-live="polite">
+            Enter the 6-digit code sent to your email
           </p>
 
-          <form onSubmit={handleSubmit}>
-            <label className="form-label fw-semibold">Enter OTP *</label>
-            <input
-              type="text"
-              className="form-control mb-3"
-              value={code}
-              onChange={(e) =>
-                setCode(e.target.value.replace(/\D/g, "").slice(0, 6))
-              }
-              placeholder="Enter 6-digit code"
-              required
-            />
+          <div
+            className={`d-flex justify-content-between mb-3 ${shake ? "otp-shake" : ""}`}
+            role="group"
+            aria-label="OTP input"
+          >
+            {otp.map((d, i) => (
+              <input
+                key={i}
+                ref={(el) => (inputsRef.current[i] = el)}
+                className="form-control otp-input text-center fw-bold"
+                style={{ width: 50, height: 20, fontSize: 16 }}
+                value={d}
+                maxLength={1}
+                inputMode="numeric"
+                aria-label={`Digit ${i + 1}`}
+                onChange={(e) => handleOtpChange(e.target.value, i)}
+                onKeyDown={(e) => handleKeyDown(e, i)}
+              />
+            ))}
+          </div>
 
-            <p className="small text-dark">
-              This OTP will expire in 5 minutes.
-            </p>
+          <p className="small text-center">
+            OTP expires in <b>{formatTime(timeLeft)}</b>
+          </p>
 
-            <button
-              className="btn btn-success w-100 fw-semibold"
-              disabled={loading}
-            >
-              {loading ? "Verifying..." : "Verify & Continue"}
-            </button>
-          </form>
+          <button
+            className="btn btn-success w-100"
+            disabled={loading || timeLeft === 0}
+          >
+            {loading ? "Verifying..." : "Verify & Continue"}
+          </button>
 
           <div className="text-center mt-3">
             <button
+              className="btn btn-link"
+              disabled={resendCooldown > 0}
               onClick={resendOtp}
-              className="btn btn-link fw-semibold text-decoration-none"
-              style={{ color: "#928f8fff" }}
-              type="button"
             >
-              Send new code
+              {resendCooldown > 0
+                ? `Resend in ${resendCooldown}s`
+                : "Send new code"}
             </button>
           </div>
-
-          <footer className="text-center mt-3 small text-warning">
-            © {new Date().getFullYear()} Hirelink
-          </footer>
         </div>
       </div>
     </>

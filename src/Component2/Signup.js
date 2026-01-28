@@ -23,6 +23,7 @@ const Signup = () => {
   const [captchaToken, setCaptchaToken] = useState(null);
 
   /* ---------------- VALIDATION ---------------- */
+  
   const validationSchema = Yup.object({
     fullname: Yup.string().required("Full name is required"),
 

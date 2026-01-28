@@ -163,12 +163,10 @@ function Users() {
     state: yup.string().required("State is required"),
     city: yup.string().required("City is required"),
     joindate: yup.date().required("Join date is required"),
-    
     adhar: yup
       .string()
       .required("Aadhar number is required")
       .matches(/^[0-9]{12}$/, "Aadhar number must be 12 digits"),
-
     pan: yup
       .string()
       .required("PAN number is required")
@@ -176,14 +174,11 @@ function Users() {
         /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/,
         "Invalid PAN number (eg: ABCDE1234F)",
       ),
-
     bankpassbook: yup.string().required("Bank passbook upload is required"),
     experience: yup.string().required("Experience is required"),
     education_type: yup.string().required("Education Type is required"),
     education_detail: yup.string().required("Education Detail is required"),
-
     role: yup.string().required("Role is required"),
-
     menus: yup.array().min(1, "Select at least one menu").required(),
   });
 
@@ -228,7 +223,7 @@ function Users() {
       user_menu_id: data.menus.join(","),
       // user_aadhar_image: User.user_aadhar_image,
       // user_pan_image: User.user_pan_image,
-      user_aadhar: User.adhar,
+      user_adhar: User.adhar,
       user_pan: User.pan,
       user_status: "Active",
     };
@@ -1243,7 +1238,6 @@ function Users() {
                     className="form-select form-control"
                   >
                     <option value="">Selete Role</option>
-                    <option value="1">Super Admin</option>
                     <option value="2">Sub Admin</option>
                     <option value="3">Backend</option>
                     <option value="4">Accountant</option>

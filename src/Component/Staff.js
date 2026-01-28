@@ -160,8 +160,8 @@ function Staff() {
 
   /* ================= FILE STATE ================= */
   const [User, setUser] = useState({
-    staff_aadhar_image: "",
-    staff_pan_image: "",
+    // staff_aadhar_image: "",
+    // staff_pan_image: "",
     staff_bankpassbook: "",
   });
 
@@ -179,8 +179,8 @@ function Staff() {
     state: yup.string().required(),
     city: yup.string().required(),
     joindate: yup.date().required(),
-    adharupload: yup.string().required("Aadhar upload required"),
-    panupload: yup.string().required("PAN upload required"),
+    // adharupload: yup.string().required("Aadhar upload required"),
+    // panupload: yup.string().required("PAN upload required"),
     bankpassbook: yup.string().required("BackPassbook upload required"),
     experience: yup.string().required(),
     education_type: yup.string().required("Education Type is required"),
@@ -195,8 +195,8 @@ function Staff() {
     defaultValues: {
       state: "",
       city: "",
-      adharupload: "",
-      panupload: "",
+      // adharupload: "",
+      // panupload: "",
       bankpassbook: "",
     },
   });
@@ -290,8 +290,10 @@ function Staff() {
         staff_education_detail: data.education_detail,
         staff_role: data.role,
         staff_menu_id: data.menus.join(","),
-        staff_aadhar_image: User.staff_aadhar_image,
-        staff_pan_image: User.staff_pan_image,
+        // staff_aadhar_image: User.staff_aadhar_image,
+        // staff_pan_image: User.staff_pan_image,
+        staff_adhar: data.adhar,
+        staff_pan: data.pan,
         staff_bankpassbook: User.staff_bankpassbook,
         staff_status: "Active",
         staff_employer_id: employerId,
@@ -1034,8 +1036,32 @@ function Staff() {
                   <p className="text-danger">{addErrors.joindate?.message}</p>
                 </div>
 
-                {/* Aadhaar Upload */}
+                {/* Aadhaar */}
                 <div className="col-md-4">
+                  <label className="fw-semibold">Adhar Number</label>
+                  <input
+                    type="text"
+                    {...addRegister("adhar")}
+                    className="form-control"
+                    placeholder="Enter Adhar Number"
+                  />
+                  <p className="text-danger">{addErrors.adhar?.message}</p>
+                </div>
+
+                {/* PAN */}
+                <div className="col-md-4">
+                  <label className="fw-semibold">PAN Number</label>
+                  <input
+                    type="text"
+                    {...addRegister("pan")}
+                    className="form-control"
+                    placeholder="Enter PAN Number"
+                  />
+                  <p className="text-danger">{addErrors.pan?.message}</p>
+                </div>
+
+                {/* Aadhaar Upload */}
+                {/* <div className="col-md-4">
                   <label className="fw-semibold">
                     Aadhar Card Upload
                     {User.staff_aadhar_image && (
@@ -1051,10 +1077,10 @@ function Staff() {
                   <p className="text-danger">
                     {addErrors.adharupload?.message}
                   </p>
-                </div>
+                </div> */}
 
                 {/* PAN Upload */}
-                <div className="col-md-4">
+                {/* <div className="col-md-4">
                   <label className="fw-semibold">
                     PAN Card Upload
                     {User.staff_pan_image && (
@@ -1068,7 +1094,7 @@ function Staff() {
                   />
                   <input type="hidden" {...addRegister("panupload")} />
                   <p className="text-danger">{addErrors.panupload?.message}</p>
-                </div>
+                </div> */}
 
                 {/* Bank Upload */}
                 <div className="col-md-4">

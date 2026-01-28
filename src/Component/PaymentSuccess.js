@@ -13,6 +13,8 @@ function PaymentSuccess() {
 
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("paymentDetails"));
+    const paymentUser = JSON.parse(localStorage.getItem("paymentUser") || "{}");
+    const temp = paymentUser?.tempData || {};
 
     if (!saved) {
       navigate("/signin");
@@ -21,6 +23,13 @@ function PaymentSuccess() {
 
     const finalPayment = {
       ...saved,
+
+      name: paymentUser.role === "candidate" ? temp.can_name : temp.emp_name,
+
+      // ✅ Mobile
+      mobile:
+        paymentUser.role === "candidate" ? temp.can_mobile : temp.emp_mobile,
+
       receiptNo: saved.receiptNo || `RCPT-${Date.now().toString().slice(-8)}`,
       paymentFor:
         saved.paymentFor ||
@@ -80,8 +89,7 @@ function PaymentSuccess() {
 
   const downloadPDF = async () => {
     try {
-      
-      if (count === null) setCount(5);
+      if (count === null) setCount(3);
 
       setLoading(true);
 

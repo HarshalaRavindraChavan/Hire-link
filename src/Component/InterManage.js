@@ -42,7 +42,7 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
       }
 
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/employer/getdatawhere/tbl_interview/itv_employer_id/${employerId}`
+        `${BASE_URL}hirelink_apis/employer/getdatawhere/tbl_interview/itv_employer_id/${employerId}`,
       );
 
       if (res?.data?.status) {
@@ -60,7 +60,7 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
 
   const getCandidateById = async (can_id) => {
     const res = await axios.get(
-      `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_candidate/can_id/${can_id}`
+      `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_candidate/can_id/${can_id}`,
     );
 
     if (res?.data?.status && res?.data?.data?.length > 0) {
@@ -77,7 +77,7 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
       // 1) Interview status update
       const res = await axios.post(
         `${BASE_URL}hirelink_apis/employer/updatedata/tbl_interview/itv_id/${itv_id}`,
-        { itv_status: newStatus }
+        { itv_status: newStatus },
       );
 
       if (!res?.data?.status) {
@@ -108,7 +108,7 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
           `${BASE_URL}hirelink_apis/candidate/updatedata/tbl_candidate/can_id/${can_id}`,
           {
             can_score: newScore,
-          }
+          },
         );
 
         if (!scoreRes?.data?.status) {
@@ -144,7 +144,8 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
     if (activeTab === "Pending")
       return status === "Pending" || status === "Reschedule Request";
 
-    if (activeTab === "Upcoming") return status === "Confirmed";
+    if (activeTab === "Upcoming")
+      return status === "Confirmed" || status === "Hold";
 
     if (activeTab === "Appointed") return status === "Appointed";
 
@@ -154,9 +155,9 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
         status === "Cancelled" ||
         status === "Completed" ||
         status === "Rejected" ||
-        status === "Hold" ||
         status === "Not Attended" ||
-        status === "Not Joined"
+        status === "Not Joined" ||
+        status === "Joined"
       );
 
     return true;
@@ -205,11 +206,11 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
   }).length;
 
   const upcomingCount = interviews.filter(
-    (i) => (i.itv_status || "").trim() === "Confirmed"
+    (i) => (i.itv_status || "").trim() === "Confirmed",
   ).length;
 
   const appointedCount = interviews.filter(
-    (i) => (i.itv_status || "").trim() === "Appointed"
+    (i) => (i.itv_status || "").trim() === "Appointed",
   ).length;
 
   return (
@@ -242,10 +243,10 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
                       tab === "Pending"
                         ? pendingCount
                         : tab === "Upcoming"
-                        ? upcomingCount
-                        : tab === "Appointed"
-                        ? appointedCount
-                        : null;
+                          ? upcomingCount
+                          : tab === "Appointed"
+                            ? appointedCount
+                            : null;
 
                     return (
                       <li className="nav-item" key={tab}>
@@ -260,7 +261,7 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
                         </button>
                       </li>
                     );
-                  }
+                  },
                 )}
               </ul>
 
@@ -309,47 +310,48 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
                               item.itv_status === "Pending"
                                 ? "bg-warning"
                                 : item.itv_status === "Confirmed"
-                                ? "bg-primary"
-                                : item.itv_status === "Candidate Cancelled"
-                                ? "bg-danger"
-                                : item.itv_status === "Cancelled"
-                                ? "bg-danger"
-                                : item.itv_status === "Completed"
-                                ? "bg-success"
-                                : item.itv_status === "Rejected"
-                                ? "bg-danger"
-                                : item.itv_status === "Hold"
-                                ? "bg-warning"
-                                : item.itv_status === "Not Attended"
-                                ? "bg-dark"
-                                : item.itv_status === "Appointed"
-                                ? "bg-info"
-                                : item.itv_status === "Not Joined"
-                                ? "bg-danger"
-                                : "bg-secondary"
+                                  ? "bg-primary"
+                                  : item.itv_status === "Candidate Cancelled"
+                                    ? "bg-danger"
+                                    : item.itv_status === "Cancelled"
+                                      ? "bg-danger"
+                                      : item.itv_status === "Completed"
+                                        ? "bg-success"
+                                        : item.itv_status === "Rejected"
+                                          ? "bg-danger"
+                                          : item.itv_status === "Hold"
+                                            ? "bg-warning"
+                                            : item.itv_status === "Not Attended"
+                                              ? "bg-dark"
+                                              : item.itv_status === "Appointed"
+                                                ? "bg-info"
+                                                : item.itv_status ===
+                                                    "Not Joined"
+                                                  ? "bg-danger"
+                                                  : "bg-secondary"
                             }`}
                           >
                             {item.itv_status === "Pending"
                               ? "Awaiting candidate confirmation"
                               : item.itv_status === "Confirmed"
-                              ? "Scheduled"
-                              : item.itv_status === "Candidate Cancelled"
-                              ? "Candidate Cancelled"
-                              : item.itv_status === "Cancelled"
-                              ? "Cancelled"
-                              : item.itv_status === "Completed"
-                              ? "Completed"
-                              : item.itv_status === "Rejected"
-                              ? "Rejected"
-                              : item.itv_status === "Hold"
-                              ? "On Hold"
-                              : item.itv_status === "Not Attended"
-                              ? "Not Attended"
-                              : item.itv_status === "Appointed"
-                              ? "Appointed"
-                              : item.itv_status === "Not Joined"
-                              ? "Not Joined"
-                              : item.itv_status}
+                                ? "Scheduled"
+                                : item.itv_status === "Candidate Cancelled"
+                                  ? "Candidate Cancelled"
+                                  : item.itv_status === "Cancelled"
+                                    ? "Cancelled"
+                                    : item.itv_status === "Completed"
+                                      ? "Completed"
+                                      : item.itv_status === "Rejected"
+                                        ? "Rejected"
+                                        : item.itv_status === "Hold"
+                                          ? "On Hold"
+                                          : item.itv_status === "Not Attended"
+                                            ? "Not Attended"
+                                            : item.itv_status === "Appointed"
+                                              ? "Appointed"
+                                              : item.itv_status === "Not Joined"
+                                                ? "Not Joined"
+                                                : item.itv_status}
                           </span>
 
                           <div className="small text-muted">
@@ -460,7 +462,7 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
                         updateInterviewStatus(
                           selectedInterview.itv_id,
                           "Cancelled",
-                          selectedInterview.can_id
+                          selectedInterview.can_id,
                         )
                       }
                     >
@@ -468,7 +470,8 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
                     </button>
                   )}
 
-                  {selectedInterview.itv_status === "Confirmed" && (
+                  {(selectedInterview.itv_status === "Confirmed" ||
+                    selectedInterview.itv_status === "Hold") && (
                     <div className="mb-4">
                       <label className="fw-bold mb-2 d-block">
                         Update Status
@@ -514,6 +517,7 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
                       >
                         <option value="">Select status</option>
                         <option value="Not Joined">Not Joined</option>
+                        <option value="Joined">Joined</option>
                       </select>
                     </div>
                   )}
@@ -597,7 +601,7 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
                     updateInterviewStatus(
                       selectedInterview.itv_id,
                       pendingStatus,
-                      selectedInterview.can_id
+                      selectedInterview.can_id,
                     );
                     closeStatusConfirmModal();
                   }}

@@ -1,0 +1,148 @@
+.hl-rec-wrapper {
+  position: relative;
+  max-width: 650px;
+  margin: auto;
+  padding: 24px;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+}
+
+/* PAID Stamp – PDF safe */
+.hl-rec-paid {
+  position: absolute;
+  top: 90px;
+  right: 30px;
+  border: 3px solid #1aa34a;
+  color: #1aa34a;
+  font-weight: 800;
+  padding: 6px 18px;
+  font-size: 20px;
+  opacity: 0.8;
+}
+
+/* Header */
+.hl-rec-header {
+  display: table;
+  width: 100%;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 12px;
+}
+
+.hl-rec-company,
+.hl-rec-meta {
+  display: table-cell;
+  vertical-align: top;
+}
+
+.hl-rec-company img {
+  width: 80px;
+}
+
+.hl-rec-company h2 {
+  margin: 0;
+  color: #198754;
+}
+
+.hl-rec-meta {
+  text-align: right;
+}
+
+.hl-rec-title {
+  color: #b07a00;
+  font-weight: 700;
+}
+
+/* Billing */
+.hl-rec-billing {
+  display: table;
+  width: 100%;
+  margin-top: 18px;
+  font-size: 13px;
+}
+
+.hl-rec-billing > div {
+  display: table-cell;
+  vertical-align: top;
+}
+
+.hl-rec-label {
+  font-weight: 700;
+  color: #198754;
+}
+
+.hl-rec-small {
+  margin-top: 6px;
+  color: #5a5a5a;
+}
+
+.hl-rec-right {
+  text-align: right;
+}
+
+/* Table */
+.hl-rec-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 13px;
+}
+
+.hl-rec-table th {
+  background: #165c2d;
+  color: #fff;
+  padding: 10px;
+  text-align: left;
+}
+
+.hl-rec-table th.r,
+.hl-rec-table td.r {
+  text-align: right;
+}
+
+.hl-rec-table td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+/* Totals – PDF safe */
+.hl-rec-total-box {
+  width: 180px;
+  margin-top: 14px;
+  float: right;
+}
+
+.hl-rec-total-box .row {
+  display: table;
+  width: 100%;
+}
+
+.hl-rec-total-box .row span {
+  display: table-cell;
+  text-align: right;
+}
+
+.hl-rec-total-box .total {
+  border-top: 2px solid #198754;
+  font-weight: 700;
+  background: #f2f8f4;
+  padding: 8px;
+}
+
+/* Notes */
+.hl-rec-notes {
+  clear: both;
+  border-top: 1px dashed #ddd;
+  margin-top: 30px;
+  padding-top: 12px;
+  font-size: 13px;
+  color: #555;
+}
+
+/* Print */
+@media print {
+  .hl-rec-wrapper {
+    border: none;
+    padding: 0;
+  }
+}

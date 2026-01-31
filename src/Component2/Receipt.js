@@ -23,8 +23,8 @@
 //       ? "Account Create"
 //       : roleLower === "employer"
 //         ? "Account Create"
-//         : roleLower === "receipt"
-//           ? "Receipt Download"
+//         : roleLower === "resume_download"
+//           ? "Resume Download"
 //           : "Payment");
 
 //   return (
@@ -234,269 +234,400 @@
 
 // export default Receipt;
 
+//=========================================================================
 
+// import React from "react";
+// import logo from "../Component2/logo/hirelink.png";
+
+// function Receipt({ payment }) {
+//   if (!payment) return null;
+
+//   const receiptNo =
+//     payment.receiptNo || `RCPT-${Date.now().toString().slice(-8)}`;
+
+//   const role = (payment.role || "").toLowerCase();
+
+//   const paymentForText =
+//     payment.paymentFor ||
+//     (role === "candidate" ? "Candidate Signup Fee" : "Employer Signup Fee");
+
+//   const total = payment.amount || "₹0";
+//   const unitPrice = payment.baseAmount || total;
+
+//   const ForbyText =
+//     payment.for ||
+//     (role === "candidate" || role === "employer"
+//       ? "Account Creation"
+//         : role === "resume_download"
+//           ? "Resume Download"
+//           : "Payment");
+
+//   return (
+//     <div style={container}>
+//       {/* Header */}
+//       <div style={header}>
+//         <div style={brand}>
+//           <img src={logo} alt="Hirelink" style={logoStyle} />
+//           <div>
+//             <h2 style={company}>Hirelinkinfo</h2>
+//             <p style={address}>Mumbai, Maharashtra – 400001</p>
+//           </div>
+//         </div>
+
+//         <div style={receiptInfo}>
+//           <span style={badge}>PAID</span>
+//           <p style={receiptText}>Receipt</p>
+//           <p style={receiptNo}>#{receiptNo}</p>
+//         </div>
+//       </div>
+
+//       {/* User Info */}
+//       <div style={section}>
+//         <div>
+//           <h4 style={sectionTitle}>Billed To</h4>
+//           <p style={text}>{payment.email || "-"}</p>
+//           <p style={meta}>
+//             <strong>Order ID:</strong> {payment.orderId || "-"}
+//             <br />
+//             <strong>Payment ID:</strong> {payment.paymentId || "-"}
+//             <br />
+//             <strong>Purpose:</strong> {ForbyText}
+//           </p>
+//         </div>
+
+//         <div style={{ textAlign: "right" }}>
+//           <h4 style={sectionTitle}>Payment Date</h4>
+//           <p style={text}>
+//             {payment.date || new Date().toLocaleDateString()}
+//           </p>
+//         </div>
+//       </div>
+
+//       {/* Table */}
+//       <table style={table}>
+//         <thead>
+//           <tr style={thead}>
+//             <th style={th}>Description</th>
+//             <th style={thRight}>Unit Price</th>
+//             <th style={thRight}>Total</th>
+//           </tr>
+//         </thead>
+
+//         <tbody>
+//           <tr>
+//             <td style={td}>{paymentForText}</td>
+//             <td style={tdRight}>{unitPrice}</td>
+//             <td style={tdRight}>{total}</td>
+//           </tr>
+//         </tbody>
+//       </table>
+
+//       {/* Total */}
+//       <div style={totalBox}>
+//         <Row label="Subtotal" value={total} />
+//         <Row label="Total Paid" value={total} bold />
+//       </div>
+
+//       {/* Footer */}
+//       <div style={footer}>
+//         <p>
+//           <strong>Note:</strong> This is a system-generated receipt confirming a
+//           successful payment. The amount paid is non-refundable.
+//         </p>
+
+//         <p>
+//           Need help? Contact{" "}
+//           <a href="mailto:support@hirelinkinfo.com">
+//             support@hirelinkinfo.com
+//           </a>
+//         </p>
+
+//         <p style={copyright}>
+//           © {new Date().getFullYear()} Hirelinkinfo
+//         </p>
+//       </div>
+//     </div>
+//   );
+// }
+
+// /* ================= STYLES ================= */
+
+// const container = {
+//   maxWidth: "700px",
+//   margin: "40px auto",
+//   background: "#ffffff",
+//   borderRadius: "12px",
+//   boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
+//   fontFamily: "Inter, Arial, sans-serif",
+//   overflow: "hidden",
+// };
+
+// const header = {
+//   display: "flex",
+//   justifyContent: "space-between",
+//   padding: "24px",
+//   borderBottom: "1px solid #eee",
+// };
+
+// const brand = {
+//   display: "flex",
+//   gap: "16px",
+//   alignItems: "center",
+// };
+
+// const logoStyle = {
+//   width: "60px",
+//   height: "60px",
+//   borderRadius: "8px",
+// };
+
+// const company = {
+//   margin: 0,
+//   color: "#0a8a4a",
+// };
+
+// const address = {
+//   margin: "4px 0 0",
+//   fontSize: "13px",
+//   color: "#666",
+// };
+
+// const receiptInfo = {
+//   textAlign: "right",
+// };
+
+// const badge = {
+//   display: "inline-block",
+//   background: "#e6f6ee",
+//   color: "#0a8a4a",
+//   fontSize: "12px",
+//   fontWeight: 600,
+//   padding: "4px 10px",
+//   borderRadius: "20px",
+// };
+
+// const receiptText = {
+//   margin: "8px 0 0",
+//   fontSize: "14px",
+//   fontWeight: 600,
+// };
+
+// const receiptNo = {
+//   fontSize: "12px",
+//   color: "#666",
+// };
+
+// const section = {
+//   display: "flex",
+//   justifyContent: "space-between",
+//   padding: "20px 24px",
+// };
+
+// const sectionTitle = {
+//   marginBottom: "6px",
+//   color: "#0a8a4a",
+// };
+
+// const text = {
+//   fontSize: "14px",
+// };
+
+// const meta = {
+//   fontSize: "13px",
+//   color: "#666",
+//   marginTop: "8px",
+// };
+
+// const table = {
+//   width: "100%",
+//   borderCollapse: "collapse",
+// };
+
+// const thead = {
+//   background: "#0a8a4a",
+//   color: "#fff",
+// };
+
+// const th = {
+//   padding: "12px",
+//   textAlign: "left",
+// };
+
+// const thRight = {
+//   ...th,
+//   textAlign: "right",
+// };
+
+// const td = {
+//   padding: "14px 12px",
+//   borderBottom: "1px solid #eee",
+// };
+
+// const tdRight = {
+//   ...td,
+//   textAlign: "right",
+// };
+
+// const totalBox = {
+//   maxWidth: "280px",
+//   marginLeft: "auto",
+//   padding: "16px 24px",
+// };
+
+// const footer = {
+//   padding: "20px 24px",
+//   borderTop: "1px dashed #ddd",
+//   fontSize: "13px",
+//   color: "#555",
+// };
+
+// const copyright = {
+//   marginTop: "10px",
+//   fontSize: "12px",
+//   color: "#999",
+// };
+
+// const Row = ({ label, value, bold }) => (
+//   <div
+//     style={{
+//       display: "flex",
+//       justifyContent: "space-between",
+//       padding: "8px 0",
+//       fontWeight: bold ? 700 : 400,
+//       borderTop: bold ? "1px solid #0a8a4a" : "none",
+//     }}
+//   >
+//     <span>{label}</span>
+//     <span>{value}</span>
+//   </div>
+// );
+
+// export default Receipt;
 import React from "react";
 import logo from "../Component2/logo/hirelink.png";
+import "../Component2/css/Receip.css";
 
+/* 🔹 Receipt Component */
 function Receipt({ payment }) {
   if (!payment) return null;
+
+  const roleLower = (payment.role || "").toLowerCase();
+
+  const paymentForText =
+    payment.paymentFor ||
+    (roleLower === "candidate"
+      ? "Candidate Signup Fee"
+      : roleLower === "employer"
+        ? "Employer Signup Fee"
+        : roleLower === "employer_staff"
+          ? "Extended Staff Fee"
+          : "Payment");
 
   const receiptNo =
     payment.receiptNo || `RCPT-${Date.now().toString().slice(-8)}`;
 
-  const role = (payment.role || "").toLowerCase();
+  /* 🔢 GST INCLUDED AMOUNT */
+  const amount = Number(String(payment.amount || 0).replace(/[^\d.]/g, ""));
 
-  const paymentForText =
-    payment.paymentFor ||
-    (role === "candidate" ? "Candidate Signup Fee" : "Employer Signup Fee");
+  const gstRate = 18;
 
-  const total = payment.amount || "₹0";
-  const unitPrice = payment.baseAmount || total;
+  // ✅ Base amount (excluding GST)
+  const baseAmount = +((amount * 100) / (100 + gstRate)).toFixed(2);
 
-  const ForbyText =
-    payment.for ||
-    (role === "candidate" || role === "employer"
-      ? "Account Creation"
-      : "Payment");
+  // ✅ GST amount (18%)
+  const gstAmount = +(amount - baseAmount).toFixed(2);
 
   return (
-    <div style={container}>
+    <div id="receipt-print-area" className="hl-rec-wrapper">
+      {/* PAID Stamp */}
+      {/* <div className="hl-rec-paid">PAID</div> */}
+
       {/* Header */}
-      <div style={header}>
-        <div style={brand}>
-          <img src={logo} alt="Hirelink" style={logoStyle} />
-          <div>
-            <h2 style={company}>Hirelinkinfo</h2>
-            <p style={address}>Mumbai, Maharashtra – 400001</p>
-          </div>
+      <div className="hl-rec-header">
+        <div className="hl-rec-company">
+          <img src={logo} alt="Hirelink" />
+          {/* <div>
+            <h2>Hirelinkinfo</h2>
+            <p>123 Business Rd, Mumbai – 400001</p>
+          </div> */}
         </div>
 
-        <div style={receiptInfo}>
-          <span style={badge}>PAID</span>
-          <p style={receiptText}>Receipt</p>
-          <p style={receiptNo}>#{receiptNo}</p>
+        <div className="hl-rec-meta">
+          <div className="hl-rec-title">RECEIPT</div>
+          <div>#{receiptNo}</div>
         </div>
       </div>
 
-      {/* User Info */}
-      <div style={section}>
+      {/* Billing */}
+      <div className="hl-rec-billing">
         <div>
-          <h4 style={sectionTitle}>Billed To</h4>
-          <p style={text}>{payment.email || "-"}</p>
-          <p style={meta}>
-            <strong>Order ID:</strong> {payment.orderId || "-"}
-            <br />
-            <strong>Payment ID:</strong> {payment.paymentId || "-"}
-            <br />
-            <strong>Purpose:</strong> {ForbyText}
-          </p>
-        </div>
+          <div className="hl-rec-label">Billed To</div>
 
-        <div style={{ textAlign: "right" }}>
-          <h4 style={sectionTitle}>Payment Date</h4>
-          <p style={text}>
-            {payment.date || new Date().toLocaleDateString()}
-          </p>
+          <div>
+            <b>Name:</b> {payment.name || "-"}
+          </div>
+          <div>
+            <b>Email:</b> {payment.email || "-"}
+          </div>
+          <div>
+            <b>Mobile:</b> {payment.mobile || "-"}
+          </div>
+          <div>
+            <b>Order ID:</b> {payment.orderId}
+          </div>
+          <div>
+            <b>Payment ID:</b> {payment.paymentId}
+          </div>
+        </div>
+        <div className="hl-rec-right">
+          <div className="hl-rec-label">Date</div>
+          <div>{payment.date}</div>
         </div>
       </div>
 
       {/* Table */}
-      <table style={table}>
+      <table className="hl-rec-table">
         <thead>
-          <tr style={thead}>
-            <th style={th}>Description</th>
-            <th style={thRight}>Unit Price</th>
-            <th style={thRight}>Total</th>
+          <tr>
+            <th>Description</th>
+            <th className="r">Amount</th>
+            <th className="r">Total</th>
           </tr>
         </thead>
 
         <tbody>
           <tr>
-            <td style={td}>{paymentForText}</td>
-            <td style={tdRight}>{unitPrice}</td>
-            <td style={tdRight}>{total}</td>
+            <td>{paymentForText}</td>
+            <td className="r">{baseAmount}</td>
+            <td className="r">{baseAmount}</td>
+          </tr>
+
+          <tr>
+            <td>GST (18%)</td>
+            <td className="r">{gstAmount}</td>
+            <td className="r">{gstAmount}</td>
           </tr>
         </tbody>
       </table>
 
       {/* Total */}
-      <div style={totalBox}>
-        <Row label="Subtotal" value={total} />
-        <Row label="Total Paid" value={total} bold />
+      <div className="hl-rec-total-box">
+        <div className="row total">
+          <span>Total</span>
+          <span>{amount}</span>
+        </div>
       </div>
 
-      {/* Footer */}
-      <div style={footer}>
+      {/* Notes */}
+      <div className="hl-rec-notes">
+        <b>Notes:</b>
         <p>
-          <strong>Note:</strong> This is a system-generated receipt confirming a
-          successful payment. The amount paid is non-refundable.
-        </p>
-
-        <p>
-          Need help? Contact{" "}
-          <a href="mailto:support@hirelinkinfo.com">
-            support@hirelinkinfo.com
-          </a>
-        </p>
-
-        <p style={copyright}>
-          © {new Date().getFullYear()} Hirelinkinfo
+          This receipt confirms successful payment on Hirelinkinfo. Payment is
+          non-refundable.
         </p>
       </div>
     </div>
   );
 }
-
-/* ================= STYLES ================= */
-
-const container = {
-  maxWidth: "700px",
-  margin: "40px auto",
-  background: "#ffffff",
-  borderRadius: "12px",
-  boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
-  fontFamily: "Inter, Arial, sans-serif",
-  overflow: "hidden",
-};
-
-const header = {
-  display: "flex",
-  justifyContent: "space-between",
-  padding: "24px",
-  borderBottom: "1px solid #eee",
-};
-
-const brand = {
-  display: "flex",
-  gap: "16px",
-  alignItems: "center",
-};
-
-const logoStyle = {
-  width: "60px",
-  height: "60px",
-  borderRadius: "8px",
-};
-
-const company = {
-  margin: 0,
-  color: "#0a8a4a",
-};
-
-const address = {
-  margin: "4px 0 0",
-  fontSize: "13px",
-  color: "#666",
-};
-
-const receiptInfo = {
-  textAlign: "right",
-};
-
-const badge = {
-  display: "inline-block",
-  background: "#e6f6ee",
-  color: "#0a8a4a",
-  fontSize: "12px",
-  fontWeight: 600,
-  padding: "4px 10px",
-  borderRadius: "20px",
-};
-
-const receiptText = {
-  margin: "8px 0 0",
-  fontSize: "14px",
-  fontWeight: 600,
-};
-
-const receiptNo = {
-  fontSize: "12px",
-  color: "#666",
-};
-
-const section = {
-  display: "flex",
-  justifyContent: "space-between",
-  padding: "20px 24px",
-};
-
-const sectionTitle = {
-  marginBottom: "6px",
-  color: "#0a8a4a",
-};
-
-const text = {
-  fontSize: "14px",
-};
-
-const meta = {
-  fontSize: "13px",
-  color: "#666",
-  marginTop: "8px",
-};
-
-const table = {
-  width: "100%",
-  borderCollapse: "collapse",
-};
-
-const thead = {
-  background: "#0a8a4a",
-  color: "#fff",
-};
-
-const th = {
-  padding: "12px",
-  textAlign: "left",
-};
-
-const thRight = {
-  ...th,
-  textAlign: "right",
-};
-
-const td = {
-  padding: "14px 12px",
-  borderBottom: "1px solid #eee",
-};
-
-const tdRight = {
-  ...td,
-  textAlign: "right",
-};
-
-const totalBox = {
-  maxWidth: "280px",
-  marginLeft: "auto",
-  padding: "16px 24px",
-};
-
-const footer = {
-  padding: "20px 24px",
-  borderTop: "1px dashed #ddd",
-  fontSize: "13px",
-  color: "#555",
-};
-
-const copyright = {
-  marginTop: "10px",
-  fontSize: "12px",
-  color: "#999",
-};
-
-const Row = ({ label, value, bold }) => (
-  <div
-    style={{
-      display: "flex",
-      justifyContent: "space-between",
-      padding: "8px 0",
-      fontWeight: bold ? 700 : 400,
-      borderTop: bold ? "1px solid #0a8a4a" : "none",
-    }}
-  >
-    <span>{label}</span>
-    <span>{value}</span>
-  </div>
-);
 
 export default Receipt;

@@ -28,7 +28,6 @@ function PaymentPage() {
 
       const roleLower = String(user.role).toLowerCase();
 
-      // ✅ payload तयार कर
       const payload = {
         email: user.email,
         role: roleLower,
@@ -36,7 +35,6 @@ function PaymentPage() {
         employer_id: user.employer_id || null, // ✅ NEW
       };
 
-      // ✅ फक्त resume_download असेल तेव्हाच candidate_id add कर
       if (roleLower === "resume_download") {
         payload.candidate_id = user.candidate_id;
       }
@@ -116,6 +114,7 @@ function PaymentPage() {
             razorpay_order_id: response.razorpay_order_id,
             razorpay_signature: response.razorpay_signature,
             email: user.email,
+            mobile: user.mobile,
             role: roleLower,
             for: user.for,
           };
@@ -169,6 +168,8 @@ function PaymentPage() {
                 paymentId: response.razorpay_payment_id,
                 orderId: response.razorpay_order_id,
                 email: user.email,
+                mobile: user.mobile,
+                name: user.name,
                 role: String(user.role).toLowerCase(),
                 for: user.for,
                 amount: displayAmount,
@@ -198,6 +199,38 @@ function PaymentPage() {
       toast.error("Payment failed. Please try again.");
     }
   };
+
+  // STEP 1
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      sessionStorage.setItem("page_unloaded", "true");
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, []);
+
+  // STEP 2
+  useEffect(() => {
+    sessionStorage.removeItem("page_unloaded");
+  }, []);
+
+  // STEP 3
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (
+        sessionStorage.getItem("page_unloaded") &&
+        !localStorage.getItem("paymentDone")
+      ) {
+        localStorage.removeItem("candidate");
+        localStorage.removeItem("auth");
+        localStorage.removeItem("employer");
+        localStorage.removeItem("paymentUser");
+      }
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const isPayDisabled = loading || !orderData || !!errorMsg;
 

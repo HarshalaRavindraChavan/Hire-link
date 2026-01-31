@@ -199,10 +199,6 @@
 
 // export default Verify;
 
-
-
-
-
 import React, { useState, useEffect } from "react";
 import SEO from "../SEO";
 import { seoConfig } from "../config/seoConfig";
@@ -308,13 +304,19 @@ function Verify() {
       if (res.data?.status) {
         toast.success("Mobile number verified ✅");
 
+        const oldPaymentUser = JSON.parse(
+          localStorage.getItem("paymentUser") || "{}",
+        );
+
         localStorage.setItem(
           "paymentUser",
           JSON.stringify({
+            ...oldPaymentUser,
             email,
             role,
             for: "Account Create",
-          })
+            returnTo: role === "candidate" ? "/profile" : "/emp-profile",
+          }),
         );
 
         localStorage.removeItem("verifyUser");
@@ -327,6 +329,68 @@ function Verify() {
       toast.error("Mobile OTP verification failed");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const resendMobileOtp = async () => {
+    if (!mobile || !role) {
+      toast.error("Verification details missing. Please signup again.");
+      navigate("/signup");
+      return;
+    }
+
+    try {
+      let url = "";
+      let payload = {};
+
+      if (role === "candidate") {
+        url = `${BASE_URL}hirelink_apis/candidate/resendMobileOtp`;
+        payload = { can_mobile: mobile };
+      } else {
+        url = `${BASE_URL}hirelink_apis/employer/resendMobileOtp`;
+        payload = { emp_mobile: mobile };
+      }
+
+      const res = await axios.post(url, payload);
+
+      if (res.data?.status === true) {
+        toast.success("OTP resent to mobile");
+      } else {
+        toast.error(res.data?.message || "Failed to resend OTP");
+      }
+    } catch (error) {
+      toast.error("Failed to resend OTP");
+    }
+  };
+
+  const resendEmailOtp = async () => {
+    if (!email || !role) {
+      toast.error("Verification details missing. Please signup again.");
+      navigate("/signup");
+      return;
+    }
+
+    try {
+      let url = "";
+      let payload = {};
+
+      if (role === "candidate") {
+        url = `${BASE_URL}hirelink_apis/candidate/resendOtp`;
+        payload = { can_email: email };
+      } else {
+        url = `${BASE_URL}hirelink_apis/employer/resendOtp`;
+        payload = { emp_email: email };
+      }
+
+      const res = await axios.post(url, payload);
+
+      if (res.data?.status === true) {
+        toast.success("OTP resent to email ✅");
+      } else {
+        toast.error(res.data?.message || "Failed to resend OTP");
+      }
+    } catch (error) {
+      toast.error("Failed to resend OTP");
     }
   };
 
@@ -363,7 +427,22 @@ function Verify() {
                 <button className="btn btn-success w-100" disabled={loading}>
                   {loading ? "Verifying..." : "Verify Email"}
                 </button>
+
+                <div className="text-center mt-3">
+                  <button
+                    onClick={resendEmailOtp}
+                    className="btn btn-link fw-semibold text-decoration-none"
+                    style={{ color: "#928f8fff" }}
+                    type="button"
+                  >
+                    Send new code
+                  </button>{" "}
+                </div>
               </form>
+              <footer className="text-center mt-3 small text-warning">
+                {" "}
+                © {new Date().getFullYear()} Hirelink{" "}
+              </footer>
             </>
           )}
 
@@ -386,7 +465,21 @@ function Verify() {
                 <button className="btn btn-success w-100" disabled={loading}>
                   {loading ? "Verifying..." : "Verify Mobile"}
                 </button>
+
+                <div className="text-center mt-3">
+                  <button
+                    onClick={resendMobileOtp}
+                    className="btn btn-link fw-semibold text-decoration-none"
+                    style={{ color: "#928f8fff" }}
+                    type="button"
+                  >
+                    Send new code
+                  </button>{" "}
+                </div>
               </form>
+              <footer className="text-center mt-3 small text-warning">
+                © {new Date().getFullYear()} Hirelink
+              </footer>
             </>
           )}
         </div>

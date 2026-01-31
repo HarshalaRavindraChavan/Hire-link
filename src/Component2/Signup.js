@@ -23,7 +23,7 @@ const Signup = () => {
   const [captchaToken, setCaptchaToken] = useState(null);
 
   /* ---------------- VALIDATION ---------------- */
-  
+
   const validationSchema = Yup.object({
     fullname: Yup.string().required("Full name is required"),
 
@@ -175,27 +175,26 @@ const Signup = () => {
         // ✅ Store full data in localStorage (same as your first code)
         if (activeRole === "candidate") {
           //store data after signup
-          // localStorage.setItem("candidate", JSON.stringify(data.data));
+          localStorage.setItem("candidate", JSON.stringify(data.data));
 
           // ✅ FCM token (optional)
           if (data.data?.can_id) {
             saveFcmToken(data.data.can_id);
           }
-        }
-        // else {
-        //   // ✅ auth store (same as old code)
-        //   localStorage.setItem(
-        //     "auth",
-        //     JSON.stringify({
-        //       role: 100,
-        //       emp_id: data.data.emp_id,
-        //       emp_companyname: data.data.emp_companyname,
-        //     }),
-        //   );
+        } else {
+          // ✅ auth store (same as old code)
+          localStorage.setItem(
+            "auth",
+            JSON.stringify({
+              role: 100,
+              emp_id: data.data.emp_id,
+              emp_companyname: data.data.emp_companyname,
+            }),
+          );
 
-        //   // ✅ full employer row store
-        //   // localStorage.setItem("employer", JSON.stringify(data.data));
-        // }
+          // ✅ full employer row store
+          localStorage.setItem("employer", JSON.stringify(data.data));
+        }
 
         // ✅ store payment user info
         localStorage.setItem(
@@ -203,6 +202,19 @@ const Signup = () => {
           JSON.stringify({
             email: values.email,
             role: activeRole,
+            mobile: values.mobile,
+          }),
+        );
+
+        // ✅ REQUIRED for PaymentSuccess redirect
+        localStorage.setItem(
+          "paymentUser",
+          JSON.stringify({
+            name:values.fullname,
+            email: values.email,
+            role: activeRole, // "candidate" | "employer"
+            mobile: values.mobile,
+            returnTo: activeRole === "candidate" ? "/profile" : "/emp-profile",
           }),
         );
 

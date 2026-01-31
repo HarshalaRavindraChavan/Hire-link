@@ -24,11 +24,15 @@ function PaymentSuccess() {
     const finalPayment = {
       ...saved,
 
-      name: paymentUser.role === "candidate" ? temp.can_name : temp.emp_name,
+      name:
+        paymentUser.role === "candidate"
+          ? temp.can_name || saved.name
+          : temp.emp_name || saved.name,
 
-      // ✅ Mobile
       mobile:
-        paymentUser.role === "candidate" ? temp.can_mobile : temp.emp_mobile,
+        paymentUser.role === "candidate"
+          ? temp.can_mobile || saved.mobile
+          : temp.emp_mobile || saved.mobile,
 
       receiptNo: saved.receiptNo || `RCPT-${Date.now().toString().slice(-8)}`,
       paymentFor:
@@ -56,12 +60,23 @@ function PaymentSuccess() {
         localStorage.getItem("paymentUser") || "{}",
       );
 
-      const returnTo = paymentUser?.returnTo || "/signin";
+      const returnTo =
+        paymentUser.role === "candidate"
+          ? "/profile"
+          : paymentUser.role === "employer"
+            ? "/emp-profile"
+            : paymentUser.role === "resume_download"
+              ? "/candidate"
+              : paymentUser.role === "employer_staff"
+                ? "/staff"
+                : "/signin";
 
       navigate(returnTo);
 
-      localStorage.removeItem("paymentUser");
-      localStorage.removeItem("paymentDone");
+      if (paymentUser.role !== "resume_download") {
+        localStorage.removeItem("paymentUser");
+        localStorage.removeItem("paymentDone");
+      }
 
       return;
     }

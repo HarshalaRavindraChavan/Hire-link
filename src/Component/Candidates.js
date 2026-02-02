@@ -483,7 +483,7 @@ function Candidates() {
 
                       <div className="fw-bold">
                         Score:{" "}
-                        <span className="text-dark fw-normal">
+                        <span className="text-dark "style={{fontSize:"30px"}}>
                           {candidate.can_score}/1000
                         </span>
                       </div>

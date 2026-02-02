@@ -66,13 +66,13 @@ function Interview() {
       let res;
       if (["1", "2", "3", "4"].includes(role)) {
         res = await axios.get(
-          `${BASE_URL}hirelink_apis/admin/getdata/tbl_interview`,
+          `${BASE_URL}admin/getdata/tbl_interview`,
         );
       }
 
       if (Number(role) === 100) {
         res = await axios.get(
-          `${BASE_URL}hirelink_apis/employer/getdatawhere/tbl_interview/itv_employer_id/${employerId}`,
+          `${BASE_URL}employer/getdatawhere/tbl_interview/itv_employer_id/${employerId}`,
         );
       }
 
@@ -101,7 +101,7 @@ function Interview() {
   const confirmDelete = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/deletedata/tbl_interview/itv_id/${deleteId}`,
+        `${BASE_URL}admin/deletedata/tbl_interview/itv_id/${deleteId}`,
       );
       if (res.data.status) {
         toast.success("Interview deleted successfully");
@@ -155,7 +155,7 @@ function Interview() {
       };
 
       const res = await axios.post(
-        `${BASE_URL}hirelink_apis/admin/updatedata/tbl_interview/itv_id/${editInterviewId}`,
+        `${BASE_URL}admin/updatedata/tbl_interview/itv_id/${editInterviewId}`,
         payload,
         { headers: { "Content-Type": "application/json" } },
       );

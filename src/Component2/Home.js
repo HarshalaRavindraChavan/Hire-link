@@ -13,7 +13,7 @@ function Home() {
   const navigate = useNavigate();
   useEffect(() => {
     axios
-      .get(`${BASE_URL}hirelink_apis/candidate/getdata/tbl_job`)
+      .get(`${BASE_URL}candidate/getdata/tbl_job`)
       .then((res) => {
         if (res.data.status === "success") {
           setJobs(res.data.data);

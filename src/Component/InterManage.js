@@ -42,7 +42,7 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
       }
 
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/employer/getdatawhere/tbl_interview/itv_employer_id/${employerId}`,
+        `${BASE_URL}employer/getdatawhere/tbl_interview/itv_employer_id/${employerId}`,
       );
 
       if (res?.data?.status) {
@@ -60,7 +60,7 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
 
   const getCandidateById = async (can_id) => {
     const res = await axios.get(
-      `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_candidate/can_id/${can_id}`,
+      `${BASE_URL}candidate/getdatawhere/tbl_candidate/can_id/${can_id}`,
     );
 
     if (res?.data?.status && res?.data?.data?.length > 0) {
@@ -76,7 +76,7 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
 
       // 1) Interview status update
       const res = await axios.post(
-        `${BASE_URL}hirelink_apis/employer/updatedata/tbl_interview/itv_id/${itv_id}`,
+        `${BASE_URL}employer/updatedata/tbl_interview/itv_id/${itv_id}`,
         { itv_status: newStatus },
       );
 
@@ -105,7 +105,7 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
         const newScore = oldScore - deduction;
 
         const scoreRes = await axios.post(
-          `${BASE_URL}hirelink_apis/candidate/updatedata/tbl_candidate/can_id/${can_id}`,
+          `${BASE_URL}candidate/updatedata/tbl_candidate/can_id/${can_id}`,
           {
             can_score: newScore,
           },

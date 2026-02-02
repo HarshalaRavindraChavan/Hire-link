@@ -29,7 +29,7 @@ function Offer() {
   const fetchOffers = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/getdata/tbl_offer`,
+        `${BASE_URL}admin/getdata/tbl_offer`,
       );
 
       if (res.data.status === true) {
@@ -68,7 +68,7 @@ function Offer() {
   const confirmDelete = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/deletedata/tbl_offer/offer_id/${deleteId}`
+        `${BASE_URL}admin/deletedata/tbl_offer/offer_id/${deleteId}`
       );
 
       if (res.data.status === true) {
@@ -160,7 +160,7 @@ function Offer() {
       };
 
       const res = await axios.post(
-        `${BASE_URL}hirelink_apis/admin/insert/tbl_offer`,
+        `${BASE_URL}admin/insert/tbl_offer`,
         payload
       );
 
@@ -238,7 +238,7 @@ function Offer() {
       };
 
       const response = await axios.post(
-        `${BASE_URL}hirelink_apis/admin/updatedata/tbl_offer/offer_id/${editOfferId}`,
+        `${BASE_URL}admin/updatedata/tbl_offer/offer_id/${editOfferId}`,
         payload
       );
 

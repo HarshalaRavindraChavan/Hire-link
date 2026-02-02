@@ -49,7 +49,7 @@ function Staff() {
   const fetchStates = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdata/tbl_state`,
+        `${BASE_URL}candidate/getdata/tbl_state`,
       );
 
       if (res.data?.status) {
@@ -63,7 +63,7 @@ function Staff() {
   const fetchCities = async (stateId, selectedCity = null) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_city/city_state_id/${stateId}`,
+        `${BASE_URL}candidate/getdatawhere/tbl_city/city_state_id/${stateId}`,
       );
 
       if (res.data?.status) {
@@ -99,14 +99,14 @@ function Staff() {
       // ✅ ADMIN / SUBADMIN / BACKEND / ACCOUNTANT → ALL STAFF
       if (["1", "2", "3", "4", "5"].includes(String(role))) {
         res = await axios.get(
-          `${BASE_URL}hirelink_apis/admin/getdata/tbl_staff`,
+          `${BASE_URL}admin/getdata/tbl_staff`,
         );
       }
 
       // ✅ EMPLOYER → ONLY HIS STAFF
       if (Number(role) === 100) {
         res = await axios.get(
-          `${BASE_URL}hirelink_apis/admin/getdatawhere/tbl_staff/staff_employer_id/${employerId}`,
+          `${BASE_URL}admin/getdatawhere/tbl_staff/staff_employer_id/${employerId}`,
         );
       }
 
@@ -143,7 +143,7 @@ function Staff() {
   const confirmDelete = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/deletedata/tbl_staff/staff_id/${deleteId}`,
+        `${BASE_URL}admin/deletedata/tbl_staff/staff_id/${deleteId}`,
       );
 
       if (res.data.status === true) {
@@ -254,7 +254,7 @@ function Staff() {
 
       // ✅ 1) DUPLICATE CHECK BEFORE PAYMENT
       const dupRes = await axios.post(
-        `${BASE_URL}hirelink_apis/admin/checkStaffDuplicate`,
+        `${BASE_URL}admin/checkStaffDuplicate`,
         {
           email: data.email,
           mobile: data.mobile,
@@ -386,7 +386,7 @@ function Staff() {
 
     try {
       const res = await axios.post(
-        `${BASE_URL}hirelink_apis/admin/fileupload`,
+        `${BASE_URL}admin/fileupload`,
         formData,
       );
 
@@ -525,7 +525,7 @@ function Staff() {
       };
 
       const response = await axios.post(
-        `${BASE_URL}hirelink_apis/admin/updatedata/tbl_staff/staff_id/${editUserId}`,
+        `${BASE_URL}admin/updatedata/tbl_staff/staff_id/${editUserId}`,
         payload,
       );
 
@@ -618,7 +618,7 @@ function Staff() {
       setLoading(true);
 
       const res = await axios.post(
-        `${BASE_URL}hirelink_apis/admin/updatedata/tbl_staff/staff_id/${staffId}`,
+        `${BASE_URL}admin/updatedata/tbl_staff/staff_id/${staffId}`,
         {
           staff_status: newStatus,
         },

@@ -15,7 +15,7 @@ export const saveFcmToken = async (candidateId) => {
     console.log("FCM TOKEN:", token);
 
     if (token) {
-      await axios.post(`${BASE_URL}hirelink_apis/candidate/save-fcm-token`, {
+      await axios.post(`${BASE_URL}candidate/save-fcm-token`, {
         fcm_can_id: candidateId,
         fcm_token: token,
       });

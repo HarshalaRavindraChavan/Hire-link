@@ -26,13 +26,13 @@ function JobsSAI() {
     try {
       const [savedRes, appliedRes, interviewRes] = await Promise.all([
         axios.get(
-          `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_save_job/save_candidate_id/${candidateId}`,
+          `${BASE_URL}candidate/getdatawhere/tbl_save_job/save_candidate_id/${candidateId}`,
         ),
         axios.get(
-          `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_applied/apl_candidate_id/${candidateId}`,
+          `${BASE_URL}candidate/getdatawhere/tbl_applied/apl_candidate_id/${candidateId}`,
         ),
         axios.get(
-          `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_interview/itv_candidate_id/${candidateId}`,
+          `${BASE_URL}candidate/getdatawhere/tbl_interview/itv_candidate_id/${candidateId}`,
         ),
       ]);
 
@@ -65,7 +65,7 @@ function JobsSAI() {
       setLoading(true);
 
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_save_job/save_candidate_id/${candidateId}`,
+        `${BASE_URL}candidate/getdatawhere/tbl_save_job/save_candidate_id/${candidateId}`,
       );
 
       console.log("Saved API:", res.data);
@@ -99,7 +99,7 @@ function JobsSAI() {
       setAppliedLoading(true);
 
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_applied/apl_candidate_id/${candidateId}`,
+        `${BASE_URL}candidate/getdatawhere/tbl_applied/apl_candidate_id/${candidateId}`,
       );
 
       console.log("Applied API:", res.data);
@@ -134,7 +134,7 @@ function JobsSAI() {
       setInterviewLoading(true);
 
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_interview/itv_candidate_id/${candidateId}`,
+        `${BASE_URL}candidate/getdatawhere/tbl_interview/itv_candidate_id/${candidateId}`,
       );
 
       if (res.data.status) {
@@ -179,7 +179,7 @@ function JobsSAI() {
   const updateInterviewStatus = async (interviewId, newStatus) => {
     try {
       const res = await axios.post(
-        `${BASE_URL}hirelink_apis/admin/updatedata/tbl_interview/itv_id/${interviewId}`,
+        `${BASE_URL}admin/updatedata/tbl_interview/itv_id/${interviewId}`,
         { itv_status: newStatus },
       );
 

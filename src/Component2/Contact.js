@@ -40,7 +40,7 @@ export default function Contact() {
       setLoading(true);
       try {
         const res = await axios.post(
-          `${BASE_URL}hirelink_apis/candidate/insert/tbl_contact`,
+          `${BASE_URL}candidate/insert/tbl_contact`,
           values
         );
 

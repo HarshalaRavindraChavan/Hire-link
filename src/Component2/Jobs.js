@@ -41,7 +41,7 @@ function Jobs() {
   const fetchSavedJobs = async (canId) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/saved-jobs/${canId}`,
+        `${BASE_URL}candidate/saved-jobs/${canId}`,
       );
 
       if (res.data.status) {
@@ -81,14 +81,14 @@ function Jobs() {
     try {
       if (isSaved) {
         await axios.post(
-          `${BASE_URL}hirelink_apis/candidate/unsave-job`,
+          `${BASE_URL}candidate/unsave-job`,
           payload,
         );
         setSavedJobs((prev) => prev.filter((id) => id !== Number(jobId)));
         toast.info("Job removed");
       } else {
         await axios.post(
-          `${BASE_URL}hirelink_apis/candidate/save-job`,
+          `${BASE_URL}candidate/save-job`,
           payload,
         );
         setSavedJobs((prev) => [...prev, Number(jobId)]);
@@ -102,7 +102,7 @@ function Jobs() {
   useEffect(() => {
     axios
       .get(
-        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_job/job_status/Active`,
+        `${BASE_URL}candidate/getdatawhere/tbl_job/job_status/Active`,
       )
       .then((res) => {
         if (res.data.status === "success") {

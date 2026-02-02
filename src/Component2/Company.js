@@ -11,7 +11,7 @@ function Company() {
   const [popularCompanies, setPopularCompanies] = useState([]);
 
   useEffect(() => {
-    fetch(`${BASE_URL}hirelink_apis/admin/getdata/tbl_employer`)
+    fetch(`${BASE_URL}admin/getdata/tbl_employer`)
       .then((res) => res.json())
       .then((data) => {
         if (data?.data) {
@@ -112,7 +112,7 @@ function Company() {
                   <img
                     src={
                       c.emp_com_logo
-                        ? `${BASE_URL}hirelink_apis/Uploads/${c.emp_com_logo}`
+                        ? `${BASE_URL}Uploads/${c.emp_com_logo}`
                         : "https://via.placeholder.com/100"
                     }
                     width="150px"

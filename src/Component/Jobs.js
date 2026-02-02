@@ -62,7 +62,7 @@ function Jobs() {
   const fetchStates = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdata/tbl_state`,
+        `${BASE_URL}candidate/getdata/tbl_state`,
       );
 
       if (res.data?.status) {
@@ -76,7 +76,7 @@ function Jobs() {
   const fetchCities = async (stateId, selectedCity = null) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_city/city_state_id/${stateId}`,
+        `${BASE_URL}candidate/getdatawhere/tbl_city/city_state_id/${stateId}`,
       );
 
       if (res.data?.status) {
@@ -112,13 +112,13 @@ function Jobs() {
 
       // ADMIN / SUBADMIN / BACKEND → ALL DATA
       if (["1", "2", "3", "4"].includes(role)) {
-        res = await axios.get(`${BASE_URL}hirelink_apis/admin/getdata/tbl_job`);
+        res = await axios.get(`${BASE_URL}admin/getdata/tbl_job`);
       }
 
       // EMPLOYER → ONLY HIS DATA
       if (Number(role) === 100) {
         res = await axios.get(
-          `${BASE_URL}hirelink_apis/employer/getdatawhere/tbl_job/job_employer_id/${employerId}`,
+          `${BASE_URL}employer/getdatawhere/tbl_job/job_employer_id/${employerId}`,
         );
       }
 
@@ -156,7 +156,7 @@ function Jobs() {
   const confirmDelete = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/deletedata/tbl_job/job_id/${deleteId}`,
+        `${BASE_URL}admin/deletedata/tbl_job/job_id/${deleteId}`,
       );
 
       if (res.data.status === true) {
@@ -286,7 +286,7 @@ function Jobs() {
       };
 
       const res = await axios.post(
-        `${BASE_URL}hirelink_apis/admin/insert/tbl_job`,
+        `${BASE_URL}admin/insert/tbl_job`,
         payload,
       );
 
@@ -376,7 +376,7 @@ function Jobs() {
   const fetchCategories = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/getdata/tbl_main_category`,
+        `${BASE_URL}admin/getdata/tbl_main_category`,
       );
       setCategories(res.data.data || []);
     } catch (err) {
@@ -397,7 +397,7 @@ function Jobs() {
   const fetchSubCategories = async (mc_id) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/getdatawhere/tbl_subcategory/sc_mc_id/${mc_id}`,
+        `${BASE_URL}admin/getdatawhere/tbl_subcategory/sc_mc_id/${mc_id}`,
       );
       setSubCategories(res.data.data || []);
     } catch (err) {
@@ -418,7 +418,7 @@ function Jobs() {
   const fetchSubCat1 = async (sc_id) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/getdatawhere/tbl_subcategory_1/sc1_sc_id/${sc_id}`,
+        `${BASE_URL}admin/getdatawhere/tbl_subcategory_1/sc1_sc_id/${sc_id}`,
       );
       setSubCat1(res.data.data || []);
     } catch (err) {
@@ -439,7 +439,7 @@ function Jobs() {
   const fetchSubCat2 = async (sc1_id) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/getdatawhere/tbl_subcategory_2/sc2_sc1_id/${sc1_id}`,
+        `${BASE_URL}admin/getdatawhere/tbl_subcategory_2/sc2_sc1_id/${sc1_id}`,
       );
       setSubCat2(res.data.data || []);
     } catch (err) {
@@ -460,7 +460,7 @@ function Jobs() {
   const fetchSubCat3 = async (sc2_id) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/getdatawhere/tbl_subcategory_3/sc3_sc2_id/${sc2_id}`,
+        `${BASE_URL}admin/getdatawhere/tbl_subcategory_3/sc3_sc2_id/${sc2_id}`,
       );
       setSubCat3(res.data.data || []);
     } catch (err) {
@@ -559,7 +559,7 @@ function Jobs() {
       };
 
       const response = await axios.post(
-        `${BASE_URL}hirelink_apis/admin/updatedata/tbl_job/job_id/${editJobId}`,
+        `${BASE_URL}admin/updatedata/tbl_job/job_id/${editJobId}`,
         payload,
       );
 
@@ -601,7 +601,7 @@ function Jobs() {
       alreadyUpdatedRef.current[jobId] = true;
 
       await axios.post(
-        `${BASE_URL}hirelink_apis/admin/updatedata/tbl_job/job_id/${jobId}`,
+        `${BASE_URL}admin/updatedata/tbl_job/job_id/${jobId}`,
         { job_status: "Active" },
       );
 

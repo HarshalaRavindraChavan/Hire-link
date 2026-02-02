@@ -2,8 +2,9 @@ import { useSearchParams, useNavigate, NavLink } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
+import SEO from "../SEO";
+import { seoConfig } from "../config/seoConfig";
 import { useEffect, useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
 import { BASE_URL } from "../config/constants";
 
 function ResetPassword() {
@@ -91,13 +92,6 @@ function ResetPassword() {
       <SEO
         title={seoConfig.resetpass.title}
         description={seoConfig.resetpass.description}
-      />
-      {/* TOAST */}
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        pauseOnHover
-        theme="colored"
       />
       <div className="container d-flex justify-content-center align-items-center vh-100">
         <div className="card shadow p-4" style={{ width: "400px" }}>

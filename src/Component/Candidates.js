@@ -60,9 +60,7 @@ function Candidates() {
   const fetchCandidates = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(
-        `${BASE_URL}admin/getdata/tbl_candidate`,
-      );
+      const res = await axios.get(`${BASE_URL}admin/getdata/tbl_candidate`);
 
       if (res.data.status === true) {
         setCandidates(res.data.data);
@@ -298,7 +296,7 @@ function Candidates() {
       }
 
       // ❌ Not paid => redirect to payment page
-      toast.error("Pay ₹60 to download this resume");
+      // toast.error("Pay ₹60 to download this resume");
 
       localStorage.setItem(
         "paymentUser",
@@ -419,7 +417,7 @@ function Candidates() {
               <tr className="text-center">
                 <th className="fs-6 fw-bold">ID</th>
                 <th className="fs-6 fw-bold">Candidate Details</th>
-                <th className="fs-6 fw-bold">Profile Photo</th>
+                {/* <th className="fs-6 fw-bold">Profile Photo</th> */}
                 <th className="fs-6 fw-bold">Experience</th>
                 <th className="fs-6 fw-bold">Resume</th>
               </tr>
@@ -483,7 +481,10 @@ function Candidates() {
 
                       <div className="fw-bold">
                         Score:{" "}
-                        <span className="text-dark "style={{fontSize:"30px"}}>
+                        <span
+                          className="text-dark "
+                          style={{ fontSize: "17px" }}
+                        >
                           {candidate.can_score}/1000
                         </span>
                       </div>
@@ -497,7 +498,7 @@ function Candidates() {
                     </td>
 
                     {/* Profile Image */}
-                    <td className="text-center">
+                    {/* <td className="text-center">
                       <div className="avatar avatar-xl">
                         <img
                           src={candidate.profile_photo || image}
@@ -505,7 +506,7 @@ function Candidates() {
                           className="avatar-img rounded-circle"
                         />
                       </div>
-                    </td>
+                    </td> */}
 
                     {/* Experience */}
                     <td className="text-start">

@@ -262,7 +262,7 @@ function Interview() {
                           Score:{" "}
                           <span
                             className="text-dark"
-                            style={{ fontSize: "25px" }}
+                            style={{ fontSize: "17px" }}
                           >
                             {i.can_score}/1000
                           </span>

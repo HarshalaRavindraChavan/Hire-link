@@ -118,10 +118,19 @@ function Signin() {
           );
 
           localStorage.setItem(
+            "signupTempData",
+            JSON.stringify({
+              role: activeRole, // candidate | employer
+              data: data.data,
+              createdAt: Date.now(),
+            }),
+          );
+
+          localStorage.setItem(
             "paymentUser",
             JSON.stringify({
               email: values.email,
-              role: activeRole.toLowerCase(), // ✅ must be "candidate" / "employer"
+              role: activeRole.toLowerCase(), //must be "candidate" / "employer"
             }),
           );
 
@@ -137,6 +146,15 @@ function Signin() {
         // ✅ OTP required -> redirect verify
         if (errData?.otp_required === true) {
           toast.error(errData.message || "OTP verification required");
+
+          localStorage.setItem(
+            "signupTempData",
+            JSON.stringify({
+              role: activeRole, // candidate | employer
+              data: errData.data,
+              createdAt: Date.now(),
+            }),
+          );
 
           localStorage.setItem(
             "verifyUser",
@@ -155,6 +173,15 @@ function Signin() {
         if (errData?.payment_required === true) {
           toast.error(
             errData.message || "Payment pending. Please complete payment.",
+          );
+
+          localStorage.setItem(
+            "signupTempData",
+            JSON.stringify({
+              role: activeRole, // candidate | employer
+              data: errData.data,
+              createdAt: Date.now(),
+            }),
           );
 
           localStorage.setItem(

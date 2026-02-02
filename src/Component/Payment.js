@@ -222,10 +222,12 @@ function PaymentPage() {
         sessionStorage.getItem("page_unloaded") &&
         !localStorage.getItem("paymentDone")
       ) {
-        localStorage.removeItem("candidate");
-        localStorage.removeItem("auth");
-        localStorage.removeItem("employer");
+        // ❌ Payment failed / abandoned
+        localStorage.removeItem("signupTempData");
         localStorage.removeItem("paymentUser");
+        localStorage.removeItem("candidate");
+        localStorage.removeItem("employer");
+        localStorage.removeItem("auth");
       }
     }, 2000);
 

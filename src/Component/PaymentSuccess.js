@@ -27,12 +27,20 @@ function PaymentSuccess() {
       name:
         paymentUser.role === "candidate"
           ? temp.can_name || saved.name
-          : temp.emp_name || saved.name,
+          : paymentUser.role === "employer"
+            ? temp.emp_name || saved.name
+            : paymentUser.role === "employer_staff"
+              ? temp.emp_name || saved.name
+              : temp.name,
 
       mobile:
         paymentUser.role === "candidate"
           ? temp.can_mobile || saved.mobile
-          : temp.emp_mobile || saved.mobile,
+          : paymentUser.role === "employer"
+            ? temp.emp_mobile || saved.mobile
+            : paymentUser.role === "employer_staff"
+              ? temp.emp_mobile || saved.mobile 
+              : temp.emp_mobile || saved.mobile,
 
       receiptNo: saved.receiptNo || `RCPT-${Date.now().toString().slice(-8)}`,
       paymentFor:
@@ -51,6 +59,33 @@ function PaymentSuccess() {
 
     setPayment(finalPayment);
   }, [navigate]);
+
+  // ✅ FINAL SAVE AFTER VERIFIED PAYMENT ONLY
+  useEffect(() => {
+    const savedPayment = JSON.parse(localStorage.getItem("paymentDetails"));
+    const temp = JSON.parse(localStorage.getItem("signupTempData"));
+
+
+    if (!savedPayment || !temp) return;
+
+    if (temp.role === "candidate") {
+      localStorage.setItem("candidate", JSON.stringify(temp.data));
+    } else if (temp.role === "employer") {
+      localStorage.setItem(
+        "auth",
+        JSON.stringify({
+          role: 100,
+          emp_id: temp.data.emp_id,
+          emp_companyname: temp.data.emp_companyname,
+        }),
+      );
+
+      localStorage.setItem("employer", JSON.stringify(temp.data));
+    }
+
+    // ✅ cleanup temp
+    localStorage.removeItem("signupTempData");
+  }, []);
 
   useEffect(() => {
     if (count === null) return;

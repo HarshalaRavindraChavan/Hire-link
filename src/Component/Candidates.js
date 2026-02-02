@@ -304,6 +304,8 @@ function Candidates() {
         "paymentUser",
         JSON.stringify({
           email: employer.emp_email,
+          name: employer.emp_name,
+          mobile: employer.emp_mobile,
           role: "resume_download",
           for: "Resume Download",
           candidate_id: candidate.can_id,

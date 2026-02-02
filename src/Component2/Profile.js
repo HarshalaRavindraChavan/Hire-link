@@ -404,7 +404,6 @@ function Profile() {
       if (!isAadharLocked) payload.can_aadhar = candidate.can_aadhar;
       if (!isPanLocked) payload.can_pan = candidate.can_pan;
 
-      
       const response = await axios.post(
         `${BASE_URL}hirelink_apis/candidate/updatedata/tbl_candidate/can_id/${candidate.can_id}`,
         payload,
@@ -1077,9 +1076,25 @@ function Profile() {
                         isPanLocked || (candidate.can_pan || "").length === 10
                       }
                       onChange={(e) => {
-                        const value = e.target.value
-                          .toUpperCase()
-                          .replace(/[^A-Z0-9]/g, "");
+                        let value = e.target.value.toUpperCase();
+
+                        // Remove invalid characters
+                        value = value.replace(/[^A-Z0-9]/g, "");
+
+                        // Enforce PAN structure step-by-step
+                        if (value.length <= 5) {
+                          value = value.replace(/[^A-Z]/g, "");
+                        } else if (value.length <= 9) {
+                          value =
+                            value.slice(0, 5).replace(/[^A-Z]/g, "") +
+                            value.slice(5).replace(/[^0-9]/g, "");
+                        } else {
+                          value =
+                            value.slice(0, 5).replace(/[^A-Z]/g, "") +
+                            value.slice(5, 9).replace(/[^0-9]/g, "") +
+                            value.slice(9, 10).replace(/[^A-Z]/g, "");
+                        }
+
                         setCandidate((prev) => ({
                           ...prev,
                           can_pan: value,

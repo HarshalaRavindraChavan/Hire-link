@@ -308,6 +308,8 @@ function Staff() {
         "paymentUser",
         JSON.stringify({
           email: employerEmail,
+          name:data.fullname,
+          mobile:data.mobile,
           role: "employer_staff",
           for: "staff_add",
           employer_id: employerId,
@@ -945,6 +947,7 @@ function Staff() {
                     type="number"
                     {...addRegister("mobile")}
                     className="form-control"
+                    maxLength={10}
                     placeholder="Enter Mobile Number"
                   />
                   <p className="text-danger">{addErrors.mobile?.message}</p>
@@ -1042,6 +1045,7 @@ function Staff() {
                   <input
                     type="text"
                     {...addRegister("adhar")}
+                    maxLength={12}
                     className="form-control"
                     placeholder="Enter Adhar Number"
                   />
@@ -1053,6 +1057,7 @@ function Staff() {
                   <label className="fw-semibold">PAN Number</label>
                   <input
                     type="text"
+                    maxLength={10}
                     {...addRegister("pan")}
                     className="form-control"
                     placeholder="Enter PAN Number"

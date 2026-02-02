@@ -175,26 +175,37 @@ const Signup = () => {
         // ✅ Store full data in localStorage (same as your first code)
         if (activeRole === "candidate") {
           //store data after signup
-          localStorage.setItem("candidate", JSON.stringify(data.data));
+          // localStorage.setItem("candidate", JSON.stringify(data.data));
 
           // ✅ FCM token (optional)
           if (data.data?.can_id) {
             saveFcmToken(data.data.can_id);
           }
-        } else {
-          // ✅ auth store (same as old code)
-          localStorage.setItem(
-            "auth",
-            JSON.stringify({
-              role: 100,
-              emp_id: data.data.emp_id,
-              emp_companyname: data.data.emp_companyname,
-            }),
-          );
-
-          // ✅ full employer row store
-          localStorage.setItem("employer", JSON.stringify(data.data));
         }
+        //else {
+        //   // ✅ auth store (same as old code)
+        //   localStorage.setItem(
+        //     "auth",
+        //     JSON.stringify({
+        //       role: 100,
+        //       emp_id: data.data.emp_id,
+        //       emp_companyname: data.data.emp_companyname,
+        //     }),
+        //   );
+
+        //   // ✅ full employer row store
+        //   localStorage.setItem("employer", JSON.stringify(data.data));
+        // }
+
+        // 🔹 ONLY TEMP STORAGE (payment pending)
+        localStorage.setItem(
+          "signupTempData",
+          JSON.stringify({
+            role: activeRole, // candidate | employer
+            data: data.data,
+            createdAt: Date.now(),
+          }),
+        );
 
         // ✅ store payment user info
         localStorage.setItem(
@@ -210,7 +221,7 @@ const Signup = () => {
         localStorage.setItem(
           "paymentUser",
           JSON.stringify({
-            name:values.fullname,
+            name: values.fullname,
             email: values.email,
             role: activeRole, // "candidate" | "employer"
             mobile: values.mobile,

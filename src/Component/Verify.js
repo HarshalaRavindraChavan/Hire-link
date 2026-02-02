@@ -417,7 +417,9 @@ function Verify() {
               <form onSubmit={verifyEmailOtp}>
                 <input
                   className="form-control mb-3"
+                  type="tel"
                   placeholder="Enter Email OTP"
+                  maxLength={6}
                   value={emailOtp}
                   onChange={(e) =>
                     setEmailOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
@@ -455,7 +457,9 @@ function Verify() {
               <form onSubmit={verifyMobileOtp}>
                 <input
                   className="form-control mb-3"
+                  type="tel"
                   placeholder="Enter Mobile OTP"
+                  maxLength={6}
                   value={mobileOtp}
                   onChange={(e) =>
                     setMobileOtp(e.target.value.replace(/\D/g, "").slice(0, 6))

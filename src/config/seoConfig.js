@@ -103,10 +103,16 @@ export const seoConfig = {
       "Contact Hirelink support team for assistance, queries or feedback related to your account and services.",
   },
 
-  forgot_password: {
-    title: "Hirelink | Forgot Password",
+  forgot: {
+    title: "Forgot Password | Hirelink",
     description:
-      "Reset your Hirelink account password securely and regain access to your profile in a few steps.",
+      "Forgot your Hirelink password? Reset it securely and regain access to your account in just a few simple steps.",
+  },
+
+  resetpass: {
+    title: "Reset Password | Hirelink",
+    description:
+      "Create a new password for your Hirelink account securely and continue managing your profile without interruption.",
   },
 
   help: {

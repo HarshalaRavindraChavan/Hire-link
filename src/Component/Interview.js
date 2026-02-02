@@ -65,9 +65,7 @@ function Interview() {
       setLoading(true);
       let res;
       if (["1", "2", "3", "4"].includes(role)) {
-        res = await axios.get(
-          `${BASE_URL}admin/getdata/tbl_interview`,
-        );
+        res = await axios.get(`${BASE_URL}admin/getdata/tbl_interview`);
       }
 
       if (Number(role) === 100) {
@@ -262,7 +260,10 @@ function Interview() {
                         </div>
                         <div className="fw-bold">
                           Score:{" "}
-                          <span className="text-dark fw-normal">
+                          <span
+                            className="text-dark"
+                            style={{ fontSize: "25px" }}
+                          >
                             {i.can_score}/1000
                           </span>
                         </div>

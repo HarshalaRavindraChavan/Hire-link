@@ -60,14 +60,14 @@ function Signin() {
         let payload = {};
 
         if (activeRole === "candidate") {
-          url = `${BASE_URL}hirelink_apis/candidate/signin/tbl_candidate`;
+          url = `${BASE_URL}candidate/signin/tbl_candidate`;
           payload = {
             can_email: values.email,
             can_password: values.password,
             captchaToken: captchaToken,
           };
         } else {
-          url = `${BASE_URL}hirelink_apis/employer/signin/tbl_employer`;
+          url = `${BASE_URL}employer/signin/tbl_employer`;
           payload = {
             emp_email: values.email,
             emp_password: values.password,

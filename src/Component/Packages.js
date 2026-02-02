@@ -101,7 +101,7 @@ function Packages() {
       };
 
       const res = await axios.post(
-        `${BASE_URL}hirelink_apis/admin/insert/tbl_package`,
+        `${BASE_URL}admin/insert/tbl_package`,
         payload
       );
 
@@ -153,7 +153,7 @@ function Packages() {
   const fetchPackages = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/getdata/tbl_package`,
+        `${BASE_URL}admin/getdata/tbl_package`,
       );
 
       if (res.data.status === true) {
@@ -172,7 +172,7 @@ function Packages() {
   const confirmDelete = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/deletedata/tbl_package/pack_id/${deletePackageId}`
+        `${BASE_URL}admin/deletedata/tbl_package/pack_id/${deletePackageId}`
       );
 
       if (res.data.status === true) {
@@ -252,7 +252,7 @@ function Packages() {
       setLoading(true);
 
       const response = await axios.post(
-        `${BASE_URL}hirelink_apis/admin/updatedata/tbl_package/pack_id/${editPackId}`,
+        `${BASE_URL}admin/updatedata/tbl_package/pack_id/${editPackId}`,
         {
           pack_name: data.pack_name,
           pack_price: data.pack_price,

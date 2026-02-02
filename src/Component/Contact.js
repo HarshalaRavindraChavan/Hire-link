@@ -27,7 +27,7 @@ function Contact() {
       setLoading(true); // loader start
 
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/getdata/tbl_contact`
+        `${BASE_URL}admin/getdata/tbl_contact`
       );
 
       if (res.data.status === true) {

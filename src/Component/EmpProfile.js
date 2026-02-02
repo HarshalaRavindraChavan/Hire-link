@@ -24,7 +24,7 @@ const EmpProfile = () => {
   const fetchStates = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdata/tbl_state`
+        `${BASE_URL}candidate/getdata/tbl_state`
       );
 
       if (res.data?.status) {
@@ -38,7 +38,7 @@ const EmpProfile = () => {
   const fetchCities = async (stateId) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_city/city_state_id/${stateId}`
+        `${BASE_URL}candidate/getdatawhere/tbl_city/city_state_id/${stateId}`
       );
 
       if (res.data?.status) {
@@ -136,7 +136,7 @@ const EmpProfile = () => {
         }
 
         const res = await axios.post(
-          `${BASE_URL}hirelink_apis/employer/updatedata/tbl_employer/emp_id/${employer?.emp_id}`,
+          `${BASE_URL}employer/updatedata/tbl_employer/emp_id/${employer?.emp_id}`,
           payload
         );
 
@@ -196,7 +196,7 @@ const EmpProfile = () => {
 
     try {
       const res = await axios.post(
-        `${BASE_URL}hirelink_apis/admin/fileupload`,
+        `${BASE_URL}admin/fileupload`,
         formData
       );
 
@@ -248,7 +248,7 @@ const EmpProfile = () => {
       };
 
       await axios.post(
-        `${BASE_URL}hirelink_apis/employer/updatedata/tbl_employer/emp_id/${empId}`,
+        `${BASE_URL}employer/updatedata/tbl_employer/emp_id/${empId}`,
         payload,
         {
           headers: {

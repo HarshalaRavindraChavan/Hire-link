@@ -38,7 +38,7 @@ function Users() {
   const fetchStates = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdata/tbl_state`,
+        `${BASE_URL}candidate/getdata/tbl_state`,
       );
 
       if (res.data?.status) {
@@ -52,7 +52,7 @@ function Users() {
   const fetchCities = async (stateId, selectedCity = null) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_city/city_state_id/${stateId}`,
+        `${BASE_URL}candidate/getdatawhere/tbl_city/city_state_id/${stateId}`,
       );
 
       if (res.data?.status) {
@@ -85,7 +85,7 @@ function Users() {
       setLoading(true);
 
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/getdata/tbl_user`,
+        `${BASE_URL}admin/getdata/tbl_user`,
       );
       if (res.data.status === true) {
         setUsers(res.data.data);
@@ -120,7 +120,7 @@ function Users() {
   const confirmDelete = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/deletedata/tbl_user/user_id/${deleteId}`,
+        `${BASE_URL}admin/deletedata/tbl_user/user_id/${deleteId}`,
       );
 
       if (res.data.status === true) {
@@ -230,7 +230,7 @@ function Users() {
 
     try {
       const res = await axios.post(
-        `${BASE_URL}hirelink_apis/admin/insert/tbl_user`,
+        `${BASE_URL}admin/insert/tbl_user`,
         payload,
       );
 
@@ -319,7 +319,7 @@ function Users() {
 
     try {
       const res = await axios.post(
-        `${BASE_URL}hirelink_apis/admin/fileupload`,
+        `${BASE_URL}admin/fileupload`,
         formData,
       );
 
@@ -467,7 +467,7 @@ function Users() {
       };
 
       const response = await axios.post(
-        `${BASE_URL}hirelink_apis/admin/updatedata/tbl_user/user_id/${editUserId}`,
+        `${BASE_URL}admin/updatedata/tbl_user/user_id/${editUserId}`,
         payload,
       );
 
@@ -568,7 +568,7 @@ function Users() {
       setLoading(true);
 
       const res = await axios.post(
-        `${BASE_URL}hirelink_apis/admin/updatedata/tbl_user/user_id/${userId}`,
+        `${BASE_URL}admin/updatedata/tbl_user/user_id/${userId}`,
         {
           user_status: newStatus,
         },

@@ -28,7 +28,7 @@ function Employes() {
     try {
       setLoading(true);
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/getdata/tbl_employer`
+        `${BASE_URL}admin/getdata/tbl_employer`
       );
 
       if (res.data.status === true) {
@@ -63,7 +63,7 @@ function Employes() {
   const confirmDelete = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/deletedata/tbl_employer/emp_id/${deleteId}`
+        `${BASE_URL}admin/deletedata/tbl_employer/emp_id/${deleteId}`
       );
 
       if (res.data.status === true) {
@@ -136,7 +136,7 @@ function Employes() {
       };
 
       const res = await axios.post(
-        `${BASE_URL}hirelink_apis/employer/insert/tbl_employer`,
+        `${BASE_URL}employer/insert/tbl_employer`,
         payload
       );
 
@@ -206,7 +206,7 @@ function Employes() {
 
     try {
       const res = await axios.post(
-        `${BASE_URL}hirelink_apis/candidate/fileupload`,
+        `${BASE_URL}candidate/fileupload`,
         formData
       );
 
@@ -290,7 +290,7 @@ function Employes() {
       setLoading(true);
 
       const res = await axios.post(
-        `${BASE_URL}hirelink_apis/admin/updatedata/tbl_employer/emp_id/${empId}`,
+        `${BASE_URL}admin/updatedata/tbl_employer/emp_id/${empId}`,
         {
           emp_status: newStatus,
         }

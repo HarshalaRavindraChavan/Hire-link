@@ -64,7 +64,7 @@ const Signup = () => {
 
   //     if (activeRole === "Candidate") {
   //       // 🔹 Candidate Signup API
-  //       url = `${BASE_URL}hirelink_apis/candidate/signup/tbl_candidate`;
+  //       url = `${BASE_URL}candidate/signup/tbl_candidate`;
   //       payload = {
   //         can_name: values.fullname,
   //         can_email: values.email,
@@ -75,7 +75,7 @@ const Signup = () => {
   //       };
   //     } else {
   //       // 🔹 Employer Signup API
-  //       url = `${BASE_URL}hirelink_apis/employer/signup/tbl_employer`;
+  //       url = `${BASE_URL}employer/signup/tbl_employer`;
   //       payload = {
   //         emp_name: values.fullname,
   //         emp_email: values.email,
@@ -143,7 +143,7 @@ const Signup = () => {
 
       // ✅ Role wise API + payload
       if (activeRole === "candidate") {
-        url = `${BASE_URL}hirelink_apis/candidate/signup/tbl_candidate`;
+        url = `${BASE_URL}candidate/signup/tbl_candidate`;
         payload = {
           can_name: values.fullname,
           can_email: values.email,
@@ -154,7 +154,7 @@ const Signup = () => {
           captchaToken: captchaToken,
         };
       } else {
-        url = `${BASE_URL}hirelink_apis/employer/signup/tbl_employer`;
+        url = `${BASE_URL}employer/signup/tbl_employer`;
         payload = {
           emp_name: values.fullname,
           emp_email: values.email,

@@ -84,13 +84,13 @@ function Dashboard() {
           contacts,
           users,
         ] = await Promise.all([
-          axios.get(`${BASE_URL}hirelink_apis/admin/countdata/tbl_job`),
-          axios.get(`${BASE_URL}hirelink_apis/admin/countdata/tbl_candidate`),
-          axios.get(`${BASE_URL}hirelink_apis/admin/countdata/tbl_applied`),
-          axios.get(`${BASE_URL}hirelink_apis/admin/countdata/tbl_interview`),
-          axios.get(`${BASE_URL}hirelink_apis/admin/countdata/tbl_employer`),
-          axios.get(`${BASE_URL}hirelink_apis/admin/countdata/tbl_contact`),
-          axios.get(`${BASE_URL}hirelink_apis/admin/countdata/tbl_user`),
+          axios.get(`${BASE_URL}admin/countdata/tbl_job`),
+          axios.get(`${BASE_URL}admin/countdata/tbl_candidate`),
+          axios.get(`${BASE_URL}admin/countdata/tbl_applied`),
+          axios.get(`${BASE_URL}admin/countdata/tbl_interview`),
+          axios.get(`${BASE_URL}admin/countdata/tbl_employer`),
+          axios.get(`${BASE_URL}admin/countdata/tbl_contact`),
+          axios.get(`${BASE_URL}admin/countdata/tbl_user`),
         ]);
 
         setCounts({
@@ -108,14 +108,14 @@ function Dashboard() {
       if (Number(role) === 100) {
         const [jobs, candidates, applicants, interviews] = await Promise.all([
           axios.get(
-            `${BASE_URL}hirelink_apis/admin/countdatawhere/tbl_job/job_employer_id/${employerId}`,
+            `${BASE_URL}admin/countdatawhere/tbl_job/job_employer_id/${employerId}`,
           ),
-          axios.get(`${BASE_URL}hirelink_apis/admin/countdata/tbl_candidate`),
+          axios.get(`${BASE_URL}admin/countdata/tbl_candidate`),
           axios.get(
-            `${BASE_URL}hirelink_apis/admin/countdatawhere/tbl_applied/apl_employer_id/${employerId}`,
+            `${BASE_URL}admin/countdatawhere/tbl_applied/apl_employer_id/${employerId}`,
           ),
           axios.get(
-            `${BASE_URL}hirelink_apis/admin/countdatawhere/tbl_interview/itv_employer_id/${employerId}`,
+            `${BASE_URL}admin/countdatawhere/tbl_interview/itv_employer_id/${employerId}`,
           ),
         ]);
 

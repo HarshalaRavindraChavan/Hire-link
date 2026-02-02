@@ -45,7 +45,7 @@ function Apply() {
   const fetchJobDetail = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_job/job_id/${job_id}`,
+        `${BASE_URL}candidate/getdatawhere/tbl_job/job_id/${job_id}`,
       );
 
       if (res?.data?.status === true || res?.data?.status === "success") {
@@ -68,7 +68,7 @@ function Apply() {
       if (!candidateLS?.can_id) return;
 
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_candidate/can_id/${candidateLS.can_id}`,
+        `${BASE_URL}candidate/getdatawhere/tbl_candidate/can_id/${candidateLS.can_id}`,
       );
 
       if (res.data.status === true || res.data.status === "success") {
@@ -125,7 +125,7 @@ function Apply() {
       if (!candidate?.can_id) return;
 
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/getdatawhere/tbl_applied/apl_job_id/${job_id}`,
+        `${BASE_URL}admin/getdatawhere/tbl_applied/apl_job_id/${job_id}`,
       );
 
       if (res.data.status === true || res.data.status === "success") {
@@ -175,7 +175,7 @@ function Apply() {
 
     try {
       const res = await axios.post(
-        `${BASE_URL}hirelink_apis/candidate/fileupload`,
+        `${BASE_URL}candidate/fileupload`,
         formDataFile,
       );
 
@@ -263,7 +263,7 @@ function Apply() {
       };
 
       const res = await axios.post(
-        `${BASE_URL}hirelink_apis/candidate/updatedata/tbl_candidate/can_id/${candidate.can_id}`,
+        `${BASE_URL}candidate/updatedata/tbl_candidate/can_id/${candidate.can_id}`,
         payload,
         {
           headers: { "Content-Type": "application/json" },
@@ -346,7 +346,7 @@ function Apply() {
 
     try {
       const res = await axios.post(
-        `${BASE_URL}hirelink_apis/admin/insert/tbl_applied`,
+        `${BASE_URL}admin/insert/tbl_applied`,
         payload,
         { headers: { "Content-Type": "application/json" } },
       );

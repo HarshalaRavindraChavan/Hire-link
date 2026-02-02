@@ -36,7 +36,7 @@ function Candidates() {
       paymentUser?.role === "resume_download" &&
       paymentUser?.resumeFile
     ) {
-      const fileUrl = `${BASE_URL}hirelink_apis/Uploads/${paymentUser.resumeFile}`;
+      const fileUrl = `${BASE_URL}Uploads/${paymentUser.resumeFile}`;
 
       // ✅ Direct download
       const link = document.createElement("a");
@@ -61,7 +61,7 @@ function Candidates() {
     try {
       setLoading(true);
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/getdata/tbl_candidate`,
+        `${BASE_URL}admin/getdata/tbl_candidate`,
       );
 
       if (res.data.status === true) {
@@ -97,7 +97,7 @@ function Candidates() {
   const confirmDelete = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/admin/deletedata/tbl_candidate/can_id/${deleteId}`,
+        `${BASE_URL}admin/deletedata/tbl_candidate/can_id/${deleteId}`,
       );
 
       if (res.data.status === true) {
@@ -150,7 +150,7 @@ function Candidates() {
 
     try {
       const res = await axios.post(
-        `${BASE_URL}hirelink_apis/admin/insert/tbl_candidate`,
+        `${BASE_URL}admin/insert/tbl_candidate`,
         payload,
       );
 
@@ -180,7 +180,7 @@ function Candidates() {
       setLoading(true);
 
       const res = await axios.post(
-        `${BASE_URL}hirelink_apis/admin/updatedata/tbl_candidate/can_id/${canId}`,
+        `${BASE_URL}admin/updatedata/tbl_candidate/can_id/${canId}`,
         {
           can_status: newStatus,
         },
@@ -277,7 +277,7 @@ function Candidates() {
 
       // ✅ Check payment done for this employer + this candidate
       const checkRes = await axios.post(
-        `${BASE_URL}hirelink_apis/payment/check-resume-payment`,
+        `${BASE_URL}payment/check-resume-payment`,
         {
           email: employer.emp_email,
           candidate_id: candidate.can_id,
@@ -286,7 +286,7 @@ function Candidates() {
 
       // ✅ If paid => download resume now
       if (checkRes.data?.status === true && checkRes.data?.paid === true) {
-        const fileUrl = `${BASE_URL}hirelink_apis/Uploads/${candidate.can_resume}`;
+        const fileUrl = `${BASE_URL}Uploads/${candidate.can_resume}`;
 
         const link = document.createElement("a");
         link.href = fileUrl;

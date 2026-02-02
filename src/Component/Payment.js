@@ -40,7 +40,7 @@ function PaymentPage() {
       }
 
       const { data } = await axios.post(
-        `${BASE_URL}hirelink_apis/payment/create-order`,
+        `${BASE_URL}payment/create-order`,
         payload,
       );
 
@@ -124,7 +124,7 @@ function PaymentPage() {
           }
 
           const verify = await axios.post(
-            `${BASE_URL}hirelink_apis/payment/verify`,
+            `${BASE_URL}payment/verify`,
             verifyPayload,
           );
 
@@ -142,7 +142,7 @@ function PaymentPage() {
 
               try {
                 const insertRes = await axios.post(
-                  `${BASE_URL}hirelink_apis/admin/insert/tbl_staff`,
+                  `${BASE_URL}admin/insert/tbl_staff`,
                   pendingStaff,
                 );
 

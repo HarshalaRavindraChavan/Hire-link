@@ -39,6 +39,7 @@ import Applicant from "./Component/Applicant";
 import Login from "./Component/Login";
 import Registar from "./Component/Registar";
 import Verify from "./Component/Verify";
+import ResetPassword from "./Component/ResetPassword";
 // import InterManage from "./Component/InterManage";
 
 /* ================= EMPLOYER ================= */
@@ -98,6 +99,7 @@ function App() {
         <Route path="/receipt" element={<Receipt />} />
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/payment-success" element={<PaymentSuccess />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
         {/* ---------- USER ---------- */}
         <Route element={<UserLayout />}>

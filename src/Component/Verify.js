@@ -60,10 +60,10 @@
 //       let payload = {};
 
 //       if (role === "candidate") {
-//         url = `${BASE_URL}hirelink_apis/candidate/verifyEmailOtp`;
+//         url = `${BASE_URL}candidate/verifyEmailOtp`;
 //         payload = { can_email: email, otp: code };
 //       } else {
-//         url = `${BASE_URL}hirelink_apis/employer/verifyEmailOtp`;
+//         url = `${BASE_URL}employer/verifyEmailOtp`;
 //         payload = { emp_email: email, otp: code };
 //       }
 
@@ -112,10 +112,10 @@
 //       let payload = {};
 
 //       if (role === "candidate") {
-//         url = `${BASE_URL}hirelink_apis/candidate/resendOtp`;
+//         url = `${BASE_URL}candidate/resendOtp`;
 //         payload = { can_email: email };
 //       } else {
-//         url = `${BASE_URL}hirelink_apis/employer/resendOtp`;
+//         url = `${BASE_URL}employer/resendOtp`;
 //         payload = { emp_email: email };
 //       }
 
@@ -254,8 +254,8 @@ function Verify() {
     try {
       const url =
         role === "candidate"
-          ? `${BASE_URL}hirelink_apis/candidate/verifyEmailOtp`
-          : `${BASE_URL}hirelink_apis/employer/verifyEmailOtp`;
+          ? `${BASE_URL}candidate/verifyEmailOtp`
+          : `${BASE_URL}employer/verifyEmailOtp`;
 
       const payload =
         role === "candidate"
@@ -291,8 +291,8 @@ function Verify() {
     try {
       const url =
         role === "candidate"
-          ? `${BASE_URL}hirelink_apis/candidate/verifyMobileOtp`
-          : `${BASE_URL}hirelink_apis/employer/verifyMobileOtp`;
+          ? `${BASE_URL}candidate/verifyMobileOtp`
+          : `${BASE_URL}employer/verifyMobileOtp`;
 
       const payload =
         role === "candidate"
@@ -344,10 +344,10 @@ function Verify() {
       let payload = {};
 
       if (role === "candidate") {
-        url = `${BASE_URL}hirelink_apis/candidate/resendMobileOtp`;
+        url = `${BASE_URL}candidate/resendMobileOtp`;
         payload = { can_mobile: mobile };
       } else {
-        url = `${BASE_URL}hirelink_apis/employer/resendMobileOtp`;
+        url = `${BASE_URL}employer/resendMobileOtp`;
         payload = { emp_mobile: mobile };
       }
 
@@ -375,10 +375,10 @@ function Verify() {
       let payload = {};
 
       if (role === "candidate") {
-        url = `${BASE_URL}hirelink_apis/candidate/resendOtp`;
+        url = `${BASE_URL}candidate/resendOtp`;
         payload = { can_email: email };
       } else {
-        url = `${BASE_URL}hirelink_apis/employer/resendOtp`;
+        url = `${BASE_URL}employer/resendOtp`;
         payload = { emp_email: email };
       }
 

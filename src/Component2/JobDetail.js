@@ -22,7 +22,7 @@ function JobDetail() {
     if (!job && jobId) {
       axios
         .get(
-          `${BASE_URL}hirelink_apis/candidate/getdatawhere/tbl_job/job_id/${jobId}`
+          `${BASE_URL}candidate/getdatawhere/tbl_job/job_id/${jobId}`
         )
         .then((res) => {
           if (

@@ -26,7 +26,7 @@ function Sidebar() {
     displayName = employer?.emp_name || "Employer";
     // displayEmail = employer?.emp_email || "";
     if (employer?.emp_com_logo) {
-      com_logo = `${BASE_URL}hirelink_apis/Uploads/${employer.emp_com_logo}`;
+      com_logo = `${BASE_URL}Uploads/${employer.emp_com_logo}`;
     } else {
       com_logo = logo;
     }

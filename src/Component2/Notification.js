@@ -16,7 +16,7 @@ export default function NotificationPage() {
   const loadNotifications = async (candidateId) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/notifications/${candidateId}`
+        `${BASE_URL}candidate/notifications/${candidateId}`
       );
 
       if (res.data.status) {
@@ -76,7 +76,7 @@ export default function NotificationPage() {
   const markAsRead = async (notiId, candidateId) => {
     try {
       await axios.get(
-        `${BASE_URL}hirelink_apis/candidate/notification-read/${notiId}`
+        `${BASE_URL}candidate/notification-read/${notiId}`
       );
 
       // 🔄 Reload notifications after update

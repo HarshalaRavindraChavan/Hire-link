@@ -51,13 +51,13 @@ function Applicant() {
 
       if (["1", "2", "3", "4"].includes(role)) {
         res = await axios.get(
-          `${BASE_URL}hirelink_apis/admin/getdata/tbl_applied`
+          `${BASE_URL}admin/getdata/tbl_applied`
         );
       }
 
       if (Number(role) === 100) {
         res = await axios.get(
-          `${BASE_URL}hirelink_apis/employer/getdatawhere/tbl_applied/apl_employer_id/${employerId}`
+          `${BASE_URL}employer/getdatawhere/tbl_applied/apl_employer_id/${employerId}`
         );
       }
 
@@ -118,7 +118,7 @@ function Applicant() {
       };
 
       const res = await axios.post(
-        `${BASE_URL}hirelink_apis/admin/insert/tbl_interview`,
+        `${BASE_URL}admin/insert/tbl_interview`,
         payload
       );
 

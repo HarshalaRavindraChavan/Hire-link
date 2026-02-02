@@ -1,3 +1,3 @@
-export const BASE_URL = "https://hirelinkinfo.com/";
+export const BASE_URL = "https://hirelinkinfo.com/hirelink_apis/";
 
 

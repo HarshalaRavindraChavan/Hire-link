@@ -40,7 +40,7 @@ function Login() {
         console.log("Sending login API request...");
 
         const response = await axios.post(
-          `${BASE_URL}hirelink_apis/admin/login`,
+          `${BASE_URL}admin/login`,
           {
             user_email: values.user_email.trim(),
             user_password: values.user_password.trim(),

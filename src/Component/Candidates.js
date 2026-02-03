@@ -425,7 +425,7 @@ function Candidates() {
 
             <tbody>
               {loading ? (
-                <TableSkeleton rows={6} columns={5} />
+                <TableSkeleton rows={6} columns={4} />
               ) : filteredRecords.length > 0 ? (
                 filteredRecords.map((candidate, index) => (
                   <tr key={candidate.can_id}>

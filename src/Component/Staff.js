@@ -733,7 +733,7 @@ function Staff() {
 
             <tbody>
               {loading ? (
-                <TableSkeleton rows={6} columns={5} />
+                <TableSkeleton rows={6} columns={4} />
               ) : filteredRecords.length > 0 ? (
                 filteredRecords.map((u, index) => (
                   <tr

@@ -760,7 +760,7 @@ function Jobs() {
 
             <tbody>
               {loading ? (
-                <TableSkeleton rows={6} columns={5} />
+                <TableSkeleton rows={6} columns={4} />
               ) : filteredJobs.length > 0 ? (
                 filteredJobs.slice(firstIndex, lastIndex).map((job, index) => (
                   <tr key={job.job_id}>
@@ -853,8 +853,8 @@ function Jobs() {
                       </div>
                     </td>
 
-                    <td className="text-start">
-                      <div className="fw-bold text-center">
+                    <td className="text-center">
+                      <div className="fw-bold">
                         Posted Date:{" "}
                         <span className="text-dark fw-normal">
                           {job.job_date}

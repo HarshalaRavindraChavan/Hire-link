@@ -22,7 +22,7 @@ function Receipt({ payment }) {
             : "Payment");
 
   const receiptNo =
-    payment.receiptNo || `RCPT-${Date.now().toString().slice(-8)}`;
+    payment.receiptNo || `HRLK-${Date.now().toString().slice(-8)}`;
 
   /* 🔢 GST INCLUDED AMOUNT */
   const amount = Number(String(payment.amount || 0).replace(/[^\d.]/g, ""));

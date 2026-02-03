@@ -621,7 +621,7 @@ function Receipt({ payment }) {
       {/* Notes */}
       <div className="hl-rec-notes">
         <b>Notes:</b>
-        <p>
+        <p className="receipt-text">
           This receipt confirms successful payment on Hirelinkinfo. Payment is
           non-refundable.
         </p>

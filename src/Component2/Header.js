@@ -1,7 +1,8 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import logo from "../Component2/Image/logo.png";
 import "../Component2/css/Header.css";
+import { FaUserCircle } from "react-icons/fa";
 
 function Header() {
   const [isLogin, setIsLogin] = useState(false);
@@ -21,6 +22,23 @@ function Header() {
     setIsLogin(false);
     navigate("/");
   };
+
+  const [open, setOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <>
@@ -55,9 +73,32 @@ function Header() {
               <NavLink to="/notification" className="nav-link-custom ms-2 me-2">
                 <i className="fa fa-bell"></i>
               </NavLink>
-              <NavLink to="/profile" className="nav-link-custom ms-2 me-2">
+              {/* <NavLink to="/profile" className="nav-link-custom ms-2 me-2">
                 <i className="fa fa-user"></i>
-              </NavLink>
+              </NavLink> */}
+              <div className="dropdown-container" ref={dropdownRef}>
+                <FaUserCircle
+                  className="dropdown-icon"
+                  onClick={() => setOpen(!open)}
+                />
+
+                {open && (
+                  <div className="dropdown-menu">
+                    <div
+                      className="dropdown-item"
+                      onClick={() => navigate("/profile")}
+                    >
+                      👤 My Profile
+                    </div>
+                    <div
+                      className="dropdown-item"
+                      onClick={() => window.open("/receipt.pdf", "_blank")}
+                    >
+                      ⬇️ Download Receipts
+                    </div>
+                  </div>
+                )}
+              </div>
 
               <button
                 className="btn btn-sm btn-outline-danger ps-5 pe-5 fs-6"

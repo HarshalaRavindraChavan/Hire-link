@@ -31,7 +31,7 @@ function Staff() {
 
   const educationOptions = {
     Diploma: ["D.Pharm"],
-    Graduation: ["B.Sc", "B.Pharm"],
+    Graduation: ["B.Sc", "B.Pharmacy"],
     "Post Graduation": ["M.Sc", "M.Pharm"],
     Other: [],
   };
@@ -48,9 +48,7 @@ function Staff() {
 
   const fetchStates = async () => {
     try {
-      const res = await axios.get(
-        `${BASE_URL}candidate/getdata/tbl_state`,
-      );
+      const res = await axios.get(`${BASE_URL}candidate/getdata/tbl_state`);
 
       if (res.data?.status) {
         setStates(res.data.data || []);
@@ -98,9 +96,7 @@ function Staff() {
 
       // ✅ ADMIN / SUBADMIN / BACKEND / ACCOUNTANT → ALL STAFF
       if (["1", "2", "3", "4", "5"].includes(String(role))) {
-        res = await axios.get(
-          `${BASE_URL}admin/getdata/tbl_staff`,
-        );
+        res = await axios.get(`${BASE_URL}admin/getdata/tbl_staff`);
       }
 
       // ✅ EMPLOYER → ONLY HIS STAFF
@@ -253,13 +249,10 @@ function Staff() {
       }
 
       // ✅ 1) DUPLICATE CHECK BEFORE PAYMENT
-      const dupRes = await axios.post(
-        `${BASE_URL}admin/checkStaffDuplicate`,
-        {
-          email: data.email,
-          mobile: data.mobile,
-        },
-      );
+      const dupRes = await axios.post(`${BASE_URL}admin/checkStaffDuplicate`, {
+        email: data.email,
+        mobile: data.mobile,
+      });
 
       // ✅ If duplicate found -> stop here (NO PAYMENT)
       if (dupRes.data?.emailExists) {
@@ -308,8 +301,8 @@ function Staff() {
         "paymentUser",
         JSON.stringify({
           email: employerEmail,
-          name:data.fullname,
-          mobile:data.mobile,
+          name: employer.emp_name,
+          mobile: employer.emp_mobile,
           role: "employer_staff",
           for: "staff_add",
           employer_id: employerId,
@@ -385,10 +378,7 @@ function Staff() {
     formData.append(field, file);
 
     try {
-      const res = await axios.post(
-        `${BASE_URL}admin/fileupload`,
-        formData,
-      );
+      const res = await axios.post(`${BASE_URL}admin/fileupload`, formData);
 
       if (res.data.status) {
         const filename = res.data.files[field];
@@ -736,7 +726,6 @@ function Staff() {
               <tr className="text-center">
                 <th className="fs-6 fw-bold">ID</th>
                 <th className="fs-6 fw-bold">Staff Detail</th>
-                <th className="fs-6 fw-bold">Staff Proof</th>
                 <th className="fs-6 fw-bold">Staff Address</th>
                 <th className="fs-6 fw-bold">Activity Detail</th>
               </tr>
@@ -744,7 +733,7 @@ function Staff() {
 
             <tbody>
               {loading ? (
-                <TableSkeleton rows={6} columns={5} />
+                <TableSkeleton rows={6} columns={4} />
               ) : filteredRecords.length > 0 ? (
                 filteredRecords.map((u, index) => (
                   <tr
@@ -809,9 +798,6 @@ function Staff() {
                           {u.staff_experience} Year
                         </span>
                       </div>
-                    </td>
-
-                    <td className="text-start">
                       <div className="fw-bold">
                         Join:{" "}
                         <span className="text-dark fw-normal">

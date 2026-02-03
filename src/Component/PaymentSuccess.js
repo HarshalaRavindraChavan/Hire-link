@@ -31,7 +31,9 @@ function PaymentSuccess() {
             ? temp.emp_name || saved.name
             : paymentUser.role === "employer_staff"
               ? temp.emp_name || saved.name
-              : temp.name,
+              : paymentUser.role === "resume_download"
+                ? temp.emp_name || saved.name
+                : temp.name || saved.name,
 
       mobile:
         paymentUser.role === "candidate"
@@ -39,8 +41,10 @@ function PaymentSuccess() {
           : paymentUser.role === "employer"
             ? temp.emp_mobile || saved.mobile
             : paymentUser.role === "employer_staff"
-              ? temp.emp_mobile || saved.mobile 
-              : temp.emp_mobile || saved.mobile,
+              ? temp.emp_mobile || saved.mobile
+              : paymentUser.role === "resume_download"
+                ? temp.emp_mobile || saved.mobile
+                : temp.emp_mobile || saved.mobile,
 
       receiptNo: saved.receiptNo || `RCPT-${Date.now().toString().slice(-8)}`,
       paymentFor:
@@ -64,7 +68,6 @@ function PaymentSuccess() {
   useEffect(() => {
     const savedPayment = JSON.parse(localStorage.getItem("paymentDetails"));
     const temp = JSON.parse(localStorage.getItem("signupTempData"));
-
 
     if (!savedPayment || !temp) return;
 

@@ -40,9 +40,7 @@ function Jobs() {
   /* ================= FETCH SAVED JOBS ================= */
   const fetchSavedJobs = async (canId) => {
     try {
-      const res = await axios.get(
-        `${BASE_URL}candidate/saved-jobs/${canId}`,
-      );
+      const res = await axios.get(`${BASE_URL}candidate/saved-jobs/${canId}`);
 
       if (res.data.status) {
         setSavedJobs(res.data.data.map((j) => Number(j.save_job_id)));
@@ -80,17 +78,11 @@ function Jobs() {
 
     try {
       if (isSaved) {
-        await axios.post(
-          `${BASE_URL}candidate/unsave-job`,
-          payload,
-        );
+        await axios.post(`${BASE_URL}candidate/unsave-job`, payload);
         setSavedJobs((prev) => prev.filter((id) => id !== Number(jobId)));
         toast.info("Job removed");
       } else {
-        await axios.post(
-          `${BASE_URL}candidate/save-job`,
-          payload,
-        );
+        await axios.post(`${BASE_URL}candidate/save-job`, payload);
         setSavedJobs((prev) => [...prev, Number(jobId)]);
         toast.success("Job saved ❤️");
       }
@@ -101,9 +93,7 @@ function Jobs() {
 
   useEffect(() => {
     axios
-      .get(
-        `${BASE_URL}candidate/getdatawhere/tbl_job/job_status/Active`,
-      )
+      .get(`${BASE_URL}candidate/getdatawhere/tbl_job/job_status/Active`)
       .then((res) => {
         if (res.data.status === "success") {
           setJobs(res.data.data); // ✅ THIS WAS MISSING
@@ -365,10 +355,10 @@ function Jobs() {
                 <p>
                   {selectedJob.city_name}, {selectedJob.state_name}
                 </p>
-                <hr />
-                <button className="btn btn-outline-danger btn-sm">
+                {/* <hr /> */}
+                {/* <button className="btn btn-outline-danger btn-sm">
                   Report job
-                </button>
+                </button> */}
               </div>
             </div>
           )}

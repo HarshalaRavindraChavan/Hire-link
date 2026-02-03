@@ -5,6 +5,7 @@ import { NavLink } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
+import { toast, ToastContainer } from "react-toastify";
 import { BASE_URL } from "../config/constants";
 
 function Forgot() {
@@ -41,22 +42,28 @@ function Forgot() {
       const result = await res.json();
 
       if (result.status) {
-        alert("Reset link sent to your email");
+        toast.success("Reset link sent to your email");
       } else {
-        alert(result.message);
+        toast.error(result.message);
       }
     } catch (error) {
-      alert("Something went wrong");
+      toast.error("Something went wrong");
     }
   };
 
   return (
     <>
       <SEO
-        title={seoConfig.forgot_password.title}
-        description={seoConfig.forgot_password.description}
+        title={seoConfig.forgot.title}
+        description={seoConfig.forgot.description}
       />
-
+      {/* TOAST */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        pauseOnHover
+        theme="colored"
+      />
       <div className="bg-light d-flex justify-content-center align-items-center vh-100">
         <div
           className="card shadow p-4 m-2"

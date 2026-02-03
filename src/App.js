@@ -40,6 +40,7 @@ import Login from "./Component/Login";
 import Registar from "./Component/Registar";
 import Verify from "./Component/Verify";
 import ResetPassword from "./Component/ResetPassword";
+import PaymentHistory from "./Component/PaymentHistory";
 // import InterManage from "./Component/InterManage";
 
 /* ================= EMPLOYER ================= */
@@ -149,6 +150,7 @@ function App() {
           <Route path="job" element={<Job />} />
           <Route path="candidate" element={<Candidates />} />
           <Route path="interview" element={<Interview />} />
+          <Route path="payment-history" element={<PaymentHistory />} />
           {/* <Route path="intermanage" element={<InterManage />} /> */}
           <Route path="employe" element={<Employes />} />
           <Route path="applicant" element={<Applicant />} />

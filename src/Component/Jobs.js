@@ -47,7 +47,7 @@ function Jobs() {
 
   const educationOptions = {
     Diploma: ["D.Pharm"],
-    Graduation: ["B.Sc", "B.Pharm"],
+    Graduation: ["B.Sc", "B.Pharmacy."],
     "Post Graduation": ["M.Sc", "M.Pharm"],
   };
 
@@ -61,9 +61,7 @@ function Jobs() {
 
   const fetchStates = async () => {
     try {
-      const res = await axios.get(
-        `${BASE_URL}candidate/getdata/tbl_state`,
-      );
+      const res = await axios.get(`${BASE_URL}candidate/getdata/tbl_state`);
 
       if (res.data?.status) {
         setStates(res.data.data || []);
@@ -285,10 +283,7 @@ function Jobs() {
         job_description: data.job_description,
       };
 
-      const res = await axios.post(
-        `${BASE_URL}admin/insert/tbl_job`,
-        payload,
-      );
+      const res = await axios.post(`${BASE_URL}admin/insert/tbl_job`, payload);
 
       if (res.data?.status === true) {
         resetAdd();
@@ -375,9 +370,7 @@ function Jobs() {
 
   const fetchCategories = async () => {
     try {
-      const res = await axios.get(
-        `${BASE_URL}admin/getdata/tbl_main_category`,
-      );
+      const res = await axios.get(`${BASE_URL}admin/getdata/tbl_main_category`);
       setCategories(res.data.data || []);
     } catch (err) {
       console.error("Main category error", err);
@@ -600,10 +593,9 @@ function Jobs() {
 
       alreadyUpdatedRef.current[jobId] = true;
 
-      await axios.post(
-        `${BASE_URL}admin/updatedata/tbl_job/job_id/${jobId}`,
-        { job_status: "Active" },
-      );
+      await axios.post(`${BASE_URL}admin/updatedata/tbl_job/job_id/${jobId}`, {
+        job_status: "Active",
+      });
 
       fetchJobs();
     } catch (err) {
@@ -763,13 +755,12 @@ function Jobs() {
                 <th className="fs-6 fw-bold">Job Detail</th>
                 <th className="fs-6 fw-bold">Job By</th>
                 <th className="fs-6 fw-bold">Other Detail</th>
-                <th className="fs-6 fw-bold">Status</th>
               </tr>
             </thead>
 
             <tbody>
               {loading ? (
-                <TableSkeleton rows={6} columns={5} />
+                <TableSkeleton rows={6} columns={4} />
               ) : filteredJobs.length > 0 ? (
                 filteredJobs.slice(firstIndex, lastIndex).map((job, index) => (
                   <tr key={job.job_id}>
@@ -861,21 +852,14 @@ function Jobs() {
                         </span>
                       </div>
                     </td>
-                    <td className="text-start">
-                      <div className="fw-bold ">
+
+                    <td className="text-center">
+                      <div className="fw-bold">
                         Posted Date:{" "}
                         <span className="text-dark fw-normal">
                           {job.job_date}
                         </span>
                       </div>
-                      {/* <div className="fw-bold ">
-                        Applications:{" "}
-                        <span className="text-dark fw-normal">
-                          {job.job_applications}
-                        </span>
-                      </div> */}
-                    </td>
-                    <td className="text-center">
                       {job.job_status === "Closed" ? (
                         <span className="badge bg-danger">Closed</span>
                       ) : job.job_status === "Active" ? (

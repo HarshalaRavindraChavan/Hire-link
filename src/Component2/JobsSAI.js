@@ -870,6 +870,31 @@ function JobsSAI() {
                           </button>
                         </div>
                       )}
+
+                      {job.itv_status === "Rescheduled" && (
+                        <div className="d-flex gap-2 flex-wrap justify-content-end">
+                          <button
+                            className="btn btn-success btn-sm"
+                            onClick={() =>
+                              updateInterviewStatus(job.itv_id, "Confirmed")
+                            }
+                          >
+                            Confirm
+                          </button>
+
+                          {/* <button
+                            className="btn btn-outline-danger btn-sm"
+                            onClick={() =>
+                              updateInterviewStatus(
+                                job.itv_id,
+                                "Candidate Cancelled",
+                              )
+                            }
+                          >
+                            Cancel
+                          </button> */}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

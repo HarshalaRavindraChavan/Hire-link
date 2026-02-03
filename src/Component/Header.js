@@ -418,11 +418,9 @@ function Sidebar() {
                       </div>
                     </div>
                   </li>
-
                   <li>
                     <hr className="dropdown-divider" />
                   </li>
-
                   {/* MENU ITEMS */}
                   <li>
                     <Link
@@ -433,11 +431,21 @@ function Sidebar() {
                       My Profile
                     </Link>
                   </li>
+                  {Number(role) === 100 && (
+                    <li>
+                      <Link
+                        to="/payment-history"
+                        className="dropdown-item d-flex align-items-center gap-2 border-0 bg-transparent"
+                      >
+                        <i className="fa-solid fa-scroll"></i>
+                        Payment History
+                      </Link>
+                    </li>
+                  )}
 
                   <li>
                     <hr className="dropdown-divider" />
                   </li>
-
                   <li>
                     <button
                       type="button"

@@ -39,7 +39,7 @@ function Profile() {
 
   const educationOptions = {
     Diploma: ["D.Pharm"],
-    Graduation: ["B.Sc", "B.Pharm"],
+    Graduation: ["B.Sc", "B.Pharmacy"],
     "Post Graduation": ["M.Sc", "M.Pharm"],
   };
 

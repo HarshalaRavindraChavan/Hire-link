@@ -213,6 +213,26 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
     (i) => (i.itv_status || "").trim() === "Appointed",
   ).length;
 
+  const getStatusButtonClass = (status) => {
+    if (
+      status === "Not Attended" ||
+      status === "Not Joined" ||
+      status === "Rejected"
+    ) {
+      return "btn-danger";
+    }
+
+    if (status === "Hold") {
+      return "btn-warning";
+    }
+
+    if (status === "Completed" || status === "Appointed" || status ==="Joined") {
+      return "btn-success";
+    }
+
+    return "btn-primary";
+  };
+
   return (
     <div className="container-fluid interview-wrapper py-3">
       {/* Header */}
@@ -554,64 +574,71 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
 
       {/* ✅ Status Confirmation Modal */}
       {showStatusModal && (
-        <div className="modal fade show d-block" tabIndex="-1">
-          <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title fw-bold">Confirm Status Update</h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  onClick={closeStatusConfirmModal}
-                ></button>
-              </div>
+        <>
+          {/* Bootstrap backdrop */}
+          <div className="modal-backdrop fade show bg-dark bg-opacity-50"></div>
 
-              <div className="modal-body">
-                <p className="mb-0">
-                  Are you sure you want to update this interview status to{" "}
-                  <b>{pendingStatus}</b>?
-                </p>
+          <div className="modal fade show d-block" tabIndex="-1">
+            <div className="modal-dialog modal-dialog-centered">
+              <div className="modal-content shadow-lg rounded-4 border-0">
+                <div className="modal-header">
+                  <h5 className="modal-title fw-bold">Confirm Status Update</h5>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    onClick={closeStatusConfirmModal}
+                  ></button>
+                </div>
 
-                {pendingStatus === "Not Attended" && (
-                  <p className="text-danger fw-bold mt-2 mb-0">
-                    Note: Candidate score will be reduced by -50 points.
+                <div className="modal-body">
+                  <p className="mb-1">
+                    Are you sure you want to update this interview status to{" "}
+                    <b className="text-success">{pendingStatus}</b>?
                   </p>
-                )}
 
-                {pendingStatus === "Not Joined" && (
-                  <p className="text-danger fw-bold mt-2 mb-0">
-                    Note: Candidate score will be reduced by -200 points.
-                  </p>
-                )}
-              </div>
+                  {pendingStatus === "Not Attended" && (
+                    <div className="alert alert-warning py-2 mt-3 mb-0">
+                      ⚠ Candidate score will be reduced by <b>-50 points</b>
+                    </div>
+                  )}
 
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary btn-sm fw-bold"
-                  onClick={closeStatusConfirmModal}
-                >
-                  Cancel
-                </button>
+                  {pendingStatus === "Not Joined" && (
+                    <div className="alert alert-danger py-2 mt-3 mb-0">
+                      ⚠ Candidate score will be reduced by <b>-200 points</b>
+                    </div>
+                  )}
+                </div>
 
-                <button
-                  type="button"
-                  className="btn btn-primary btn-sm fw-bold"
-                  onClick={() => {
-                    updateInterviewStatus(
-                      selectedInterview.itv_id,
-                      pendingStatus,
-                      selectedInterview.can_id,
-                    );
-                    closeStatusConfirmModal();
-                  }}
-                >
-                  Yes, Update
-                </button>
+                <div className="modal-footer d-flex justify-content-between">
+                  {/* Cancel - Left */}
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary btn-sm fw-bold px-4"
+                    onClick={closeStatusConfirmModal}
+                  >
+                    Cancel
+                  </button>
+
+                  {/* Update - Right */}
+                  <button
+                    type="button"
+                    className={`btn btn-sm fw-bold px-4 ${getStatusButtonClass(pendingStatus)}`}
+                    onClick={() => {
+                      updateInterviewStatus(
+                        selectedInterview.itv_id,
+                        pendingStatus,
+                        selectedInterview.can_id,
+                      );
+                      closeStatusConfirmModal();
+                    }}
+                  >
+                    Yes, Update
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );

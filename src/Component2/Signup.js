@@ -38,12 +38,15 @@ const Signup = () => {
     password: Yup.string()
       .min(6, "Password must be at least 6 characters")
       .required("Password is required"),
+
+    terms: Yup.boolean().oneOf([true], "You must accept Terms & Conditions"),
   });
 
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
@@ -245,6 +248,16 @@ const Signup = () => {
     }
   };
 
+  const termsRoute =
+    activeRole === "candidate"
+      ? "/candidate-terms-condition"
+      : "/employer-terms-condition";
+
+  const termsLabel =
+    activeRole === "candidate"
+      ? "Candidate Terms & Conditions"
+      : "Employer Terms & Conditions";
+
   /* ---------------- JSX ---------------- */
   return (
     <>
@@ -400,25 +413,54 @@ const Signup = () => {
                 />
               </div>
 
+              {/* TERMS & CONDITIONS */}
+              <div className="form-check mt-3">
+                <input
+                  className={`form-check-input ${errors.terms ? "is-invalid" : ""}`}
+                  type="checkbox"
+                  id="terms"
+                  {...register("terms")}
+                />
+
+                <label className="form-check-label" htmlFor="terms">
+                  I agree to{" "}
+                  <NavLink
+                    to={termsRoute}
+                    target="_blank"
+                    className="fw-semibold text-decoration-underline"
+                  >
+                    {termsLabel}
+                  </NavLink>
+                </label>
+
+                {errors.terms && (
+                  <div className="invalid-feedback d-block">
+                    {errors.terms.message}
+                  </div>
+                )}
+              </div>
+
               <div className="mt-2">
                 <label className="small fw-medium d-block ">Login as</label>
                 <div className="d-flex gap-2">
                   <button
                     type="button"
-                    className={`role-pill ${
-                      activeRole === "candidate" ? "active" : ""
-                    }`}
-                    onClick={() => setActiveRole("candidate")}
+                    className={`role-pill ${activeRole === "candidate" ? "active" : ""}`}
+                    onClick={() => {
+                      setActiveRole("candidate");
+                      setValue("terms", false);
+                    }}
                   >
                     Candidate
                   </button>
 
                   <button
                     type="button"
-                    className={`role-pill ${
-                      activeRole === "employer" ? "active" : ""
-                    }`}
-                    onClick={() => setActiveRole("employer")}
+                    className={`role-pill ${activeRole === "employer" ? "active" : ""}`}
+                    onClick={() => {
+                      setActiveRole("employer");
+                      setValue("terms", false);
+                    }}
                   >
                     Employer / Recruiter
                   </button>

@@ -242,7 +242,7 @@ function Verify() {
               </form>
               <footer className="text-center mt-3 small text-warning">
                 {" "}
-                © {new Date().getFullYear()} Hirelink{" "}
+                © {new Date().getFullYear()} Pharma Jobs{" "}
               </footer>
             </>
           )}
@@ -281,7 +281,7 @@ function Verify() {
                 </div>
               </form>
               <footer className="text-center mt-3 small text-warning">
-                © {new Date().getFullYear()} Hirelink
+                © {new Date().getFullYear()} Pharma Jobs
               </footer>
             </>
           )}

@@ -281,7 +281,7 @@ const Signup = () => {
           {/* LEFT PANEL */}
           <div className="col-lg-6 d-none d-lg-flex flex-column justify-content-between text-white p-4 signup-brand-panel">
             <div>
-              <h2 className="fw-bold">Hirelink</h2>
+              <h2 className="fw-bold">Pharma Jobs</h2>
               <h4 className="fw-semibold">
                 Build your hiring{" "}
                 <span style={{ color: "#ffd60a" }}>in minutes.</span>
@@ -302,7 +302,7 @@ const Signup = () => {
             </div>
 
             <p className="small opacity-75">
-              “Hirelink helped us close roles 2x faster.”
+              Pharma Jobs helped us close roles 2x faster.”
             </p>
           </div>
 
@@ -322,9 +322,9 @@ const Signup = () => {
               <div>
                 <h4
                   className=""
-                  style={{ fontSize: "18px", fontWeight: "bold" }}
+                  style={{ fontSize: "16px", fontWeight: "bold" }}
                 >
-                  Create Your Hirelink Account
+                  Create Your Pharma Jobs Account
                 </h4>
                 <p className="text-muted">
                   It takes less than a minute to get started.
@@ -346,7 +346,7 @@ const Signup = () => {
                       errors.fullname ? "is-invalid" : ""
                     }`}
                     {...register("fullname")}
-                    placeholder="Enter your name"
+                    placeholder="Enter name"
                   />
                   <div className="invalid-feedback">
                     {errors.fullname?.message}
@@ -360,7 +360,7 @@ const Signup = () => {
                       errors.email ? "is-invalid" : ""
                     }`}
                     {...register("email")}
-                    placeholder="Enter your email"
+                    placeholder="Enter email"
                   />
                   <div className="invalid-feedback">
                     {errors.email?.message}
@@ -376,7 +376,7 @@ const Signup = () => {
                     className={`form-control ${
                       errors.mobile ? "is-invalid" : ""
                     }`}
-                    placeholder="Enter yor mobile number"
+                    placeholder="Enter mobile number"
                     maxLength={10}
                     {...register("mobile")}
                     onInput={(e) => {
@@ -400,7 +400,7 @@ const Signup = () => {
                       errors.password ? "is-invalid" : ""
                     }`}
                     {...register("password")}
-                    placeholder="Enter your password"
+                    placeholder="Enter password"
                   />
                 </div>
               </div>
@@ -414,9 +414,9 @@ const Signup = () => {
               </div>
 
               {/* TERMS & CONDITIONS */}
-              <div className="form-check mt-3">
+              <div className="form-check mt-3 d-flex align-items-start">
                 <input
-                  className={`form-check-input ${errors.terms ? "is-invalid" : ""}`}
+                  className={`form-check-input me-2 ${errors?.terms ? "is-invalid" : ""}`}
                   type="checkbox"
                   id="terms"
                   {...register("terms")}
@@ -427,13 +427,13 @@ const Signup = () => {
                   <NavLink
                     to={termsRoute}
                     target="_blank"
-                    className="fw-semibold text-decoration-underline"
+                    className="fw-semibold text-decoration-underline ms-1"
                   >
                     {termsLabel}
                   </NavLink>
                 </label>
 
-                {errors.terms && (
+                {errors?.terms && (
                   <div className="invalid-feedback d-block">
                     {errors.terms.message}
                   </div>

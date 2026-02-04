@@ -41,7 +41,7 @@ const SignupVideoModal = ({ show }) => {
   return (
     <div className="modal-overlay">
       <div className="modal-box">
-        <h4>Watch Before Signup</h4>
+        <h4 style={{fontWeight:"bold"}}>Watch Full Vedio Before Signup</h4>
 
         {/* YouTube Player */}
         <div id="youtube-player" className="video-box"></div>

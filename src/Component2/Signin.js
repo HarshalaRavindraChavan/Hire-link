@@ -11,6 +11,8 @@ import { toast, ToastContainer } from "react-toastify";
 import { BASE_URL } from "../config/constants";
 import { saveFcmToken } from "./saveFcmToken";
 import ReCAPTCHA from "react-google-recaptcha";
+import SignupVideoModal from "./SignupVideoModal ";
+
 
 function Signin() {
   const navigate = useNavigate();
@@ -239,6 +241,14 @@ function Signin() {
   // ✅ FIX 2: handleSubmit define
   const handleSubmit = formik.handleSubmit;
 
+
+  const [showModal, setShowModal] = useState(false);
+
+    const handleSignupClick = (e) => {
+    e.preventDefault(); // 🔒 stop direct navigation
+    setShowModal(true);
+  };
+
   return (
     <>
       <SEO
@@ -260,7 +270,7 @@ function Signin() {
           {/* LEFT SIDE BRAND PANEL */}
           <div className="col-lg-6 d-none d-lg-flex flex-column justify-content-between text-white p-4 brand-panel">
             <div>
-              <h2 className="fw-bold">Hirelink</h2>
+              <h2 className="fw-bold">Pharma Jobs</h2>
               <h4 className="fw-semibold">
                 Your next hire is{" "}
                 <span style={{ color: "#ffd60a" }}>already here.</span>
@@ -306,12 +316,21 @@ function Signin() {
             <div className="d-flex justify-content-between align-items-center mb-3">
               <div>
                 <h2 className="fw-semibold">Welcome back</h2>
-                <p className="text-muted">Login to Hirelink.</p>
+                <p className="text-muted">Login to Pharma Jobs.</p>
               </div>
-              <NavLink to="/signup" className="btn btn-sm btn-outline-auth">
+              <NavLink
+                to="/signup"
+                onClick={handleSignupClick}
+                className="btn btn-sm btn-outline-auth"
+              >
                 <b>Sign Up</b>
               </NavLink>
             </div>
+
+            <SignupVideoModal
+              show={showModal}
+              onClose={() => setShowModal(false)}
+            />
 
             {apiError && (
               <div className="alert alert-danger py-2">{apiError}</div>

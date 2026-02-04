@@ -56,8 +56,10 @@ function Interview() {
   const modalRef = useRef(null);
 
   const auth = JSON.parse(localStorage.getItem("auth"));
+  const staff = JSON.parse(localStorage.getItem("staff"));
   const role = auth?.role;
   const employerId = auth?.emp_id;
+  const staffemploId = staff?.staff_employer_id;
 
   /* ================= FETCH ================= */
   const fetchInterviews = async () => {
@@ -71,6 +73,11 @@ function Interview() {
       if (Number(role) === 100) {
         res = await axios.get(
           `${BASE_URL}employer/getdatawhere/tbl_interview/itv_employer_id/${employerId}`,
+        );
+      }
+      if (Number(role) === 200) {
+        res = await axios.get(
+          `${BASE_URL}employer/getdatawhere/tbl_interview/itv_employer_id/${staffemploId}`,
         );
       }
 
@@ -184,7 +191,7 @@ function Interview() {
       <h3 className="fw-bold mb-3">Interview Details</h3>
 
       {/* ✅ Tabs Header (Only Employer) */}
-      {Number(role) === 100 && (
+      {(Number(role) === 100 || Number(role) === 200) && (
         <ul className="nav nav-tabs mb-3">
           <li className="nav-item">
             <button
@@ -262,7 +269,7 @@ function Interview() {
                           Score:{" "}
                           <span
                             className="text-dark"
-                            style={{ fontSize: "17px" }}
+                            style={{ fontSize: "15px" }}
                           >
                             {i.can_score}/1000
                           </span>
@@ -385,11 +392,12 @@ function Interview() {
       )}
 
       {/* ✅ Tab 2 */}
-      {Number(role) === 100 && activeTab === "tab2" && (
-        <div className="card shadow-sm p-3 border">
-          <InterviewsPage openEditInterviewModal={openEditInterviewModal} />
-        </div>
-      )}
+      {(Number(role) === 100 || Number(role) === 200) &&
+        activeTab === "tab2" && (
+          <div className="card shadow-sm p-3 border">
+            <InterviewsPage openEditInterviewModal={openEditInterviewModal} />
+          </div>
+        )}
       {/* ================= MODAL ================= */}
       <div className="modal fade" id="interviewexampleModal" tabIndex="-1">
         <div className="modal-dialog modal-lg modal-dialog-centered">

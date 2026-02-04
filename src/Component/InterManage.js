@@ -22,8 +22,9 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
 
   // ✅ Auth (Employer only)
   const auth = JSON.parse(localStorage.getItem("auth"));
+  const staff = JSON.parse(localStorage.getItem("staff"));
   const role = auth?.role;
-  const employerId = auth?.emp_id;
+  const employerId = auth?.emp_id || staff?.staff_employer_id;
 
   useEffect(() => {
     fetchInterviews();
@@ -35,7 +36,7 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
       setLoading(true);
 
       // ✅ Only employer allowed
-      if (Number(role) !== 100) {
+      if (Number(role) !== 100 && Number(role) !== 200) {
         setInterviews([]);
         setSelectedInterview(null);
         return;
@@ -226,7 +227,11 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
       return "btn-warning";
     }
 
-    if (status === "Completed" || status === "Appointed" || status ==="Joined") {
+    if (
+      status === "Completed" ||
+      status === "Appointed" ||
+      status === "Joined"
+    ) {
       return "btn-success";
     }
 

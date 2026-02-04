@@ -6,7 +6,9 @@ function Sidebar() {
   const navigate = useNavigate();
 
   const auth = JSON.parse(localStorage.getItem("auth"));
-  const employer = JSON.parse(localStorage.getItem("employer"));
+  const employer =
+    JSON.parse(localStorage.getItem("employer")) ||
+    JSON.parse(localStorage.getItem("staff"));
   const admin = JSON.parse(localStorage.getItem("admin"));
 
   const role = auth?.role;
@@ -33,6 +35,9 @@ function Sidebar() {
   } else if (roleNum >= 1 && roleNum <= 10) {
     displayName = roleNames[roleNum];
     com_logo = logo;
+  } else {
+    displayName = roleNames[employer.staff_role] || "staff";
+    com_logo = logo;
   }
 
   const handleLogout = () => {
@@ -48,7 +53,7 @@ function Sidebar() {
     if (role === "1") {
       // Admin logout
       navigate("/admin");
-    } else if (Number(role) === 100) {
+    } else if (Number(role) === 100 || Number(role) === 200) {
       // Employer logout
       navigate("/signin");
     } else {
@@ -422,30 +427,34 @@ function Sidebar() {
                     <hr className="dropdown-divider" />
                   </li>
                   {/* MENU ITEMS */}
-                  <li>
-                    <Link
-                      to={Number(role) === 100 ? "/emp-profile" : "/profile"}
-                      className="dropdown-item d-flex align-items-center gap-2"
-                    >
-                      <i className="fa fa-user text-primary"></i>
-                      My Profile
-                    </Link>
-                  </li>
-                  {Number(role) === 100 && (
-                    <li>
-                      <Link
-                        to="/payment-history"
-                        className="dropdown-item d-flex align-items-center gap-2 border-0 bg-transparent"
-                      >
-                        <i className="fa-solid fa-scroll"></i>
-                        Payment History
-                      </Link>
-                    </li>
-                  )}
 
-                  <li>
-                    <hr className="dropdown-divider" />
-                  </li>
+                  {Number(role) === 100 && (
+                    <>
+                      <li>
+                        <Link
+                          to="/emp-profile"
+                          className="dropdown-item d-flex align-items-center gap-2"
+                        >
+                          <i className="fa fa-user text-primary"></i>
+                          My Profile
+                        </Link>
+                      </li>
+
+                      <li>
+                        <Link
+                          to="/payment-history"
+                          className="dropdown-item d-flex align-items-center gap-2 border-0 bg-transparent"
+                        >
+                          <i className="fa-solid fa-scroll"></i>
+                          Payment History
+                        </Link>
+                      </li>
+
+                      <li>
+                        <hr className="dropdown-divider" />
+                      </li>
+                    </>
+                  )}
                   <li>
                     <button
                       type="button"

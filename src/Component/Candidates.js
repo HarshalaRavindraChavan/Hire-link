@@ -261,8 +261,9 @@ function Candidates() {
   const handleResumeDownload = async (candidate) => {
     try {
       const employer = JSON.parse(localStorage.getItem("employer") || "{}");
+      const staff = JSON.parse(localStorage.getItem("staff") || "{}");
 
-      if (!employer?.emp_email) {
+      if (!employer?.emp_email && !staff?.emp_email) {
         toast.error("Please login as Employer first!");
         navigate("/signin");
         return;
@@ -273,11 +274,13 @@ function Candidates() {
         return;
       }
 
+      const userEmail = employer?.emp_email || staff?.emp_email;
+
       // ✅ Check payment done for this employer + this candidate
       const checkRes = await axios.post(
         `${BASE_URL}payment/check-resume-payment`,
         {
-          email: employer.emp_email,
+          email: userEmail,
           candidate_id: candidate.can_id,
         },
       );
@@ -301,9 +304,9 @@ function Candidates() {
       localStorage.setItem(
         "paymentUser",
         JSON.stringify({
-          email: employer.emp_email,
-          name: employer.emp_name,
-          mobile: employer.emp_mobile,
+          email: employer.emp_email || staff.emp_email,
+          name: employer.emp_name || staff.emp_name,
+          mobile: employer.emp_mobile || staff.emp_mobile,
           role: "resume_download",
           for: "Resume Download",
           candidate_id: candidate.can_id,
@@ -483,7 +486,7 @@ function Candidates() {
                         Score:{" "}
                         <span
                           className="text-dark "
-                          style={{ fontSize: "17px" }}
+                          style={{ fontSize: "15px" }}
                         >
                           {candidate.can_score}/1000
                         </span>

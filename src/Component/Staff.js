@@ -16,9 +16,11 @@ import "react-toastify/dist/ReactToastify.css";
 function Staff() {
   const auth = JSON.parse(localStorage.getItem("auth"));
   const employer = JSON.parse(localStorage.getItem("employer"));
+  const staff = JSON.parse(localStorage.getItem("staff"));
 
   const role = auth?.role;
   const employerId = auth?.emp_id;
+  const staffemploId = staff?.staff_employer_id;
 
   const employerEmail = auth?.emp_email || employer?.emp_email;
 
@@ -103,6 +105,12 @@ function Staff() {
       if (Number(role) === 100) {
         res = await axios.get(
           `${BASE_URL}admin/getdatawhere/tbl_staff/staff_employer_id/${employerId}`,
+        );
+      }
+
+      if (Number(role) === 200) {
+        res = await axios.get(
+          `${BASE_URL}admin/getdatawhere/tbl_staff/staff_employer_id/${staffemploId}`,
         );
       }
 
@@ -289,8 +297,8 @@ function Staff() {
         staff_pan: data.pan,
         staff_bankpassbook: User.staff_bankpassbook,
         staff_status: "Active",
-        staff_employer_id: employerId,
-        staff_added_by: employerId,
+        staff_employer_id: employerId || staffemploId,
+        staff_added_by: employerId || staffemploId,
       };
 
       // ✅ 3) Save Staff data temporarily

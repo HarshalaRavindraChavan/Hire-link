@@ -6,7 +6,7 @@ function Sidebar() {
 
   const role = auth?.role;
   const assignedMenuIds = auth?.menu_ids || [];
-
+  const assignedMenus = assignedMenuIds.map(Number);
   // Employer fixed menus
   const employerMenuIds = [1, 2, 3, 4, 5, 11, 12];
   const allMenus = [
@@ -44,6 +44,9 @@ function Sidebar() {
   } else if (role === "1") {
     // 🔓 Admin → ALL menus EXCEPT Profile (id 11)
     finalMenus = allMenus.filter((menu) => menu.id !== 11 && menu.id !== 12);
+  } else if (Number(role) === 200) {
+    // Staff → assigned menus only
+    finalMenus = allMenus.filter((menu) => assignedMenus.includes(menu.id));
   } else {
     // 👤 Other users → assigned menus EXCEPT Profile
     finalMenus = allMenus.filter(

@@ -32,8 +32,10 @@ function Jobs() {
 
   // Login ckeck and role
   const auth = JSON.parse(localStorage.getItem("auth"));
+  const staff = JSON.parse(localStorage.getItem("staff"));
   const role = auth?.role;
   const employerId = auth?.emp_id;
+  const staffemploId = staff?.staff_employer_id;
   //=================
 
   const [timeNow, setTimeNow] = useState(Date.now());
@@ -120,6 +122,11 @@ function Jobs() {
         );
       }
 
+      if (Number(role) === 200) {
+        res = await axios.get(
+          `${BASE_URL}employer/getdatawhere/tbl_job/job_employer_id/${staffemploId}`,
+        );
+      }
       if (res?.data?.status) {
         setJobs(res.data.data);
       }
@@ -244,7 +251,7 @@ function Jobs() {
   };
 
   const onSubmit = async (data) => {
-    if (Number(role) !== 100) {
+    if (Number(role) !== 100 || Number(role) !== 200) {
       toast.error("Only employer can add jobs");
       return;
     }
@@ -279,7 +286,7 @@ function Jobs() {
         job_education_type: educationType,
         job_education_detail: educationDetail,
         job_experience: data.job_experience,
-        job_employer_id: employerId,
+        job_employer_id: employerId || staffemploId,
         job_description: data.job_description,
       };
 
@@ -588,7 +595,6 @@ function Jobs() {
 
   const markJobActive = async (jobId) => {
     try {
-      // ✅ already called असेल तर पुन्हा call नको
       if (alreadyUpdatedRef.current[jobId]) return;
 
       alreadyUpdatedRef.current[jobId] = true;
@@ -671,7 +677,7 @@ function Jobs() {
         <div>
           <h3 className="fw-bold mb-3">Jobs</h3>
         </div>
-        {Number(role) === 100 && (
+        {(Number(role) === 100 || Number(role) === 200) && (
           <div className="ms-auto py-2 py-md-0">
             <a
               data-bs-toggle="modal"
@@ -777,7 +783,7 @@ function Jobs() {
                           >
                             {job.job_title}
                           </span>
-                          {Number(role) === 100 && (
+                          {(Number(role) === 100 || Number(role) === 200) && (
                             <ul className="dropdown-menu shadow">
                               <li>
                                 <button

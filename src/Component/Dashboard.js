@@ -10,9 +10,12 @@ function Dashboard() {
 
   /* ---------------- Auth ---------------- */
   const auth = JSON.parse(localStorage.getItem("auth"));
+  const staff = JSON.parse(localStorage.getItem("staff"));
   const role = auth?.role;
-  const employerId = auth?.emp_id;
+  const employerId = auth?.emp_id || auth?.staff_employer_id;
+  const staffemploId = staff?.staff_employer_id;
   const assignedMenuIds = auth?.menu_ids || [];
+  const assignedMenus = assignedMenuIds.map(Number);
 
   /* ---------------- Menu List (Same as Sidebar) ---------------- */
   const employerMenuIds = [1, 2, 3, 4, 5, 11, 12];
@@ -43,6 +46,8 @@ function Dashboard() {
       menus = allMenus.filter((menu) => employerMenuIds.includes(menu.id));
     } else if (role === "1" || Number(role) === 1) {
       menus = allMenus.filter((menu) => menu.id !== 11);
+    } else if (Number(role) === 200) {
+      menus = allMenus.filter((menu) => assignedMenus.includes(menu.id));
     } else {
       menus = allMenus.filter(
         (menu) => assignedMenuIds.includes(menu.id) && menu.id !== 11,
@@ -116,6 +121,28 @@ function Dashboard() {
           ),
           axios.get(
             `${BASE_URL}admin/countdatawhere/tbl_interview/itv_employer_id/${employerId}`,
+          ),
+        ]);
+
+        setCounts({
+          jobs: jobs.data?.data || 0,
+          candidates: candidates.data?.data || 0,
+          applicants: applicants.data?.data || 0,
+          interviews: interviews.data?.data || 0,
+        });
+      }
+
+      if (Number(role) === 200) {
+        const [jobs, candidates, applicants, interviews] = await Promise.all([
+          axios.get(
+            `${BASE_URL}admin/countdatawhere/tbl_job/job_employer_id/${staffemploId}`,
+          ),
+          axios.get(`${BASE_URL}admin/countdata/tbl_candidate`),
+          axios.get(
+            `${BASE_URL}admin/countdatawhere/tbl_applied/apl_employer_id/${staffemploId}`,
+          ),
+          axios.get(
+            `${BASE_URL}admin/countdatawhere/tbl_interview/itv_employer_id/${staffemploId}`,
           ),
         ]);
 

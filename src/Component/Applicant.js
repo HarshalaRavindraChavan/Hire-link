@@ -17,8 +17,12 @@ function Applicant() {
 
   // Login ckeck and role
   const auth = JSON.parse(localStorage.getItem("auth"));
+  const staff = JSON.parse(localStorage.getItem("staff"));
   const role = auth?.role;
   const employerId = auth?.emp_id;
+  const staffemploId = staff?.staff_employer_id;
+  console.log(employerId, role);
+  console.log(staffemploId, role);
   //=================
 
   const [search, setSearch] = useState("");
@@ -50,14 +54,18 @@ function Applicant() {
       let res;
 
       if (["1", "2", "3", "4"].includes(role)) {
-        res = await axios.get(
-          `${BASE_URL}admin/getdata/tbl_applied`
-        );
+        res = await axios.get(`${BASE_URL}admin/getdata/tbl_applied`);
       }
 
       if (Number(role) === 100) {
         res = await axios.get(
-          `${BASE_URL}employer/getdatawhere/tbl_applied/apl_employer_id/${employerId}`
+          `${BASE_URL}employer/getdatawhere/tbl_applied/apl_employer_id/${employerId}`,
+        );
+      }
+
+      if (Number(role) === 200) {
+        res = await axios.get(
+          `${BASE_URL}employer/getdatawhere/tbl_applied/apl_employer_id/${staffemploId}`,
         );
       }
 
@@ -119,7 +127,7 @@ function Applicant() {
 
       const res = await axios.post(
         `${BASE_URL}admin/insert/tbl_interview`,
-        payload
+        payload,
       );
 
       if (res.data.status) {

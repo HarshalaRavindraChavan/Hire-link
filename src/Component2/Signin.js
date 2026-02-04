@@ -75,8 +75,23 @@ function Signin() {
           };
         }
 
-        const response = await axios.post(url, payload);
-        const data = response.data;
+        let response = await axios.post(url, payload);
+        let data = response.data;
+
+        /* ==============================
+           IF NOT EMPLOYER → TRY STAFF
+           ================================ */
+        if (data.loginstatus === "0") {
+          response = await axios.post(
+            `${BASE_URL}employer/signinstaff/tbl_staff`,
+            {
+              staff_email: values.email,
+              staff_password: values.password,
+            },
+          );
+
+          data = response.data;
+        }
 
         // ✅ ✅ 1) LOGIN SUCCESS => Store data and navigate
         if (data.status === true) {
@@ -91,20 +106,35 @@ function Signin() {
 
             navigate("/profile");
           } else {
-            localStorage.setItem(
-              "auth",
-              JSON.stringify({
-                role: 100,
-                emp_id: data.data.emp_id,
-                emp_email: data.data.emp_email,
-                emp_companyname: data.data.emp_companyname,
-                emp_com_logo: data.data.emp_com_logo,
-              }),
-            );
+            if (data.data?.staff_id) {
+              localStorage.setItem(
+                "auth",
+                JSON.stringify({
+                  role: 200,
+                  staff_id: data.data.staff_id,
+                  staff_email: data.data.staff_email,
+                  menu_ids: data.menu_ids || [],
+                }),
+              );
 
-            localStorage.setItem("employer", JSON.stringify(data.data));
-
-            navigate("/emp-profile");
+              // STAFF LOGIN
+              localStorage.setItem("staff", JSON.stringify(data.data));
+              navigate("/dashboard");
+            } else {
+              localStorage.setItem(
+                "auth",
+                JSON.stringify({
+                  role: 100,
+                  emp_id: data.data.emp_id,
+                  emp_email: data.data.emp_email,
+                  emp_companyname: data.data.emp_companyname,
+                  emp_com_logo: data.data.emp_com_logo,
+                }),
+              );
+              // EMPLOYER LOGIN
+              localStorage.setItem("employer", JSON.stringify(data.data));
+              navigate("/emp-profile");
+            }
           }
 
           resetForm();

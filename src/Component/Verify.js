@@ -9,7 +9,7 @@ import { toast, ToastContainer } from "react-toastify";
 function Verify() {
   const navigate = useNavigate();
 
-  const [step, setStep] = useState("email"); // email | mobile
+const [step, setStep] = useState("mobile"); 
   const [emailOtp, setEmailOtp] = useState("");
   const [mobileOtp, setMobileOtp] = useState("");
   const [email, setEmail] = useState("");
@@ -39,42 +39,7 @@ function Verify() {
   const maskMobile = (mobile) =>
     mobile ? mobile.replace(/(\d{2})\d{6}(\d{2})/, "$1******$2") : "";
 
-  // ✅ EMAIL OTP VERIFY
-  const verifyEmailOtp = async (e) => {
-    e.preventDefault();
-
-    if (emailOtp.length !== 6) {
-      toast.error("Enter valid 6 digit Email OTP");
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const url =
-        role === "candidate"
-          ? `${BASE_URL}candidate/verifyEmailOtp`
-          : `${BASE_URL}employer/verifyEmailOtp`;
-
-      const payload =
-        role === "candidate"
-          ? { can_email: email, otp: emailOtp }
-          : { emp_email: email, otp: emailOtp };
-
-      const res = await axios.post(url, payload);
-
-      if (res.data?.status) {
-        toast.success("Email verified successfully ✅");
-        setStep("mobile"); // 👉 move to mobile OTP
-      } else {
-        toast.error(res.data?.message || "Email OTP verification failed");
-      }
-    } catch {
-      toast.error("Email OTP verification failed");
-    } finally {
-      setLoading(false);
-    }
-  };
+  
 
   // ✅ MOBILE OTP VERIFY
   const verifyMobileOtp = async (e) => {
@@ -103,6 +68,11 @@ function Verify() {
       if (res.data?.status) {
         toast.success("Mobile number verified ✅");
 
+        
+      // 👉 MOVE TO EMAIL OTP STEP
+      setStep("email");
+      setMobileOtp(""); // optional: clear OTP field
+
         const oldPaymentUser = JSON.parse(
           localStorage.getItem("paymentUser") || "{}",
         );
@@ -130,6 +100,101 @@ function Verify() {
       setLoading(false);
     }
   };
+
+  // ✅ EMAIL OTP VERIFY
+  // const verifyEmailOtp = async (e) => {
+  //   e.preventDefault();
+
+  //   if (emailOtp.length !== 6) {
+  //     toast.error("Enter valid 6 digit Email OTP");
+  //     return;
+  //   }
+
+  //   setLoading(true);
+
+  //   try {
+  //     const url =
+  //       role === "candidate"
+  //         ? `${BASE_URL}candidate/verifyEmailOtp`
+  //         : `${BASE_URL}employer/verifyEmailOtp`;
+
+  //     const payload =
+  //       role === "candidate"
+  //         ? { can_email: email, otp: emailOtp }
+  //         : { emp_email: email, otp: emailOtp };
+
+  //     const res = await axios.post(url, payload);
+
+  //     if (res.data?.status) {
+  //       toast.success("Email verified successfully ✅");
+
+  //     } else {
+  //       toast.error(res.data?.message || "Email OTP verification failed");
+  //     }
+  //   } catch {
+  //     toast.error("Email OTP verification failed");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  const verifyEmailOtp = async (e) => {
+  e.preventDefault();
+
+  if (emailOtp.length !== 6) {
+    toast.error("Enter valid 6 digit Email OTP");
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    const url =
+      role === "candidate"
+        ? `${BASE_URL}candidate/verifyEmailOtp`
+        : `${BASE_URL}employer/verifyEmailOtp`;
+
+    const payload =
+      role === "candidate"
+        ? { can_email: email, otp: emailOtp }
+        : { emp_email: email, otp: emailOtp };
+
+    const res = await axios.post(url, payload);
+
+    if (res.data?.status) {
+      toast.success("Email verified successfully ✅");
+
+      // ✅ STORE PAYMENT USER DATA
+      const oldPaymentUser = JSON.parse(
+        localStorage.getItem("paymentUser") || "{}"
+      );
+
+      localStorage.setItem(
+        "paymentUser",
+        JSON.stringify({
+          ...oldPaymentUser,
+          email,
+          role,
+          for: "Account Create",
+          returnTo: role === "candidate" ? "/profile" : "/emp-profile",
+        })
+      );
+
+      // ✅ CLEANUP VERIFY DATA
+      localStorage.removeItem("verifyUser");
+
+      // ✅ GO TO PAYMENT
+      setTimeout(() => navigate("/payment"), 800);
+    } else {
+      toast.error(res.data?.message || "Email OTP verification failed");
+    }
+  } catch (error) {
+    toast.error("Email OTP verification failed");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const resendMobileOtp = async () => {
     if (!mobile || !role) {

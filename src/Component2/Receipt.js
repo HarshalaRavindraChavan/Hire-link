@@ -21,8 +21,19 @@ function Receipt({ payment }) {
             ? "Resume Download Fee"
             : "Payment");
 
-  const receiptNo =
-    payment.receiptNo || `HRLK-${Date.now().toString().slice(-8)}`;
+  const mobile = String(payment.mobile);
+  const last4 = mobile.slice(-4);
+
+  const amountpay = String(payment.amount).replace("₹", "");
+
+  const today = new Date();
+  const day = String(today.getDate()).padStart(2, "0");
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const year = today.getFullYear();
+
+  const formattedDate = `${day}${month}${year}`;
+
+  const receiptNo = `HRLK-${last4}-${amountpay}-${formattedDate}`;
 
   /* 🔢 GST INCLUDED AMOUNT */
   const amount = Number(String(payment.amount || 0).replace(/[^\d.]/g, ""));
@@ -52,7 +63,7 @@ function Receipt({ payment }) {
 
         <div className="hl-rec-meta">
           <div className="hl-rec-title">RECEIPT</div>
-          <div>#{receiptNo}</div>
+          <div style={{ fontSize: "14px" }}>#{receiptNo}</div>
         </div>
       </div>
 
@@ -119,10 +130,10 @@ function Receipt({ payment }) {
       {/* Notes */}
       <div className="hl-rec-notes">
         <b>Notes:</b>
-        <p className="receipt-text">
-          This receipt confirms successful payment on Hirelinkinfo. Payment is
+        <span className="receipt-text">
+          This receipt confirms successful payment on Pharma Jobs. Payment is
           non-refundable.
-        </p>
+        </span>
       </div>
     </div>
   );

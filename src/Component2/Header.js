@@ -10,11 +10,7 @@ function Header() {
 
   useEffect(() => {
     const user = localStorage.getItem("candidate");
-    if (user) {
-      setIsLogin(true);
-    } else {
-      setIsLogin(false);
-    }
+    setIsLogin(!!user);
   }, []);
 
   const logout = () => {
@@ -26,7 +22,7 @@ function Header() {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Close dropdown when clicking outside
+  // ✅ Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -34,9 +30,9 @@ function Header() {
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("click", handleClickOutside);
     };
   }, []);
 
@@ -48,7 +44,7 @@ function Header() {
           <img className="m-0 logo" src={logo} alt="logo" />
         </Link>
 
-        {/* DESKTOP NAVIGATION LINKS */}
+        {/* DESKTOP NAVIGATION */}
         <nav className="d-none d-md-flex gap-3">
           <NavLink to="/" className="nav-link-custom fs-6 fw-semibold">
             Home
@@ -59,42 +55,38 @@ function Header() {
           </NavLink>
         </nav>
 
-        {/* RIGHT SIDE DESKTOP BUTTONS */}
+        {/* RIGHT SIDE */}
         <div className="d-none d-md-flex gap-3 align-items-center">
-          {/* ✅ AFTER LOGIN */}
-          {isLogin && (
+          {isLogin ? (
             <>
-              {/* <NavLink to="/" className="nav-link-custom ms-2 me-2">
-                <i className="fa fa-bookmark"></i>
-              </NavLink>
-              <a href="#" className="nav-link-custom ms-2 me-2">
-                <i className="fa fa-message"></i>
-              </a> */}
               <NavLink to="/notification" className="nav-link-custom ms-2 me-2">
                 <i className="fa fa-bell"></i>
               </NavLink>
-              {/* <NavLink to="/profile" className="nav-link-custom ms-2 me-2">
-                <i className="fa fa-user"></i>
-              </NavLink> */}
+
+              {/* ✅ DROPDOWN */}
               <div className="dropdown-container" ref={dropdownRef}>
                 <FaUserCircle
                   className="dropdown-icon"
-                  onClick={() => setOpen(!open)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setOpen((prev) => !prev);
+                  }}
                 />
 
                 {open && (
-                  <div className="dropdown-menu">
+                  <div className="custom-dropdown-menu">
                     <div
                       className="dropdown-item"
                       onClick={() => navigate("/profile")}
                     >
                       👤 My Profile
                     </div>
+
                     <div
                       className="dropdown-item"
                       onClick={() => window.open("/receipt.pdf", "_blank")}
                     >
-                      ⬇️ Download Receipts
+                      ⬇️ Payment Receipts
                     </div>
                   </div>
                 )}
@@ -107,10 +99,7 @@ function Header() {
                 Logout
               </button>
             </>
-          )}
-
-          {/* BEFORE LOGIN */}
-          {!isLogin && (
+          ) : (
             <>
               <NavLink to="/signin" className="nav-link-custom">
                 Sign in
@@ -125,7 +114,7 @@ function Header() {
           )}
         </div>
 
-        {/* MOBILE MENU TOGGLER */}
+        {/* MOBILE TOGGLER */}
         <button
           className="navbar-toggler d-md-none btn btn-outline-dark"
           type="button"
@@ -136,7 +125,7 @@ function Header() {
         </button>
       </header>
 
-      {/* ================= MOBILE MENU ================= */}
+      {/* MOBILE MENU */}
       <div className="collapse bg-light p-3" id="mobileMenu">
         <NavLink to="/" className="mobile-link">
           Home

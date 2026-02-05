@@ -36,7 +36,7 @@ function Sidebar() {
     displayName = roleNames[roleNum];
     com_logo = logo;
   } else {
-    displayName = roleNames[employer.staff_role] || "staff";
+    displayName = roleNames[employer?.staff_role] || "staff";
     com_logo = logo;
   }
 
@@ -47,7 +47,7 @@ function Sidebar() {
     // 🔥 Clear storage
     localStorage.removeItem("auth");
     localStorage.removeItem("employer");
-    localStorage.removeItem("candidate");
+    localStorage.removeItem("staff");
 
     // 🔁 Role-wise redirect
     if (role === "1") {
@@ -408,7 +408,7 @@ function Sidebar() {
                       </div>
                     </div>
                   </li> */}
-                  <li className="px-3 py-3 user-header">
+                  <li className="px-3 user-header">
                     <div className="d-flex align-items-center gap-3">
                       <div className="u-text">
                         <h5 className="mb-0 fw-semibold">
@@ -423,14 +423,14 @@ function Sidebar() {
                       </div>
                     </div>
                   </li>
-                  <li>
+                  {/* <li>
                     <hr className="dropdown-divider" />
-                  </li>
+                  </li> */}
                   {/* MENU ITEMS */}
 
                   {Number(role) === 100 && (
                     <>
-                      <li>
+                      <li className="py-0">
                         <Link
                           to="/emp-profile"
                           className="dropdown-item d-flex align-items-center gap-2"
@@ -440,10 +440,10 @@ function Sidebar() {
                         </Link>
                       </li>
 
-                      <li>
+                      <li className="py-0">
                         <Link
                           to="/payment-history"
-                          className="dropdown-item d-flex align-items-center gap-2 border-0 bg-transparent"
+                          className="dropdown-item d-flex align-items-center gap-2  border-0 bg-transparent"
                         >
                           <i className="fa-solid fa-scroll"></i>
                           Payment History

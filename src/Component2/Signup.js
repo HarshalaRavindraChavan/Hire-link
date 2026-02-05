@@ -413,35 +413,8 @@ const Signup = () => {
                 />
               </div>
 
-              {/* TERMS & CONDITIONS */}
-              <div className="form-check mt-3 d-flex align-items-start">
-                <input
-                  className={`form-check-input me-2 ${errors?.terms ? "is-invalid" : ""}`}
-                  type="checkbox"
-                  id="terms"
-                  {...register("terms")}
-                />
-
-                <label className="form-check-label" htmlFor="terms">
-                  I agree to{" "}
-                  <NavLink
-                    to={termsRoute}
-                    target="_blank"
-                    className="fw-semibold text-decoration-underline ms-1"
-                  >
-                    {termsLabel}
-                  </NavLink>
-                </label>
-
-                {errors?.terms && (
-                  <div className="invalid-feedback d-block">
-                    {errors.terms.message}
-                  </div>
-                )}
-              </div>
-
               <div className="mt-2">
-                <label className="small fw-medium d-block ">Login as</label>
+                <label className="small fw-medium d-block ">Signup as</label>
                 <div className="d-flex gap-2">
                   <button
                     type="button"
@@ -467,9 +440,36 @@ const Signup = () => {
                 </div>
               </div>
 
+              {/* TERMS & CONDITIONS */}
+              <div className="form-check mt-1 d-flex align-items-start">
+                <input
+                  className={`form-check-input me-2 ${errors?.terms ? "is-invalid" : ""}`}
+                  type="checkbox"
+                  id="terms"
+                  {...register("terms")}
+                />
+
+                <label className="form-check-label" htmlFor="terms">
+                  I agree to{" "}
+                  <NavLink
+                    to={termsRoute}
+                    target="_blank"
+                    className="fw-semibold text-decoration-underline ms-1"
+                  >
+                    {termsLabel}
+                  </NavLink>
+                </label>
+
+                {errors?.terms && (
+                  <div className="invalid-feedback d-block">
+                    {errors.terms.message}
+                  </div>
+                )}
+              </div>
+
               <button
                 type="submit"
-                className="btn btn-primary-signup w-100 mt-3 d-flex justify-content-center align-items-center gap-2"
+                className="btn btn-primary-signup w-100 mt-1 d-flex justify-content-center align-items-center gap-2"
                 disabled={loading || !captchaToken}
               >
                 {loading && (

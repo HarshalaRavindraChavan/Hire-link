@@ -65,7 +65,7 @@
 
 .form-check-input {
   cursor: pointer;
-  margin-top: 3px;   /* slight vertical alignment */
+  margin-top: 0;   /* slight vertical alignment */
   margin-bottom: 0;  /* remove unwanted gap */
 }
 

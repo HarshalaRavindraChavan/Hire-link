@@ -5,8 +5,8 @@ function Footer() {
       style={{ color: "black", fontWeight: "bold" }}
     >
       <p>
-        © {new Date().getFullYear()} Hirelinkinfo.com | All Rights Reserved |
-        Design By{" "}
+        All rights reserved © {new Date().getFullYear()} Hirelink Infotech Pvt
+        Ltd | Design By{" "}
         <a
           href="https://www.esenceweb.com/"
           style={{ color: "#000" }}

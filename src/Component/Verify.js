@@ -207,6 +207,45 @@ function Verify() {
             {step === "email" ? "Email Verification" : "Mobile Verification"}
           </h5>
 
+          {step === "mobile" && (
+            <>
+              <p className="text-center small">
+                OTP sent to <b>{maskMobile(mobile)}</b>
+              </p>
+
+              <form onSubmit={verifyMobileOtp}>
+                <input
+                  className="form-control mb-3"
+                  type="tel"
+                  placeholder="Enter Mobile OTP"
+                  maxLength={6}
+                  value={mobileOtp}
+                  onChange={(e) =>
+                    setMobileOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
+                  }
+                />
+
+                <button className="btn btn-success w-100" disabled={loading}>
+                  {loading ? "Verifying..." : "Verify Mobile"}
+                </button>
+
+                <div className="text-center mt-3">
+                  <button
+                    onClick={resendMobileOtp}
+                    className="btn btn-link fw-semibold text-decoration-none"
+                    style={{ color: "#928f8fff" }}
+                    type="button"
+                  >
+                    Send new code
+                  </button>{" "}
+                </div>
+              </form>
+              <footer className="text-center mt-3 small text-warning">
+                © {new Date().getFullYear()} Pharma Jobs
+              </footer>
+            </>
+          )}
+
           {step === "email" && (
             <>
               <p className="text-center small">
@@ -246,45 +285,7 @@ function Verify() {
               </footer>
             </>
           )}
-
-          {step === "mobile" && (
-            <>
-              <p className="text-center small">
-                OTP sent to <b>{maskMobile(mobile)}</b>
-              </p>
-
-              <form onSubmit={verifyMobileOtp}>
-                <input
-                  className="form-control mb-3"
-                  type="tel"
-                  placeholder="Enter Mobile OTP"
-                  maxLength={6}
-                  value={mobileOtp}
-                  onChange={(e) =>
-                    setMobileOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
-                  }
-                />
-
-                <button className="btn btn-success w-100" disabled={loading}>
-                  {loading ? "Verifying..." : "Verify Mobile"}
-                </button>
-
-                <div className="text-center mt-3">
-                  <button
-                    onClick={resendMobileOtp}
-                    className="btn btn-link fw-semibold text-decoration-none"
-                    style={{ color: "#928f8fff" }}
-                    type="button"
-                  >
-                    Send new code
-                  </button>{" "}
-                </div>
-              </form>
-              <footer className="text-center mt-3 small text-warning">
-                © {new Date().getFullYear()} Pharma Jobs
-              </footer>
-            </>
-          )}
+          
         </div>
       </div>
     </>

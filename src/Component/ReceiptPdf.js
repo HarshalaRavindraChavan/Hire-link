@@ -1,4 +1,4 @@
-import html2pdf from "html2pdf.js";
+import html2pdf from "html2pdf.js/dist/html2pdf.min";
 
 export const generateReceiptPDF = () => {
   const element = document.getElementById("receipt-print-area");

@@ -251,7 +251,7 @@ function Jobs() {
   };
 
   const onSubmit = async (data) => {
-    if (Number(role) !== 100 || Number(role) !== 200) {
+    if (Number(role) !== 100) {
       toast.error("Only employer can add jobs");
       return;
     }

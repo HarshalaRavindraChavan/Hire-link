@@ -84,9 +84,9 @@ function Header() {
 
                     <div
                       className="dropdown-item"
-                      onClick={() => window.open("/receipt.pdf", "_blank")}
+                      onClick={() => navigate("/candidate-receipt")}
                     >
-                      ⬇️ Payment Receipts
+                      ⬇️ Payment Receipt
                     </div>
                   </div>
                 )}
@@ -139,6 +139,13 @@ function Header() {
             <NavLink to="/profile" className="mobile-link">
               Profile
             </NavLink>
+            <div
+              className="dropdown-item"
+              onClick={() => navigate("/candidate-receipt")}
+            >
+              Payment Receipt
+            </div>
+
             <button className="btn btn-danger w-100 mt-2" onClick={logout}>
               Logout
             </button>

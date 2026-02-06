@@ -20,6 +20,7 @@ import Receipt from "./Component2/Receipt";
 import Cprivacypolicies from "./Component2/Privacypolicies";
 import Ctermscondition from "./Component2/Termscondition";
 import Creturnpolicy from "./Component2/Returnpolicy";
+import CandidateReceiptPage from "./Component2/CandidateReceiptPage";
 
 /* ================= ADMIN ================= */
 import Sidebar from "./Component/Sidebar";
@@ -98,6 +99,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgot" element={<Forgot />} />
         <Route path="/receipt" element={<Receipt />} />
+        <Route path="/candidate-receipt" element={<CandidateReceiptPage />} />
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/reset-password" element={<ResetPassword />} />

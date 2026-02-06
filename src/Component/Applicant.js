@@ -21,9 +21,6 @@ function Applicant() {
   const role = auth?.role;
   const employerId = auth?.emp_id;
   const staffemploId = staff?.staff_employer_id;
-  console.log(employerId, role);
-  console.log(staffemploId, role);
-  //=================
 
   const [search, setSearch] = useState("");
   const [users, setUsers] = useState([]);
@@ -117,7 +114,7 @@ function Applicant() {
       const payload = {
         itv_candidate_id: data.candidate_id,
         itv_job_id: data.job_id,
-        itv_employer_id: employerId,
+        itv_employer_id: employerId || staffemploId,
         itv_type: data.interviewType,
         itv_date: data.interviewDate,
         itv_meeting_link: data.meetingLink || "",

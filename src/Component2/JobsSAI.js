@@ -710,14 +710,14 @@ function JobsSAI() {
                       </div>
                     </div>
 
-                    <div>
+                    {/* <div>
                       <button
                         className="btn btn-outline-success btn-sm"
                         onClick={() => setShowModal(true)}
                       >
                         Update status
                       </button>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               ))}

@@ -202,6 +202,7 @@ function Staff() {
       // adharupload: "",
       // panupload: "",
       bankpassbook: "",
+      menus: ["1"],
     },
   });
 
@@ -472,7 +473,9 @@ function Staff() {
       joindate: user.staff_joindate?.split("T")[0] ?? "",
       experience: user.staff_experience ?? "",
       role: user.staff_role ?? "",
-      menus: user.staff_menu_id ? user.staff_menu_id.split(",") : [],
+      menus: user.staff_menu_id
+        ? Array.from(new Set(["1", ...user.staff_menu_id.split(",")]))
+        : ["1"],
       education_type: user.staff_education_type ?? "",
       education_detail: user.staff_education_detail ?? "",
     });
@@ -1218,22 +1221,19 @@ function Staff() {
                 </div>
 
                 {/* Menus */}
-                <div className="col-md-4">
-                  <label className="fw-semibold">Menus</label>
-                  <select
-                    className="form-select form-control"
-                    multiple
-                    {...addRegister("menus")}
-                  >
-                    <option value="1">Dashboard</option>
-                    <option value="2">Job</option>
-                    <option value="3">Candidate</option>
-                    <option value="4">Applicant</option>
-                    <option value="5">Interview</option>
-                    <option value="12">Staff</option>
-                  </select>
-                  <p className="text-danger">{addErrors.menus?.message}</p>
-                </div>
+                <select
+                  className="form-select form-control"
+                  multiple
+                  {...addRegister("menus")}
+                >
+                  <option value="1" disabled>
+                    Dashboard
+                  </option>
+                  <option value="2">Jobs</option>
+                  <option value="3">Candidates</option>
+                  <option value="4">Applicants</option>
+                  <option value="5">Interviews</option>
+                </select>
               </div>
 
               <div className="modal-footer bg-light rounded-bottom-4 d-flex">
@@ -1481,22 +1481,19 @@ function Staff() {
                   <p className="text-danger">{editErrors.role?.message}</p>
                 </div>
 
-                <div className="col-md-4">
-                  <label className="fw-semibold">Menus</label>
-                  <select
-                    className="form-select form-control"
-                    multiple
-                    {...editRegister("menus")}
-                  >
-                    <option value="1">Dashboard</option>
-                    <option value="2">Job</option>
-                    <option value="3">Candidate</option>
-                    <option value="4">Applicant</option>
-                    <option value="5">Interview</option>
-                    <option value="12">Staff</option>
-                  </select>
-                  <p className="text-danger">{editErrors.menus?.message}</p>
-                </div>
+                <select
+                  className="form-select form-control"
+                  multiple
+                  {...editRegister("menus")}
+                >
+                  <option value="1" disabled>
+                    Dashboard
+                  </option>
+                  <option value="2">Jobs</option>
+                  <option value="3">Candidates</option>
+                  <option value="4">Applicants</option>
+                  <option value="5">Interviews</option>
+                </select>
               </div>
 
               <div className="modal-footer bg-light rounded-bottom-4 d-flex">

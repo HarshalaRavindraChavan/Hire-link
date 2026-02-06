@@ -61,6 +61,8 @@ function Interview() {
   const employerId = auth?.emp_id;
   const staffemploId = staff?.staff_employer_id;
 
+  const canManageInterview = Number(role) === 100 || Number(role) === 200;
+
   /* ================= FETCH ================= */
   const fetchInterviews = async () => {
     try {
@@ -104,6 +106,11 @@ function Interview() {
   };
 
   const confirmDelete = async () => {
+    if (!canManageInterview) {
+      toast.error("You are not authorized to delete interviews ❌");
+      return;
+    }
+
     try {
       const res = await axios.get(
         `${BASE_URL}admin/deletedata/tbl_interview/itv_id/${deleteId}`,
@@ -122,6 +129,10 @@ function Interview() {
 
   /* ================= EDIT MODAL ================= */
   const openEditInterviewModal = (item) => {
+    if (!canManageInterview) {
+      toast.error("You are not authorized to manage interviews ❌");
+      return;
+    }
     setEditInterviewId(item.itv_id);
 
     reset({
@@ -191,27 +202,28 @@ function Interview() {
       <h3 className="fw-bold mb-3">Interview Details</h3>
 
       {/* ✅ Tabs Header (Only Employer) */}
-      {(Number(role) === 100 || Number(role) === 200) && (
-        <ul className="nav nav-tabs mb-3">
-          <li className="nav-item">
-            <button
-              className={`nav-link ${activeTab === "tab1" ? "active" : ""}`}
-              onClick={() => setActiveTab("tab1")}
-            >
-              All
-            </button>
-          </li>
+      {Number(role) === 100 ||
+        (Number(role) === 200 && (
+          <ul className="nav nav-tabs mb-3">
+            <li className="nav-item">
+              <button
+                className={`nav-link ${activeTab === "tab1" ? "active" : ""}`}
+                onClick={() => setActiveTab("tab1")}
+              >
+                All
+              </button>
+            </li>
 
-          <li className="nav-item">
-            <button
-              className={`nav-link ${activeTab === "tab2" ? "active" : ""}`}
-              onClick={() => setActiveTab("tab2")}
-            >
-              Interview Manage
-            </button>
-          </li>
-        </ul>
-      )}
+            <li className="nav-item">
+              <button
+                className={`nav-link ${activeTab === "tab2" ? "active" : ""}`}
+                onClick={() => setActiveTab("tab2")}
+              >
+                Interview Manage
+              </button>
+            </li>
+          </ul>
+        ))}
 
       {/* ✅ Tabs Content */}
       {activeTab === "tab1" && (
@@ -392,12 +404,11 @@ function Interview() {
       )}
 
       {/* ✅ Tab 2 */}
-      {(Number(role) === 100 || Number(role) === 200) &&
-        activeTab === "tab2" && (
-          <div className="card shadow-sm p-3 border">
-            <InterviewsPage openEditInterviewModal={openEditInterviewModal} />
-          </div>
-        )}
+      {canManageInterview && activeTab === "tab2" && (
+        <div className="card shadow-sm p-3 border">
+          <InterviewsPage openEditInterviewModal={openEditInterviewModal} />
+        </div>
+      )}
       {/* ================= MODAL ================= */}
       <div className="modal fade" id="interviewexampleModal" tabIndex="-1">
         <div className="modal-dialog modal-lg modal-dialog-centered">

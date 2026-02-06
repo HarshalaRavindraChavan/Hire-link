@@ -38,6 +38,8 @@ function Jobs() {
   const staffemploId = staff?.staff_employer_id;
   //=================
 
+  const canManageJob = Number(role) === 100 || Number(role) === 200;
+
   const [timeNow, setTimeNow] = useState(Date.now());
 
   const [search, setSearch] = useState("");
@@ -116,13 +118,13 @@ function Jobs() {
       }
 
       // EMPLOYER → ONLY HIS DATA
-      if (Number(role) === 100) {
+      if (canManageJob) {
         res = await axios.get(
           `${BASE_URL}employer/getdatawhere/tbl_job/job_employer_id/${employerId}`,
         );
       }
 
-      if (Number(role) === 200) {
+      if (canManageJob) {
         res = await axios.get(
           `${BASE_URL}employer/getdatawhere/tbl_job/job_employer_id/${staffemploId}`,
         );
@@ -251,8 +253,8 @@ function Jobs() {
   };
 
   const onSubmit = async (data) => {
-    if (Number(role) !== 100) {
-      toast.error("Only employer can add jobs");
+    if (!canManageJob) {
+      toast.error("You are not authorized to add jobs ❌");
       return;
     }
 
@@ -262,7 +264,7 @@ function Jobs() {
 
       const payload = {
         job_title: data.job_title,
-        job_company: auth?.emp_companyname,
+        job_company: auth?.emp_companyname || staff?.emp_companyname,
         job_mc: selectedCategory || null,
         job_sc: selectedSubCategory || null,
         job_sc1: selectedSubCat1 || null,
@@ -476,6 +478,10 @@ function Jobs() {
   const openEditJobModal = (job) => {
     if (!job) return;
 
+    if (!canManageJob) {
+      toast.error("Access denied ❌");
+      return;
+    }
     // ================= BASIC =================
     setEditJobId(job.job_id);
 
@@ -531,6 +537,11 @@ function Jobs() {
   const handleUpdateJob = async (data) => {
     if (!editJobId) {
       toast.error("Job ID missing");
+      return;
+    }
+
+    if (!canManageJob) {
+      toast.error("You are not authorized to edit jobs ❌");
       return;
     }
 
@@ -677,7 +688,7 @@ function Jobs() {
         <div>
           <h3 className="fw-bold mb-3">Jobs</h3>
         </div>
-        {(Number(role) === 100 || Number(role) === 200) && (
+        {canManageJob && (
           <div className="ms-auto py-2 py-md-0">
             <a
               data-bs-toggle="modal"
@@ -783,7 +794,7 @@ function Jobs() {
                           >
                             {job.job_title}
                           </span>
-                          {(Number(role) === 100 || Number(role) === 200) && (
+                          {canManageJob && (
                             <ul className="dropdown-menu shadow">
                               <li>
                                 <button
@@ -965,7 +976,7 @@ function Jobs() {
                   <label className="form-label fw-semibold">Company Name</label>
                   <input
                     type="text"
-                    value={auth?.emp_companyname || ""}
+                    value={auth?.emp_companyname || staff?.emp_companyname}
                     className="form-control form-control-md rounded-3"
                     readOnly
                   />

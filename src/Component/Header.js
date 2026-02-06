@@ -13,6 +13,7 @@ function Sidebar() {
 
   const role = auth?.role;
   let displayName = "";
+  let rolename = "";
   let com_logo = logo;
   // let displayEmail = "";
   const roleNum = Number(role);
@@ -22,11 +23,12 @@ function Sidebar() {
     2: "Sub Admin",
     3: "Backend",
     4: "Accountant",
+    5: "Other",
   };
 
   if (Number(role) === 100) {
     displayName = employer?.emp_name || "Employer";
-    // displayEmail = employer?.emp_email || "";
+    rolename = `${employer?.emp_companyname || "Company"} (Super Admin)`;
     if (employer?.emp_com_logo) {
       com_logo = `${BASE_URL}Uploads/${employer.emp_com_logo}`;
     } else {
@@ -36,7 +38,8 @@ function Sidebar() {
     displayName = roleNames[roleNum];
     com_logo = logo;
   } else {
-    displayName = roleNames[employer?.staff_role] || "staff";
+    displayName = employer?.staff_name;
+    rolename = `${employer?.emp_companyname || "Company"} (${roleNames[employer?.staff_role] || "Staff"})`;
     com_logo = logo;
   }
 
@@ -420,6 +423,7 @@ function Sidebar() {
                             )
                             .join(" ")}
                         </h5>
+                        {rolename}
                       </div>
                     </div>
                   </li>

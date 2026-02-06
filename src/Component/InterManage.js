@@ -26,6 +26,8 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
   const role = auth?.role;
   const employerId = auth?.emp_id || staff?.staff_employer_id;
 
+  const canManageInterview = Number(role) === 100 || Number(role) === 200;
+
   useEffect(() => {
     fetchInterviews();
     // eslint-disable-next-line

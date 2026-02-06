@@ -149,7 +149,7 @@ function Verify() {
             Mobile OTP sent to <b>{maskMobile(mobile)}</b>
           </p>
 
-          {/* <div className="d-flex gap-2 mb-3">
+           <div className="d-flex gap-2 mb-3">
             <input
               className="form-control"
               placeholder="Mobile OTP"
@@ -167,9 +167,9 @@ function Verify() {
             >
               {mobileVerified ? "Verified" : "Verify"}
             </button>
-          </div> */}
+          </div>
 
-          <div className="mb-3">
+          {/* <div className="mb-3">
             <input
               className="form-control mb-2"
               placeholder="Mobile OTP"
@@ -188,7 +188,7 @@ function Verify() {
             >
               {mobileVerified ? "Verified" : "Verify"}
             </button>
-          </div>
+          </div> */}
 
           {/* EMAIL OTP */}
           <p className="small">

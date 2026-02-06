@@ -49,6 +49,8 @@ function PaymentHistory() {
       return [
         i + 1,
         p.pay_email,
+        p.pay_role,
+        p.pay_for,
         p.razorpay_payment_id,
         base,
         gst,
@@ -61,7 +63,18 @@ function PaymentHistory() {
     autoTable(doc, {
       startY: 25,
       head: [
-        ["#", "Email", "Payment ID", "Base", "GST", "Total", "Status", "Date"],
+        [
+          "#",
+          "Email",
+          "role",
+          "For",
+          "Payment ID",
+          "Base",
+          "GST",
+          "Total",
+          "Status",
+          "Date",
+        ],
       ],
       body: rows,
     });
@@ -98,7 +111,13 @@ function PaymentHistory() {
               payments.map((pay, index) => (
                 <tr key={pay.pay_id}>
                   <td>{index + 1}</td>
-                  <td>{pay.pay_email}</td>
+                  <td>
+                    {pay.pay_email}
+                    <br></br>
+                    {pay.pay_role}
+                    <br></br>
+                    {pay.pay_for}
+                  </td>
                   <td>{pay.razorpay_payment_id}</td>
                   <td>₹{pay.pay_amount}</td>
                   <td>{pay.pay_status}</td>

@@ -149,7 +149,7 @@ function Verify() {
             Mobile OTP sent to <b>{maskMobile(mobile)}</b>
           </p>
 
-          <div className="d-flex gap-2 mb-3">
+          {/* <div className="d-flex gap-2 mb-3">
             <input
               className="form-control"
               placeholder="Mobile OTP"
@@ -162,6 +162,27 @@ function Verify() {
             />
             <button
               className="btn btn-success"
+              disabled={mobileVerified || loading}
+              onClick={verifyMobileOtp}
+            >
+              {mobileVerified ? "Verified" : "Verify"}
+            </button>
+          </div> */}
+
+          <div className="mb-3">
+            <input
+              className="form-control mb-2"
+              placeholder="Mobile OTP"
+              maxLength={6}
+              disabled={mobileVerified}
+              value={mobileOtp}
+              onChange={(e) =>
+                setMobileOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
+              }
+            />
+
+            <button
+              className="btn btn-success w-100"
               disabled={mobileVerified || loading}
               onClick={verifyMobileOtp}
             >

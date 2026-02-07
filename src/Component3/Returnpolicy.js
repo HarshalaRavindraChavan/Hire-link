@@ -6,7 +6,7 @@ import logo from "../Component2/logo/hirelink.png";
 function Returnpolicy() {
   return (
     <>
-     <SEO
+      <SEO
         title={seoConfig.e_return.title}
         description={seoConfig.e_return.description}
       />
@@ -36,6 +36,32 @@ function Returnpolicy() {
             <p className="erp-text">
               Employers are required to pay a registration fee (₹5000) to create
               an account and access employer-specific services on the platform.
+            </p>
+
+            <h3 className="erp-heading">
+              Taxes (GST) on Employer Registration
+            </h3>
+            <p className="erp-text">
+              The employer registration fee of ₹5000 is exclusive of taxes. As
+              per applicable law, an additional 18% Goods and Services Tax (GST)
+              will be charged. The total payable amount for employer
+              registration will be ₹5900 (₹5000 + 18% GST).
+            </p>
+
+            <h3 className="erp-heading">Candidate Resume Download Charges</h3>
+            <p className="erp-text">
+              Employers are required to pay ₹60 per candidate resume download.
+              This amount is exclusive of taxes. An additional 18% GST will be
+              applicable, making the total payable amount ₹70.80 per resume
+              download.
+            </p>
+
+            <h3 className="erp-heading">Extended Employer Services Charges</h3>
+            <p className="erp-text">
+              Employers opting for extended or additional employer services are
+              required to pay a fee of ₹2500. This amount is exclusive of taxes.
+              An additional 18% GST will be charged, making the total payable
+              amount ₹2950 (₹2500 + 18% GST).
             </p>
 
             <h3 className="erp-heading">Non-Refundable Payments</h3>

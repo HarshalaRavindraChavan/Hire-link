@@ -6,7 +6,7 @@ import logo from "../Component2/logo/hirelink.png";
 function Returnpolicy() {
   return (
     <>
-     <SEO
+      <SEO
         title={seoConfig.c_return.title}
         description={seoConfig.c_return.description}
       />
@@ -51,6 +51,14 @@ function Returnpolicy() {
             <p className="crp-text">
               The candidate signup fee of ₹300 is non-refundable once the
               account is created and access to the platform is provided.
+            </p>
+
+            <h3 className="crp-heading">Taxes (GST)</h3>
+            <p className="crp-text">
+              The candidate signup/registration fee of ₹300 is subject to
+              applicable taxes. An additional 18% Goods and Services Tax (GST)
+              will be charged, making the total payable amount ₹354 (₹300 + 18%
+              GST).
             </p>
 
             <h3 className="crp-heading">Service Activation</h3>

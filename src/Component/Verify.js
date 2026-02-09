@@ -226,7 +226,7 @@ function Verify() {
             Mobile OTP sent to <b>{maskMobile(mobile)}</b>
           </p>
 
-          <div className="d-flex gap-2 mb-3">
+          <div className="d-flex gap-2 mb-5">
             <input
               className="form-control"
               placeholder="Mobile OTP"
@@ -247,7 +247,7 @@ function Verify() {
           </div>
 
           {!mobileVerified && (
-            <div className="text-center mb-1">
+            <div className="text-center " style={{ margin: "-25px 0 0 0" }}>
               {mobileTimer > 0 ? (
                 <small className="text-muted">
                   Resend OTP in {mobileTimer}s
@@ -268,7 +268,7 @@ function Verify() {
             Email OTP sent to <b>{maskEmail(email)}</b>
           </p>
 
-          <div className="d-flex gap-2 mb-2">
+          <div className="d-flex gap-2 mb-5">
             <input
               className="form-control"
               placeholder="Email OTP"
@@ -289,7 +289,7 @@ function Verify() {
           </div>
 
           {!emailVerified && (
-            <div className="text-center mb-3">
+            <div className="text-center" style={{ margin: "-25px 0 0 0" }}>
               {emailTimer > 0 ? (
                 <small className="text-muted">
                   Resend OTP in {emailTimer}s

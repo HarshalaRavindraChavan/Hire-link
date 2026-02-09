@@ -1,59 +1,164 @@
-import React, { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../Component2/css/SignupVideoModal.css";
 
-const SignupVideoModal = ({ show }) => {
-  const [videoCompleted, setVideoCompleted] = useState(false);
+const videos = {
+  candidate: "d95PPykB2vE",
+  employer: "BB49x_uMlGA",
+};
 
+const SignupVideoModal = ({ show }) => {
+  const navigate = useNavigate();
+  const playerRef = useRef(null);
+  const progressTimer = useRef(null);
+  const lastAllowedTime = useRef(0);
+
+  const [selectedRole, setSelectedRole] = useState(null);
+  const [videoCompleted, setVideoCompleted] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [playedSeconds, setPlayedSeconds] = useState(0);
+
+  /* 🔹 Load YouTube API once */
   useEffect(() => {
     if (!show) return;
 
-    // Load YouTube API
     if (!window.YT) {
       const tag = document.createElement("script");
       tag.src = "https://www.youtube.com/iframe_api";
       document.body.appendChild(tag);
     }
-
-    window.onYouTubeIframeAPIReady = () => {
-      new window.YT.Player("youtube-player", {
-        videoId: "9S-CHtyU53c",
-        playerVars: {
-          autoplay: 1,
-          controls: 0,
-          disablekb: 1,
-          rel: 0,
-          modestbranding: 1
-        },
-        events: {
-          onStateChange: (event) => {
-            if (event.data === window.YT.PlayerState.ENDED) {
-              setVideoCompleted(true); // ✅ enable Next
-            }
-          }
-        }
-      });
-    };
   }, [show]);
+
+  /* 🔹 Create Player */
+  useEffect(() => {
+    if (!show || !selectedRole) return;
+    if (!window.YT || !window.YT.Player) return;
+
+    lastAllowedTime.current = 0;
+    setVideoCompleted(false);
+    setProgress(0);
+    setPlayedSeconds(0);
+
+    if (playerRef.current) {
+      playerRef.current.destroy();
+    }
+
+    playerRef.current = new window.YT.Player("youtube-player", {
+      videoId: videos[selectedRole],
+      playerVars: {
+        autoplay: 1,
+        controls: 0,
+        disablekb: 1,
+        rel: 0,
+        modestbranding: 1,
+      },
+      events: {
+        onReady: startTracking,
+        onStateChange: onPlayerStateChange,
+      },
+    });
+
+    return () => {
+      clearInterval(progressTimer.current);
+      if (playerRef.current) {
+        playerRef.current.destroy();
+        playerRef.current = null;
+      }
+    };
+  }, [selectedRole, show]);
+
+  /* 🔹 Smooth progress tracking + forward seek block */
+  const startTracking = () => {
+    progressTimer.current = setInterval(() => {
+      if (!playerRef.current) return;
+
+      const currentTime = playerRef.current.getCurrentTime();
+      const duration = playerRef.current.getDuration();
+
+      // ❌ Forward seek block (buffer safe)
+      if (currentTime > lastAllowedTime.current + 2) {
+        playerRef.current.seekTo(lastAllowedTime.current);
+        return;
+      }
+
+      // ✅ Natural play allowed
+      if (currentTime > lastAllowedTime.current) {
+        lastAllowedTime.current = currentTime;
+      }
+
+      setPlayedSeconds(Math.floor(currentTime));
+      setProgress(Math.floor((currentTime / duration) * 100));
+    }, 500); // 🔥 Smooth interval
+  };
+
+  const onPlayerStateChange = (event) => {
+    if (event.data === window.YT.PlayerState.ENDED) {
+      clearInterval(progressTimer.current);
+      setVideoCompleted(true);
+      setProgress(100);
+    }
+  };
+
+  const handleNext = () => {
+    localStorage.setItem("signupRole", selectedRole);
+    navigate("/signup");
+  };
 
   if (!show) return null;
 
   return (
     <div className="modal-overlay">
       <div className="modal-box">
-        <h4 style={{fontWeight:"bold"}}>Watch Full Vedio Before Signup</h4>
+        {!selectedRole ? (
+          <>
+            <h4 style={{ fontWeight: "bold" }}>Select Signup Type</h4>
+            <div className="d-flex gap-3 justify-content-center mt-3">
+              <button
+                className="role-pill"
+                onClick={() => setSelectedRole("candidate")}
+              >
+                Candidate
+              </button>
+              <button
+                className="role-pill"
+                onClick={() => setSelectedRole("employer")}
+              >
+                Employer
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <h4 style={{ fontWeight: "bold" }}>
+              {selectedRole === "candidate"
+                ? "Candidate Signup Guide"
+                : "Employer Signup Guide"}
+            </h4>
 
-        {/* YouTube Player */}
-        <div id="youtube-player" className="video-box"></div>
+            <div id="youtube-player" className="video-box"></div>
 
-        {/* NEXT BUTTON */}
-        <NavLink
-          to={videoCompleted ? "/signup" : "#"}
-          onClick={(e) => !videoCompleted && e.preventDefault()}
-          className={`next-btn ${videoCompleted ? "active" : "disabled"}`}
-        >
-          Next
-        </NavLink>
+            {/* 🔹 Progress Bar */}
+            <div className="video-progress-wrapper">
+              <div className="video-progress-bar">
+                <div
+                  className="video-progress-fill"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+              <small>
+                {playedSeconds}s watched ({progress}%)
+              </small>
+            </div>
+
+            <button
+              className={`next-btn ${videoCompleted ? "active" : "disabled"}`}
+              disabled={!videoCompleted}
+              onClick={handleNext}
+            >
+              Next
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

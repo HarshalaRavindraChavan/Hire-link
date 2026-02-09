@@ -65,9 +65,7 @@ function Profile() {
 
   const fetchStates = async () => {
     try {
-      const res = await axios.get(
-        `${BASE_URL}candidate/getdata/tbl_state`,
-      );
+      const res = await axios.get(`${BASE_URL}candidate/getdata/tbl_state`);
 
       if (res.data?.status) {
         setStates(res.data.data || []);
@@ -220,6 +218,7 @@ function Profile() {
     can_id: "",
     can_state: "",
     can_city: "",
+    can_image: "",
     can_aadhar: "",
     can_pan: "",
     can_resume: "",
@@ -234,6 +233,7 @@ function Profile() {
     can_sc1: "",
     can_sc2: "",
     can_sc3: "",
+    can_gender: "",
   });
 
   const [isAadharLocked, setIsAadharLocked] = useState(false);
@@ -243,17 +243,12 @@ function Profile() {
 
   const fetchCandidateProfile = async () => {
     try {
-      const stored = localStorage.getItem("candidate");
-      if (!stored) {
-        navigate("/signin");
-        return;
-      }
+      // const lsData = JSON.parse(stored);
 
-      const lsData = JSON.parse(stored);
-
-      const res = await axios.get(
-        `${BASE_URL}candidate/getdatawhere/tbl_candidate/can_id/${lsData.can_id}`,
-      );
+      const res = await axios
+        .get
+        // `${BASE_URL}candidate/getdatawhere/tbl_candidate/can_id/${lsData.can_id}`,
+        ();
 
       if (res.data?.status && res.data?.data?.length > 0) {
         const freshCandidate = res.data.data[0]; // ✅ DB latest data
@@ -354,6 +349,7 @@ function Profile() {
       can_aadhar: "aadhar number is required",
       can_pan: "pan number is required",
       can_resume: "Please upload Resume",
+      can_image: "Please upload Profile Image",
       can_cv: "Please upload CV",
     };
 
@@ -376,6 +372,11 @@ function Profile() {
       return;
     }
 
+    if (!candidate.can_gender) {
+      toast.error("Please select gender");
+      return;
+    }
+
     const categoryPayload = {};
     if (selectedCategory) categoryPayload.can_mc = selectedCategory;
     if (selectedSubCategory) categoryPayload.can_sc = selectedSubCategory;
@@ -390,9 +391,10 @@ function Profile() {
         can_about: candidate.can_about,
         can_state: candidate.can_state,
         can_city: candidate.can_city,
+        can_gender: candidate.can_gender,
 
         ...categoryPayload,
-
+        can_image: candidate.can_image,
         can_resume: candidate.can_resume,
         can_cv: candidate.can_cv,
 
@@ -441,6 +443,7 @@ function Profile() {
 
           can_aadhar: candidate.can_aadhar,
           can_pan: candidate.can_pan,
+          can_image: candidate.can_image,
           can_resume: candidate.can_resume,
           can_cv: candidate.can_cv,
 
@@ -487,20 +490,11 @@ function Profile() {
     const file = e.target.files[0];
     if (!file) return;
 
-    // allow only PDF
-    if (file.type !== "application/pdf") {
-      toast.error("Only PDF files are allowed");
-      return;
-    }
-
     const formData = new FormData();
     formData.append(fieldName, file);
 
     try {
-      const res = await axios.post(
-        `${BASE_URL}candidate/fileupload`,
-        formData,
-      );
+      const res = await axios.post(`${BASE_URL}candidate/fileupload`, formData);
 
       if (res.data.status) {
         const filename = res.data.files[fieldName];
@@ -621,7 +615,10 @@ function Profile() {
           <div className="d-flex flex-column flex-md-row align-items-center align-items-md-start gap-4 text-center text-md-start">
             {/* Profile Image */}
             <img
-              src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+              src={
+                `${BASE_URL}uploads/${candidate.can_image}` ||
+                "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+              }
               className="rounded-circle"
               width="90"
               height="90"
@@ -886,7 +883,10 @@ function Profile() {
                 {/* PROFILE IMAGE SECTION */}
                 <div className="d-flex align-items-center gap-3 mb-3">
                   <img
-                    src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                    src={
+                      `${BASE_URL}uploads/${candidate.can_image}` ||
+                      "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                    }
                     className="rounded-circle border"
                     width="90"
                     height="90"
@@ -968,66 +968,6 @@ function Profile() {
                     />
                   </div>
 
-                  {/* <div className="col-md-6">
-                    {" "}
-                    <label className="btn btn-outline-success w-100">
-                      {" "}
-                      {candidate.can_aadhar ? (
-                        <>
-                          <i className="fa-solid fa-circle-check text-success"></i>{" "}
-                          <span className="text-success fw-semibold">
-                            Aadhar Card Uploaded
-                          </span>
-                        </>
-                      ) : (
-                        <>
-                          <i className="fa fa-upload text-muted"></i>{" "}
-                          <span className="text-muted">Upload Aadhar Card</span>
-                        </>
-                      )}
-                      <input
-                        type="file"
-                        hidden
-                        onChange={(e) => uploadFile(e, "can_aadhar")}
-                      />{" "}
-                      <input
-                        type="hidden"
-                        name="can_aadhar"
-                        value={candidate.can_aadhar}
-                      />
-                    </label>{" "}
-                  </div>
-
-                  <div className="col-md-6">
-                    {" "}
-                    <label className="btn btn-outline-success w-100">
-                      {" "}
-                      {candidate.can_pan ? (
-                        <>
-                          <i className="fa-solid fa-circle-check text-success"></i>{" "}
-                          <span className="text-success fw-semibold">
-                            Pan Card Uploaded
-                          </span>
-                        </>
-                      ) : (
-                        <>
-                          <i className="fa fa-upload text-muted"></i>{" "}
-                          <span className="text-muted">Upload Pan Card</span>
-                        </>
-                      )}
-                      <input
-                        type="file"
-                        hidden
-                        onChange={(e) => uploadFile(e, "can_pan")}
-                      />{" "}
-                      <input
-                        type="hidden"
-                        name="can_pan"
-                        value={candidate.can_pan}
-                      />
-                    </label>{" "}
-                  </div> */}
-
                   {/* aadhar number */}
                   <div className="col-md-6">
                     <label className="form-label fw-semibold">
@@ -1107,6 +1047,58 @@ function Profile() {
                         PAN number once saved cannot be changed.
                       </small>
                     )}
+                  </div>
+
+                  <div className="col-md-6">
+                    <label className="fw-semibold">Gender</label>
+
+                    <select
+                      className="form-select form-control"
+                      name="can_gender"
+                      value={candidate.can_gender || ""}
+                      onChange={(e) =>
+                        setCandidate((prev) => ({
+                          ...prev,
+                          can_gender: e.target.value,
+                        }))
+                      }
+                    >
+                      <option value="">Select Gender</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+
+                  <div className="col-md-6" style={{ marginTop: "36px" }}>
+                    {" "}
+                    <label className="btn btn-outline-success w-100">
+                      {" "}
+                      {candidate.can_image ? (
+                        <>
+                          <i className="fa-solid fa-circle-check text-success"></i>{" "}
+                          <span className="text-success fw-semibold">
+                            Profile Image Uploaded
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <i className="fa fa-upload text-muted"></i>{" "}
+                          <span className="text-muted">Profile Image</span>
+                        </>
+                      )}
+                      <input
+                        type="file"
+                        hidden
+                        accept=".jpg,.jpeg,.png"
+                        onChange={(e) => uploadFile(e, "can_image")}
+                      />{" "}
+                      <input
+                        type="hidden"
+                        name="can_image"
+                        value={candidate.can_image}
+                      />
+                    </label>{" "}
                   </div>
 
                   <div className="col-md-6">

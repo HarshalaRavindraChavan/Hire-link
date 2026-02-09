@@ -202,8 +202,7 @@ function Interview() {
       <h3 className="fw-bold mb-3">Interview Details</h3>
 
       {/* ✅ Tabs Header (Only Employer) */}
-      {Number(role) === 100 ||
-        (Number(role) === 200 && (
+      { (canManageInterview && (
           <ul className="nav nav-tabs mb-3">
             <li className="nav-item">
               <button

@@ -90,10 +90,10 @@ function Jobs() {
       toast.error("Server error");
     }
   };
-
+  let one = 1;
   useEffect(() => {
     axios
-      .get(`${BASE_URL}candidate/getdatawhere/tbl_job/job_status/Active`)
+      .get(`${BASE_URL}candidate/getdatawhere/tbl_job/job_status/${one}`)
       .then((res) => {
         if (res.data.status === "success") {
           setJobs(res.data.data); // ✅ THIS WAS MISSING
@@ -122,7 +122,7 @@ function Jobs() {
 
   const filteredJobs = jobs.filter((job) => {
     // ✅ ONLY ACTIVE JOBS
-    if (job.job_status?.toLowerCase() !== "active") return false;
+    if (Number(job.job_status) !== one) return false;
 
     const keyword = appliedKeyword.toLowerCase();
     const place = appliedPlace.toLowerCase();

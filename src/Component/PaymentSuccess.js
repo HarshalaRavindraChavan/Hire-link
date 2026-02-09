@@ -14,8 +14,10 @@ function PaymentSuccess() {
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("paymentDetails"));
     const paymentUser = JSON.parse(localStorage.getItem("paymentUser") || "{}");
-    const temp = paymentUser?.tempData || {};
-
+    const signupTemp = JSON.parse(
+      localStorage.getItem("signupTempData") || "{}",
+    );
+    const tempData = signupTemp?.data || {};
     if (!saved) {
       navigate("/signin");
       return;
@@ -26,25 +28,25 @@ function PaymentSuccess() {
 
       name:
         paymentUser.role === "candidate"
-          ? temp.can_name || saved.name
+          ? tempData.can_name || paymentUser.name || saved.name
           : paymentUser.role === "employer"
-            ? temp.emp_name || saved.name
+            ? tempData.emp_name || paymentUser.name || saved.name
             : paymentUser.role === "employer_staff"
-              ? temp.emp_name || saved.name
+              ? tempData.emp_name || paymentUser.name || saved.name
               : paymentUser.role === "resume_download"
-                ? temp.emp_name || saved.name
-                : temp.name || saved.name,
+                ? tempData.emp_name || paymentUser.name || saved.name
+                : paymentUser.name || saved.name,
 
       mobile:
         paymentUser.role === "candidate"
-          ? temp.can_mobile || saved.mobile
+          ? tempData.can_mobile || paymentUser.mobile || saved.mobile
           : paymentUser.role === "employer"
-            ? temp.emp_mobile || saved.mobile
+            ? tempData.emp_mobile || paymentUser.mobile || saved.mobile
             : paymentUser.role === "employer_staff"
-              ? temp.emp_mobile || saved.mobile
+              ? tempData.emp_mobile || paymentUser.mobile || saved.mobile
               : paymentUser.role === "resume_download"
-                ? temp.emp_mobile || saved.mobile
-                : temp.emp_mobile || saved.mobile,
+                ? tempData.emp_mobile || paymentUser.mobile || saved.mobile
+                : paymentUser.mobile || saved.mobile,
 
       receiptNo: saved.receiptNo || `RCPT-${Date.now().toString().slice(-8)}`,
       paymentFor:

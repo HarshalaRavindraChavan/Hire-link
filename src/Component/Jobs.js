@@ -118,13 +118,13 @@ function Jobs() {
       }
 
       // EMPLOYER → ONLY HIS DATA
-      if (canManageJob) {
+      if (Number(role) === 100) {
         res = await axios.get(
           `${BASE_URL}employer/getdatawhere/tbl_job/job_employer_id/${employerId}`,
         );
       }
 
-      if (canManageJob) {
+      if (Number(role) === 200) {
         res = await axios.get(
           `${BASE_URL}employer/getdatawhere/tbl_job/job_employer_id/${staffemploId}`,
         );
@@ -278,7 +278,7 @@ function Jobs() {
         job_type: data.job_type,
         job_salary: data.job_salary,
 
-        job_status: "Processing", // ✅ DEFAULT Processing
+        job_status: "2", // ✅ DEFAULT Processing
 
         job_date: data.job_date,
         job_skills: data.job_skills,
@@ -877,9 +877,9 @@ function Jobs() {
                           {job.job_date}
                         </span>
                       </div>
-                      {job.job_status === "Closed" ? (
+                      {job.job_status === "0" ? (
                         <span className="badge bg-danger">Closed</span>
-                      ) : job.job_status === "Active" ? (
+                      ) : job.job_status === "1" ? (
                         <span className="badge bg-success">Active</span>
                       ) : (
                         (() => {
@@ -899,7 +899,7 @@ function Jobs() {
 
                           const diff = end - timeNow;
 
-                          if (diff <= 0 && job.job_status === "Processing") {
+                          if (diff <= 0 && job.job_status === "2") {
                             markJobActive(job.job_id);
                             return (
                               <span className="badge bg-success">Active</span>
@@ -972,7 +972,7 @@ function Jobs() {
                 </div>
 
                 {/* Company Name */}
-                <div className="col-md-4 mb-2">
+                {/* <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">Company Name</label>
                   <input
                     type="text"
@@ -980,7 +980,7 @@ function Jobs() {
                     className="form-control form-control-md rounded-3"
                     readOnly
                   />
-                </div>
+                </div> */}
 
                 {/* Job Category */}
                 <div className="col-md-4 mb-2">
@@ -1631,8 +1631,8 @@ function Jobs() {
                     className="form-control form-control-md rounded-3"
                   >
                     <option value="">Select Status</option>
-                    <option value="Active">Active</option>
-                    <option value="Closed">Closed</option>
+                    <option value="1">Active</option>
+                    <option value="0">Closed</option>
                   </select>
                   <span className="text-danger">
                     {editErrors.job_status?.message}

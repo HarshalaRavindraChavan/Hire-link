@@ -97,7 +97,7 @@ function PaymentHistory() {
           <thead>
             <tr>
               <th>#</th>
-              <th>Email</th>
+              <th>Detail</th>
               <th>Payment ID</th>
               <th>Amount</th>
               <th>Status</th>
@@ -112,10 +112,12 @@ function PaymentHistory() {
                 <tr key={pay.pay_id}>
                   <td>{index + 1}</td>
                   <td>
-                    {pay.pay_email}
+                    <b>Email:</b> {pay.pay_email}
                     <br></br>
+                    <b>Role:</b>
                     {pay.pay_role}
                     <br></br>
+                    <b>Pay For:</b>
                     {pay.pay_for}
                   </td>
                   <td>{pay.razorpay_payment_id}</td>

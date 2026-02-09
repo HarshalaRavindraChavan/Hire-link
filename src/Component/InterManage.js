@@ -38,7 +38,7 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
       setLoading(true);
 
       // ✅ Only employer allowed
-      if (Number(role) !== 100 && Number(role) !== 200) {
+      if (!canManageInterview) {
         setInterviews([]);
         setSelectedInterview(null);
         return;

@@ -22,6 +22,13 @@ const Signup = () => {
   const [loading, setLoading] = useState(false);
   const [captchaToken, setCaptchaToken] = useState(null);
 
+  useEffect(() => {
+    const lockedRole = localStorage.getItem("signupRole");
+    if (lockedRole) {
+      setActiveRole(lockedRole);
+    }
+  }, []);
+
   /* ---------------- VALIDATION ---------------- */
 
   const validationSchema = Yup.object({
@@ -204,6 +211,7 @@ const Signup = () => {
         localStorage.setItem(
           "signupTempData",
           JSON.stringify({
+            
             role: activeRole, // candidate | employer
             data: data.data,
             createdAt: Date.now(),
@@ -231,6 +239,8 @@ const Signup = () => {
             returnTo: activeRole === "candidate" ? "/profile" : "/emp-profile",
           }),
         );
+
+        localStorage.removeItem("signupRole");
 
         reset();
 
@@ -418,22 +428,24 @@ const Signup = () => {
                 <div className="d-flex gap-2">
                   <button
                     type="button"
+                    disabled
                     className={`role-pill ${activeRole === "candidate" ? "active" : ""}`}
-                    onClick={() => {
-                      setActiveRole("candidate");
-                      setValue("terms", false);
-                    }}
+                    // onClick={() => {
+                    //   setActiveRole("candidate");
+                    //   setValue("terms", false);
+                    // }}
                   >
                     Candidate
                   </button>
 
                   <button
                     type="button"
+                    disabled
                     className={`role-pill ${activeRole === "employer" ? "active" : ""}`}
-                    onClick={() => {
-                      setActiveRole("employer");
-                      setValue("terms", false);
-                    }}
+                    // onClick={() => {
+                    //   setActiveRole("employer");
+                    //   setValue("terms", false);
+                    // }}
                   >
                     Employer / Recruiter
                   </button>

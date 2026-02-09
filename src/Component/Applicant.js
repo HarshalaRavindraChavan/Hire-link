@@ -220,7 +220,7 @@ function Applicant() {
       />
       <div className="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
         <div>
-          <h3 className="fw-bold mb-3">Applieds</h3>
+          <h3 className="fw-bold mb-3">Applicant</h3>
         </div>
       </div>
 

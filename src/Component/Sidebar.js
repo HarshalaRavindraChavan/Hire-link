@@ -12,14 +12,14 @@ function Sidebar() {
   const allMenus = [
     { id: 1, label: "Dashboard", path: "/dashboard", icon: "fas fa-home" },
     { id: 2, label: "Jobs", path: "/job", icon: "fa fa-briefcase" },
-    { id: 3, label: "Candidate", path: "/candidate", icon: "fa fa-user-tie" },
+    { id: 3, label: "Candidates", path: "/candidate", icon: "fa fa-user-tie" },
     {
       id: 4,
       label: "Applicant",
       path: "/applicant",
       icon: "fa-brands fa-wpforms",
     },
-    { id: 5, label: "Interview", path: "/interview", icon: "fa fa-comments" },
+    { id: 5, label: "Interviews", path: "/interview", icon: "fa fa-comments" },
     { id: 6, label: "Employers", path: "/employe", icon: "fa fa-user-tie" },
     // {
     //   id: 7,
@@ -31,7 +31,7 @@ function Sidebar() {
     { id: 9, label: "Contacts", path: "/contact", icon: "fa fa-headphones" },
     { id: 10, label: "Users", path: "/user", icon: "fa fa-user" },
     { id: 11, label: "Profile", path: "/emp-profile", icon: "fa fa-user" },
-    { id: 12, label: "Staff", path: "/staff", icon: "fa fa-user" },
+    { id: 12, label: "Staffs", path: "/staff", icon: "fa fa-user" },
   ];
 
   // ================= MENU LOGIC =================

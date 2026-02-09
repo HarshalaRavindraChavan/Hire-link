@@ -23,9 +23,7 @@ const EmpProfile = () => {
 
   const fetchStates = async () => {
     try {
-      const res = await axios.get(
-        `${BASE_URL}candidate/getdata/tbl_state`
-      );
+      const res = await axios.get(`${BASE_URL}candidate/getdata/tbl_state`);
 
       if (res.data?.status) {
         setStates(res.data.data || []);
@@ -38,7 +36,7 @@ const EmpProfile = () => {
   const fetchCities = async (stateId) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}candidate/getdatawhere/tbl_city/city_state_id/${stateId}`
+        `${BASE_URL}candidate/getdatawhere/tbl_city/city_state_id/${stateId}`,
       );
 
       if (res.data?.status) {
@@ -137,7 +135,7 @@ const EmpProfile = () => {
 
         const res = await axios.post(
           `${BASE_URL}employer/updatedata/tbl_employer/emp_id/${employer?.emp_id}`,
-          payload
+          payload,
         );
 
         if (res.data.status) {
@@ -178,6 +176,9 @@ const EmpProfile = () => {
 
           // 🔄 notify other components
           window.dispatchEvent(new Event("storage"));
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
         } else {
           toast.error("Update failed");
         }
@@ -195,10 +196,7 @@ const EmpProfile = () => {
     formData.append(field, file);
 
     try {
-      const res = await axios.post(
-        `${BASE_URL}admin/fileupload`,
-        formData
-      );
+      const res = await axios.post(`${BASE_URL}admin/fileupload`, formData);
 
       if (res.data.status) {
         formik.setFieldValue(field, res.data.files[field]);
@@ -254,7 +252,7 @@ const EmpProfile = () => {
           headers: {
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       toast.success("Password updated successfully");
@@ -295,7 +293,7 @@ const EmpProfile = () => {
             <div className="d-flex gap-2">
               <button
                 type="button"
-                className={`btn btn-sm ${
+                className={`btn btn-md ${
                   activeTab === "profile"
                     ? "btn-success"
                     : "btn-outline-success"
@@ -307,7 +305,7 @@ const EmpProfile = () => {
 
               <button
                 type="button"
-                className={`btn btn-sm ${
+                className={`btn btn-md ${
                   activeTab === "password"
                     ? "btn-success"
                     : "btn-outline-success"

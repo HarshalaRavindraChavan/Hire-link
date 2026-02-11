@@ -5,6 +5,7 @@ import { BASE_URL } from "../config/constants";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
+import "./css/Verify.css"
 
 const RESEND_TIME = 30;
 
@@ -226,7 +227,7 @@ function Verify() {
             Mobile OTP sent to <b>{maskMobile(mobile)}</b>
           </p>
 
-          <div className="d-flex gap-2 mb-5">
+          {/* <div className="d-flex gap-2 mb-5">
             <input
               className="form-control"
               placeholder="Mobile OTP"
@@ -244,6 +245,29 @@ function Verify() {
             >
               {mobileVerified ? "Verified" : "Verify"}
             </button>
+          </div> */}
+
+          <div className="otp-wrapper mb-5">
+            <div className="otp-box">
+              <input
+                className="otp-input"
+                placeholder="Mobile OTP"
+                maxLength={6}
+                disabled={mobileVerified}
+                value={mobileOtp}
+                onChange={(e) =>
+                  setMobileOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
+                }
+              />
+
+              <button
+                className="otp-btn"
+                disabled={mobileVerified || loading}
+                onClick={verifyMobileOtp}
+              >
+                {mobileVerified ? "Verified" : "Verify"}
+              </button>
+            </div>
           </div>
 
           {!mobileVerified && (
@@ -268,7 +292,7 @@ function Verify() {
             Email OTP sent to <b>{maskEmail(email)}</b>
           </p>
 
-          <div className="d-flex gap-2 mb-5">
+          {/* <div className="d-flex gap-2 mb-5">
             <input
               className="form-control"
               placeholder="Email OTP"
@@ -286,6 +310,29 @@ function Verify() {
             >
               {emailVerified ? "Verified" : "Verify"}
             </button>
+          </div> */}
+
+          <div className="otp-wrapper mb-5">
+            <div className="otp-box">
+              <input
+                className="otp-input"
+                placeholder="Email OTP"
+                maxLength={6}
+                disabled={emailVerified}
+                value={emailOtp}
+                onChange={(e) =>
+                  setEmailOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
+                }
+              />
+
+              <button
+                className="otp-btn"
+                disabled={emailVerified || loading}
+                onClick={verifyEmailOtp}
+              >
+                {emailVerified ? "Verified" : "Verify"}
+              </button>
+            </div>
           </div>
 
           {!emailVerified && (

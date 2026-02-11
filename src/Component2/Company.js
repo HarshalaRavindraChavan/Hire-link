@@ -9,6 +9,7 @@ function Company() {
   const [showList, setShowList] = useState(false);
   const [companies, setCompanies] = useState([]);
   const [popularCompanies, setPopularCompanies] = useState([]);
+  const [filteredCompanies, setFilteredCompanies] = useState([]);
 
   useEffect(() => {
     fetch(`${BASE_URL}admin/getdata/tbl_employer`)
@@ -35,8 +36,28 @@ function Company() {
     return () => document.removeEventListener("click", closeDropdown);
   }, []);
 
+  useEffect(() => {
+    setFilteredCompanies(popularCompanies);
+  }, [popularCompanies]);
+
+  const handleSearch = () => {
+    if (!searchText.trim()) {
+      setFilteredCompanies(popularCompanies);
+      return;
+    }
+
+    const result = companies.filter((c) =>
+      c.emp_companyname?.toLowerCase().includes(searchText.toLowerCase()),
+    );
+
+    setFilteredCompanies(result);
+    setShowList(false);
+  };
+
   return (
-    <> <SEO
+    <>
+      {" "}
+      <SEO
         title={seoConfig.companies.title}
         description={seoConfig.home.description}
       />
@@ -69,7 +90,7 @@ function Company() {
                     .filter((c) =>
                       c.emp_companyname
                         ?.toLowerCase()
-                        .includes(searchText.toLowerCase())
+                        .includes(searchText.toLowerCase()),
                     )
                     .map((c, i) => (
                       <li
@@ -86,10 +107,17 @@ function Company() {
               )}
             </div>
 
-            <button className="search-btn d-none d-lg-block ">
+            <button
+              className="search-btn d-none d-lg-block"
+              onClick={handleSearch}
+            >
               Find Companies
             </button>
-            <button className="search-btn d-lg-none ps-5 pe-5 pt-2  pb-2 ">
+
+            <button
+              className="search-btn d-lg-none ps-5 pe-5 pt-2 pb-2"
+              onClick={handleSearch}
+            >
               Find
             </button>
           </div>
@@ -106,7 +134,7 @@ function Company() {
           <h3 className="text-start mt-5 fw-bold ps-3">Popular Companies</h3>
 
           <div className="row mt-3 g-3 ps-3 pe-3">
-            {popularCompanies.map((c, i) => (
+            {filteredCompanies.map((c, i) => (
               <div className="col-6 col-md-3" key={i}>
                 <div className="company-card" style={{ height: "200px" }}>
                   <img

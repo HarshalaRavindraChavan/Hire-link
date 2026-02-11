@@ -57,7 +57,7 @@ function Profile() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // const candidateId = localStorage.getItem("candidate_id");
+  const candidateId = localStorage.getItem("candidate_id");
 
   useEffect(() => {
     fetchStates();
@@ -243,12 +243,17 @@ function Profile() {
 
   const fetchCandidateProfile = async () => {
     try {
-      // const lsData = JSON.parse(stored);
+      const stored = localStorage.getItem("candidate");
 
-      const res = await axios
-        .get
-        // `${BASE_URL}candidate/getdatawhere/tbl_candidate/can_id/${lsData.can_id}`,
-        ();
+      if (!stored) {
+        navigate("/signin");
+        return;
+      }
+      const lsData = JSON.parse(stored);
+
+      const res = await axios.get(
+        `${BASE_URL}candidate/getdatawhere/tbl_candidate/can_id/${lsData.can_id}`,
+      );
 
       if (res.data?.status && res.data?.data?.length > 0) {
         const freshCandidate = res.data.data[0]; // ✅ DB latest data

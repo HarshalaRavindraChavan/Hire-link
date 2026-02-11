@@ -57,7 +57,7 @@ function Profile() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // const candidateId = localStorage.getItem("candidate_id");
+  const candidateId = localStorage.getItem("candidate_id");
 
   useEffect(() => {
     fetchStates();
@@ -243,12 +243,17 @@ function Profile() {
 
   const fetchCandidateProfile = async () => {
     try {
-      // const lsData = JSON.parse(stored);
+      const stored = localStorage.getItem("candidate");
 
-      const res = await axios
-        .get
-        // `${BASE_URL}candidate/getdatawhere/tbl_candidate/can_id/${lsData.can_id}`,
-        ();
+      if (!stored) {
+        navigate("/signin");
+        return;
+      }
+      const lsData = JSON.parse(stored);
+
+      const res = await axios.get(
+        `${BASE_URL}candidate/getdatawhere/tbl_candidate/can_id/${lsData.can_id}`,
+      );
 
       if (res.data?.status && res.data?.data?.length > 0) {
         const freshCandidate = res.data.data[0]; // ✅ DB latest data
@@ -335,6 +340,11 @@ function Profile() {
       [name]: value,
     }));
   };
+
+  console.log('IMAGE:', candidate.can_image);
+console.log('RESUME:', candidate.can_resume);
+console.log('CV:', candidate.can_cv);
+
 
   // ============ Profile Update ============
   const handleUpdateProfile = async (e) => {
@@ -884,7 +894,7 @@ function Profile() {
                 <div className="d-flex align-items-center gap-3 mb-3">
                   <img
                     src={
-                      `${BASE_URL}uploads/${candidate.can_image}` ||
+                      `${BASE_URL}Uploads/${candidate.can_image}` ||
                       "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
                     }
                     className="rounded-circle border"

@@ -13,7 +13,7 @@
 
 /* Focus accessibility */
 .otp-input:focus {
-  outline: 2px solid #198754;
+  outline: 2px solid #15b400;
   box-shadow: none;
 }
 
@@ -26,9 +26,10 @@
   display: flex;
   align-items: center;
   background: #fff;
-  border-radius: 50px;
+  border-radius: 25px;
+  height: 50px;
   overflow: hidden;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
 }
 
 .otp-input {
@@ -48,7 +49,7 @@
   border: none;
   padding: 0 26px;
   height: 100%;
-  background: #04aa6d;
+  background: #32ca03;
   color: #fff;
   font-weight: 600;
   cursor: pointer;

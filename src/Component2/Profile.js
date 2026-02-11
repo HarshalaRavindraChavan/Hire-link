@@ -341,10 +341,9 @@ function Profile() {
     }));
   };
 
-  console.log('IMAGE:', candidate.can_image);
-console.log('RESUME:', candidate.can_resume);
-console.log('CV:', candidate.can_cv);
-
+  console.log("IMAGE:", candidate.can_image);
+  console.log("RESUME:", candidate.can_resume);
+  console.log("CV:", candidate.can_cv);
 
   // ============ Profile Update ============
   const handleUpdateProfile = async (e) => {
@@ -626,8 +625,9 @@ console.log('CV:', candidate.can_cv);
             {/* Profile Image */}
             <img
               src={
-                `${BASE_URL}uploads/${candidate.can_image}` ||
-                "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                candidate?.can_image
+                  ? `${BASE_URL}uploads/${candidate.can_image}`
+                  : "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
               }
               className="rounded-circle"
               width="90"
@@ -894,13 +894,14 @@ console.log('CV:', candidate.can_cv);
                 <div className="d-flex align-items-center gap-3 mb-3">
                   <img
                     src={
-                      `${BASE_URL}Uploads/${candidate.can_image}` ||
-                      "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                      candidate?.can_image
+                        ? `${BASE_URL}uploads/${candidate.can_image}`
+                        : "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
                     }
-                    className="rounded-circle border"
+                    className="rounded-circle"
                     width="90"
                     height="90"
-                    alt="Profile"
+                    alt="Candidate"
                   />
 
                   <div className="flex-grow-1">

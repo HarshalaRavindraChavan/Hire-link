@@ -16,358 +16,239 @@ function Termscondition() {
           style={{ backgroundImage: `url(${logo})` }}
         >
           <div className="ctc-container">
-            <h1 className="ctc-title fw-bold">Candidate Terms & Conditions</h1>
-            <h3 className="ctc-heading">Objective</h3>
+            <h2 className="ctc-title">Candidate Terms & Conditions</h2>
+            <h6
+              className=""
+              style={{ textAlign: "center", fontWeight: "bold" }}
+            >
+              Hirelink Infotech Pvt Ltd – HirelinkInfo Pharma Job Portal
+            </h6>
+
+            <h3 className="ctc-heading">1. Objective of the Platform</h3>
             <p className="ctc-text">
-              Hirelink Infotech Pvt Ltd and its Affiliated Products serves
-              solely as an initial platform for communication and information
-              exchange among its users, members, and visitors who genuinely
-              intend to connect regarding actual job openings and other
-              legitimate career development services. Please read these
-              conditions carefully before using the Hirelink Infotech Pvt Ltd
-              and its Affiliated Products.
+              Hirelink Infotech Pvt Ltd and its affiliated platforms
+              (“HirelinkInfo”) operate solely as a digital job portal to enable
+              communication, job discovery, and career opportunities for
+              candidates genuinely seeking employment in the pharmaceutical and
+              allied industries. The platform is not a recruitment agency and
+              does not guarantee interviews, job offers, salary outcomes, or
+              employer responses. By accessing https://hirelinkinfo.com or using
+              the HirelinkInfo Android or iOS mobile application, you agree to
+              be legally bound by these Terms & Conditions.
             </p>
-            <h3 className="ctc-heading">CONDITIONS OF USE</h3>
+            <h3 className="ctc-heading">
+              2. Account Registration & User Responsibility
+            </h3>
             <p className="ctc-text">
-              1) If you use the website, you are responsible for maintaining the
-              confidentiality of your account and password and for restricting
-              access to your computer to prevent unauthorized access to your
-              account. You agree to accept responsibility for all activities
-              that occur under your account or password. You should take all
-              necessary steps to ensure that the password is kept confidential
-              and secure. Please ensure that the details you provide us with are
-              correct and complete. Any service or product of Hirelink Infotech
-              Pvt Ltd and its Affiliated Products that you subscribe to or use
-              (whether paid or free) is intended exclusively for the stated
-              Objective and for the personal use of the registered
-              subscriber/user. Reproducing, duplicating, copying, downloading,
-              recreating, sharing passwords, sublicensing, or distributing in
-              any way that deviates from these terms constitutes misuse of the
-              platform, service, or product. Hirelink Infotech Pvt Ltd and its
-              Affiliated Products reserves the right to take appropriate
-              measures to safeguard its revenue, reputation, or to claim
-              damages, including suspending or terminating access and reporting
-              to relevant authorities.
-            </p>
-            <p className="ctc-text">
-              2)If you are found Copy, extracting, misusing, transmitting, or
-              crawling data, photographs, graphics, or any information from
-              Hirelink Infotech Pvt Ltd and its Affiliated Products for purposes
-              other than the bona fide Objective, the company reserves the right
-              to take suitable action, including blocking access and seeking
-              damages.
+              1. Candidates must create an account using true, accurate, and
+              complete information.<br></br> 2. You are fully responsible for
+              maintaining the confidentiality of your username, password, OTPs,
+              and verification credentials.<br></br> 3. Any activity performed
+              through your account will be treated as authorized by you, whether
+              done intentionally or not.<br></br> 4. Sharing credentials,
+              transferring accounts, sublicensing access, or allowing
+              third-party use is strictly prohibited.<br></br> 5. HirelinkInfo
+              reserves the right to suspend, restrict, or permanently terminate
+              accounts for violations without prior notice.
             </p>
 
+            <h3 className="ctc-heading">3. Candidate Signup Fee (Mandatory)</h3>
             <p className="ctc-text">
-              3)The platform is a public site with paid access, and Hirelink
-              Infotech Pvt Ltd and its Affiliated Products accepts no
-              responsibility for the authenticity or quality of responses
-              received. The company cannot oversee responses that individuals
-              may receive based on information they have posted. Users/companies
-              must independently verify the legitimacy of all responses.
-            </p>
-            <p className="ctc-text">
-              4)You authorise Hirelink Infotech Pvt Ltd and its Affiliated
-              Products to utilize information about your activities on the
-              platform in relation to advertisements, offers, and other content
-              (sponsored or otherwise) displayed across its services, without
-              any compensation to you. Such data may be used to provide relevant
-              recommendations to you and others.
+              ● A one-time candidate registration fee of ₹300 + 18% GST is
+              applicable.<br></br>● This fee is strictly non-refundable under
+              all circumstances.<br></br>● Payment grants access to premium
+              job-portal features only and does not guarantee placement.
+              <br></br>● Failure to receive interview calls or job offers does
+              not entitle the candidate to a refund.
             </p>
 
+            <h3 className="ctc-heading">
+              4. Candidate Score & Interview Attendance Policy
+            </h3>
             <p className="ctc-text">
-              5)The platform may include links to third-party websites. These
-              are provided only for your convenience, and their inclusion does
-              not imply endorsement of their content. Accessing such sites is
-              entirely at your own risk.
+              To ensure employer trust and platform integrity, HirelinkInfo
+              follows a candidate scoring system:
             </p>
             <p className="ctc-text">
-              6)You are required to provide only accurate and truthful
-              information when using the platform, and if creating a profile,
-              you agree to keep it current at all times. Hirelink Infotech Pvt
-              Ltd and its Affiliated Products bear no liability for any
-              inaccuracies on the site. Visitors are responsible for further
-              verifying information. The company is not accountable for any
-              breach of privacy or misuse of information provided by users
-              through technical or other means, and does not guarantee
-              confidentiality of data shared on its websites or domains.
+              ● Default Candidate Score: 1000 points upon registration<br></br>{" "}
+              ● Interview No-Show Penalty: ○ If a candidate confirms an
+              interview and does not attend, 50 points will be deducted{" "}
+              <br></br>● Appointment Confirmation Deduction: ○ After successful
+              appointment confirmation by the employer, 200 points will be
+              deducted<br></br> ● Repeated no-shows or misuse may result in
+              account suspension or permanent deactivation.<br></br>
+              <br></br>This system ensures seriousness, fairness, and quality
+              hiring across the pharma job portal.
+            </p>
+
+            <h3 className="ctc-heading">5. Acceptable Use Policy</h3>
+            <p className="ctc-text">
+              Candidates agree to use HirelinkInfo only for personal job-search
+              purposes.
+            </p>
+            <p className="ctc-text" style={{ fontWeight: "bold" }}>
+              You must NOT:
             </p>
             <p className="ctc-text">
-              7)Hirelink Infotech Pvt Ltd and its Affiliated Products does not
-              disclose personally identifiable information to other entities
-              without consent, except to its agents or in response to legal
-              requirements such as court orders or subpoenas. Users must not use
-              the services in a way that harms the interests or operations of
-              Hirelink Infotech Pvt Ltd and its Affiliated Products. Users are
-              prohibited from duplicating, downloading, publishing, modifying,
-              or distributing material unless expressly permitted in writing.
+              ● Copy, scrape, extract, crawl, or download platform data<br></br>
+              ● Use content for commercial resale, redistribution, or AI /
+              machine-learning training<br></br>● Misrepresent qualifications,
+              experience, or identity<br></br>● Impersonate employers,
+              recruiters, or other candidates<br></br>● Manipulate platform
+              features or scores<br></br>
+              <br></br>
+              Any misuse will invite legal action, damages, and account
+              termination.
+            </p>
+
+            <h3 className="ctc-heading">6. Accuracy of Information</h3>
+            <p className="ctc-text">
+              1. All resumes, profiles, certificates, experience details, and
+              documents must be genuine and verifiable.<br></br>
+              2. HirelinkInfo is not responsible for incorrect, misleading, or
+              false information submitted by candidates.<br></br>
+              3. Candidates shall indemnify HirelinkInfo against any loss or
+              dispute arising from false data.
+            </p>
+
+            <h3 className="ctc-heading">
+              7. Platform Nature & Employer Interaction
+            </h3>
+            <p className="ctc-text">
+              ● HirelinkInfo is a public job portal with paid access features.
+              <br></br>● The company does not verify or guarantee employer
+              authenticity, interview outcomes, or job offers.<br></br>●
+              Candidates must independently verify employer credentials before
+              sharing sensitive documents or attending interviews.
+            </p>
+
+            <h3 className="ctc-heading">
+              8. Communications & Anti-Spam Policy
+            </h3>
+            <p className="ctc-text">
+              ● Sending unsolicited bulk messages, promotional emails, or spam
+              through the platform is prohibited.<br></br>● Repeated or
+              irrelevant job applications, messages, or content posting may
+              result in immediate termination.<br></br>● HirelinkInfo reserves
+              the right to monitor, filter, block, or restrict communications.
+            </p>
+
+            <h3 className="ctc-heading">9. Content Restrictions</h3>
+            <p className="ctc-text">
+              Candidates must not upload, post, transmit, or distribute content
+              that:
             </p>
             <p className="ctc-text">
-              8)Users agree to use the platform solely for personal purposes.
-              Creating derivative works with commercial intent from content on
-              Hirelink Infotech Pvt Ltd and its Affiliated Products without
-              prior written approval is strictly forbidden.
+              ● Is illegal, abusive, defamatory, obscene, hateful, or misleading
+              <br></br>● Violates privacy, intellectual property, or contractual
+              rights.<br></br>● Contains malware, viruses, or harmful code.
+              <br></br>● Encourages criminal activity or threatens India’s
+              sovereignty, security, or public order.
+            </p>
+
+            <h3 className="ctc-heading">10. Data Privacy & Usage</h3>
+            <p className="ctc-text">
+              ● Candidate data is used to improve job matching, visibility,
+              recommendations, and platform performance.<br></br> ● Personally
+              identifiable information is not sold to third parties.<br></br> ●
+              Data may be shared only with:<br></br> ○ Authorized
+              employers/recruiters<br></br> ○ Platform service providers
+              <br></br> ○ Legal authorities when required by law<br></br>
+              <br></br>
+              Complete confidentiality cannot be guaranteed due to the public
+              nature of job portals.
+            </p>
+
+            <h3 className="ctc-heading">11. Third-Party Links</h3>
+            <p className="ctc-text">
+              ● The platform may contain links to third-party websites.<br></br>
+              ● HirelinkInfo does not endorse or control such sites.<br></br>●
+              Accessing external links is done entirely at the candidate’s own
+              risk.
+            </p>
+
+            <h3 className="ctc-heading">12. Security Measures</h3>
+            <p className="ctc-text">
+              ● Automated and manual security systems detect suspicious or
+              fraudulent activity.<br></br> ● Additional verification (OTP,
+              biometric, photo, SMS, or app-based security tools) may be
+              required.<br></br> ● Refusal to comply may restrict or block
+              access.<br></br> ● Candidates must keep devices secure, updated,
+              and untampered.
             </p>
             <p className="ctc-text">
-              9)Users must not send unsolicited bulk or commercial emails using
-              the platform. Hirelink Infotech Pvt Ltd and its Affiliated
-              Products reserves the right to monitor, filter, and block emails
-              sent via its servers and to terminate services for violations,
-              including forfeiture of any fees paid.
-            </p>
-            <p className="ctc-text">
-              10)Users are prohibited from spamming the platform through
-              repeated or indiscriminate posting of jobs or messages. Any such
-              violation entitles Hirelink Infotech Pvt Ltd and its Affiliated
-              Products to immediately terminate services without notice.
-            </p>
-            <p className="ctc-text">
-              11)Users must not upload, post, transmit, publish, or distribute
-              any material that is illegal, harmful, threatening, abusive,
-              harassing, defamatory, libellous, vulgar, obscene, or racially,
-              ethnically, or otherwise objectionable.
-            </p>
-            <p className="ctc-text">
-              12)Users confirm that any resume, information, or data entered
-              into the Hirelink Infotech Pvt Ltd and its Affiliated Products
-              network is accurate, complete, and free from false, misleading,
-              fraudulent, or distorted content. The company disclaims all
-              liability arising from such submissions and users agree to assure
-              Hirelink Infotech Pvt Ltd and its Affiliated Products against any
-              losses resulting from inaccurate or objectionable content provided
-              by them.
-            </p>
-            <p className="ctc-text">
-              13)Users are solely responsible for the confidentiality of their
-              password and user ID, and for all activities conducted through
-              their account, including transactions involving credit/debit
-              cards, UPI,ectc. Hirelink Infotech Pvt Ltd and its Affiliated
-              Products accept no liability for improper use of such information.
-            </p>
-            <p className="ctc-text">
-              14)Users agree to comply fully with the Information Technology
-              Act, 2000 and all related rules, regulations, and notifications
-              when accessing or submitting data to the platform. Any violation
-              makes the user solely liable for civil or criminal consequences.
-            </p>
-            <p className="ctc-text">
-              15)Users are responsible for obtaining, at their own expense, all
-              necessary licences, permits, consents, approvals, and intellectual
-              property rights required for using the services.
-            </p>
-            <p className="ctc-text">
-              16) You acknowledge and undertake that you are accessing the
-              services on the website and transacting at your own risk and are
-              using your best and prudent judgment before entering into any
-              transactions through the website.
-            </p>
-            <p className="ctc-text">
-              17)You shall not involve in accessing the platform to extract
-              content for training machine learning.
-            </p>
-            <p className="ctc-text">
-              18)You shall not Breach any applicable law, regulation, or
-              ordinance.
-            </p>
-            <p className="ctc-text">
-              19)You shall not Disrupt or interfere with networks connected to
-              the platform.
-            </p>
-            <p className="ctc-text">
-              20)You shall not Impersonate any person or entity or misrepresent
-              affiliations.
-            </p>
-            <p className="ctc-text">
-              21)You shall not Forge headers or manipulate identifiers to
-              conceal the origin of information.
-            </p>
-            <p className="ctc-text">
-              22) You shall not Harass, threaten, stalk, or disrupt other users.
-            </p>
-            <p className="ctc-text">
-              23)You shall not Gain unauthorized access to others' computer
-              systems.
-            </p>
-            <p className="ctc-text">
-              24)You shall not exploit the platform or its components for
-              commercial purposes without permission, including reproducing,
-              copying, modifying, selling, storing, or distributing content.
-            </p>
-            <p className="ctc-text">
-              25)You shall not Use site content for commercial derivative works
-              without prior written consent.
-            </p>
-            <p className="ctc-text">
-              26)You shall not employ devices, software, or routines that
-              interfere with the platform's proper functioning.
-            </p>
-            <p className="ctc-text">
-              27)You shall not impose an excessive load on the platform's
-              infrastructure.
-            </p>
-            <p className="ctc-text">
-              28)You shall not Spam the platform through repeated or
-              indiscriminate content posting.
-            </p>
-            <p className="ctc-text">
-              29)You shall not Access data or accounts not intended for you.
-            </p>
-            <p className="ctc-text">
-              30)You shall not Reverse engineer, decompile, disassemble, or
-              attempt to derive source code.
-            </p>
-            <p className="ctc-text">
-              31)You shall not Frame, mirror, or simulate the platform's
-              appearance or functionality.
-            </p>
-            <p className="ctc-text">
-              32)You shall not Probe, scan, or test system/network
-              vulnerabilities.
-            </p>
-            <p className="ctc-text">
-              33)You shall not Use automated or manual means to crawl or scrape
-              content.
-            </p>
-            <p className="ctc-text">
-              34)You shall not bypass technological measures designed to prevent
-              robots from crawling or scraping.
-            </p>
-            <p className="ctc-text">
-              35)You shall not Access the platform other than through provided
-              interfaces.
-            </p>
-            <p className="ctc-text">
-              36)You shall not Breach security or authentication measures
-              without authorization.
-            </p>
-            <p className="ctc-text">
-              37)You shall not provide deep links without permission or extract
-              data via unauthorized automated or manual processes.
-            </p>
-            <p className="ctc-text">
-              38)You shall not send unsolicited bulk or commercial emails.
-            </p>
-            <p className="ctc-text">
-              39)You shall not Sublicense, assign, or transfer any license.
-            </p>
-            <p className="ctc-text">
-              40)You shall not Host, modify, upload, post, transmit, publish, or
-              distribute material for which you lack necessary rights or
-              licenses.
-            </p>
-            <p className="ctc-text">
-              41)You shall not perform any activity that infringes third-party
-              rights, including copyright, trademark, privacy, or proprietary
-              rights.
-            </p>
-            <p className="ctc-text">
-              42)You shall not perform any activity that Contains viruses or
-              code intended to disrupt operations.
-            </p>
-            <p className="ctc-text">
-              43)You shall not perform any activity that is harmful, harassing,
-              hateful, invasive of privacy, or otherwise unlawful.
-            </p>
-            <p className="ctc-text">
-              44)You shall not perform any activity that encourages criminal
-              conduct or violates laws.
-            </p>
-            <p className="ctc-text">
-              45)You shall not perform any activity that is deceptive,
-              offensive, or menacing.
-            </p>
-            <p className="ctc-text">
-              46)You shall not perform any activity that belongs to others
-              without rights.
-            </p>
-            <p className="ctc-text">
-              47)You shall not perform any activity that threatens India's
-              unity, integrity, security, sovereignty, public order, or
-              international relations.
-            </p>
-            <p className="ctc-text">
-              48)You shall not perform any activity that infringe intellectual
-              property rights or retain information with intent to do so.
-            </p>
-            <p className="text-center">
-              Hirelink Infotech Pvt Ltd and its Affiliated Products strive to
-              ensure error-free operation but do not warrant absence of viruses,
-              contaminants, or operational issues. Subscriptions are subject to
-              applicable quotas. Provided email addresses must be genuine and
-              accessible only to authorized personnel. Clients must use only
-              domain-owned email addresses for registration and activities.
-              Violation may result in suspension or termination.
-            </p>
-            <h3 className="ctc-heading">SECURITY MEASURES</h3>
-            <p className="ctc-text">
-              To safeguard accounts and services, automated and manual checks
-              detect unusual activity. Elevated risk may require additional
-              verification, including installation of a security application
-              with your consent. Refusal may limit access. The application may
-              use biometric, photo, SMS, or other authentication methods.
-              Limited data may be shared with fraud prevention providers. You
-              may request human review of automated decisions via support; the
-              final decision is binding. You agree to install updates, maintain
-              device security, and not tamper with features. <br />
-              <br />
               By registering, you consent to receiving SMS verification codes
-              and security messages. Standard rates apply. You confirm ownership
-              of the provided mobile number and responsibility for device/SIM
-              security. Do not share codes. Delivery issues are beyond control.
-              <br />
-              <br />
-              Hirelink Infotech Pvt Ltd and its Affiliated Products is not
-              liable for inadvertent disclosure of account or transaction
-              information, errors in legal processes, or related issues.
+              and security notifications.
             </p>
 
-            <h3 className="ctc-heading">Payment</h3>
+            <h3 className="ctc-heading">13. Legal Compliance</h3>
+            <p className="ctc-text">Candidates must comply with:</p>
             <p className="ctc-text">
-              Payments are 100% in advance. Refunds are at the company's sole
-              discretion, with no guarantees on timeliness. No warranties are
-              provided for uptime or functionality; liability is limited to
-              refunds. Free services carry no liability. Terms may be amended
-              without prior notice.
-              <br />
-              <br />
-              Performance obligations are limited to providing portal access for
-              the subscription period. Usage limits do not create additional
-              obligations.
-              <br />
-              <br /> The company may set off amounts owed against payments due
-              under other agreements. <br />
-              <br />
-              Data may be posted on affiliated sites at no extra cost. <br />
-              <br />
-              Subscriptions do not confer exclusivity or constitute non-poach
-              agreements, as the platform is public.
-              <br />
-              <br /> The company will not participate in disputes between users
-              and third parties contracted via the site but will comply with
-              court orders. Costs from involvement will be recovered from the
-              initiating party. The platform operates from Nashik, India; users
-              from other locations are responsible for local compliance. <br />
-              <br />
-              The company is not responsible for spam or viruses linking to its
-              sites or for acting as an agent.
-              <br />
-              <br /> Violations of these Terms render users liable to civil and
-              criminal action.
-              <br />
-              <br /> You agree to indemnify and hold harmless Hirelink Infotech
-              Pvt Ltd and its Affiliated Products, its directors, officers,
-              employees, agents, subsidiaries, affiliates, and partners from any
-              damages arising from your use of the services or information
-              provided. <br />
-              <br />
-              Disputes shall be resolved through arbitration in Nashik under the
-              Arbitration & Conciliation Act, 1996, with governing law being
-              Indian law and exclusive jurisdiction in Nashik courts.
-              <br />
-              <br /> Non-compliance may lead to termination of access and
-              removal of content.
+              ● Information Technology Act, 2000<br></br>● All applicable Indian
+              laws and regulations<br></br>● Google Play Store & Apple App Store
+              policies<br></br>
             </p>
-            <p className="ctc-footer-text">
+            <p className="ctc-text">
+              Any violation may attract civil and criminal liability.
+            </p>
+
+            <h3 className="ctc-heading">14. Payments, Refunds & Liability</h3>
+            <p className="ctc-text">
+              ● All payments are 100% advance.<br></br>● Refunds, if any, are at
+              the sole discretion of Hirelink Infotech Pvt Ltd.<br></br>● No
+              warranty is provided for uptime, job results, or platform
+              availability.<br></br>● Liability, if applicable, is strictly
+              limited to the amount paid.<br></br>● Free services carry no
+              liability.
+            </p>
+
+            <h3 className="ctc-heading">15. Platform Availability</h3>
+            <p className="ctc-text">
+              You agree to indemnify and hold harmless Hirelink Infotech Pvt
+              Ltd, its directors, employees, partners, and affiliates from any
+              claims, damages, losses, or legal actions arising from:
+            </p>
+            <p className="ctc-text">
+              ● Error-free operation<br></br>● Virus-free access<br></br>●
+              Continuous availability
+            </p>
+
+            <h3 className="ctc-heading">16. Indemnity</h3>
+            <p className="ctc-text">
+              HirelinkInfo strives for uninterrupted service but does not
+              guarantee:
+            </p>
+            <p className="ctc-text">
+              ● Your platform usage<br></br>● Your submitted data<br></br>● Your
+              violation of these Terms
+            </p>
+
+            <h3 className="ctc-heading">
+              17. Dispute Resolution & Jurisdiction
+            </h3>
+            <p className="ctc-text">
+              ● All disputes shall be resolved by arbitration in Nashik,
+              Maharashtra, under the Arbitration & Conciliation Act, 1996.
+              <br></br>● Indian law shall govern the agreement.<br></br>● Courts
+              at Nashik shall have exclusive jurisdiction.
+            </p>
+
+            <h3 className="ctc-heading">18. Termination of Access</h3>
+            <p className="ctc-text">Non-compliance may result in:</p>
+            <p className="ctc-text">
+              ● Immediate suspension<br></br>● Permanent account termination
+              <br></br>● Content removal<br></br>● Legal action where applicable
+            </p>
+
+            <h3 className="ctc-heading">19. Acceptance of Terms</h3>
+            <p className="ctc-text">
+              By registering, paying the ₹300 + 18% GST non-refundable fee, or
+              using the HirelinkInfo website or mobile app, you confirm that you
+              have read, understood, and agreed to these Candidate Terms &
+              Conditions.
+            </p>
+
+            <p className="ctc-footer-text" style={{ fontWeight: "bold" }}>
               © {new Date().getFullYear()} All Rights Reserved
             </p>
           </div>

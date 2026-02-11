@@ -1221,19 +1221,21 @@ function Staff() {
                 </div>
 
                 {/* Menus */}
-                <select
-                  className="form-select form-control"
-                  multiple
-                  {...addRegister("menus")}
-                >
-                  <option value="1" disabled>
-                    Dashboard
-                  </option>
-                  <option value="2">Jobs</option>
-                  <option value="3">Candidates</option>
-                  <option value="4">Applicants</option>
-                  <option value="5">Interviews</option>
-                </select>
+                <div className="col-md-4">
+                  <select
+                    className="form-select form-control"
+                    multiple
+                    {...addRegister("menus")}
+                  >
+                    <option value="1" disabled>
+                      Dashboard
+                    </option>
+                    <option value="2">Jobs</option>
+                    <option value="3">Candidates</option>
+                    <option value="4">Applicants</option>
+                    <option value="5">Interviews</option>
+                  </select>
+                </div>
               </div>
 
               <div className="modal-footer bg-light rounded-bottom-4 d-flex">

@@ -17,134 +17,221 @@ function Returnpolicy() {
         >
           <div className="crp-container">
             <h1 className="crp-title fw-bold">Candidate Return Policy</h1>
-            <h3 className="crp-heading">Applicability</h3>
+            <h6 className="crp-sub-title fw-bold">
+              Hirelink Infotech Pvt Ltd – HirelinkInfo Pharma Job Portal
+            </h6>
+            <h3 className="crp-heading">1. Introduction</h3>
             <p className="crp-text">
-              This Return & Refund Policy applies only to candidates (job
-              seekers) who register and use Hirelinkinfo.com for job search,
-              profile creation, job applications, and related career services.
+              This Return & Refund Policy applies to all candidates registering
+              on <span className="text-bold">HirelinkInfo</span> (
+              <a href="https://hirelinkinfo.com">https://hirelinkinfo.com</a>){" "}
+              and its{" "}
+              <span className="text-bold">
+                {" "}
+                Android and iOS mobile applications.
+              </span>
             </p>
-            <h3 className="crp-heading">Candidate Signup Fee</h3>
-
             <p className="crp-text">
-              Candidates are required to pay a one-time signup/registration fee
-              of ₹300 to create an account and access candidate-related services
-              on Hirelinkinfo.com.
+              HirelinkInfo is a{" "}
+              <span className="text-bold"> pharma job portal</span> designed to
+              connect pharmaceutical job seekers with employers, recruiters, and
+              career opportunities across India. By registering on our platform,
+              you agree to the terms outlined in this policy.
             </p>
-
-            <h3 className="crp-heading">Nature of Services</h3>
-
+            <h3 className="crp-heading">2. Candidate Registration Fee</h3>
             <p className="crp-text">
-              All services provided to candidates are digital in nature,
-              including online profile creation, job applications, and access to
-              job-related features.
+              To access premium features of the HirelinkInfo job portal,
+              candidates are required to pay:
             </p>
-
-            <h3 className="crp-heading">No Return Policy</h3>
-
+            <ul className="crp-list">
+              <li className="crp-bold">₹300 Registration Fee</li>
+              <li className="crp-bold">18% GST applicable</li>
+              <li>
+                Total payable amount as per invoice at the time of payment
+              </li>
+            </ul>
             <p className="crp-text">
-              Since Hirelinkinfo.com provides only digital services and no
-              physical products to candidates, returns are not applicable.
+              This is a{" "}
+              <span className="text-bold">
+                one-time candidate signup fee.
+              </span>{" "}
             </p>
-
-            <h3 className="crp-heading">Non-Refundable Signup Fee</h3>
-
+            <h3 className="crp-heading">3. Strict Non-Refundable Policy</h3>
             <p className="crp-text">
-              The candidate signup fee of ₹300 is non-refundable once the
-              account is created and access to the platform is provided.
+              The{" "}
+              <span className="text-bold">
+                ₹300 + 18% GST registration fee is 100% non-refundable
+              </span>{" "}
+              under all circumstances.
             </p>
-
-            <h3 className="crp-heading">Taxes (GST)</h3>
+            <p className="crp-text">Refunds will NOT be provided for:</p>
+            <ul className="crp-list">
+              <li> Not getting selected by employers </li>
+              <li> Change of mind after registration </li>
+              <li> Profile inactivity </li>
+              <li> Dissatisfaction with job availability </li>
+              <li> Failure to attend interviews </li>
+              <li> Account suspension due to violation of platform rules </li>
+              <li> Accidental payments made by the candidate </li>
+            </ul>
             <p className="crp-text">
-              The candidate signup/registration fee of ₹300 is subject to
-              applicable taxes. An additional 18% Goods and Services Tax (GST)
-              will be charged, making the total payable amount ₹354 (₹300 + 18%
-              GST).
+              Once payment is successfully processed, it is considered final and
+              non-reversible.
             </p>
-
-            <h3 className="crp-heading">Service Activation</h3>
-
+            <h3 className="crp-heading">4. Nature of Service</h3>
             <p className="crp-text">
-              Candidate services are activated immediately or shortly after
-              successful payment. Once activated, candidates are not eligible
-              for any return or refund.
+              HirelinkInfo operates solely as a{" "}
+              <span className="text-bold">digital job portal platform</span> for
+              pharma candidates and employers.
+            </p>
+            <p className="crp-text"> We do NOT:</p>
+            <ul className="crp-list">
+              <li> Guarantee job placement </li>
+              <li> Guarantee interview calls </li>
+              <li> Guarantee salary packages </li>
+              <li> Act as an employer or recruitment agency </li>
+            </ul>
+            <p className="crp-text">
+              The registration fee grants access to platform features and
+              profile visibility within the pharma job portal ecosystem. It does
+              not guarantee employment outcomes.
+            </p>
+            <h3 className="crp-heading">5. Payment Processing</h3>
+            <p className="crp-text">All payments are:</p>
+            <ul className="crp-list">
+              <li> Collected in advance</li>
+              <li> Processed through secure third-party payment gateways </li>
+              <li> Subject to applicable GST laws </li>
+            </ul>
+            <p className="crp-text">HirelinkInfo is not responsible for:</p>
+            <ul className="crp-list">
+              <li> Bank delays </li>
+              <li> Payment gateway technical issues </li>
+              <li>
+                {" "}
+                Transaction failures due to incorrect details entered by the
+                candidate{" "}
+              </li>
+            </ul>
+            <h3 className="crp-heading">6. Exceptional Technical Errors</h3>
+            <p className="crp-text">
+              Refund consideration may only occur in rare cases where:
+            </p>
+            <ul className="crp-list">
+              <li>
+                {" "}
+                A verified duplicate payment is made for the same account{" "}
+              </li>
+              <li>
+                A payment is successfully debited but the account is not
+                activated due to technical error
+              </li>
+            </ul>
+            <p className="crp-text">
+              Such cases must be reported within{" "}
+              <span className="text-bold">48 hours</span> of payment with valid
+              proof. Any decision regarding refund approval remains solely at
+              the discretion of Hirelink Infotech Pvt Ltd.
+            </p>
+            <h3 className="crp-heading">
+              7. Account Suspension & Policy Violations
+            </h3>
+            <p className="crp-text">
+              If a candidate account is suspended or terminated due to:
+            </p>
+            <ul className="crp-list">
+              <li> False information submission </li>
+              <li> Interview no-shows </li>
+              <li> Misuse of the job portal</li>
+              <li> Fraudulent activity </li>
+              <li> Violation of terms & conditions</li>
+            </ul>
+            <p className="crp-text">
+              No refund will be issued under any circumstances.
             </p>
 
             <h3 className="crp-heading">
-              Optional Paid Services (If Applicable)
+              8. App Store Compliance (Android & iOS)
             </h3>
-
             <p className="crp-text">
-              If Hirelinkinfo.com offers additional paid services to candidates
-              in the future (such as premium features, profile highlighting,
-              resume services, or training programs), the payment terms will be
-              clearly mentioned at the time of purchase.
+              For users downloading the HirelinkInfo mobile application via:
             </p>
-
-            <h3 className="crp-heading">Non-Refundable Paid Services</h3>
-
+            <ul className="crp-list">
+              <li> Google Play Store (Android) </li>
+              <li> Apple App Store (iOS) </li>
+            </ul>
+            <p className="crp-text">Please note:</p>
+            <ul className="crp-list">
+              <li> Digital service fees are governed by this policy</li>
+              <li>
+                App store operators are not responsible for refunds related to
+                job portal registration fees
+              </li>
+              <li>
+                All refund-related decisions are managed exclusively by Hirelink
+                Infotech Pvt Ltd.
+              </li>
+            </ul>
+            <h3 className="crp-heading">9. GST Compliance</h3>
             <p className="crp-text">
-              Any payment made by a candidate for optional paid services is
-              non-refundable once the service is activated or delivered.
+              The candidate registration fee includes applicable{" "}
+              <span className="text-bold">18% GST</span> as per Indian taxation
+              laws.
             </p>
-
-            <h3 className="crp-heading">Exceptional Refund Cases</h3>
-
             <p className="crp-text">
-              Refunds may be considered only in exceptional situations such as:
-              <ul>
-                <li>Duplicate payment made due to a technical error</li>
-                <li>
-                  Payment deducted but the candidate account or paid service was
-                  not activated due to system failure
-                </li>
-              </ul>
+              GST once remitted to government authorities cannot be reversed
+              unless legally permitted.
             </p>
-
-            <h3 className="crp-heading">Refund Request Timeline</h3>
-
+            <h3 className="crp-heading">10. Policy Updates</h3>
             <p className="crp-text">
-              Any refund request under exceptional circumstances must be raised
-              within 7 working days from the date of payment along with valid
-              transaction proof.
+              Hirelink Infotech Pvt Ltd reserves the right to:
             </p>
-
-            <h3 className="crp-heading">Refund Processing Time</h3>
-
+            <ul className="crp-list">
+              <li> Modify or update this Return & Refund Policy</li>
+              <li> Change pricing structure</li>
+              <li> Introduce new subscription plans</li>
+            </ul>
             <p className="crp-text">
-              Approved refunds, if any, will be processed to the original
-              payment method within 7 to 10 working days.
+              Updates may occur without prior notice. Continued use of the job
+              portal implies acceptance of revised terms.
             </p>
-
-            <h3 className="crp-heading">No Job Guarantee</h3>
-
+            <h3 className="crp-heading">11. Legal Jurisdiction</h3>
             <p className="crp-text">
-              Hirelinkinfo.com does not guarantee job placement, interview
-              calls, or employment. The signup fee and any other payments are
-              for platform access and services only.
+              All disputes relating to payments, refunds, or services shall be
+              subject to:
             </p>
+            <ul className="crp-list">
+              <li> Indian laws </li>
+              <li> Jurisdiction of Nashik, Maharashtra Courts </li>
+            </ul>
 
-            <h3 className="crp-heading">Violation & Misuse</h3>
-
+            <h3 className="crp-heading">12. Acceptance of Policy</h3>
             <p className="crp-text">
-              No refund will be provided if a candidate account is suspended or
-              terminated due to violation of platform rules, terms & conditions,
-              or misuse of services.
+              By completing payment of the{" "}
+              <span className="text-bold">
+                ₹300 + 18% GST non-refundable candidate registration fee,
+              </span>{" "}
+              you confirm that:
             </p>
+            <ul className="crp-list">
+              <li> You have read this Return & Refund Policy </li>
+              <li> You understand that the fee is strictly non-refundable</li>
+              <li> You agree to all stated terms</li>
+            </ul>
 
-            <h3 className="crp-heading">Policy Modification Rights</h3>
-
+            <h3 className="crp-heading fw-bold">
+              Important Reminder for Pharma Job Seekers
+            </h3>
             <p className="crp-text">
-              Hirelinkinfo.com reserves the right to modify, update, or change
-              this Candidate Return & Refund Policy at any time without prior
-              notice. Updates will be effective immediately upon posting on the
-              website.
+              HirelinkInfo is a professional{" "}
+              <span className="text-bold"> pharma job portal </span>created to
+              improve hiring transparency and streamline job opportunities in
+              QA, QC, Production, R&D, Regulatory Affairs, Sales, and other
+              pharmaceutical domains.
             </p>
-            <h3 className="crp-heading">Contact Support</h3>
-
             <p className="crp-text">
-              For any questions or refund-related queries, candidates can
-              contact Hirelinkinfo.com through the official support channels
-              available on the website.
+              Your registration fee provides platform access — not a job
+              guarantee.
             </p>
             <p className="crp-footer-text">
               © {new Date().getFullYear()} All Rights Reserved

@@ -11,8 +11,18 @@ import { toast } from "react-toastify";
 import { BASE_URL } from "../config/constants";
 import TableSkeleton from "./commenuse/TableSkeleton";
 import SearchableDropdown from "./SearchableDropdown";
+import { useNavigate } from "react-router-dom";
 
 function Users() {
+  const navigate = useNavigate();
+  const auth = JSON.parse(localStorage.getItem("auth"));
+
+  useEffect(() => {
+    if (!auth) {
+      navigate("/signin");
+    }
+  }, [auth, navigate]);
+
   const [loading, setLoading] = useState(false);
 
   // ================= EDUCATION =================
@@ -37,9 +47,7 @@ function Users() {
 
   const fetchStates = async () => {
     try {
-      const res = await axios.get(
-        `${BASE_URL}candidate/getdata/tbl_state`,
-      );
+      const res = await axios.get(`${BASE_URL}candidate/getdata/tbl_state`);
 
       if (res.data?.status) {
         setStates(res.data.data || []);
@@ -84,9 +92,7 @@ function Users() {
     try {
       setLoading(true);
 
-      const res = await axios.get(
-        `${BASE_URL}admin/getdata/tbl_user`,
-      );
+      const res = await axios.get(`${BASE_URL}admin/getdata/tbl_user`);
       if (res.data.status === true) {
         setUsers(res.data.data);
       }
@@ -229,10 +235,7 @@ function Users() {
     };
 
     try {
-      const res = await axios.post(
-        `${BASE_URL}admin/insert/tbl_user`,
-        payload,
-      );
+      const res = await axios.post(`${BASE_URL}admin/insert/tbl_user`, payload);
 
       if (res.data.status) {
         toast.success("User added successfully");
@@ -318,10 +321,7 @@ function Users() {
     formData.append(field, file);
 
     try {
-      const res = await axios.post(
-        `${BASE_URL}admin/fileupload`,
-        formData,
-      );
+      const res = await axios.post(`${BASE_URL}admin/fileupload`, formData);
 
       if (res.data.status) {
         const filename = res.data.files[field];

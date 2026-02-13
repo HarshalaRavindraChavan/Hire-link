@@ -6,11 +6,14 @@ import Pagination from "./commenuse/Pagination";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
 import { toast, ToastContainer } from "react-toastify";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../config/constants";
 import TableSkeleton from "./commenuse/TableSkeleton";
 import InterviewsPage from "./InterManage";
 
 function Interview() {
+  const navigate = useNavigate();
+
   /* ================= FORM ================= */
   const {
     register,
@@ -60,6 +63,12 @@ function Interview() {
   const role = auth?.role;
   const employerId = auth?.emp_id;
   const staffemploId = staff?.staff_employer_id;
+
+  useEffect(() => {
+    if (!auth && !staff) {
+      navigate("/signin");
+    }
+  }, [auth, staff, navigate]);
 
   const canManageInterview = Number(role) === 100 || Number(role) === 200;
 
@@ -202,27 +211,27 @@ function Interview() {
       <h3 className="fw-bold mb-3">Interview Details</h3>
 
       {/* ✅ Tabs Header (Only Employer) */}
-      { (canManageInterview && (
-          <ul className="nav nav-tabs mb-3">
-            <li className="nav-item">
-              <button
-                className={`nav-link ${activeTab === "tab1" ? "active" : ""}`}
-                onClick={() => setActiveTab("tab1")}
-              >
-                All
-              </button>
-            </li>
+      {canManageInterview && (
+        <ul className="nav nav-tabs mb-3">
+          <li className="nav-item">
+            <button
+              className={`nav-link ${activeTab === "tab1" ? "active" : ""}`}
+              onClick={() => setActiveTab("tab1")}
+            >
+              All
+            </button>
+          </li>
 
-            <li className="nav-item">
-              <button
-                className={`nav-link ${activeTab === "tab2" ? "active" : ""}`}
-                onClick={() => setActiveTab("tab2")}
-              >
-                Interview Manage
-              </button>
-            </li>
-          </ul>
-        ))}
+          <li className="nav-item">
+            <button
+              className={`nav-link ${activeTab === "tab2" ? "active" : ""}`}
+              onClick={() => setActiveTab("tab2")}
+            >
+              Interview Manage
+            </button>
+          </li>
+        </ul>
+      )}
 
       {/* ✅ Tabs Content */}
       {activeTab === "tab1" && (

@@ -1,12 +1,22 @@
 import React, { useState, useEffect } from "react";
 import Pagination from "./commenuse/Pagination";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../config/constants";
 import TableSkeleton from "./commenuse/TableSkeleton";
 import SEO from "../SEO";
 import { seoConfig } from "../config/seoConfig";
 
 function Contact() {
+  const navigate = useNavigate();
+  const auth = JSON.parse(localStorage.getItem("auth"));
+
+  useEffect(() => {
+    if (!auth) {
+      navigate("/signin");
+    }
+  }, [auth, navigate]);
+
   const [contacts, setContact] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -26,9 +36,7 @@ function Contact() {
     try {
       setLoading(true); // loader start
 
-      const res = await axios.get(
-        `${BASE_URL}admin/getdata/tbl_contact`
-      );
+      const res = await axios.get(`${BASE_URL}admin/getdata/tbl_contact`);
 
       if (res.data.status === true) {
         setContact(res.data.data);
@@ -89,7 +97,7 @@ function Contact() {
 
   return (
     <>
-    <SEO
+      <SEO
         title={seoConfig.a_contact.title}
         description={seoConfig.a_contact.description}
       />

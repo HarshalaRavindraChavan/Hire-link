@@ -3,15 +3,24 @@ import SEO from "../SEO";
 import { seoConfig } from "../config/seoConfig";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import { BASE_URL } from "../config/constants";
 import SearchableDropdown from "./SearchableDropdown";
 
 const EmpProfile = () => {
+  const navigate = useNavigate();
+
   const [activeTab, setActiveTab] = useState("profile");
   const employer = JSON.parse(localStorage.getItem("employer"));
   // const auth = JSON.parse(localStorage.getItem("auth"));
+
+  useEffect(() => {
+    if (!employer) {
+      navigate("/signin");
+    }
+  }, [employer, navigate]);
 
   // ================= STATE & CITY =================
   const [states, setStates] = useState([]);

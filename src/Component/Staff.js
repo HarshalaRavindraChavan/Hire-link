@@ -9,11 +9,14 @@ import * as yup from "yup";
 import Pagination from "./commenuse/Pagination";
 import { BASE_URL } from "../config/constants";
 import TableSkeleton from "./commenuse/TableSkeleton";
+import { useNavigate } from "react-router-dom";
 import SearchableDropdown from "./SearchableDropdown";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function Staff() {
+  const navigate = useNavigate();
+
   const auth = JSON.parse(localStorage.getItem("auth"));
   const employer = JSON.parse(localStorage.getItem("employer"));
   const staff = JSON.parse(localStorage.getItem("staff"));
@@ -21,6 +24,12 @@ function Staff() {
   const role = auth?.role;
   const employerId = auth?.emp_id;
   const staffemploId = staff?.staff_employer_id;
+
+  useEffect(() => {
+    if (!auth && !staff && !employer) {
+      navigate("/signin");
+    }
+  }, [auth, staff, employer, navigate]);
 
   const employerEmail = auth?.emp_email || employer?.emp_email;
 

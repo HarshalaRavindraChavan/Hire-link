@@ -14,13 +14,19 @@ import SEO from "../SEO";
 import { seoConfig } from "../config/seoConfig";
 
 function Candidates() {
+  const navigate = useNavigate();
   const auth = JSON.parse(localStorage.getItem("auth") || "{}");
   const isAdmin = Number(auth?.role) === 1;
+
+  useEffect(() => {
+    if (!auth) {
+      navigate("/signin");
+    }
+  }, [auth, navigate]);
 
   const [search, setSearch] = useState("");
   const [candidates, setCandidates] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
   // const [search, setSearch] = useState("");
   const [experience, setExperience] = useState("");

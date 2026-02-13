@@ -8,10 +8,12 @@ import { toast, ToastContainer } from "react-toastify";
 import Pagination from "./commenuse/Pagination";
 import { BASE_URL } from "../config/constants";
 import TableSkeleton from "./commenuse/TableSkeleton";
+import { useNavigate } from "react-router-dom";
 import SEO from "../SEO";
 import { seoConfig } from "../config/seoConfig";
 
 function Applicant() {
+  const navigate = useNavigate();
   const modalRef = useRef(null);
   const [selectedApplicant, setSelectedApplicant] = useState(null);
 
@@ -21,6 +23,12 @@ function Applicant() {
   const role = auth?.role;
   const employerId = auth?.emp_id;
   const staffemploId = staff?.staff_employer_id;
+
+  useEffect(() => {
+    if (!auth && !staff) {
+      navigate("/signin");
+    }
+  }, [auth, staff, navigate]);
 
   const [search, setSearch] = useState("");
   const [users, setUsers] = useState([]);

@@ -4,7 +4,7 @@ import { seoConfig } from "../config/seoConfig";
 import ConfirmDelete from "./commenuse/ConfirmDelete";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import image from "./logo/no image.jpg";
+import { useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import Pagination from "./commenuse/Pagination";
@@ -13,8 +13,15 @@ import { BASE_URL } from "../config/constants";
 import TableSkeleton from "./commenuse/TableSkeleton";
 
 function Employes() {
+  const navigate = useNavigate();
   const auth = JSON.parse(localStorage.getItem("auth") || "{}");
   const isAdmin = Number(auth?.role) === 1;
+
+  useEffect(() => {
+    if (!auth) {
+      navigate("/signin");
+    }
+  }, [auth, navigate]);
 
   const [search, setSearch] = useState("");
   const [employer, setEmployer] = useState([]);
@@ -27,9 +34,7 @@ function Employes() {
   const fetchEmployers = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(
-        `${BASE_URL}admin/getdata/tbl_employer`
-      );
+      const res = await axios.get(`${BASE_URL}admin/getdata/tbl_employer`);
 
       if (res.data.status === true) {
         setEmployer(res.data.data);
@@ -63,7 +68,7 @@ function Employes() {
   const confirmDelete = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}admin/deletedata/tbl_employer/emp_id/${deleteId}`
+        `${BASE_URL}admin/deletedata/tbl_employer/emp_id/${deleteId}`,
       );
 
       if (res.data.status === true) {
@@ -137,7 +142,7 @@ function Employes() {
 
       const res = await axios.post(
         `${BASE_URL}employer/insert/tbl_employer`,
-        payload
+        payload,
       );
 
       if (res.data.status === true) {
@@ -184,8 +189,8 @@ function Employes() {
     if (file.size < minSize) {
       toast.error(
         `File too small ❌ (${Math.round(
-          file.size / 1024
-        )}KB). Minimum 30KB required`
+          file.size / 1024,
+        )}KB). Minimum 30KB required`,
       );
       e.target.value = "";
       return;
@@ -194,8 +199,8 @@ function Employes() {
     if (file.size > maxSize) {
       toast.error(
         `File too large ❌ (${Math.round(
-          file.size / 1024
-        )}KB). Maximum 50KB allowed`
+          file.size / 1024,
+        )}KB). Maximum 50KB allowed`,
       );
       e.target.value = "";
       return;
@@ -205,10 +210,7 @@ function Employes() {
     formData.append(fieldName, file);
 
     try {
-      const res = await axios.post(
-        `${BASE_URL}candidate/fileupload`,
-        formData
-      );
+      const res = await axios.post(`${BASE_URL}candidate/fileupload`, formData);
 
       if (res.data.status === true) {
         const filename = res.data.files[fieldName];
@@ -293,7 +295,7 @@ function Employes() {
         `${BASE_URL}admin/updatedata/tbl_employer/emp_id/${empId}`,
         {
           emp_status: newStatus,
-        }
+        },
       );
 
       if (res.data?.status === true) {
@@ -302,8 +304,8 @@ function Employes() {
         // ✅ instant UI update
         setEmployer((prev) =>
           prev.map((e) =>
-            e.emp_id === empId ? { ...e, emp_status: newStatus } : e
-          )
+            e.emp_id === empId ? { ...e, emp_status: newStatus } : e,
+          ),
         );
       } else {
         toast.error("Status update failed ❌");
@@ -318,7 +320,7 @@ function Employes() {
 
   return (
     <>
-    <SEO
+      <SEO
         title={seoConfig.a_employers.title}
         description={seoConfig.a_employers.description}
       />
@@ -528,7 +530,7 @@ function Employes() {
                               onChange={(e) =>
                                 handleEmployerStatusChange(
                                   emp.emp_id,
-                                  e.target.value
+                                  e.target.value,
                                 )
                               }
                             >

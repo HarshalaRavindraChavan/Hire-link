@@ -14,21 +14,7 @@ import SearchableDropdown from "./SearchableDropdown";
 import { useNavigate } from "react-router-dom";
 
 function Jobs() {
-  // const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   const auth = JSON.parse(localStorage.getItem("auth"));
-
-  //   if (!auth || !auth?.role) {
-  //     navigate("/signin");
-  //     return;
-  //   }
-
-  //   const role = auth?.role;
-  //   if (!["1", "2", "3", "4", 100, "100"].includes(role)) {
-  //     navigate("/signin");
-  //   }
-  // }, [navigate]);
+  const navigate = useNavigate();
 
   // Login ckeck and role
   const auth = JSON.parse(localStorage.getItem("auth"));
@@ -36,6 +22,13 @@ function Jobs() {
   const role = auth?.role;
   const employerId = auth?.emp_id;
   const staffemploId = staff?.staff_employer_id;
+
+  useEffect(() => {
+    if (!auth && !staff) {
+      navigate("/signin");
+    }
+  }, [auth, staff, navigate]);
+
   //=================
 
   const canManageJob = Number(role) === 100 || Number(role) === 200;

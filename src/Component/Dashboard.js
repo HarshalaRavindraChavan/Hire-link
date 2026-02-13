@@ -17,6 +17,12 @@ function Dashboard() {
   const assignedMenuIds = auth?.menu_ids || [];
   const assignedMenus = assignedMenuIds.map(Number);
 
+  useEffect(() => {
+    if (!auth && !staff) {
+      navigate("/signin");
+    }
+  }, [auth, staff, navigate]);
+
   /* ---------------- Menu List (Same as Sidebar) ---------------- */
   const employerMenuIds = [1, 2, 3, 4, 5, 11, 12];
 

@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { FaPhone, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import "./css/InterManage.css";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../config/constants";
 
 const InterviewsPage = ({ openEditInterviewModal }) => {
+  const navigate = useNavigate();
+
   const [activeTab, setActiveTab] = useState("Pending");
 
   const [interviews, setInterviews] = useState([]);
@@ -25,6 +28,12 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
   const staff = JSON.parse(localStorage.getItem("staff"));
   const role = auth?.role;
   const employerId = auth?.emp_id || staff?.staff_employer_id;
+
+  useEffect(() => {
+    if (!auth && !staff) {
+      navigate("/signin");
+    }
+  }, [auth, staff, navigate]);
 
   const canManageInterview = Number(role) === 100 || Number(role) === 200;
 

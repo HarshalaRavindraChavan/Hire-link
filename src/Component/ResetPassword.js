@@ -11,6 +11,7 @@ function ResetPassword() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const token = searchParams.get("token");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [isValidToken, setIsValidToken] = useState(null); // null = loading
   const [errorMsg, setErrorMsg] = useState("");
@@ -63,6 +64,9 @@ function ResetPassword() {
 
   // ✅ Submit new password
   const onSubmit = async (data) => {
+    if (isSubmitting) return; // 🔒 block double submit
+    setIsSubmitting(true);
+
     try {
       const res = await fetch(`${BASE_URL}reset-password`, {
         method: "POST",
@@ -84,6 +88,8 @@ function ResetPassword() {
     } catch (error) {
       setErrorMsg("Unable to reset password. Try again.");
       setIsValidToken(false);
+    } finally {
+      setIsSubmitting(false); // 🔓 unlock (if page stays here)
     }
   };
 
@@ -146,8 +152,12 @@ function ResetPassword() {
                   </p>
                 </div>
 
-                <button type="submit" className="btn btn-success w-100">
-                  Update Password
+                <button
+                  type="submit"
+                  className="btn btn-success w-100"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Updating..." : "Update Password"}
                 </button>
               </form>
             </>

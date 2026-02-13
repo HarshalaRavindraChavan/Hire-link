@@ -10,6 +10,7 @@ function JobsSAI() {
   const [showModal, setShowModal] = useState(false);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [selectedInterview, setSelectedInterview] = useState(null);
+  const [isUpdatingInterview, setIsUpdatingInterview] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -177,6 +178,9 @@ function JobsSAI() {
   }, [location.pathname, navigate]);
 
   const updateInterviewStatus = async (interviewId, newStatus) => {
+    if (isUpdatingInterview) return; // 🔒 HARD LOCK
+    setIsUpdatingInterview(true);
+
     try {
       const res = await axios.post(
         `${BASE_URL}admin/updatedata/tbl_interview/itv_id/${interviewId}`,
@@ -189,6 +193,8 @@ function JobsSAI() {
       }
     } catch (error) {
       console.error("Status update error:", error);
+    } finally {
+      setIsUpdatingInterview(false); // 🔓 unlock
     }
   };
 
@@ -454,12 +460,13 @@ function JobsSAI() {
 
                   <button
                     className="btn btn-success w-100"
+                    disabled={isUpdatingInterview}
                     onClick={() => {
                       updateInterviewStatus(interview.itv_id, "Confirmed");
                       onClose();
                     }}
                   >
-                    Confirm
+                    {isUpdatingInterview ? "Processing..." : "Confirm"}
                   </button>
                 </div>
 
@@ -469,14 +476,21 @@ function JobsSAI() {
 
                   <button
                     className="btn btn-outline-success w-100 mb-2"
-                    style={{ borderRadius: "6px" }}
+                    disabled={isUpdatingInterview}
+                    onClick={() => {
+                      updateInterviewStatus(
+                        interview.itv_id,
+                        "Reschedule Request",
+                      );
+                      onClose();
+                    }}
                   >
                     Reschedule Request
                   </button>
 
                   <button
                     className="btn btn-outline-danger w-100"
-                    style={{ borderRadius: "6px" }}
+                    disabled={isUpdatingInterview}
                     onClick={() => {
                       updateInterviewStatus(
                         interview.itv_id,
@@ -838,15 +852,17 @@ function JobsSAI() {
                         <div className="d-flex gap-2 flex-wrap justify-content-end">
                           <button
                             className="btn btn-success btn-sm"
+                            disabled={isUpdatingInterview}
                             onClick={() =>
                               updateInterviewStatus(job.itv_id, "Confirmed")
                             }
                           >
-                            Confirm
+                            {isUpdatingInterview ? "Processing..." : "Confirm"}
                           </button>
 
                           <button
                             className="btn btn-outline-warning btn-sm"
+                            disabled={isUpdatingInterview}
                             onClick={() =>
                               updateInterviewStatus(
                                 job.itv_id,
@@ -859,6 +875,7 @@ function JobsSAI() {
 
                           <button
                             className="btn btn-outline-danger btn-sm"
+                            disabled={isUpdatingInterview}
                             onClick={() =>
                               updateInterviewStatus(
                                 job.itv_id,

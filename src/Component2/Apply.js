@@ -11,6 +11,7 @@ function Apply() {
   const navigate = useNavigate();
 
   const candidateLS = JSON.parse(localStorage.getItem("candidate"));
+  const [isApplying, setIsApplying] = useState(false);
 
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -314,6 +315,9 @@ function Apply() {
   const handleApplySubmit = async (e) => {
     e.preventDefault();
 
+    if (isApplying) return; // 🔒 HARD LOCK (double click block)
+    setIsApplying(true);
+
     const candidate = JSON.parse(localStorage.getItem("candidate"));
 
     if (!candidate?.can_id) {
@@ -362,6 +366,7 @@ function Apply() {
       toast.error("Server error while applying job");
     } finally {
       setLoading(false);
+      setIsApplying(false); // 🔓 unlock
     }
   };
 

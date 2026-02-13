@@ -24,6 +24,7 @@ function Users() {
   }, [auth, navigate]);
 
   const [loading, setLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // ================= EDUCATION =================
   const [educationType, setEducationType] = useState("");
@@ -211,6 +212,9 @@ function Users() {
 
   /* ================= SUBMIT ================= */
   const onSubmit = async (data) => {
+    if (isSubmitting) return; // 🔒 block double click
+    setIsSubmitting(true);
+
     const payload = {
       user_name: data.fullname,
       user_email: data.email,
@@ -262,6 +266,8 @@ function Users() {
       }
     } catch {
       toast.error("Something went wrong");
+    } finally {
+      setIsSubmitting(false); // 🔓 unlock
     }
   };
 
@@ -439,6 +445,9 @@ function Users() {
   };
 
   const handleUpdateUser = async (data) => {
+    if (isSubmitting) return; // 🔒 block double submit
+    setIsSubmitting(true);
+
     if (!editUserId) {
       toast.error("User ID missing");
       return;
@@ -487,7 +496,7 @@ function Users() {
       console.error("User Update Error:", error);
       toast.error("Server error");
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -1277,8 +1286,12 @@ function Users() {
                   Cancel
                 </button>
 
-                <button type="submit" className="btn btn-success px-4 ms-auto">
-                  Submit
+                <button
+                  type="submit"
+                  className="btn btn-success px-4 ms-auto"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Submitting..." : "Submit"}
                 </button>
               </div>
             </form>
@@ -1584,8 +1597,12 @@ function Users() {
                   Cancel
                 </button>
 
-                <button type="submit" className="btn btn-success px-4 ms-auto">
-                  Submit
+                <button
+                  type="submit"
+                  className="btn btn-success px-4 ms-auto"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Updating..." : "Submit"}
                 </button>
               </div>
             </form>

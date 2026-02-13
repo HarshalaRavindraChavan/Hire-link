@@ -508,6 +508,10 @@ function Staff() {
   };
 
   const handleUpdateUser = async (data) => {
+    if (isSubmitting) return; // 🔒 block double click
+
+    setIsSubmitting(true);
+
     if (!editUserId) {
       toast.error("Staff ID missing ❌");
       return;
@@ -554,7 +558,7 @@ function Staff() {
       console.error("Staff Update Error:", error);
       toast.error("Server error ❌");
     } finally {
-      setLoading(false);
+      setIsSubmitting(false); // 🔓 unlock
     }
   };
 
@@ -1516,8 +1520,19 @@ function Staff() {
                   Cancel
                 </button>
 
-                <button type="submit" className="btn btn-success px-4 ms-auto">
-                  Submit
+                <button
+                  type="submit"
+                  className="btn btn-success px-4 ms-auto"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm me-2"></span>
+                      Please wait...
+                    </>
+                  ) : (
+                    "Submit"
+                  )}
                 </button>
               </div>
             </form>

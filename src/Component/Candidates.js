@@ -27,6 +27,8 @@ function Candidates() {
   const [search, setSearch] = useState("");
   const [candidates, setCandidates] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
 
   // const [search, setSearch] = useState("");
   const [experience, setExperience] = useState("");
@@ -139,6 +141,9 @@ function Candidates() {
   });
 
   const onSubmit = async (data) => {
+    if (isSubmitting) return; // 🔒 block double submit
+    setIsSubmitting(true);
+
     const payload = {
       can_name: data.fullname,
       can_email: data.email,
@@ -175,14 +180,17 @@ function Candidates() {
       }
     } catch {
       toast.error("Something went wrong");
+    } finally {
+      setIsSubmitting(false); // 🔓 unlock
     }
   };
 
   //Status Update Function
   const handleCandidateStatusChange = async (canId, newStatus) => {
-    try {
-      setLoading(true);
+    if (isUpdatingStatus) return; // 🔒 block fast clicks
+    setIsUpdatingStatus(true);
 
+    try {
       const res = await axios.post(
         `${BASE_URL}admin/updatedata/tbl_candidate/can_id/${canId}`,
         {
@@ -206,7 +214,7 @@ function Candidates() {
       console.error(error);
       toast.error("Server error ❌");
     } finally {
-      setLoading(false);
+      setIsUpdatingStatus(false); // 🔓 unlock
     }
   };
 
@@ -549,6 +557,7 @@ function Candidates() {
                           <select
                             className="form-select form-select-sm d-inline w-auto ms-2"
                             value={candidate.can_status || "Inactive"}
+                            disabled={isUpdatingStatus}
                             onChange={(e) =>
                               handleCandidateStatusChange(
                                 candidate.can_id,
@@ -811,8 +820,12 @@ function Candidates() {
                   Cancel
                 </button>
 
-                <button type="submit" className="btn btn-success px-4 ms-auto">
-                  Submit
+                <button
+                  type="submit"
+                  className="btn btn-success px-4 ms-auto"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Processing..." : "Submit"}
                 </button>
               </div>
             </form>

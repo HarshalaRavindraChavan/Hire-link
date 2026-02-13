@@ -13,6 +13,7 @@ import InterviewsPage from "./InterManage";
 
 function Interview() {
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   /* ================= FORM ================= */
   const {
@@ -165,6 +166,9 @@ function Interview() {
   const onSubmit = async (data) => {
     if (!editInterviewId) return;
 
+    if (isSubmitting) return; // 🔒 block double click
+    setIsSubmitting(true);
+
     try {
       const payload = {
         itv_candidate_id: Number(data.candidate_id),
@@ -196,6 +200,8 @@ function Interview() {
       }
     } catch {
       toast.error("Server error ❌");
+    } finally {
+      setIsSubmitting(false); // 🔓 unlock
     }
   };
 
@@ -484,8 +490,19 @@ function Interview() {
                 <button className="btn btn-secondary" data-bs-dismiss="modal">
                   Cancel
                 </button>
-                <button className="btn btn-success" type="submit">
-                  Update
+                <button
+                  className="btn btn-success"
+                  type="submit"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm me-2"></span>
+                      Updating...
+                    </>
+                  ) : (
+                    "Update"
+                  )}
                 </button>
               </div>
             </form>

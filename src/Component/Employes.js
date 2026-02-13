@@ -16,6 +16,8 @@ function Employes() {
   const navigate = useNavigate();
   const auth = JSON.parse(localStorage.getItem("auth") || "{}");
   const isAdmin = Number(auth?.role) === 1;
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
 
   useEffect(() => {
     if (!auth) {
@@ -120,9 +122,10 @@ function Employes() {
 
   // Submit form as JSON
   const onSubmit = async (data) => {
-    try {
-      setLoading(true);
+    if (isSubmitting) return; // 🔒 double click block
+    setIsSubmitting(true);
 
+    try {
       const payload = {
         emp_name: data.emp_name,
         emp_email: data.emp_email,
@@ -167,7 +170,7 @@ function Employes() {
 
       toast.error(msg);
     } finally {
-      setLoading(false);
+      setIsSubmitting(false); // 🔓 unlock
     }
   };
 
@@ -288,9 +291,9 @@ function Employes() {
 
   //Status Update Fuction
   const handleEmployerStatusChange = async (empId, newStatus) => {
+    if (isUpdatingStatus) return; // 🔒 block
+    setIsUpdatingStatus(true);
     try {
-      setLoading(true);
-
       const res = await axios.post(
         `${BASE_URL}admin/updatedata/tbl_employer/emp_id/${empId}`,
         {
@@ -314,7 +317,7 @@ function Employes() {
       console.error(error);
       toast.error("Server error ❌");
     } finally {
-      setLoading(false);
+      setIsUpdatingStatus(false); // 🔓 unlock
     }
   };
 
@@ -527,6 +530,7 @@ function Employes() {
                             <select
                               className="form-select form-select-sm d-inline w-auto ms-2"
                               value={emp.emp_status || "Inactive"}
+                              disabled={isUpdatingStatus}
                               onChange={(e) =>
                                 handleEmployerStatusChange(
                                   emp.emp_id,
@@ -806,8 +810,12 @@ function Employes() {
                 >
                   Cancel
                 </button>
-                <button type="submit" className="btn btn-success px-4 ms-auto">
-                  {loading ? "Processing..." : "Submit"}
+                <button
+                  type="submit"
+                  className="btn btn-success px-4 ms-auto"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Processing..." : "Submit"}
                 </button>
               </div>
             </form>

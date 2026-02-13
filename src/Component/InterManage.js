@@ -7,7 +7,7 @@ import { BASE_URL } from "../config/constants";
 
 const InterviewsPage = ({ openEditInterviewModal }) => {
   const navigate = useNavigate();
-
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
   const [activeTab, setActiveTab] = useState("Pending");
 
   const [interviews, setInterviews] = useState([]);
@@ -83,9 +83,10 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
   };
 
   const updateInterviewStatus = async (itv_id, newStatus, can_id) => {
-    try {
-      setLoading(true);
+    if (isUpdatingStatus) return; // 🔒 block double click
+    setIsUpdatingStatus(true);
 
+    try {
       // 1) Interview status update
       const res = await axios.post(
         `${BASE_URL}employer/updatedata/tbl_interview/itv_id/${itv_id}`,
@@ -134,7 +135,7 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
       console.log(error);
       alert("Something went wrong!");
     } finally {
-      setLoading(false);
+      setIsUpdatingStatus(false); // 🔓 unlock
     }
   };
 
@@ -494,6 +495,7 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
                     <button
                       className="btn btn-outline-danger btn-sm fw-bold mb-4 ms-2"
                       type="button"
+                      disabled={isUpdatingStatus}
                       onClick={() =>
                         updateInterviewStatus(
                           selectedInterview.itv_id,
@@ -502,7 +504,7 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
                         )
                       }
                     >
-                      Cancel Interview
+                      {isUpdatingStatus ? "Cancelling..." : "Cancel Interview"}
                     </button>
                   )}
 
@@ -638,6 +640,7 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
                   {/* Update - Right */}
                   <button
                     type="button"
+                    disabled={isUpdatingStatus}
                     className={`btn btn-sm fw-bold px-4 ${getStatusButtonClass(pendingStatus)}`}
                     onClick={() => {
                       updateInterviewStatus(
@@ -648,7 +651,14 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
                       closeStatusConfirmModal();
                     }}
                   >
-                    Yes, Update
+                    {isUpdatingStatus ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-2"></span>
+                        Updating...
+                      </>
+                    ) : (
+                      "Yes, Update"
+                    )}
                   </button>
                 </div>
               </div>

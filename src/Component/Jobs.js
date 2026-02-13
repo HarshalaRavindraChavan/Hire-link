@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 
 function Jobs() {
   const navigate = useNavigate();
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   // Login ckeck and role
   const auth = JSON.parse(localStorage.getItem("auth"));
   const staff = JSON.parse(localStorage.getItem("staff"));
@@ -246,6 +246,9 @@ function Jobs() {
   };
 
   const onSubmit = async (data) => {
+    if (isSubmitting) return; // 🔒 STOP double submit
+    setIsSubmitting(true);
+
     if (!canManageJob) {
       toast.error("You are not authorized to add jobs ❌");
       return;
@@ -318,6 +321,8 @@ function Jobs() {
       toast.error(
         error.response?.data?.message || "Failed to add job. Please try again.",
       );
+    } finally {
+      setIsSubmitting(false); // 🔓 unlock
     }
   };
 
@@ -528,6 +533,9 @@ function Jobs() {
   };
 
   const handleUpdateJob = async (data) => {
+    if (isSubmitting) return; // 🔒 STOP double submit
+    setIsSubmitting(true);
+
     if (!editJobId) {
       toast.error("Job ID missing");
       return;
@@ -583,7 +591,7 @@ function Jobs() {
       console.error("Job Update Error:", error);
       toast.error("Server error");
     } finally {
-      setLoading(false);
+      setIsSubmitting(false); // 🔓 unlock
     }
   };
 
@@ -1378,8 +1386,12 @@ function Jobs() {
                   Cancel
                 </button>
 
-                <button type="submit" className="btn btn-success px-4 ms-auto">
-                  Submit
+                <button
+                  type="submit"
+                  className="btn btn-success px-4 ms-auto"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Submitting..." : "Submit"}
                 </button>
               </div>
             </form>
@@ -1838,8 +1850,12 @@ function Jobs() {
                   Cancel
                 </button>
 
-                <button type="submit" className="btn btn-success px-4 ms-auto">
-                  Submit
+                <button
+                  type="submit"
+                  className="btn btn-success px-4 ms-auto"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Updating..." : "Submit"}
                 </button>
               </div>
             </form>

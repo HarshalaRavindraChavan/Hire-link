@@ -16,6 +16,7 @@ function Applicant() {
   const navigate = useNavigate();
   const modalRef = useRef(null);
   const [selectedApplicant, setSelectedApplicant] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Login ckeck and role
   const auth = JSON.parse(localStorage.getItem("auth"));
@@ -118,6 +119,9 @@ function Applicant() {
 
   // Submit Handler
   const onSubmit = async (data) => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
     try {
       const payload = {
         itv_candidate_id: data.candidate_id,
@@ -146,6 +150,8 @@ function Applicant() {
     } catch (err) {
       console.error(err);
       toast.error("Something went wrong");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -523,8 +529,12 @@ function Applicant() {
                   Cancel
                 </button>
 
-                <button type="submit" className="btn btn-success px-4 ms-auto">
-                  Submit
+                <button
+                  type="submit"
+                  className="btn btn-success px-4 ms-auto"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Submitting..." : "Submit"}
                 </button>
               </div>
             </form>

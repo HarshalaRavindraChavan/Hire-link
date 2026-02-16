@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import jsPDF from "jspdf";
 import Receipt from "../Component2/Receipt";
 import { toast } from "react-toastify";
+import "../Component/css/PaymentSuccess.css";
 
 function PaymentSuccess() {
   const navigate = useNavigate();
@@ -180,31 +181,35 @@ function PaymentSuccess() {
   if (!payment) return null;
 
   return (
-    <div className="container d-flex justify-content-center align-items-center vh-100">
-      <div className="card shadow p-4 text-center" style={{ maxWidth: 420 }}>
-        <h3 className="text-success mb-1">Payment Successful 🎉</h3>
+    <div className="hl-success-wrapper">
+      <div className="hl-success-card">
+        {/* Logo Watermark */}
+        {/* <div className="hl-success-watermark">
+          <img src="/images/hirelink-logo.png" alt="HireLink" />
+        </div> */}
 
-        <p className="text-muted" style={{ fontSize: 14 }}>
-          Download your receipt and you will be redirected to Login page.
-        </p>
+        <div className="hl-success-header">
+          <div className="hl-success-icon">✓</div>
+          <h3>Payment Successful</h3>
+          <p>Download your receipt. You will be redirected automatically.</p>
+        </div>
 
         <button
-          className="btn btn-success w-100 mt-2"
+          className="hl-success-btn"
           onClick={downloadPDF}
           disabled={loading}
         >
           {loading ? "Generating PDF..." : "📄 Download Receipt PDF"}
         </button>
 
-        {/* ✅ countdown show only after download click */}
-        {count !== null ? (
-          <small className="text-muted d-block mt-2">
+        {count !== null && (
+          <div className="hl-success-countdown">
             Redirecting in {count} seconds...
-          </small>
-        ) : null}
+          </div>
+        )}
       </div>
 
-      {/* ✅ Hidden Receipt UI (for PDF only) */}
+      {/* Hidden Receipt for PDF */}
       <div className="d-none" style={{ width: "700px", background: "#fff" }}>
         <Receipt payment={payment} />
       </div>

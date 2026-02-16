@@ -3,6 +3,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../config/constants";
 import { toast } from "react-toastify";
+import "../Component/css/Payment.css";
+// import logo from "../Component/logo/hirelink.png";
 
 function PaymentPage() {
   const navigate = useNavigate();
@@ -237,38 +239,54 @@ function PaymentPage() {
   const isPayDisabled = loading || !orderData || !!errorMsg;
 
   return (
-    <div className="container d-flex justify-content-center align-items-center vh-100">
-      <div className="card shadow p-4 text-center" style={{ maxWidth: 420 }}>
-        <h4>Complete Your Payment</h4>
-        <p className="text-muted">{user?.role} Payment</p>
+    <div className="hl-payment-wrapper">
+      <div className="hl-payment-card">
+        {/* Watermark */}
 
-        {/* ✅ Amount */}
-        <h3>{loading ? "Loading..." : displayAmount}</h3>
+        {/* <div className="hl-logo-watermark">
+          <img src={logo} alt="HireLink Logo" />
+        </div> */}
 
-        {/* ✅ Error UI */}
-        {errorMsg ? (
-          <div className="alert alert-danger mt-3 p-2">{errorMsg}</div>
-        ) : null}
+        {/* Header */}
+        <div className="hl-header">
+          <h3>Complete Your Payment</h3>
+          <p>{user?.role} Payment</p>
+        </div>
 
-        {/* ✅ Buttons */}
+        {/* Amount */}
+        <div className="hl-amount-box">
+          <span>Total Amount</span>
+          <h2>{loading ? "Loading..." : displayAmount}</h2>
+        </div>
+
+        {/* Error */}
+        {errorMsg && <div className="hl-error-box">{errorMsg}</div>}
+
+        {/* Pay Button */}
         <button
-          className="btn btn-success w-100 mt-3"
+          className="hl-pay-btn"
           onClick={openRazorpay}
           disabled={isPayDisabled}
         >
-          {loading ? "Please wait..." : "Pay Now"}
+          {loading ? "Processing..." : "Pay Securely"}
         </button>
 
-        {/* ✅ Retry Button */}
-        {errorMsg ? (
+        {/* Retry */}
+        {errorMsg && (
           <button
-            className="btn btn-outline-secondary w-100 mt-2"
+            className="hl-retry-btn"
             onClick={createOrder}
             disabled={loading}
           >
             Retry Order
           </button>
-        ) : null}
+        )}
+
+        {/* Footer */}
+        <div className="hl-footer">
+          <i className="fa-solid fa-lock"></i>
+          Secure payment powered by Razorpay
+        </div>
       </div>
     </div>
   );

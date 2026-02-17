@@ -24,16 +24,16 @@ function Candidates() {
     }
   }, [auth, navigate]);
 
-  const [search, setSearch] = useState("");
+  // const [search, setSearch] = useState("");
   const [candidates, setCandidates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
 
   // const [search, setSearch] = useState("");
-  const [experience, setExperience] = useState("");
-  const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] = useState("");
+  // const [experience, setExperience] = useState("");
+  // const [fromDate, setFromDate] = useState("");
+  // const [toDate, setToDate] = useState("");
 
   useEffect(() => {
     const paymentUser = JSON.parse(localStorage.getItem("paymentUser") || "{}");
@@ -239,39 +239,6 @@ function Candidates() {
     return `${maskedName}@${domain}`;
   };
 
-  // Filter Code
-  const filteredRecords = records.filter((candidate) => {
-    const searchValue = search.toLowerCase();
-
-    // 🔍 SEARCH FILTER
-    const matchesSearch =
-      candidate?.can_name?.toLowerCase().includes(searchValue) ||
-      candidate?.can_email?.toLowerCase().includes(searchValue) ||
-      candidate?.can_mobile?.includes(search) ||
-      candidate?.can_skill?.toLowerCase().includes(searchValue);
-
-    // 🎯 EXPERIENCE FILTER
-    const exp = Number(candidate?.can_experience || 0);
-    let matchesExperience = true;
-
-    if (experience === "0-1") matchesExperience = exp >= 0 && exp <= 1;
-    if (experience === "1-3") matchesExperience = exp >= 1 && exp <= 3;
-    if (experience === "3-5") matchesExperience = exp >= 3 && exp <= 5;
-    if (experience === "5+") matchesExperience = exp >= 5;
-
-    // 📅 DATE FILTER
-    const regDate = new Date(candidate?.can_added_date);
-    const from = fromDate ? new Date(fromDate) : null;
-    const to = toDate ? new Date(toDate) : null;
-
-    let matchesDate = true;
-    if (from && to) matchesDate = regDate >= from && regDate <= to;
-    else if (from) matchesDate = regDate >= from;
-    else if (to) matchesDate = regDate <= to;
-
-    return matchesSearch && matchesExperience && matchesDate;
-  });
-
   const handleResumeDownload = async (candidate) => {
     try {
       const employer = JSON.parse(localStorage.getItem("employer") || "{}");
@@ -336,6 +303,76 @@ function Candidates() {
     }
   };
 
+  const [search, setSearch] = useState("");
+
+  const [mainCate, setMainCate] = useState("");
+  const [subCate, setSubCate] = useState("");
+  const [subCate1, setSubCate1] = useState("");
+  const [subCate2, setSubCate2] = useState("");
+  const [subCate3, setSubCate3] = useState("");
+
+  const [experience, setExperience] = useState("");
+  const [gender, setGender] = useState("");
+
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
+
+  const filteredRecords = records.filter((candidate) => {
+    // SEARCH FILTER
+    const matchesSearch =
+      !search ||
+      candidate.can_name?.toLowerCase().includes(search.toLowerCase()) ||
+      candidate.can_email?.toLowerCase().includes(search.toLowerCase()) ||
+      candidate.can_mobile?.includes(search);
+
+    const matchesMainCate = !mainCate || candidate.main_category === mainCate;
+
+    const matchesSubCate = !subCate || candidate.sub_category === subCate;
+
+    const matchesSubCate1 = !subCate1 || candidate.sub_category1 === subCate1;
+
+    const matchesSubCate2 = !subCate2 || candidate.sub_category2 === subCate2;
+
+    const matchesSubCate3 = !subCate3 || candidate.sub_category3 === subCate3;
+
+    const matchesExperience =
+      !experience || candidate.can_experience === experience;
+
+    const matchesGender = !gender || candidate.can_gender === gender;
+
+    const matchesDate =
+      (!fromDate || new Date(candidate.register_date) >= new Date(fromDate)) &&
+      (!toDate || new Date(candidate.register_date) <= new Date(toDate));
+
+    return (
+      matchesSearch &&
+      matchesMainCate &&
+      matchesSubCate &&
+      matchesSubCate1 &&
+      matchesSubCate2 &&
+      matchesSubCate3 &&
+      matchesExperience &&
+      matchesGender &&
+      matchesDate
+    );
+  });
+
+  const handleReset = () => {
+    setSearch("");
+
+    setMainCate("");
+    setSubCate("");
+    setSubCate1("");
+    setSubCate2("");
+    setSubCate3("");
+
+    setExperience("");
+    setGender("");
+
+    setFromDate("");
+    setToDate("");
+  };
+
   return (
     <>
       <SEO
@@ -365,75 +402,92 @@ function Candidates() {
         <div className="row g-2 align-items-center mb-3">
           {/* Experience */}
           <div className="col-12 col-md-2">
+            {/* Main Cate */}
             <select
-              className="form-select form-control"
-              value={experience}
-              onChange={(e) => setExperience(e.target.value)}
+              className="form-select"
+              value={mainCate}
+              onChange={(e) => setMainCate(e.target.value)}
             >
               <option value="">Main Cate</option>
+              <option value="IT">IT</option>
+              <option value="Finance">Finance</option>
             </select>
           </div>
 
           <div className="col-12 col-md-2">
+            {/* Subcate */}
             <select
-              className="form-select form-control"
-              value={experience}
-              onChange={(e) => setExperience(e.target.value)}
+              className="form-select"
+              value={subCate}
+              onChange={(e) => setSubCate(e.target.value)}
             >
               <option value="">Subcate</option>
+              <option value="Developer">Developer</option>
+              <option value="Designer">Designer</option>
             </select>
           </div>
 
           <div className="col-12 col-md-2">
+            {/* Subcate1 */}
             <select
-              className="form-select form-control"
-              value={experience}
-              onChange={(e) => setExperience(e.target.value)}
+              className="form-select"
+              value={subCate1}
+              onChange={(e) => setSubCate1(e.target.value)}
             >
               <option value="">Subcate 1</option>
+              <option value="Frontend">Frontend</option>
+              <option value="Backend">Backend</option>
             </select>
           </div>
 
           <div className="col-12 col-md-2">
+            {/* Subcate2 */}
             <select
-              className="form-select form-control"
-              value={experience}
-              onChange={(e) => setExperience(e.target.value)}
+              className="form-select"
+              value={subCate2}
+              onChange={(e) => setSubCate2(e.target.value)}
             >
               <option value="">Subcate 2</option>
             </select>
           </div>
 
           <div className="col-12 col-md-2">
+            {/* Subcate3 */}
             <select
-              className="form-select form-control"
-              value={experience}
-              onChange={(e) => setExperience(e.target.value)}
+              className="form-select"
+              value={subCate3}
+              onChange={(e) => setSubCate3(e.target.value)}
             >
               <option value="">Subcate 3</option>
             </select>
           </div>
 
-          <div className="col-12 col-md-2 d-flex justify-content-md-start justify-content-between">
-            <button className="btn px-4 me-2 btn-success">Submit</button>
+       <div className="col-12 col-md-2 d-flex justify-content-md-start justify-content-between">
 
-            <button
-              className="btn btn-light border px-3"
-              onClick={() => {
-                setSearch("");
-                setExperience("");
-                setFromDate("");
-                setToDate("");
-              }}
-            >
-              <i className="fa fa-refresh"></i>
-            </button>
-          </div>
+  {/* Submit Button */}
+  <button
+    className="btn px-4 me-2 btn-success"
+    onClick={handleSubmit}
+  >
+    Submit
+  </button>
+
+  {/* Reset Button */}
+  <button
+    className="btn btn-light border px-3"
+    onClick={handleReset}
+  >
+    <i className="fa fa-refresh"></i>
+  </button>
+
+</div>
+
         </div>
         <div className="row g-2 align-items-center mb-3">
           <div className="col-12 col-md-2">
+            {/* Experience */}
             <select
-              className="form-select form-control"
+              className="form-select"
               value={experience}
               onChange={(e) => setExperience(e.target.value)}
             >
@@ -441,20 +495,19 @@ function Candidates() {
               <option value="0-1">0–1 Years</option>
               <option value="1-3">1–3 Years</option>
               <option value="3-5">3–5 Years</option>
-              <option value="5+">5+ Years</option>
             </select>
           </div>
 
           <div className="col-12 col-md-2">
+            {/* Gender */}
             <select
-              className="form-select form-control"
-              value={experience}
-              onChange={(e) => setExperience(e.target.value)}
+              className="form-select"
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
             >
               <option value="">Gender</option>
-              <option value="0-1">Male</option>
-              <option value="1-3">Female</option>
-              <option value="3-5">Other</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
             </select>
           </div>
 

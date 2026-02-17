@@ -370,11 +370,91 @@ function Candidates() {
               value={experience}
               onChange={(e) => setExperience(e.target.value)}
             >
-              <option value="">Select Experience</option>
+              <option value="">Main Cate</option>
+            </select>
+          </div>
+
+          <div className="col-12 col-md-2">
+            <select
+              className="form-select form-control"
+              value={experience}
+              onChange={(e) => setExperience(e.target.value)}
+            >
+              <option value="">Subcate</option>
+            </select>
+          </div>
+
+          <div className="col-12 col-md-2">
+            <select
+              className="form-select form-control"
+              value={experience}
+              onChange={(e) => setExperience(e.target.value)}
+            >
+              <option value="">Subcate 1</option>
+            </select>
+          </div>
+
+          <div className="col-12 col-md-2">
+            <select
+              className="form-select form-control"
+              value={experience}
+              onChange={(e) => setExperience(e.target.value)}
+            >
+              <option value="">Subcate 2</option>
+            </select>
+          </div>
+
+          <div className="col-12 col-md-2">
+            <select
+              className="form-select form-control"
+              value={experience}
+              onChange={(e) => setExperience(e.target.value)}
+            >
+              <option value="">Subcate 3</option>
+            </select>
+          </div>
+
+          <div className="col-12 col-md-2 d-flex justify-content-md-start justify-content-between">
+            <button className="btn px-4 me-2 btn-success">Submit</button>
+
+            <button
+              className="btn btn-light border px-3"
+              onClick={() => {
+                setSearch("");
+                setExperience("");
+                setFromDate("");
+                setToDate("");
+              }}
+            >
+              <i className="fa fa-refresh"></i>
+            </button>
+          </div>
+        </div>
+        <div className="row g-2 align-items-center mb-3">
+          <div className="col-12 col-md-2">
+            <select
+              className="form-select form-control"
+              value={experience}
+              onChange={(e) => setExperience(e.target.value)}
+            >
+              <option value="">Experience</option>
               <option value="0-1">0–1 Years</option>
               <option value="1-3">1–3 Years</option>
               <option value="3-5">3–5 Years</option>
               <option value="5+">5+ Years</option>
+            </select>
+          </div>
+
+          <div className="col-12 col-md-2">
+            <select
+              className="form-select form-control"
+              value={experience}
+              onChange={(e) => setExperience(e.target.value)}
+            >
+              <option value="">Gender</option>
+              <option value="0-1">Male</option>
+              <option value="1-3">Female</option>
+              <option value="3-5">Other</option>
             </select>
           </div>
 
@@ -399,7 +479,7 @@ function Candidates() {
           </div>
 
           {/* Submit + Reset */}
-          <div className="col-12 col-md-3 d-flex justify-content-md-start justify-content-between">
+          <div className="col-12 col-md-2 d-flex justify-content-md-start justify-content-between">
             <button className="btn px-4 me-2 btn-success">Submit</button>
 
             <button
@@ -416,7 +496,7 @@ function Candidates() {
           </div>
 
           {/* Search */}
-          <div className="col-12 col-md-3">
+          <div className="col-12 col-md-2">
             <input
               type="text"
               className="form-control"

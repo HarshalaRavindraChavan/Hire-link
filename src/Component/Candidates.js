@@ -15,7 +15,7 @@ import { seoConfig } from "../config/seoConfig";
 
 function Candidates() {
   const navigate = useNavigate();
-  const auth = JSON.parse(localStorage.getItem("auth") || "{}");
+  const auth = JSON.parse(localStorage.getItem("auth"));
   const isAdmin = Number(auth?.role) === 1;
 
   useEffect(() => {

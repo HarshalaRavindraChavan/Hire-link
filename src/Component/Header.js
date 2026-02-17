@@ -1,4 +1,4 @@
-import logo from "./logo/avatar.jpeg";
+import logo from "./logo/hirelink.png";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../config/constants";
 

@@ -31,11 +31,10 @@ function Jobs() {
 
   //=================
 
+  const [companies, setCompanies] = useState([]);
   const canManageJob = Number(role) === 100 || Number(role) === 200;
 
   const [timeNow, setTimeNow] = useState(Date.now());
-
-  const [search, setSearch] = useState("");
   const [jobs, setJobs] = useState([]);
 
   // ================= EDUCATION =================
@@ -51,6 +50,22 @@ function Jobs() {
   // ================= STATE & CITY =================
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
+
+  // ================= FILTER STATES =================
+
+  // 🔵 Draft (UI – typing/select करताना)
+  const [companySearch, setCompanySearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
+  const [search, setSearch] = useState("");
+
+  // 🟢 Applied (Submit button नंतरच apply होणारे)
+  const [appliedCompany, setAppliedCompany] = useState("");
+  const [appliedStatus, setAppliedStatus] = useState("");
+  const [appliedFromDate, setAppliedFromDate] = useState("");
+  const [appliedToDate, setAppliedToDate] = useState("");
+  const [appliedSearch, setAppliedSearch] = useState("");
 
   useEffect(() => {
     fetchStates();
@@ -99,6 +114,28 @@ function Jobs() {
     fetchJobs();
   }, []);
 
+  useEffect(() => {
+    if (jobs.length > 0) {
+      const uniqueCompanies = [
+        ...new Map(
+          jobs
+            .filter((job) => job.job_company)
+            .map((job) => [
+              job.job_company,
+              {
+                company_id: job.job_company, // value
+                company_name: job.job_company, // label
+              },
+            ]),
+        ).values(),
+      ];
+
+      setCompanies(uniqueCompanies);
+    } else {
+      setCompanies([]);
+    }
+  }, [jobs]);
+
   const fetchJobs = async () => {
     try {
       setLoading(true);
@@ -133,13 +170,6 @@ function Jobs() {
     }
   };
 
-  //==========Pagination=========================
-  const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 100;
-  const lastIndex = currentPage * recordsPerPage;
-  const firstIndex = lastIndex - recordsPerPage;
-  const records = jobs.slice(firstIndex, lastIndex);
-  const nPages = Math.ceil(jobs.length / recordsPerPage);
   //===================================================
 
   // Delete modal state
@@ -634,32 +664,31 @@ function Jobs() {
   // filter code
   // const [search, setSearch] = useState("");
   const [jobType, setJobType] = useState("");
-  const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] = useState("");
 
   const filteredJobs = React.useMemo(() => {
-    return records.filter((job) => {
-      /* 🔍 SEARCH */
-      const searchText = search.toLowerCase().trim();
+    return jobs.filter((job) => {
+      const searchText = appliedSearch.toLowerCase().trim();
+
       const matchesSearch =
         !searchText ||
-        job?.job_title?.toLowerCase().includes(searchText) ||
-        job?.job_company?.toLowerCase().includes(searchText) ||
-        job?.mc_name?.toLowerCase().includes(searchText) ||
-        job?.sc_name?.toLowerCase().includes(searchText);
+        job.job_title?.toLowerCase().includes(searchText) ||
+        job.mc_name?.toLowerCase().includes(searchText);
 
-      /* 🎯 JOB TYPE */
-      const matchesType = !jobType || job?.job_type === jobType;
+      const matchesCompany =
+        !["1", "2", "3", "4"].includes(role) ||
+        !appliedCompany ||
+        job.job_company === appliedCompany;
 
-      /* 📅 DATE FILTER */
+      const matchesStatus = !appliedStatus || job.job_status === appliedStatus;
+
       let matchesDate = true;
-      if (fromDate || toDate) {
-        const jobDate = job?.job_date
+      if (appliedFromDate || appliedToDate) {
+        const jobDate = job.job_date
           ? new Date(job.job_date.replace(" ", "T"))
           : null;
 
-        const from = fromDate ? new Date(fromDate) : null;
-        const to = toDate ? new Date(toDate) : null;
+        const from = appliedFromDate ? new Date(appliedFromDate) : null;
+        const to = appliedToDate ? new Date(appliedToDate) : null;
 
         if (jobDate) {
           if (from && to) matchesDate = jobDate >= from && jobDate <= to;
@@ -668,9 +697,27 @@ function Jobs() {
         }
       }
 
-      return matchesSearch && matchesType && matchesDate;
+      return matchesSearch && matchesCompany && matchesStatus && matchesDate;
     });
-  }, [records, search, jobType, fromDate, toDate]);
+  }, [
+    jobs,
+    appliedSearch,
+    appliedCompany,
+    appliedStatus,
+    appliedFromDate,
+    appliedToDate,
+    role,
+  ]);
+
+  //==========Pagination=========================
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 100;
+
+  const lastIndex = currentPage * recordsPerPage;
+  const firstIndex = lastIndex - recordsPerPage;
+
+  const records = filteredJobs.slice(firstIndex, lastIndex);
+  const nPages = Math.ceil(filteredJobs.length / recordsPerPage);
 
   return (
     <>
@@ -705,13 +752,37 @@ function Jobs() {
       <div className="card shadow-sm p-3 border">
         {/* FILTER ROW */}
         <div className="row g-2 align-items-center mb-3">
-          {/* Job Type */}
+          {/* ✅ COMPANY FILTER (ONLY ADMIN) */}
+          {["1", "2", "3", "4"].includes(role) && (
+            <div className="col-12 col-md-2">
+              <SearchableDropdown
+                options={companies}
+                value={companySearch}
+                labelKey="company_name"
+                valueKey="company_id"
+                placeholder="Search Company"
+                onChange={(company) => {
+                  setCompanySearch(company);
+                  setCurrentPage(1);
+                }}
+              />
+            </div>
+          )}
+
+          {/* ✅ STATUS FILTER (ALL ROLES but different meaning) */}
           <div className="col-12 col-md-2">
             <select
               className="form-select form-control"
-              value={jobType}
-              onChange={(e) => setJobType(e.target.value)}
-            ></select>
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+            >
+              <option value="">Job Status</option>
+              <option value="1">Active</option>
+              <option value="0">Inactive</option>
+              {["1", "2", "3", "4"].includes(role) && (
+                <option value="2">Processing</option>
+              )}
+            </select>
           </div>
 
           {/* From Date */}
@@ -734,17 +805,40 @@ function Jobs() {
             />
           </div>
 
-          {/* Submit + Reset */}
-          <div className="col-12 col-md-3 d-flex justify-content-md-start justify-content-between">
-            <button className="btn px-4 me-2 btn-success">Submit</button>
+          {/* RESET */}
+          <div className="col-12 col-md-2 d-flex justify-content-md-start justify-content-between">
+            <button
+              type="button"
+              className="btn px-4 me-2 btn-success"
+              onClick={() => {
+                setAppliedCompany(companySearch);
+                setAppliedStatus(statusFilter);
+                setAppliedFromDate(fromDate);
+                setAppliedToDate(toDate);
+                setAppliedSearch(search);
+                setCurrentPage(1);
+              }}
+            >
+              Submit
+            </button>
 
             <button
               className="btn btn-light border px-3"
               onClick={() => {
-                setSearch("");
-                setJobType("");
+                // Draft
+                setCompanySearch("");
+                setStatusFilter("");
                 setFromDate("");
                 setToDate("");
+                setSearch("");
+
+                // Applied
+                setAppliedCompany("");
+                setAppliedStatus("");
+                setAppliedFromDate("");
+                setAppliedToDate("");
+                setAppliedSearch("");
+
                 setCurrentPage(1);
               }}
             >
@@ -752,8 +846,7 @@ function Jobs() {
             </button>
           </div>
 
-          {/* Search */}
-          <div className="col-12 col-md-3">
+          <div className="col-12 col-md-4">
             <input
               type="text"
               className="form-control"
@@ -780,7 +873,7 @@ function Jobs() {
               {loading ? (
                 <TableSkeleton rows={6} columns={4} />
               ) : filteredJobs.length > 0 ? (
-                filteredJobs.slice(firstIndex, lastIndex).map((job, index) => (
+                records.map((job, index) => (
                   <tr key={job.job_id}>
                     <td>{firstIndex + index + 1}</td>
                     <td className="text-start fw-bold">

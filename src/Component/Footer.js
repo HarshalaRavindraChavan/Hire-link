@@ -13,7 +13,7 @@ function Footer() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Ensenceweb IT
+          Esenceweb IT
         </a>
       </p>
     </footer>

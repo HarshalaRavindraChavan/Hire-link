@@ -50,7 +50,7 @@ function Header() {
                   className="btn btn-sm me-2 mb-2 mb-lg-0"
                   to="/signin"style={{backgroundColor:"green",color:"white",fontWeight:"bold",fontSize:"13px"}}
                 >
-                  Sign in
+                  Login
                 </NavLink>
               </li>
               <li className="nav-item">

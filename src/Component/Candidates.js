@@ -304,16 +304,13 @@ function Candidates() {
   };
 
   const [search, setSearch] = useState("");
-
   const [mainCate, setMainCate] = useState("");
   const [subCate, setSubCate] = useState("");
   const [subCate1, setSubCate1] = useState("");
   const [subCate2, setSubCate2] = useState("");
   const [subCate3, setSubCate3] = useState("");
-
   const [experience, setExperience] = useState("");
   const [gender, setGender] = useState("");
-
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 
@@ -359,19 +356,133 @@ function Candidates() {
 
   const handleReset = () => {
     setSearch("");
-
     setMainCate("");
     setSubCate("");
     setSubCate1("");
     setSubCate2("");
     setSubCate3("");
-
     setExperience("");
     setGender("");
-
     setFromDate("");
     setToDate("");
   };
+
+  const [categories, setCategories] = useState([]);
+  const [subCategories, setSubCategories] = useState([]);
+  const [subCat1, setSubCat1] = useState([]);
+  const [subCat2, setSubCat2] = useState([]);
+  const [subCat3, setSubCat3] = useState([]);
+
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedSubCategory, setSelectedSubCategory] = useState("");
+  const [selectedSubCat1, setSelectedSubCat1] = useState("");
+  const [selectedSubCat2, setSelectedSubCat2] = useState("");
+  const [selectedSubCat3, setSelectedSubCat3] = useState("");
+
+  const fetchCategories = async () => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}candidate/getdata/tbl_main_category`,
+      );
+      setCategories(res.data.data || []);
+    } catch (err) {
+      console.error("Main category error", err);
+    }
+  };
+
+  //Sub cateagory
+  useEffect(() => {
+    if (selectedCategory) {
+      fetchSubCategories(selectedCategory);
+    } else {
+      setSubCategories([]);
+      setSelectedSubCategory("");
+    }
+  }, [selectedCategory]);
+
+  const fetchSubCategories = async (mc_id) => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}candidate/getdatawhere/tbl_subcategory/sc_mc_id/${mc_id}`,
+      );
+      setSubCategories(res.data.data || []);
+    } catch (err) {
+      console.error("Sub category error", err);
+    }
+  };
+
+  //Sub Categoray one
+  useEffect(() => {
+    if (selectedSubCategory) {
+      fetchSubCat1(selectedSubCategory);
+    } else {
+      setSubCat1([]);
+      setSelectedSubCat1("");
+    }
+  }, [selectedSubCategory]);
+
+  const fetchSubCat1 = async (sc_id) => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}candidate/getdatawhere/tbl_subcategory_1/sc1_sc_id/${sc_id}`,
+      );
+      setSubCat1(res.data.data || []);
+    } catch (err) {
+      console.error("Sub category 1 error", err);
+    }
+  };
+
+  //Sub Categoray Two
+  useEffect(() => {
+    if (selectedSubCat1) {
+      fetchSubCat2(selectedSubCat1);
+    } else {
+      setSubCat2([]);
+      setSelectedSubCat2("");
+    }
+  }, [selectedSubCat1]);
+
+  const fetchSubCat2 = async (sc1_id) => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}candidate/getdatawhere/tbl_subcategory_2/sc2_sc1_id/${sc1_id}`,
+      );
+      setSubCat2(res.data.data || []);
+    } catch (err) {
+      console.error("Sub category 2 error", err);
+    }
+  };
+
+  //Sub Categoray Three
+  useEffect(() => {
+    if (selectedSubCat2) {
+      fetchSubCat3(selectedSubCat2);
+    } else {
+      setSubCat3([]);
+      setSelectedSubCat3("");
+    }
+  }, [selectedSubCat2]);
+
+  const fetchSubCat3 = async (sc2_id) => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}candidate/getdatawhere/tbl_subcategory_3/sc3_sc2_id/${sc2_id}`,
+      );
+      setSubCat3(res.data.data || []);
+    } catch (err) {
+      console.error("Sub category 3 error", err);
+    }
+  };
+
+  const handleSubmitData = () => {
+  console.log({
+    selectedCategory,
+    selectedSubCategory,
+    selectedSubCat1,
+    selectedSubCat2,
+    selectedSubCat3,
+  });
+};
 
   return (
     <>
@@ -400,89 +511,114 @@ function Candidates() {
       <div className="card shadow-sm p-3 border">
         {/* 🔍 FILTER ROW */}
         <div className="row g-2 align-items-center mb-3">
-          {/* Experience */}
+          {/* Main Category */}
           <div className="col-12 col-md-2">
-            {/* Main Cate */}
             <select
               className="form-select"
-              value={mainCate}
-              onChange={(e) => setMainCate(e.target.value)}
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
             >
-              <option value="">Main Cate</option>
-              <option value="IT">IT</option>
-              <option value="Finance">Finance</option>
+              <option value="">Main Category</option>
+              {categories.map((cat) => (
+                <option key={cat.mc_id} value={cat.mc_id}>
+                  {cat.mc_name}
+                </option>
+              ))}
             </select>
           </div>
 
+          {/* Sub Category */}
           <div className="col-12 col-md-2">
-            {/* Subcate */}
             <select
               className="form-select"
-              value={subCate}
-              onChange={(e) => setSubCate(e.target.value)}
+              value={selectedSubCategory}
+              onChange={(e) => setSelectedSubCategory(e.target.value)}
+              disabled={!selectedCategory}
             >
-              <option value="">Subcate</option>
-              <option value="Developer">Developer</option>
-              <option value="Designer">Designer</option>
+              <option value="">Sub Category</option>
+              {subCategories.map((sub) => (
+                <option key={sub.sc_id} value={sub.sc_id}>
+                  {sub.sc_name}
+                </option>
+              ))}
             </select>
           </div>
 
+          {/* Sub Category 1 */}
           <div className="col-12 col-md-2">
-            {/* Subcate1 */}
             <select
               className="form-select"
-              value={subCate1}
-              onChange={(e) => setSubCate1(e.target.value)}
+              value={selectedSubCat1}
+              onChange={(e) => setSelectedSubCat1(e.target.value)}
+              disabled={!selectedSubCategory}
             >
-              <option value="">Subcate 1</option>
-              <option value="Frontend">Frontend</option>
-              <option value="Backend">Backend</option>
+              <option value="">Sub Category 1</option>
+              {subCat1.map((item) => (
+                <option key={item.sc1_id} value={item.sc1_id}>
+                  {item.sc1_name}
+                </option>
+              ))}
             </select>
           </div>
 
+          {/* Sub Category 2 */}
           <div className="col-12 col-md-2">
-            {/* Subcate2 */}
             <select
               className="form-select"
-              value={subCate2}
-              onChange={(e) => setSubCate2(e.target.value)}
+              value={selectedSubCat2}
+              onChange={(e) => setSelectedSubCat2(e.target.value)}
+              disabled={!selectedSubCat1}
             >
-              <option value="">Subcate 2</option>
+              <option value="">Sub Category 2</option>
+              {subCat2.map((item) => (
+                <option key={item.sc2_id} value={item.sc2_id}>
+                  {item.sc2_name}
+                </option>
+              ))}
             </select>
           </div>
 
+          {/* Sub Category 3 */}
           <div className="col-12 col-md-2">
-            {/* Subcate3 */}
             <select
               className="form-select"
-              value={subCate3}
-              onChange={(e) => setSubCate3(e.target.value)}
+              value={selectedSubCat3}
+              onChange={(e) => setSelectedSubCat3(e.target.value)}
+              disabled={!selectedSubCat2}
             >
-              <option value="">Subcate 3</option>
+              <option value="">Sub Category 3</option>
+              {subCat3.map((item) => (
+                <option key={item.sc3_id} value={item.sc3_id}>
+                  {item.sc3_name}
+                </option>
+              ))}
             </select>
           </div>
 
-       <div className="col-12 col-md-2 d-flex justify-content-md-start justify-content-between">
+          {/* Buttons */}
+          <div className="col-12 col-md-2 d-flex justify-content-md-start justify-content-between">
+            <button
+              className="btn px-4 me-2 btn-success"
+              onClick={handleSubmitData}
+            >
+              Submit
+            </button>
 
-  {/* Submit Button */}
-  <button
-    className="btn px-4 me-2 btn-success"
-    onClick={handleSubmit}
-  >
-    Submit
-  </button>
-
-  {/* Reset Button */}
-  <button
-    className="btn btn-light border px-3"
-    onClick={handleReset}
-  >
-    <i className="fa fa-refresh"></i>
-  </button>
-
-</div>
-
+            <button
+              className="btn btn-light border px-3"
+              onClick={() => {
+                setSelectedCategory("");
+                setSelectedSubCategory("");
+                setSelectedSubCat1("");
+                setSelectedSubCat2("");
+                setSelectedSubCat3("");
+              }}
+            >
+              <i className="fa fa-refresh"></i>
+            </button>
+          </div>
         </div>
+
         <div className="row g-2 align-items-center mb-3">
           <div className="col-12 col-md-2">
             {/* Experience */}

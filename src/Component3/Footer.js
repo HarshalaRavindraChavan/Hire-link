@@ -119,7 +119,7 @@ export default function Footer() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Ensenceweb IT
+          Esenceweb IT
         </a>
         <div className="social-icons mt-2">
           <a href="#">

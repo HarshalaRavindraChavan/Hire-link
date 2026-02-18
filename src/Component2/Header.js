@@ -102,7 +102,7 @@ function Header() {
           ) : (
             <>
               <NavLink to="/signin" className="nav-link-custom">
-                Sign in
+                Login
               </NavLink>
               <NavLink
                 to="/employer"
@@ -153,7 +153,7 @@ function Header() {
         ) : (
           <>
             <NavLink to="/signin" className="mobile-link">
-              Sign in
+              Login
             </NavLink>
             <NavLink to="/employer" className="mobile-link">
               Employers / Post Job

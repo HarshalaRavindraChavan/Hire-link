@@ -323,7 +323,7 @@ function Signin() {
                 onClick={handleSignupClick}
                 className="btn btn-sm btn-outline-auth"
               >
-                <b>Sign Up</b>
+                <b>Register</b>
               </NavLink>
             </div>
 

@@ -18,11 +18,11 @@ function Candidates() {
   const auth = JSON.parse(localStorage.getItem("auth"));
   const isAdmin = Number(auth?.role) === 1;
 
-  useEffect(() => {
-    if (!auth) {
-      navigate("/signin");
-    }
-  }, [auth, navigate]);
+  // useEffect(() => {
+  //   if (!auth) {
+  //     navigate("/signin");
+  //   }
+  // }, [auth, navigate]);
 
   // const [search, setSearch] = useState("");
   const [candidates, setCandidates] = useState([]);
@@ -303,69 +303,78 @@ function Candidates() {
     }
   };
 
-  const [search, setSearch] = useState("");
-  const [mainCate, setMainCate] = useState("");
-  const [subCate, setSubCate] = useState("");
-  const [subCate1, setSubCate1] = useState("");
-  const [subCate2, setSubCate2] = useState("");
-  const [subCate3, setSubCate3] = useState("");
-  const [experience, setExperience] = useState("");
-  const [gender, setGender] = useState("");
-  const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] = useState("");
+  // filter code 
+const [search, setSearch] = useState("");
+const [experience, setExperience] = useState("");
+const [gender, setGender] = useState("");
+const [fromDate, setFromDate] = useState("");
+const [toDate, setToDate] = useState("");
 
   const filteredRecords = records.filter((candidate) => {
-    // SEARCH FILTER
-    const matchesSearch =
-      !search ||
-      candidate.can_name?.toLowerCase().includes(search.toLowerCase()) ||
-      candidate.can_email?.toLowerCase().includes(search.toLowerCase()) ||
-      candidate.can_mobile?.includes(search);
+  const matchesSearch =
+    !search ||
+    candidate.can_name?.toLowerCase().includes(search.toLowerCase()) ||
+    candidate.can_email?.toLowerCase().includes(search.toLowerCase()) ||
+    candidate.can_mobile?.includes(search);
 
-    const matchesMainCate = !mainCate || candidate.main_category === mainCate;
+  const matchesMainCate =
+    !selectedCategory || candidate.mc_id == selectedCategory;
 
-    const matchesSubCate = !subCate || candidate.sub_category === subCate;
+  const matchesSubCate =
+    !selectedSubCategory || candidate.sc_id == selectedSubCategory;
 
-    const matchesSubCate1 = !subCate1 || candidate.sub_category1 === subCate1;
+  const matchesSubCate1 =
+    !selectedSubCat1 || candidate.sc1_id == selectedSubCat1;
 
-    const matchesSubCate2 = !subCate2 || candidate.sub_category2 === subCate2;
+  const matchesSubCate2 =
+    !selectedSubCat2 || candidate.sc2_id == selectedSubCat2;
 
-    const matchesSubCate3 = !subCate3 || candidate.sub_category3 === subCate3;
+  const matchesSubCate3 =
+    !selectedSubCat3 || candidate.sc3_id == selectedSubCat3;
 
-    const matchesExperience =
-      !experience || candidate.can_experience === experience;
+  const matchesExperience =
+    !experience ||
+    (() => {
+      const [min, max] = experience.split("-").map(Number);
+      const candidateExp = Number(candidate.can_experience);
+      return candidateExp >= min && candidateExp <= max;
+    })();
 
-    const matchesGender = !gender || candidate.can_gender === gender;
+  const matchesGender =
+    !gender || candidate.can_gender === gender;
 
-    const matchesDate =
-      (!fromDate || new Date(candidate.register_date) >= new Date(fromDate)) &&
-      (!toDate || new Date(candidate.register_date) <= new Date(toDate));
+  const matchesDate =
+    (!fromDate ||
+      new Date(candidate.register_date) >= new Date(fromDate)) &&
+    (!toDate ||
+      new Date(candidate.register_date) <= new Date(toDate));
 
-    return (
-      matchesSearch &&
-      matchesMainCate &&
-      matchesSubCate &&
-      matchesSubCate1 &&
-      matchesSubCate2 &&
-      matchesSubCate3 &&
-      matchesExperience &&
-      matchesGender &&
-      matchesDate
-    );
-  });
+  return (
+    matchesSearch &&
+    matchesMainCate &&
+    matchesSubCate &&
+    matchesSubCate1 &&
+    matchesSubCate2 &&
+    matchesSubCate3 &&
+    matchesExperience &&
+    matchesGender &&
+    matchesDate
+  );
+});
 
-  const handleReset = () => {
-    setSearch("");
-    setMainCate("");
-    setSubCate("");
-    setSubCate1("");
-    setSubCate2("");
-    setSubCate3("");
-    setExperience("");
-    setGender("");
-    setFromDate("");
-    setToDate("");
-  };
+const handleResetAll = () => {
+  setSearch("");
+  setSelectedCategory("");
+  setSelectedSubCategory("");
+  setSelectedSubCat1("");
+  setSelectedSubCat2("");
+  setSelectedSubCat3("");
+  setExperience("");
+  setGender("");
+  setFromDate("");
+  setToDate("");
+};
+
 
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
@@ -611,13 +620,7 @@ function Candidates() {
 
             <button
               className="btn btn-light border px-3"
-              onClick={() => {
-                setSelectedCategory("");
-                setSelectedSubCategory("");
-                setSelectedSubCat1("");
-                setSelectedSubCat2("");
-                setSelectedSubCat3("");
-              }}
+                 onClick={handleResetAll }
             >
               <i className="fa fa-refresh"></i>
             </button>

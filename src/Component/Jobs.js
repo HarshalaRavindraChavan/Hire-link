@@ -645,7 +645,7 @@ function Jobs() {
       alreadyUpdatedRef.current[jobId] = true;
 
       await axios.post(`${BASE_URL}admin/updatedata/tbl_job/job_id/${jobId}`, {
-        job_status: "Active",
+        job_status: "1",
       });
 
       fetchJobs();
@@ -781,7 +781,7 @@ function Jobs() {
             >
               <option value="">Job Status</option>
               <option value="1">Active</option>
-              <option value="0">Inactive</option>
+              <option value="0">Closed</option>
               {["1", "2", "3", "4"].includes(role) && (
                 <option value="2">Processing</option>
               )}

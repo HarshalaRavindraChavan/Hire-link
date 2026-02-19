@@ -9,8 +9,15 @@ import { toast, ToastContainer } from "react-toastify";
 import JobsSAI from "./JobsSAI";
 import { BASE_URL } from "../config/constants";
 import SearchableDropdown from "../Component/SearchableDropdown";
+import Cropper from "react-easy-crop";
+import { getCroppedImg } from "../Component/commenuse/CropImage";
 
 function Profile() {
+  const [imageSrc, setImageSrc] = useState(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const [showCropper, setShowCropper] = useState(false);
   // Main
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -494,6 +501,40 @@ function Profile() {
     }
   };
 
+  const onSelectImage = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      setImageSrc(reader.result);
+      setShowCropper(true);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const onCropComplete = (_, croppedPixels) => {
+    setCroppedAreaPixels(croppedPixels);
+  };
+
+  const handleCropSave = async () => {
+    const croppedBlob = await getCroppedImg(imageSrc, croppedAreaPixels);
+
+    const formData = new FormData();
+    formData.append("can_image", croppedBlob, "profile.jpg");
+
+    const res = await axios.post(`${BASE_URL}candidate/fileupload`, formData);
+
+    if (res.data.status) {
+      setCandidate((prev) => ({
+        ...prev,
+        can_image: res.data.files.can_image,
+      }));
+      toast.success("Profile image uploaded ✅");
+      setShowCropper(false);
+    }
+  };
+
   // ============ File Upload API ============
   const uploadFile = async (e, fieldName) => {
     const file = e.target.files[0];
@@ -598,8 +639,54 @@ function Profile() {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = showCropper ? "hidden" : "auto";
+  }, [showCropper]);
+
   return (
     <>
+      {showCropper && (
+        <div className="crop-overlay">
+          <div className="crop-box">
+            <div className="cropper-wrapper">
+              <Cropper
+                image={imageSrc}
+                crop={crop}
+                zoom={zoom}
+                aspect={1}
+                cropShape="round"
+                showGrid={false}
+                onCropChange={setCrop}
+                onZoomChange={setZoom}
+                onCropComplete={onCropComplete}
+              />
+            </div>
+
+            <input
+              type="range"
+              min={1}
+              max={3}
+              step={0.1}
+              value={zoom}
+              onChange={(e) => setZoom(e.target.value)}
+              className="form-range mt-3"
+            />
+
+            <div className="d-flex justify-content-end gap-2 mt-3">
+              <button
+                className="btn btn-outline-secondary"
+                onClick={() => setShowCropper(false)}
+              >
+                Cancel
+              </button>
+              <button className="btn btn-success" onClick={handleCropSave}>
+                Crop & Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <SEO
         title={`${seoConfig.c_profile.title} - ${candidate?.can_name
           ?.split(" ")
@@ -645,7 +732,7 @@ function Profile() {
                   .join(" ")}
               </h5>
               <p className="mb-1 text-muted">
-                {candidate.can_email} | {candidate.can_mobile}
+                {candidate.can_email?.toLowerCase()} | {candidate.can_mobile}
               </p>
               <p className="mb-0 text-muted">
                 {/* {candidate.can_address}
@@ -894,13 +981,14 @@ function Profile() {
                 <div className="d-flex align-items-center gap-3 mb-3">
                   <img
                     src={
-                      `${BASE_URL}Uploads/${candidate.can_image}` ||
-                      "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                      candidate.can_image
+                        ? `${BASE_URL}Uploads/${candidate.can_image}`
+                        : "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
                     }
                     className="rounded-circle"
                     width="90"
                     height="90"
-                    alt="Candidate"
+                    style={{ objectFit: "cover" }}
                   />
 
                   <div className="flex-grow-1">
@@ -917,7 +1005,8 @@ function Profile() {
                     </h5>
                     <p className="mb-1 text-muted">
                       {" "}
-                      {candidate.can_email} | {candidate.can_mobile}
+                      {candidate.can_email?.toLowerCase()}|{" "}
+                      {candidate.can_mobile}
                     </p>
                     <p className="mb-0 text-muted">
                       {/* {candidate.city_name}, {candidate.state_name} <br /> */}
@@ -1102,7 +1191,7 @@ function Profile() {
                         type="file"
                         hidden
                         accept=".jpg,.jpeg,.png"
-                        onChange={(e) => uploadFile(e, "can_image")}
+                        onChange={onSelectImage}
                       />{" "}
                       <input
                         type="hidden"

@@ -8,6 +8,9 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import { BASE_URL } from "../config/constants";
 import SearchableDropdown from "./SearchableDropdown";
+import "../Component/css/Emp-profile.css";
+import Cropper from "react-easy-crop";
+import { getCroppedImg } from "../Component/commenuse/CropImage";
 
 const EmpProfile = () => {
   const navigate = useNavigate();
@@ -21,6 +24,12 @@ const EmpProfile = () => {
       navigate("/signin");
     }
   }, [employer, navigate]);
+
+  const [logoSrc, setLogoSrc] = useState(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const [showCropper, setShowCropper] = useState(false);
 
   // ================= STATE & CITY =================
   const [states, setStates] = useState([]);
@@ -197,26 +206,61 @@ const EmpProfile = () => {
     },
   });
 
-  const uploadFile = async (e, field) => {
+  const onSelectLogo = (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
+    const reader = new FileReader();
+    reader.onload = () => {
+      setLogoSrc(reader.result);
+      setShowCropper(true);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const onCropComplete = (_, croppedPixels) => {
+    setCroppedAreaPixels(croppedPixels);
+  };
+
+  const handleCropSave = async () => {
+    const croppedBlob = await getCroppedImg(logoSrc, croppedAreaPixels);
+
     const formData = new FormData();
-    formData.append(field, file);
+    formData.append("emp_com_logo", croppedBlob, "logo.jpg");
 
     try {
       const res = await axios.post(`${BASE_URL}admin/fileupload`, formData);
 
       if (res.data.status) {
-        formik.setFieldValue(field, res.data.files[field]);
-        toast.success("File uploaded successfully");
-      } else {
-        toast.error("Upload failed");
+        formik.setFieldValue("emp_com_logo", res.data.files.emp_com_logo);
+        toast.success("Company logo uploaded ✅");
+        setShowCropper(false);
       }
     } catch {
-      toast.error("Upload failed");
+      toast.error("Logo upload failed");
     }
   };
+
+  // const uploadFile = async (e, field) => {
+  //   const file = e.target.files[0];
+  //   if (!file) return;
+
+  //   const formData = new FormData();
+  //   formData.append(field, file);
+
+  //   try {
+  //     const res = await axios.post(`${BASE_URL}admin/fileupload`, formData);
+
+  //     if (res.data.status) {
+  //       formik.setFieldValue(field, res.data.files[field]);
+  //       toast.success("File uploaded successfully");
+  //     } else {
+  //       toast.error("Upload failed");
+  //     }
+  //   } catch {
+  //     toast.error("Upload failed");
+  //   }
+  // };
 
   const fieldClass = (name) =>
     `form-control ${
@@ -276,6 +320,10 @@ const EmpProfile = () => {
   };
 
   useEffect(() => {
+    document.body.style.overflow = showCropper ? "hidden" : "auto";
+  }, [showCropper]);
+
+  useEffect(() => {
     if (formik.values.state) {
       fetchCities(formik.values.state);
     }
@@ -283,6 +331,48 @@ const EmpProfile = () => {
 
   return (
     <>
+      {showCropper && (
+        <div className="crop-overlay">
+          <div className="crop-box">
+            <div className="cropper-wrapper">
+              <Cropper
+                image={logoSrc}
+                crop={crop}
+                zoom={zoom}
+                aspect={1}
+                cropShape="round"
+                showGrid={false}
+                onCropChange={setCrop}
+                onZoomChange={setZoom}
+                onCropComplete={onCropComplete}
+              />
+            </div>
+
+            <input
+              type="range"
+              min={1}
+              max={3}
+              step={0.1}
+              value={zoom}
+              onChange={(e) => setZoom(e.target.value)}
+              className="form-range mt-3"
+            />
+
+            <div className="d-flex justify-content-end gap-2 mt-3">
+              <button
+                className="btn btn-outline-secondary"
+                onClick={() => setShowCropper(false)}
+              >
+                Cancel
+              </button>
+              <button className="btn btn-success" onClick={handleCropSave}>
+                Crop & Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <SEO
         title={`${seoConfig.emp_profile.title} - ${
           employer?.emp_name
@@ -392,7 +482,8 @@ const EmpProfile = () => {
                       <input
                         type="file"
                         className="form-control"
-                        onChange={(e) => uploadFile(e, "emp_com_logo")}
+                        accept=".jpg,.jpeg,.png"
+                        onChange={onSelectLogo}
                       />
                       <input
                         type="hidden"

@@ -4,7 +4,7 @@ import "../Component2/css/SignupVideoModal.css";
 
 const videos = {
   candidate: "d95PPykB2vE",
-  employer: "BB49x_uMlGA",
+  employer: null,
 };
 
 const SignupVideoModal = ({ show }) => {
@@ -32,6 +32,9 @@ const SignupVideoModal = ({ show }) => {
   /* 🔹 Create Player */
   useEffect(() => {
     if (!show || !selectedRole) return;
+
+    if (!videos[selectedRole]) return;
+
     if (!window.YT || !window.YT.Player) return;
 
     lastAllowedTime.current = 0;
@@ -67,6 +70,17 @@ const SignupVideoModal = ({ show }) => {
     };
   }, [selectedRole, show]);
 
+  const handleRoleSelect = (role) => {
+    if (role === "employer" && !videos.employer) {
+      localStorage.setItem("signupRole", role);
+      localStorage.setItem("videoCompleted", "true"); // ✅ allow
+      navigate("/signup");
+      return;
+    }
+
+    setSelectedRole(role);
+  };
+
   /* 🔹 Smooth progress tracking + forward seek block */
   const startTracking = () => {
     progressTimer.current = setInterval(() => {
@@ -96,6 +110,9 @@ const SignupVideoModal = ({ show }) => {
       clearInterval(progressTimer.current);
       setVideoCompleted(true);
       setProgress(100);
+
+      // ✅ Save completion status
+      localStorage.setItem("videoCompleted", "true");
     }
   };
 
@@ -111,17 +128,18 @@ const SignupVideoModal = ({ show }) => {
       <div className="modal-box">
         {!selectedRole ? (
           <>
-            <h4 style={{ fontWeight: "bold" }}>Select Signup Type</h4>
+            <h4 style={{ fontWeight: "bold" }}>Select Register Type</h4>
             <div className="d-flex gap-3 justify-content-center mt-3">
               <button
                 className="role-pill"
-                onClick={() => setSelectedRole("candidate")}
+                onClick={() => handleRoleSelect("candidate")}
               >
                 Candidate
               </button>
+
               <button
                 className="role-pill"
-                onClick={() => setSelectedRole("employer")}
+                onClick={() => handleRoleSelect("employer")}
               >
                 Employer
               </button>

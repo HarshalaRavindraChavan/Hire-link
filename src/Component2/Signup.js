@@ -211,7 +211,6 @@ const Signup = () => {
         localStorage.setItem(
           "signupTempData",
           JSON.stringify({
-            
             role: activeRole, // candidate | employer
             data: data.data,
             createdAt: Date.now(),
@@ -267,6 +266,16 @@ const Signup = () => {
     activeRole === "candidate"
       ? "Candidate Terms & Conditions"
       : "Employer Terms & Conditions";
+
+  useEffect(() => {
+    const role = localStorage.getItem("signupRole");
+    const completed = localStorage.getItem("videoCompleted");
+
+  
+    if (!role || completed !== "true") {
+      navigate("/signin"); 
+    }
+  }, []);
 
   /* ---------------- JSX ---------------- */
   return (

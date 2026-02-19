@@ -379,12 +379,17 @@ function Candidates() {
   const [selectedSubCat2, setSelectedSubCat2] = useState("");
   const [selectedSubCat3, setSelectedSubCat3] = useState("");
 
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
   const fetchCategories = async () => {
     try {
       const res = await axios.get(
         `${BASE_URL}candidate/getdata/tbl_main_category`,
       );
       setCategories(res.data.data || []);
+      console.log("Main categories:", res.data.data);
     } catch (err) {
       console.error("Main category error", err);
     }
@@ -475,14 +480,14 @@ function Candidates() {
   };
 
   const handleSubmitData = () => {
-  console.log({
-    selectedCategory,
-    selectedSubCategory,
-    selectedSubCat1,
-    selectedSubCat2,
-    selectedSubCat3,
-  });
-};
+    console.log({
+      selectedCategory,
+      selectedSubCategory,
+      selectedSubCat1,
+      selectedSubCat2,
+      selectedSubCat3,
+    });
+  };
 
   return (
     <>

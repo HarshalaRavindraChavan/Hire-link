@@ -639,7 +639,8 @@ function Profile() {
               <h5 className="mb-1 fw-bold">
                 {" "}
                 {candidate.can_name
-                  ?.split(" ")
+                  ?.toLowerCase()
+                  .split(" ")
                   .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
                   .join(" ")}
               </h5>
@@ -906,7 +907,8 @@ function Profile() {
                     <h5 className="mb-1 fw-bold">
                       {" "}
                       {candidate.can_name
-                        ?.split(" ")
+                        ?.toLowerCase()
+                        .split(" ")
                         .map(
                           (word) =>
                             word.charAt(0).toUpperCase() + word.slice(1),

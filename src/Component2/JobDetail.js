@@ -21,9 +21,7 @@ function JobDetail() {
   useEffect(() => {
     if (!job && jobId) {
       axios
-        .get(
-          `${BASE_URL}candidate/getdatawhere/tbl_job/job_id/${jobId}`
-        )
+        .get(`${BASE_URL}candidate/getdatawhere/tbl_job/job_id/${jobId}`)
         .then((res) => {
           if (
             (res.data.status === true || res.data.status === "success") &&
@@ -259,15 +257,14 @@ function JobDetail() {
           Full job description
         </h4>
 
-        <p
+        <div
           style={{
             fontSize: "14px",
             color: "#333",
             lineHeight: 1.6,
           }}
-        >
-          {job.job_description}
-        </p>
+          dangerouslySetInnerHTML={{ __html: job.job_description }}
+        />
 
         {/* <p
           style={{

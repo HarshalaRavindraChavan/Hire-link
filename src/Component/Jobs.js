@@ -12,6 +12,7 @@ import { BASE_URL } from "../config/constants";
 import TableSkeleton from "./commenuse/TableSkeleton";
 import SearchableDropdown from "./SearchableDropdown";
 import { useNavigate } from "react-router-dom";
+import RichTextEditor from "../Component/commenuse/RichTextEditor";
 
 function Jobs() {
   const navigate = useNavigate();
@@ -43,13 +44,15 @@ function Jobs() {
 
   const educationOptions = {
     Diploma: ["D.Pharm"],
-    Graduation: ["B.Sc", "B.Pharmacy."],
+    Graduation: ["B.Sc", "B.Pharmacy"],
     "Post Graduation": ["M.Sc", "M.Pharm"],
   };
 
   // ================= STATE & CITY =================
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
+
+  const [viewDescription, setViewDescription] = useState("");
 
   // ================= FILTER STATES =================
 
@@ -923,6 +926,19 @@ function Jobs() {
                           {job.job_experience}Year
                         </span>
                       </div>
+                      <div className="">
+                        Description:{" "}
+                        <a
+                          className="text-primary"
+                          data-bs-toggle="modal"
+                          data-bs-target="#viewDescriptionModal"
+                          onClick={() =>
+                            setViewDescription(job.job_description)
+                          }
+                        >
+                          View
+                        </a>
+                      </div>
                     </td>
 
                     <td className="text-start">
@@ -1456,12 +1472,16 @@ function Jobs() {
                 {/* Description */}
                 <div className="col-md-12 mb-2">
                   <label className="form-label fw-semibold">Description</label>
-                  <textarea
-                    rows={5}
-                    {...addRegister("job_description")}
-                    className="form-control"
-                    placeholder="Enter Job Description"
-                  ></textarea>
+
+                  <RichTextEditor
+                    value={addWatch("job_description") || ""}
+                    onChange={(html) =>
+                      setAddValue("job_description", html, {
+                        shouldValidate: true,
+                        shouldDirty: true,
+                      })
+                    }
+                  />
 
                   <span className="text-danger">
                     {addErrors.job_description?.message}
@@ -1731,6 +1751,7 @@ function Jobs() {
                     <option value="">Select Status</option>
                     <option value="1">Active</option>
                     <option value="0">Closed</option>
+                    <option value="2">Processing</option>
                   </select>
                   <span className="text-danger">
                     {editErrors.job_status?.message}
@@ -1920,12 +1941,16 @@ function Jobs() {
                 {/* Description */}
                 <div className="col-md-12 mb-2">
                   <label className="form-label fw-semibold">Description</label>
-                  <textarea
-                    rows={5}
-                    {...editRegister("job_description")}
-                    className="form-control"
-                    placeholder="Enter Job Description"
-                  ></textarea>
+
+                  <RichTextEditor
+                    value={editWatch("job_description") || ""}
+                    onChange={(html) =>
+                      setEditValue("job_description", html, {
+                        shouldValidate: true,
+                        shouldDirty: true,
+                      })
+                    }
+                  />
 
                   <span className="text-danger">
                     {editErrors.job_description?.message}
@@ -1952,6 +1977,48 @@ function Jobs() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      </div>
+
+      {/* VIEW DESCRIPTION MODAL */}
+      <div
+        className="modal fade"
+        id="viewDescriptionModal"
+        tabIndex="-1"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-dialog-centered modal-lg">
+          <div className="modal-content shadow-lg border-0 rounded-4">
+            <div className="modal-header bg-success text-white">
+              <h5 className="modal-title fw-bold">Job Description</h5>
+              <button
+                type="button"
+                className="btn-close btn-close-white"
+                data-bs-dismiss="modal"
+              ></button>
+            </div>
+
+            <div className="modal-body">
+              {/* 🔥 READ ONLY HTML VIEW */}
+              <div
+                className="border rounded p-3"
+                style={{ minHeight: "200px", background: "#fafafa" }}
+                dangerouslySetInnerHTML={{
+                  __html: viewDescription || "<p>No description available</p>",
+                }}
+              />
+            </div>
+
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       </div>

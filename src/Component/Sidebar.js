@@ -15,23 +15,17 @@ function Sidebar() {
     { id: 3, label: "Candidates", path: "/candidate", icon: "fa fa-user-tie" },
     {
       id: 4,
-      label: "Applicant",
+      label: "Applicants",
       path: "/applicant",
       icon: "fa-brands fa-wpforms",
     },
     { id: 5, label: "Interviews", path: "/interview", icon: "fa fa-comments" },
     { id: 6, label: "Employers", path: "/employe", icon: "fa fa-user-tie" },
-    // {
-    //   id: 7,
-    //   label: "Packages",
-    //   path: "/package",
-    //   icon: "fa-solid fa-boxes-packing",
-    // },
-    // { id: 8, label: "Offers", path: "/offer", icon: "fa fa-gift" },
     { id: 9, label: "Contacts", path: "/contact", icon: "fa fa-headphones" },
     { id: 10, label: "Users", path: "/user", icon: "fa fa-user" },
     { id: 11, label: "Profile", path: "/emp-profile", icon: "fa fa-user" },
     { id: 12, label: "Staffs", path: "/staff", icon: "fa fa-user" },
+    { id: 13, label: "Setting", path: "/setting", icon: "fa-solid fa-gear" },
   ];
 
   // ================= MENU LOGIC =================

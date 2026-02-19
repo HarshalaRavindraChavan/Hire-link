@@ -346,7 +346,12 @@ function Jobs() {
                 </p>{" "}
                 <hr />
                 <h6 className="fw-bold fs-5">Job Description</h6>
-                <p>{selectedJob.job_description}</p>
+                <div
+                  style={{ lineHeight: "1.6", fontSize: "14px" }}
+                  dangerouslySetInnerHTML={{
+                    __html: selectedJob.job_description,
+                  }}
+                />
                 <hr />
                 <h6 className="fw-bold fs-6">Job Type</h6>
                 <p>{selectedJob.job_type}</p>

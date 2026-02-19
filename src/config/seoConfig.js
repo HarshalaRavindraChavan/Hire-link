@@ -66,6 +66,12 @@ export const seoConfig = {
       "Securely login to Hirelink admin panel to manage jobs, candidates, employers and platform activity.",
   },
 
+  a_setting: {
+    title: "Hirelink | Admin Setting",
+    description:
+      "Securely login to Hirelink admin panel to manage jobs, candidates, employers and platform activity.",
+  },
+
   verify: {
     title: "Hirelink | Email Verification",
     description:

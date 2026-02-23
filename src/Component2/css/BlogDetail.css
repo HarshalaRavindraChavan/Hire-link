@@ -1,0 +1,163 @@
+/* ===== HERO ===== */
+.bd-hero {
+  position: relative;
+  height: 360px;
+  overflow: hidden;
+}
+
+.bd-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bd-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.4),
+    rgba(0, 0, 0, 0.7)
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 40px 8%;
+  color: #fff;
+}
+
+.bd-hero-overlay h1 {
+  font-size: 32px;
+  font-weight: 700;
+  max-width: 900px;
+}
+
+.bd-hero-overlay p {
+  margin-top: 10px;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+/* ===== WRAPPER ===== */
+.bd-wrapper {
+  background: #ffffff;
+  padding: 60px 0;
+}
+
+.bd-container {
+  width: 90%;
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 40px;
+}
+
+/* ===== CONTENT ===== */
+.bd-content {
+  font-family: "Inter", sans-serif;
+}
+
+.bd-intro {
+  font-size: 16px;
+  color: #374151;
+  margin-bottom: 30px;
+}
+
+.bd-content h2 {
+  margin-top: 40px;
+  margin-bottom: 12px;
+  font-size: 22px;
+  color: #0f172a;
+}
+
+.bd-content p {
+  font-size: 15px;
+  line-height: 1.8;
+  color: #4b5563;
+}
+
+.bd-content ul {
+  margin-left: 20px;
+  color: #4b5563;
+}
+
+.bd-content li {
+  margin-bottom: 8px;
+}
+
+/* ===== SIDEBAR ===== */
+.bd-sidebar {
+  position: sticky;
+  top: 90px;
+  height: fit-content;
+}
+
+.bd-toc {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 20px;
+  background: #f9fafb;
+}
+
+.bd-toc h4 {
+  margin-bottom: 14px;
+  font-size: 16px;
+  color: #111827;
+}
+
+.bd-toc ul {
+  list-style: none;
+  padding: 0;
+}
+
+.bd-toc li {
+  margin-bottom: 10px;
+}
+
+.bd-toc a {
+  font-size: 14px;
+  text-decoration: none;
+  color: #166534;
+}
+
+.bd-toc a:hover {
+  text-decoration: underline;
+}
+/* ===== FLOATING JOB BUTTON ===== */
+.job-float-btn {
+  position: fixed;
+  right: 20px;
+  bottom: 30px;
+  background: #269e01;
+  color: #fff;
+  border: none;
+  padding: 12px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(37, 235, 96, 0.4);
+  z-index: 999;
+  transition: all 0.3s ease;
+}
+
+.job-float-btn:hover {
+  background: #0b5302;
+  transform: translateY(-3px);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .bd-container {
+    grid-template-columns: 1fr;
+  }
+
+  .bd-sidebar {
+    position: static;
+  }
+
+  .bd-hero-overlay h1 {
+    font-size: 24px;
+  }
+}

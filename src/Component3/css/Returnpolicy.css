@@ -28,17 +28,18 @@
 .erp-title {
   text-align: center;
   color: #333;
-  margin-bottom: 25px;
+  /* margin-bottom: 25px; */
+  font-weight: bold;
   font-size: 35px;
 }
 
 .erp-heading {
   margin-top: 25px;
-  padding-left: 50px;
   color: #000000;
   font-size: 18px;
-  text-align: start;
+  /* text-align: center; */
   font-weight: 700;
+  margin-left: 20px;
 }
 
 .erp-text {
@@ -53,6 +54,29 @@
   text-align: center;
   font-size: 14px;
   color: #000000;
+}
+
+.tblx9-wrapper {
+  width: 600px;
+  margin-left: 90px;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+}
+
+.tblx9-head {
+  background: #f4f6f8;
+}
+
+.tblx9-th,
+.tblx9-td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.tblx9-row:hover {
+  background-color: #f9fafb;
 }
 
 @media (max-width: 768px) {

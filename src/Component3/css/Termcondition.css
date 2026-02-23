@@ -1,13 +1,13 @@
 /* ===== Terms & Conditions Unique CSS ===== */
 
-.etc-body {
+.ect-body {
   margin: 0;
   padding: 0;
   font-family: Arial, Helvetica, sans-serif;
   background-color: #f4f6f9;
 }
 
-.etc-wrapper {
+.ect-wrapper {
   min-height: 100vh;
   padding: 30px 30px 0 30px;
   background-repeat: no-repeat;
@@ -16,7 +16,7 @@
   background-attachment: fixed;
 }
 
-.etc-container {
+.ect-container {
   max-width: 900px;
   margin: auto;
   background: rgba(255, 255, 255, 0.46);
@@ -25,45 +25,70 @@
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
 }
 
-.etc-title {
+.ect-title {
   text-align: center;
   color: #333;
-  margin-bottom: 25px;
+  /* margin-bottom: 25px; */
+  font-weight: bold;
   font-size: 35px;
 }
 
-.etc-heading {
+.ect-heading {
   margin-top: 25px;
   color: #000000;
   font-size: 18px;
-  text-align: center;
+  /* text-align: center; */
   font-weight: 700;
+  margin-left: 20px;
 }
 
-.etc-text {
+.ect-text {
   color: #000000;
   line-height: 1.7;
   font-size: 15px;
   padding-left: 50px;
 }
 
-.etc-footer-text {
+.ect-footer-text {
   margin-top: 30px;
   text-align: center;
   font-size: 14px;
   color: #000000;
 }
 
+.tblx9-wrapper {
+  width: 600px;
+  margin-left: 90px;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+}
+
+.tblx9-head {
+  background: #f4f6f8;
+}
+
+.tblx9-th,
+.tblx9-td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.tblx9-row:hover {
+  background-color: #f9fafb;
+}
+
 @media (max-width: 768px) {
-  .etc-text {
+  .ect-text {
     padding-left: 0;
   }
 
-  .etc-wrapper {
+  .ect-wrapper {
     padding: 10px;
   }
 
-  .etc-title {
+  .ect-title {
     font-size: 30px;
   }
 }

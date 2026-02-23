@@ -16,140 +16,280 @@ function Returnpolicy() {
           style={{ backgroundImage: `url(${logo})` }}
         >
           <div className="erp-container">
-            <h1 className="erp-title fw-bold">Employer Return Policy</h1>
-            <h3 className="erp-heading">Service Nature</h3>
+            <h2 className="erp-title">Employer Return & Refund Policy</h2>
+            <h6
+              className=""
+              style={{ textAlign: "center", fontWeight: "bold" }}
+            >
+              PharmaJobsHireLink – Official Pharma Job Portal Policy
+            </h6>
+
+            <h3 className="erp-heading">1. Platform Purpose</h3>
             <p className="erp-text">
-              Hirelinkinfo.com is a digital job portal platform that provides
-              online services such as employer registration, job postings,
-              candidate access, and other recruitment-related services. All
-              services are delivered electronically.
+              This Return & Refund Policy governs payments made by employers,
+              recruiters, HR teams, and pharmaceutical companies using the
+              <b>PharmaJobsHireLink pharma job portal</b> for recruitment
+              services, resume access, and candidate search tools.
             </p>
-            <h3 className="erp-heading">No Physical Returns</h3>
 
             <p className="erp-text">
-              Since Hirelinkinfo.com offers only digital services, there is no
-              concept of physical product returns.
+              By registering or making payment on the platform, you confirm that
+              you have read, understood, and agreed to this policy in full.
             </p>
 
-            <h3 className="erp-heading">Employer Registration Fee</h3>
+            <h3 className="erp-heading">2. Nature of Platform Service</h3>
+            <p className="erp-text">
+              PharmaJobsHireLink is a <b>digital pharma job portal platform,</b>{" "}
+              not a recruitment agency or placement consultancy.
+            </p>
+            <p className="erp-text">
+              Payments made by employers are solely for:
+              <br></br>
+              <br></br>● Portal access<br></br>● Resume database search
+              <br></br>● Candidate profile visibility
+              <br></br>● Recruitment tools
+            </p>
+            <p className="erp-text">
+              Payments are{" "}
+              <b>
+                not for guaranteed hiring, interviews, or candidate response.
+              </b>
+            </p>
+
+            <h3 className="erp-heading">3. Employer Fees Structure</h3>
+            <p className="erp-text">
+              The platform provides paid employer services with the following
+              charges:
+            </p>
+            <table class="tblx9-wrapper">
+              <thead class="tblx9-head">
+                <tr class="tblx9-row">
+                  <th class="tblx9-th">Service</th>
+                  <th class="tblx9-th">Fee</th>
+                  <th class="tblx9-th">GST</th>
+                  <th class="tblx9-th">Total</th>
+                </tr>
+              </thead>
+
+              <tbody class="tblx9-body">
+                <tr class="tblx9-row">
+                  <td class="tblx9-td">Employer Registration</td>
+                  <td class="tblx9-td">₹5000</td>
+                  <td class="tblx9-td">18%</td>
+                  <td class="tblx9-td">Non-Refundable</td>
+                </tr>
+
+                <tr class="tblx9-row">
+                  <td class="tblx9-td">Staff Account Creation</td>
+                  <td class="tblx9-td">₹2500</td>
+                  <td class="tblx9-td">18%</td>
+                  <td class="tblx9-td">Non-Refundable</td>
+                </tr>
+
+                <tr className="tblx9-row">
+                  <td class="tblx9-td">Resume Download</td>
+                  <td class="tblx9-td">₹60</td>
+                  <td class="tblx9-td">18%</td>
+                  <td class="tblx9-td">Non-Refundable</td>
+                </tr>
+              </tbody>
+            </table>
 
             <p className="erp-text">
-              Employers are required to pay a registration fee (₹5000) to create
-              an account and access employer-specific services on the platform.
+              All amounts must be paid 100% in advance before service
+              activation.
+            </p>
+
+            <h3 className="erp-heading">4. Strict No Refund Policy</h3>
+            <p className="erp-text">
+              All payments made to PharmaJobsHireLink are final and
+              non-refundable under any condition.
+              <br></br>
+              <br></br>Refund requests will not be accepted for reasons
+              including but not limited to:
+            </p>
+            <p className="erp-text">
+              ● Employer changed hiring plans<br></br> ● No suitable candidates
+              found <br></br>● Low response rate from candidates<br></br> ●
+              Hiring completed elsewhere
+              <br></br> ● Account inactivity
+              <br></br> ● Staff misuse of credits
+              <br></br> ● Mistaken payment
+              <br></br> ● Technical misunderstanding of features
+              <br></br> ● Dissatisfaction with candidate quality
+            </p>
+
+            <p className="erp-text">
+              Once payment is successfully processed,{" "}
+              <b>
+                no reversal, cancellation, or credit adjustment will be provided
+              </b>
+            </p>
+
+            <h3 className="erp-heading">5. GST Non-Reversible Clause</h3>
+            <p className="erp-text">
+              All employer payments include 18% GST as mandated by Indian tax
+              law.
+              <br></br>
+              <br></br>After invoice generation:
+            </p>
+            <p className="erp-text">
+              ● GST is remitted to authorities<br></br>● It cannot be refunded
+              or reversed<br></br>● The platform cannot modify tax invoices once
+              issued
+            </p>
+
+            <h3 className="erp-heading">6. Resume Download Charges Policy</h3>
+            <p className="erp-text">
+              Employers and authorized staff can search and download resumes
+              using platform credits.
+              <br></br>
+              <br></br>Important rules:
+            </p>
+            <p className="erp-text">
+              ● Each resume download costs ₹60 + GST<br></br>● Charges apply
+              instantly when resume is accessed<br></br>● Credits once used
+              cannot be reversed
+              <br></br>● Charges apply even if candidate is not hired
+              <br></br>
+              <br></br>
+              This fee is for data access, not for hiring success
+            </p>
+
+            <h3 className="erp-heading">7. Staff Account Payment Policy</h3>
+            <p className="erp-text">
+              Employers may create internal recruiter or HR staff accounts
+              <br></br>
+              <br></br>Conditions:
+              <br></br>
+              <br></br>● Each staff login costs ₹2500 + GST
+              <br></br>● Payment is non-refundable<br></br>● Staff access cannot
+              be transferred to another company
+              <br></br>● Employers are responsible for all staff actions
+              <br></br>
+              <br></br>Deleting a staff account does not qualify for refund.
             </p>
 
             <h3 className="erp-heading">
-              Taxes (GST) on Employer Registration
+              8. Payment Errors or Duplicate Transactions
             </h3>
             <p className="erp-text">
-              The employer registration fee of ₹5000 is exclusive of taxes. As
-              per applicable law, an additional 18% Goods and Services Tax (GST)
-              will be charged. The total payable amount for employer
-              registration will be ₹5900 (₹5000 + 18% GST).
+              Refund review will only be considered if:
+              <br></br>
+              <br></br>● Exact duplicate payment is made for the same service
+              <br></br>● Payment is deducted but account is not activated due to
+              verified system error<br></br>
+              <br></br>Such cases must be reported within 48 hours with valid
+              proof.
+              <br></br>
+              <br></br>Approval of such requests remains solely at company
+              discretion.
             </p>
 
-            <h3 className="erp-heading">Candidate Resume Download Charges</h3>
+            <h3 className="erp-heading">9. Suspension or Termination</h3>
             <p className="erp-text">
-              Employers are required to pay ₹60 per candidate resume download.
-              This amount is exclusive of taxes. An additional 18% GST will be
-              applicable, making the total payable amount ₹70.80 per resume
-              download.
+              No refund will be issued if employer account is suspended due to:
             </p>
-
-            <h3 className="erp-heading">Extended Employer Services Charges</h3>
             <p className="erp-text">
-              Employers opting for extended or additional employer services are
-              required to pay a fee of ₹2500. This amount is exclusive of taxes.
-              An additional 18% GST will be charged, making the total payable
-              amount ₹2950 (₹2500 + 18% GST).
+              ● Policy violation
+              <br></br>● Fraudulent activity<br></br>● Fake job postings
+              <br></br>● Candidate complaints
+              <br></br>● Data misuse
+              <br></br>● Terms violation
             </p>
-
-            <h3 className="erp-heading">Non-Refundable Payments</h3>
-
             <p className="erp-text">
-              All payments made towards employer signup, subscriptions, job
-              postings, or any other paid services on Hirelinkinfo.com are
-              strictly non-refundable once the service is activated.
+              Termination automatically cancels all remaining credits without
+              compensation.
             </p>
 
-            <h3 className="erp-heading">Service Activation</h3>
-
+            <h3 className="erp-heading">10. Third-Party Payment Gateways</h3>
             <p className="erp-text">
-              Services are activated immediately or within a short processing
-              time after successful payment. Once activated, the user is not
-              eligible for any return or refund.
+              Payments are processed through secure external gateways.
+              <br></br>
+              <br></br>PharmaJobsHireLink is not responsible for:<br></br>
+              <br></br>● Bank delays
+              <br></br> ● Server timeouts
+              <br></br> ● Network issues
+              <br></br> ● Payment failures caused by incorrect details
+              <br></br>
+              <br></br>
+              Employers must verify transaction details before confirming
+              payment.
             </p>
 
-            <h3 className="erp-heading">No Cancellation Refund</h3>
-
+            <h3 className="erp-heading">11. Mobile App Payment Compliance</h3>
             <p className="erp-text">
-              Cancellation of any active service, subscription, or employer
-              account will not result in a refund, either full or partial.
+              Employers using the mobile platform via
+              <br></br>
+              <b>Google Play Store</b> and
+              <br></br>
+              <b>Apple App Store</b>
+              <br></br>● Platform services are digital and non-refundable
+              <br></br>● App stores do not manage or approve refunds for portal
+              services
+              <br></br>● Refund decisions are handled only by PharmaJobsHireLink
             </p>
 
-            <h3 className="erp-heading">Exceptions for Refunds</h3>
-
+            <h3 className="erp-heading">12. No Service Guarantee Disclaimer</h3>
             <p className="erp-text">
-              Refunds may be considered only in exceptional cases, such as:
-              <ul>
-                <li>
-                  Duplicate payment made by the user due to a technical error
-                </li>
-                <li>
-                  Payment deducted but the service was not activated due to
-                  system failure.
-                </li>
-              </ul>
+              Payment for employer access does not guarantee:
+              <br></br>
+              <br></br>● Hiring success<br></br> ● Interview scheduling
+              <br></br> ● Candidate acceptance
+              <br></br> ● Databases
+              <br></br> ● Candidate availability
+              <br></br>
+              <br></br>
+              The platform provides technology tools only, not recruitment
+              outcomes.
             </p>
 
-            <h3 className="erp-heading">Refund Request Timeline</h3>
-
+            <h3 className="erp-heading">13. Legal Enforceability</h3>
             <p className="erp-text">
-              Any refund request under exceptional circumstances must be raised
-              within 7 working days from the date of payment along with valid
-              transaction proof.
+              By making payment, employers legally confirm that::
             </p>
-
-            <h3 className="erp-heading">Refund Processing Time</h3>
-
             <p className="erp-text">
-              If a refund is approved, the amount will be processed to the
-              original payment method within 7 to 10 working days.
+              ● They understand all fees are non-refundable<br></br>● They
+              accept the pricing model
+              <br></br>● They agree not to initiate payment disputes or
+              chargebacks without valid legal basis
+              <br></br>
+              <br></br>Unjustified payment disputes may result in:
+              <br></br>● Permanent account suspension
+              <br></br>● Legal recovery action
+              <br></br>● Restriction from future platform use
             </p>
 
-            <h3 className="erp-heading">Dispute Resolution</h3>
-
+            <h3 className="erp-heading">14. Policy Modification Rights</h3>
             <p className="erp-text">
-              Any disputes related to payments, refunds, or services shall be
-              reviewed by the Hirelinkinfo.com management team, and their
-              decision shall be final.
+              PharmaJobsHireLink reserves the right to:
             </p>
-
-            <h3 className="erp-heading">Policy Modification Rights</h3>
-
             <p className="erp-text">
-              Hirelinkinfo.com reserves the right to modify, update, or change
-              this Return & Refund Policy at any time without prior notice.
-              Updated policies will be effective immediately upon publication on
-              the website.
+              ● Change pricing<br></br>● Modify services<br></br>● Update refund
+              rules<br></br>● CIntroduce new plans<br></br>
+              <br></br>Updates may be made at any time without prior notice.
+              Continued use of the pharma job portal indicates acceptance of
+              revised policies.
             </p>
 
-            <h3 className="erp-heading">User Responsibility</h3>
-
+            <h3 className="erp-heading">15. Jurisdiction</h3>
             <p className="erp-text">
-              Users are advised to read and understand this policy carefully
-              before making any payment on Hirelinkinfo.com.
+              All payment-related disputes shall fall under the legal
+              jurisdiction of courts located in <b>Nashik, India.</b>
             </p>
 
-            <h3 className="erp-heading">Contact Information</h3>
-
+            <h3 className="erp-heading">16. Acceptance Confirmation</h3>
             <p className="erp-text">
-              For any questions, concerns, or refund-related queries, users can
-              contact Hirelinkinfo.com through the official support channels
-              available on the website.
+              By completing payment on PharmaJobsHireLink, the employer
+              confirms:
+            </p>
+            <p className="erp-text">
+              ● Full understanding of this Return Policy
+              <br></br>● Acceptance of strict non-refund rules<br></br>●
+              Agreement with all platform payment terms
             </p>
 
-            <p className="erp-footer-text">
+            <p className="erp-footer-text" style={{ fontWeight: "bold" }}>
               © {new Date().getFullYear()} All Rights Reserved
             </p>
           </div>

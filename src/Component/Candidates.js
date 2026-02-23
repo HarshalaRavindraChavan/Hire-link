@@ -18,11 +18,11 @@ function Candidates() {
   const auth = JSON.parse(localStorage.getItem("auth"));
   const isAdmin = Number(auth?.role) === 1;
 
-  // useEffect(() => {
-  //   if (!auth) {
-  //     navigate("/signin");
-  //   }
-  // }, [auth, navigate]);
+  useEffect(() => {
+    if (!auth) {
+      navigate("/signin");
+    }
+  }, [auth, navigate]);
 
   // const [search, setSearch] = useState("");
   const [candidates, setCandidates] = useState([]);
@@ -30,10 +30,24 @@ function Candidates() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
 
-  // const [search, setSearch] = useState("");
-  // const [experience, setExperience] = useState("");
-  // const [fromDate, setFromDate] = useState("");
-  // const [toDate, setToDate] = useState("");
+  // filter code
+  const [search, setSearch] = useState("");
+  const [experience, setExperience] = useState("");
+  const [gender, setGender] = useState("");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
+
+  const [categories, setCategories] = useState([]);
+  const [subCategories, setSubCategories] = useState([]);
+  const [subCat1, setSubCat1] = useState([]);
+  const [subCat2, setSubCat2] = useState([]);
+  const [subCat3, setSubCat3] = useState([]);
+
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedSubCategory, setSelectedSubCategory] = useState("");
+  const [selectedSubCat1, setSelectedSubCat1] = useState("");
+  const [selectedSubCat2, setSelectedSubCat2] = useState("");
+  const [selectedSubCat3, setSelectedSubCat3] = useState("");
 
   useEffect(() => {
     const paymentUser = JSON.parse(localStorage.getItem("paymentUser") || "{}");
@@ -86,8 +100,22 @@ function Candidates() {
   const recordsPerPage = 100;
   const lastIndex = currentPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
-  const records = candidates.slice(firstIndex, lastIndex);
-  const nPages = Math.ceil(candidates.length / recordsPerPage);
+
+  // 🔁 Reset page when any filter changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [
+    search,
+    experience,
+    gender,
+    fromDate,
+    toDate,
+    selectedCategory,
+    selectedSubCategory,
+    selectedSubCat1,
+    selectedSubCat2,
+    selectedSubCat3,
+  ]);
 
   //============================== Delete modal state
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -303,90 +331,76 @@ function Candidates() {
     }
   };
 
-  // filter code 
-const [search, setSearch] = useState("");
-const [experience, setExperience] = useState("");
-const [gender, setGender] = useState("");
-const [fromDate, setFromDate] = useState("");
-const [toDate, setToDate] = useState("");
+  const filteredCandidates = candidates.filter((candidate) => {
+    const matchesSearch =
+      !search ||
+      candidate.can_name?.toLowerCase().includes(search.toLowerCase()) ||
+      candidate.can_email?.toLowerCase().includes(search.toLowerCase()) ||
+      candidate.can_mobile?.includes(search);
 
-  const filteredRecords = records.filter((candidate) => {
-  const matchesSearch =
-    !search ||
-    candidate.can_name?.toLowerCase().includes(search.toLowerCase()) ||
-    candidate.can_email?.toLowerCase().includes(search.toLowerCase()) ||
-    candidate.can_mobile?.includes(search);
+    const matchesMainCate =
+      !selectedCategory ||
+      String(candidate.can_mc) === String(selectedCategory);
 
-  const matchesMainCate =
-    !selectedCategory || candidate.mc_id == selectedCategory;
+    const matchesSubCate =
+      !selectedSubCategory ||
+      String(candidate.can_sc) === String(selectedSubCategory);
 
-  const matchesSubCate =
-    !selectedSubCategory || candidate.sc_id == selectedSubCategory;
+    const matchesSubCate1 =
+      !selectedSubCat1 || String(candidate.can_sc1) === String(selectedSubCat1);
 
-  const matchesSubCate1 =
-    !selectedSubCat1 || candidate.sc1_id == selectedSubCat1;
+    const matchesSubCate2 =
+      !selectedSubCat2 || String(candidate.can_sc2) === String(selectedSubCat2);
 
-  const matchesSubCate2 =
-    !selectedSubCat2 || candidate.sc2_id == selectedSubCat2;
+    const matchesSubCate3 =
+      !selectedSubCat3 || String(candidate.can_sc3) === String(selectedSubCat3);
 
-  const matchesSubCate3 =
-    !selectedSubCat3 || candidate.sc3_id == selectedSubCat3;
+    const matchesExperience =
+      !experience ||
+      (() => {
+        const [min, max] = experience.split("-").map(Number);
+        const candidateExp = Number(candidate.can_experience);
+        return candidateExp >= min && candidateExp <= max;
+      })();
 
-  const matchesExperience =
-    !experience ||
-    (() => {
-      const [min, max] = experience.split("-").map(Number);
-      const candidateExp = Number(candidate.can_experience);
-      return candidateExp >= min && candidateExp <= max;
-    })();
+    const matchesGender = !gender || candidate.can_gender === gender;
 
-  const matchesGender =
-    !gender || candidate.can_gender === gender;
+    const matchesDate =
+      (!fromDate ||
+        (candidate.register_date &&
+          new Date(candidate.register_date) >= new Date(fromDate))) &&
+      (!toDate ||
+        (candidate.register_date &&
+          new Date(candidate.register_date) <= new Date(toDate)));
 
-  const matchesDate =
-    (!fromDate ||
-      new Date(candidate.register_date) >= new Date(fromDate)) &&
-    (!toDate ||
-      new Date(candidate.register_date) <= new Date(toDate));
+    return (
+      matchesSearch &&
+      matchesMainCate &&
+      matchesSubCate &&
+      matchesSubCate1 &&
+      matchesSubCate2 &&
+      matchesSubCate3 &&
+      matchesExperience &&
+      matchesGender &&
+      matchesDate
+    );
+  });
 
-  return (
-    matchesSearch &&
-    matchesMainCate &&
-    matchesSubCate &&
-    matchesSubCate1 &&
-    matchesSubCate2 &&
-    matchesSubCate3 &&
-    matchesExperience &&
-    matchesGender &&
-    matchesDate
-  );
-});
+  const records = filteredCandidates.slice(firstIndex, lastIndex);
+  const nPages = Math.ceil(filteredCandidates.length / recordsPerPage);
 
-const handleResetAll = () => {
-  setSearch("");
-  setSelectedCategory("");
-  setSelectedSubCategory("");
-  setSelectedSubCat1("");
-  setSelectedSubCat2("");
-  setSelectedSubCat3("");
-  setExperience("");
-  setGender("");
-  setFromDate("");
-  setToDate("");
-};
-
-
-  const [categories, setCategories] = useState([]);
-  const [subCategories, setSubCategories] = useState([]);
-  const [subCat1, setSubCat1] = useState([]);
-  const [subCat2, setSubCat2] = useState([]);
-  const [subCat3, setSubCat3] = useState([]);
-
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedSubCategory, setSelectedSubCategory] = useState("");
-  const [selectedSubCat1, setSelectedSubCat1] = useState("");
-  const [selectedSubCat2, setSelectedSubCat2] = useState("");
-  const [selectedSubCat3, setSelectedSubCat3] = useState("");
+  const handleResetAll = () => {
+    setSearch("");
+    setSelectedCategory("");
+    setSelectedSubCategory("");
+    setSelectedSubCat1("");
+    setSelectedSubCat2("");
+    setSelectedSubCat3("");
+    setExperience("");
+    setGender("");
+    setFromDate("");
+    setToDate("");
+  };
 
   useEffect(() => {
     fetchCategories();
@@ -547,7 +561,7 @@ const handleResetAll = () => {
               className="form-select"
               value={selectedSubCategory}
               onChange={(e) => setSelectedSubCategory(e.target.value)}
-              disabled={!selectedCategory}
+              disabled={!selectedCategory || subCategories.length === 0}
             >
               <option value="">Sub Category</option>
               {subCategories.map((sub) => (
@@ -564,7 +578,7 @@ const handleResetAll = () => {
               className="form-select"
               value={selectedSubCat1}
               onChange={(e) => setSelectedSubCat1(e.target.value)}
-              disabled={!selectedSubCategory}
+              disabled={!selectedSubCategory || subCat1.length === 0}
             >
               <option value="">Sub Category 1</option>
               {subCat1.map((item) => (
@@ -581,7 +595,7 @@ const handleResetAll = () => {
               className="form-select"
               value={selectedSubCat2}
               onChange={(e) => setSelectedSubCat2(e.target.value)}
-              disabled={!selectedSubCat1}
+              disabled={!selectedSubCat1 || subCat2.length === 0}
             >
               <option value="">Sub Category 2</option>
               {subCat2.map((item) => (
@@ -598,7 +612,7 @@ const handleResetAll = () => {
               className="form-select"
               value={selectedSubCat3}
               onChange={(e) => setSelectedSubCat3(e.target.value)}
-              disabled={!selectedSubCat2}
+              disabled={!selectedSubCat2 || subCat3.length === 0}
             >
               <option value="">Sub Category 3</option>
               {subCat3.map((item) => (
@@ -620,7 +634,7 @@ const handleResetAll = () => {
 
             <button
               className="btn btn-light border px-3"
-                 onClick={handleResetAll }
+              onClick={handleResetAll}
             >
               <i className="fa fa-refresh"></i>
             </button>
@@ -720,8 +734,8 @@ const handleResetAll = () => {
             <tbody>
               {loading ? (
                 <TableSkeleton rows={6} columns={4} />
-              ) : filteredRecords.length > 0 ? (
-                filteredRecords.map((candidate, index) => (
+              ) : records.length > 0 ? (
+                records.map((candidate, index) => (
                   <tr key={candidate.can_id}>
                     <td className="text-center fw-bold">
                       {firstIndex + index + 1}

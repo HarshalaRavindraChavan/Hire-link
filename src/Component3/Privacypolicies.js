@@ -16,151 +16,255 @@ function PrivacyPolicies() {
           style={{ backgroundImage: `url(${logo})` }}
         >
           <div className="epp-container">
-            <h1 className="epp-title fw-bold">Employer Privacy Policy</h1>
-            <h3 className="epp-heading">Introduction</h3>
+            <h2 className="epp-title">
+              Employer Privacy Policy – PharmaJobshireLink.com
+            </h2>
+            <h6
+              className=""
+              style={{ textAlign: "center", fontWeight: "bold" }}
+            >
+              Platform: PharmaJobshireLink (Website + Mobile Applications)
+            </h6>
+
+            <h3 className="epp-heading">1. Platform Purpose</h3>
             <p className="epp-text">
-              This Privacy Policy explains how Hirelinkinfo.com collects, uses,
-              stores, and protects information provided by employers while using
-              the platform.
+              Welcome to PharmaJobshireLink, a specialized
+              <b>Pharma Job portal</b> fdesigned to connect pharmaceutical
+              companies, HR professionals, recruiters, and hiring managers with
+              qualified pharma candidates. We are committed to protecting
+              employer data, maintaining confidentiality, and ensuring secure
+              processing of all business and recruitment information submitted
+              through our platform.
             </p>
-            <h3 className="epp-heading">Applicability</h3>
 
             <p className="epp-text">
-              This policy applies only to employers who register, access, or use
-              employer-related services on Hirelinkinfo.com.
+              This Employer Privacy Policy explains how we collect, use, store,
+              and protect employer information when you access or use our pharma
+              job portal via website, Android app, or iOS app. By registering or
+              using our services, you agree to the practices described below.
             </p>
 
             <h3 className="epp-heading">
-              Information Collected from Employers
+              2. Information We Collect from Employers
             </h3>
-
             <p className="epp-text">
-              Hirelinkinfo.com may collect the following information from
-              employers:
-              <ul>
-                <li>Company name, address, and contact details</li>
-                <li>
-                  Authorized person’s name, email address, and phone number
-                </li>
-                <li>Company registration details (if required)</li>
-                <li>Payment and billing information</li>
-                <li>Job posting details and recruitment-related data</li>
-              </ul>
+              We collect only necessary and relevant data required to provide
+              recruitment services efficiently.
+            </p>
+            <p className="epp-text">
+              <b>A. Registration Information</b>
+              <br></br>● Company name and business details
+              <br></br>● Contact person name
+              <br></br>● Official email address
+              <br></br>● Mobile number
+              <br></br>● Office address
+              <br></br>● GST details (if applicable)
+              <br></br>
+              <br></br>
+              <b>B. Account & Usage Data</b>
+              <br></br>● Login credentials
+              <br></br>● Staff account details created by employer
+              <br></br>● Job posting information
+              <br></br>● Resume download activity
+              <br></br>● Subscription and payment history
+              <br></br>
+              <br></br>
+              <b>C. Technical Data</b>
+              <br></br>● Device information
+              <br></br>● Browser type
+              <br></br>● IP address
+              <br></br>● App usage analytics
             </p>
 
-            <h3 className="epp-heading">Purpose of Data Collection</h3>
-
+            <h3 className="epp-heading">3. How We Use Employer Information</h3>
             <p className="epp-text">
-              Employer information is collected for purposes including but not
-              limited to:
-              <ul>
-                <li>Account creation and management</li>
-                <li>Processing payments and invoices</li>
-                <li>Facilitating job postings and recruitment activities</li>
-                <li>Providing customer support and communication</li>
-                <li>Improving platform functionality and services</li>
-              </ul>
+              We use employer information strictly for operational and
+              service-related purposes, including:
+              <br></br>
+              <br></br>● Providing access to our pharma job portal services{" "}
+              <br></br>● Enabling employers to post pharma jobs <br></br>●
+              Allowing employers to search and download candidate resumes{" "}
+              <br></br>● Managing employer and staff accounts <br></br>●
+              Processing payments and invoices <br></br>● Preventing fraud,
+              misuse, or unauthorized activity <br></br>● Improving platform
+              performance and user experience
+            </p>
+            <p className="epp-text">
+              We <b>do not sell or rent employer data</b> to third parties for
+              marketing purposes.
             </p>
 
-            <h3 className="epp-heading">Use of Employer Information</h3>
-
+            <h3 className="epp-heading">
+              4. Resume Access & Candidate Data Usage
+            </h3>
             <p className="epp-text">
-              Employer data is used strictly for recruitment and
-              platform-related operations. It will not be sold, rented, or
-              shared with unauthorized third parties.
+              Employers may access candidate profiles and resumes only after
+              payment of applicable charges.Employers agree:
+            </p>
+            <p className="epp-text">
+              <br></br> ● To use candidate data strictly for recruitment
+              purposes <br></br>● Not to copy, distribute, or resell candidate
+              information <br></br>● Not to contact candidates for unrelated
+              marketing or promotions
             </p>
 
-            <h3 className="epp-heading">Candidate Data Access</h3>
-
             <p className="epp-text">
-              Employers may access candidate profiles and data only for
-              recruitment purposes. Employers are strictly prohibited from
-              misusing candidate data for marketing, solicitation, or any
-              unlawful activities.
+              Violation may result in account suspension or permanent
+              termination.
             </p>
 
-            <h3 className="epp-heading">Data Sharing</h3>
-
+            <h3 className="epp-heading">5. Data Security Measures</h3>
             <p className="epp-text">
-              Employer information may be shared only in the following cases:
-              <ul>
-                <li>With payment gateways for transaction processing</li>
-                <li>With legal or regulatory authorities if required by law</li>
-                <li>
-                  With service providers assisting in platform operations under
-                  confidentiality agreements
-                </li>
-              </ul>
+              We implement industry-standard security safeguards to protect
+              employer information, including:
+            </p>
+            <p className="epp-text">
+              <br></br>● Secure server infrastructure <br></br>● Encrypted login
+              authentication <br></br>● Firewall protection <br></br>●
+              Restricted database access <br></br>● Continuous monitoring for
+              suspicious activity
+            </p>
+            <p className="epp-text">
+              While we maintain strict safeguards, no online platform can
+              guarantee absolute security. Employers are responsible for
+              protecting their login credentials.
             </p>
 
-            <h3 className="epp-heading">Data Retention</h3>
-
+            <h3 className="epp-heading">6. Payment Information Security</h3>
             <p className="epp-text">
-              Employer data will be retained as long as the employer account
-              remains active or as required by applicable laws. Data may be
-              retained for legal, accounting, or compliance purposes even after
-              account termination.
+              All payments on the pharma job portal are processed through secure
+              payment gateways. We do{" "}
+              <b>
+                not store card details, banking PINs, or sensitive financial
+                credentials
+              </b>{" "}
+              on our servers.
+              <br></br>
+              <br></br>Payment records retained are limited to:
+            </p>
+            <p className="epp-text">
+              ● Transaction ID <br></br>● Amount paid <br></br>● Payment status{" "}
+              <br></br>● Invoice details
             </p>
 
-            <h3 className="epp-heading">Account Responsibility</h3>
-
+            <h3 className="epp-heading">7. Third-Party Services</h3>
             <p className="epp-text">
-              Employers are responsible for maintaining the confidentiality of
-              their login credentials. Any activity performed through the
-              employer account will be considered the responsibility of the
-              employer.
+              We may use trusted third-party service providers for:
+              <br></br>
+              <br></br>Conditions:
+              <br></br>
+              <br></br>● Payment processing <br></br>● Cloud hosting <br></br>●
+              Analytics <br></br>● Technical maintenance
+              <br></br>
+              <br></br>These providers are contractually obligated to protect
+              employer data and use it only for authorized services.
             </p>
 
-            <h3 className="epp-heading">Third-Party Links</h3>
-
+            <h3 className="epp-heading">8. Employer Responsibilities</h3>
             <p className="epp-text">
-              Hirelinkinfo.com may contain links to third-party websites. The
-              platform is not responsible for the privacy practices or content
-              of such external websites.
+              Employers using PharmaJobshireLink agree:
+              <br></br>
+              <br></br>● To provide accurate company information <br></br>● Not
+              to upload false or misleading job postings <br></br>● Not to
+              misuse candidate data <br></br>● To maintain confidentiality of
+              login credentials<br></br>
+              <br></br>Such cases must be reported within 48 hours with valid
+              proof.
+              <br></br>
+              <br></br>Any violation may lead to account suspension without
+              notice.
             </p>
 
-            <h3 className="epp-heading">Account Suspension or Termination</h3>
-
+            <h3 className="epp-heading">9. Data Retention Policy</h3>
             <p className="epp-text">
-              In case of violation of Terms & Conditions or misuse of the
-              platform, Hirelinkinfo.com reserves the right to suspend or
-              terminate the employer account. Data may be retained as per legal
-              requirements.
+              We retain employer information only as long as necessary for:
+            </p>
+            <p className="epp-text">
+              ● Active account services <br></br>● Legal compliance <br></br>●
+              Dispute resolution
+              <br></br>● Fraud prevention
+            </p>
+            <p className="epp-text">
+              Inactive accounts may be archived or deleted periodically to
+              maintain system efficiency
             </p>
 
-            <h3 className="epp-heading">No Refund Policy</h3>
-
+            <h3 className="epp-heading">10. Legal Compliance & Disclosure</h3>
             <p className="epp-text">
-              Privacy-related actions such as account suspension or termination
-              do not entitle employers to any refund of signup fees or other
-              payments.
+              We may disclose employer information if required:
+              <br></br>
+              <br></br>● By law or government authority <br></br>● To comply
+              with legal proceedings <br></br>● To protect platform rights or
+              safety <br></br>● To prevent fraudulent or illegal activity
             </p>
 
-            <h3 className="epp-heading">Changes to This Privacy Policy</h3>
-
+            <h3 className="epp-heading">11. Mobile App Privacy Compliance</h3>
             <p className="epp-text">
-              Hirelinkinfo.com reserves the right to modify or update this
-              Employer Privacy Policy at any time. Changes will be effective
-              immediately upon posting on the website.
+              Our Android and iOS applications comply with app-store privacy
+              standards:
+              <br></br>
+              <br></br>● We collect only necessary business information{" "}
+              <br></br>● We do not access contacts, media, or files without
+              permission <br></br>● We do not track users outside the app
+              without consent <br></br>● Permissions requested are strictly
+              service-related
             </p>
 
-            <h3 className="epp-heading">Consent</h3>
-
+            <h3 className="epp-heading">12. Cookies & Tracking Technologies</h3>
             <p className="epp-text">
-              By registering as an employer and using Hirelinkinfo.com,
-              employers consent to the collection and use of their information
-              as described in this policy.
+              Our pharma job portal uses cookies and similar technologies to:
+              <br></br>
+              <br></br>● Maintain login sessions <br></br>● Improve user
+              experience <br></br>● Analyze platform performance
+              <br></br>
+              <br></br>
+              Employers may disable cookies in browser settings, but some
+              features may not function properly.
             </p>
 
-            <h3 className="epp-heading">Contact Information</h3>
-
+            <h3 className="epp-heading">13. Policy Updates</h3>
             <p className="epp-text">
-              For any privacy-related questions or concerns, employers can
-              contact Hirelinkinfo.com through the official support channels
-              available on the website.
+              We may revise this Employer Privacy Policy at any time to reflect:
+            </p>
+            <p className="epp-text">
+              ● Legal updates <br></br>● Security improvements <br></br>●
+              Service changes
+            </p>
+            <p className="epp-text">
+              Updated policies will be posted on this page with a revised
+              effective date. Continued use of the platform indicates acceptance
+              of the updated policy.
             </p>
 
-            <p className="epp-footer-text">
+            <h3 className="epp-heading">14. Contact Information</h3>
+            <p className="epp-text">
+              For privacy-related questions, data requests, or account concerns,
+              employers may contact:
+            </p>
+            <p className="epp-text">
+              <b>Support Team</b>
+              <br></br>PharmaJobshireLink<br></br>Website:{" "}
+              <a href=" https://pharmajobshirelink.com">
+                {" "}
+                https://pharmajobshirelink.com
+              </a>
+              <br></br>Email:{" "}
+              <a href="info@pharmajobshirelink.com">
+                {" "}
+                info@pharmajobshirelink.com
+              </a>
+            </p>
+
+            <h3 className="epp-heading">15. Acceptance of Policy</h3>
+            <p className="epp-text">
+              By registering as an employer or using our pharma job portal
+              services, you confirm that:
+              <br></br>
+              <br></br>● You have read this Privacy Policy
+              <br></br>● You understand how your data is used
+              <br></br>● You agree to comply with all terms
+            </p>
+            <p className="epp-footer-text" style={{ fontWeight: "bold" }}>
               © {new Date().getFullYear()} All Rights Reserved
             </p>
           </div>

@@ -1,0 +1,158 @@
+/* ===== HEADER ===== */
+.hlb-header {
+  background: radial-gradient(
+    circle at top,
+    #043d04 0%,
+    #0b6b0b 45%,
+    #043004 100%
+  );
+  padding: 90px 0 150px;
+  color: #fff;
+  text-align: center;
+}
+
+.hlb-header-inner {
+  width: 90%;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.hlb-logo-text {
+  font-size: 32px;
+  font-weight: 600;
+}
+
+.hlb-tagline {
+  margin-top: 10px;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+/* ===== BLOG SECTION ===== */
+.hl-blog-wrapper {
+  padding: 60px 0;
+  background: #f6f8fb;
+  font-family: "Inter", sans-serif;
+}
+
+/* OVERLAP EFFECT */
+.hl-blog-wrapper:first-of-type {
+  margin-top: -110px;
+  position: relative;
+  z-index: 2;
+}
+
+.hl-container {
+  width: 90%;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.hl-section-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 30px;
+  color: #1f2a44;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hl-section-title span {
+  font-size: 13px;
+  font-weight: 500;
+  color: #247404;
+  cursor: pointer;
+}
+
+/* GRID */
+.hl-blog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+/* CARD */
+.hl-blog-card {
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.hl-blog-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.1);
+}
+
+/* IMAGE */
+.hl-blog-img img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+/* BODY */
+.hl-blog-body {
+  padding: 18px;
+  min-height: 160px;
+}
+
+.hl-blog-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+.hl-blog-desc {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+/* FOOTER */
+.hl-blog-footer {
+  padding: 14px 18px;
+  border-top: 1px solid #eef0f4;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hl-blog-footer img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+
+.hl-author {
+  font-size: 13px;
+  font-weight: 500;
+  color: #247404;
+}
+/* ===== FLOATING JOB BUTTON ===== */
+.job-float-btn {
+  position: fixed;
+  right: 20px;
+  bottom: 30px;
+  background: #269e01;
+  color: #fff;
+  border: none;
+  padding: 12px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(37, 235, 96, 0.4);
+  z-index: 999;
+  transition: all 0.3s ease;
+}
+
+.job-float-btn:hover {
+  background: #0b5302;
+  transform: translateY(-3px);
+}

@@ -13,7 +13,6 @@ import { saveFcmToken } from "./saveFcmToken";
 import ReCAPTCHA from "react-google-recaptcha";
 import SignupVideoModal from "./SignupVideoModal ";
 
-
 function Signin() {
   const navigate = useNavigate();
 
@@ -241,10 +240,9 @@ function Signin() {
   // ✅ FIX 2: handleSubmit define
   const handleSubmit = formik.handleSubmit;
 
-
   const [showModal, setShowModal] = useState(false);
 
-    const handleSignupClick = (e) => {
+  const handleSignupClick = (e) => {
     e.preventDefault(); // 🔒 stop direct navigation
     setShowModal(true);
   };
@@ -387,7 +385,8 @@ function Signin() {
 
               <div className="my-3 d-flex justify-content-center">
                 <ReCAPTCHA
-                  sitekey="6LfE8EgsAAAAANyUHlqJ_RMe1Klg_WVpVx7NimPG"
+                  // sitekey="6LfE8EgsAAAAANyUHlqJ_RMe1Klg_WVpVx7NimPG" //hirelink
+                  sitekey="6LdU2HQsAAAAAGrvguav-Xg6Cmn9UoM0D-lymAyJ" //pharmajobshirelink
                   onChange={(token) => setCaptchaToken(token)}
                   onExpired={() => setCaptchaToken(null)}
                 />

@@ -11,6 +11,7 @@ function Footer() {
         {/* <NavLink to="/dashboard">Work at JobFinder</NavLink> */}
         {/* <NavLink to="/dashboard">Countries</NavLink> */}
         <NavLink to="/about">About</NavLink>
+        <NavLink to="/blogs">Hirelink-Blogs</NavLink>
         <NavLink to="/help">Help</NavLink>
         <NavLink to="/candidate-terms-condition">Terms & Condition</NavLink>
         <NavLink to="/employer">Post a Job</NavLink>

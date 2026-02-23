@@ -77,7 +77,7 @@ label {
 
 .login-login-btn {
   width: 100%;
-  background: #4a6cf7;
+  background: #09b303;
   padding: 12px;
   text-align: center;
   border-radius: 8px;
@@ -92,7 +92,7 @@ label {
 }
 
 .login-login-btn:hover {
-  background: #3c57c4;
+  background: #d0d30ae7;
   color: #fff;
   transform: translateY(-2px);
 }

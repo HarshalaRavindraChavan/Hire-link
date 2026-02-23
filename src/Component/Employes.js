@@ -490,12 +490,19 @@ function Employes() {
                             {emp.emp_companyname}
                           </span>
                         </div>
-                        <div className="fw-bold ">
+                        <div className="fw-bold">
                           Website:{" "}
                           <span className="text-dark fw-normal">
-                            <a href={emp.emp_website}>Go To</a>
+                            <a
+                              href={emp.emp_website}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              Go To
+                            </a>
                           </span>
                         </div>
+
                         <div className="fw-bold ">
                           Location:{" "}
                           <span className="text-dark fw-normal">

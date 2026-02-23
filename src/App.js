@@ -21,6 +21,9 @@ import Cprivacypolicies from "./Component2/Privacypolicies";
 import Ctermscondition from "./Component2/Termscondition";
 import Creturnpolicy from "./Component2/Returnpolicy";
 import CandidateReceiptPage from "./Component2/CandidateReceiptPage";
+import BlogPage from "./Component2/Blog";
+import BlogDetailPage from "./Component2/BlogDetail";
+import CateBlogPage from "./Component2/CateBlog";
 
 /* ================= ADMIN ================= */
 import Sidebar from "./Component/Sidebar";
@@ -102,6 +105,9 @@ function App() {
         <Route path="/receipt" element={<Receipt />} />
         <Route path="/candidate-receipt" element={<CandidateReceiptPage />} />
         <Route path="/payment" element={<PaymentPage />} />
+        <Route path="/blogs" element={<BlogPage />} />
+        <Route path="/blog-detail" element={<BlogDetailPage />} />
+        <Route path="/blog-cate" element={<CateBlogPage />} />
         <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/reset-password" element={<ResetPassword />} />
 

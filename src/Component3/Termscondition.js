@@ -10,364 +10,348 @@ function Termscondition() {
         title={seoConfig.e_term.title}
         description={seoConfig.e_term.description}
       />
-      <div className="etc-body">
+      <div className="ect-body">
         <div
-          className="etc-wrapper"
+          className="ect-wrapper"
           style={{ backgroundImage: `url(${logo})` }}
         >
-          <div className="etc-container">
-            <h1 className="etc-title fw-bold">Employer Terms & Conditions</h1>
-            <h3 className="etc-heading">Objective</h3>
-            <p className="etc-text">
-              Hirelink Infotech Pvt Ltd and its Affiliated Products serves
-              solely as an initial platform for communication and information
-              exchange among its users, members, and visitors who genuinely
-              intend to connect regarding actual job openings and other
-              legitimate career development services. Please read these
-              conditions carefully before using the Hirelink Infotech Pvt Ltd
-              and its Affiliated Products.
-            </p>
-            <h3 className="etc-heading">CONDITIONS OF USE</h3>
-            <p className="etc-text">
-              1) If you use the website, you are responsible for maintaining the
-              confidentiality of your account and password and for restricting
-              access to your computer to prevent unauthorized access to your
-              account. You agree to accept responsibility for all activities
-              that occur under your account or password. You should take all
-              necessary steps to ensure that the password is kept confidential
-              and secure. Please ensure that the details you provide us with are
-              correct and complete. Any service or product of Hirelink Infotech
-              Pvt Ltd and its Affiliated Products that you subscribe to or use
-              (whether paid or free) is intended exclusively for the stated
-              Objective and for the personal use of the registered
-              subscriber/user. Reproducing, duplicating, copying, downloading,
-              recreating, sharing passwords, sublicensing, or distributing in
-              any way that deviates from these terms constitutes misuse of the
-              platform, service, or product. Hirelink Infotech Pvt Ltd and its
-              Affiliated Products reserves the right to take appropriate
-              measures to safeguard its revenue, reputation, or to claim
-              damages, including suspending or terminating access and reporting
-              to relevant authorities.
-            </p>
-            <p className="etc-text">
-              2)If you are found Copy, extracting, misusing, transmitting, or
-              crawling data, photographs, graphics, or any information from
-              Hirelink Infotech Pvt Ltd and its Affiliated Products for purposes
-              other than the bona fide Objective, the company reserves the right
-              to take suitable action, including blocking access and seeking
-              damages.
+          <div className="ect-container">
+            <h2 className="ect-title">Employer Return & Refund Policy</h2>
+            <h6
+              className=""
+              style={{ textAlign: "center", fontWeight: "bold" }}
+            >
+              PharmaJobsHireLink – Official Pharma Job Portal Policy
+            </h6>
+
+            <h3 className="ect-heading">1. Platform Purpose</h3>
+            <p className="ect-text">
+              PharmaJobsHireLink is a professional <b>pharma job portal</b>{" "}
+              designed to connect verified pharmaceutical employers with
+              qualified candidates seeking jobs in QA, QC, Production, R&D,
+              Regulatory Affairs, Packaging, Sales, Clinical Research, and other
+              pharma sectors.
             </p>
 
-            <p className="etc-text">
-              3)The platform is a public site with paid access, and Hirelink
-              Infotech Pvt Ltd and its Affiliated Products accepts no
-              responsibility for the authenticity or quality of responses
-              received. The company cannot oversee responses that individuals
-              may receive based on information they have posted. Users/companies
-              must independently verify the legitimacy of all responses.
-            </p>
-            <p className="etc-text">
-              4)You authorise Hirelink Infotech Pvt Ltd and its Affiliated
-              Products to utilize information about your activities on the
-              platform in relation to advertisements, offers, and other content
-              (sponsored or otherwise) displayed across its services, without
-              any compensation to you. Such data may be used to provide relevant
-              recommendations to you and others.
+            <p className="ect-text">
+              The platform serves strictly as a <b>technology interface</b> that
+              enables employers to search, filter, and connect with candidates.
+              We do not act as a recruitment agency, hiring consultant, or
+              employment guarantor.
             </p>
 
-            <p className="etc-text">
-              5)The platform may include links to third-party websites. These
-              are provided only for your convenience, and their inclusion does
-              not imply endorsement of their content. Accessing such sites is
-              entirely at your own risk.
-            </p>
-            <p className="etc-text">
-              6)You are required to provide only accurate and truthful
-              information when using the platform, and if creating a profile,
-              you agree to keep it current at all times. Hirelink Infotech Pvt
-              Ltd and its Affiliated Products bear no liability for any
-              inaccuracies on the site. Visitors are responsible for further
-              verifying information. The company is not accountable for any
-              breach of privacy or misuse of information provided by users
-              through technical or other means, and does not guarantee
-              confidentiality of data shared on its websites or domains.
-            </p>
-            <p className="etc-text">
-              7)Hirelink Infotech Pvt Ltd and its Affiliated Products does not
-              disclose personally identifiable information to other entities
-              without consent, except to its agents or in response to legal
-              requirements such as court orders or subpoenas. Users must not use
-              the services in a way that harms the interests or operations of
-              Hirelink Infotech Pvt Ltd and its Affiliated Products. Users are
-              prohibited from duplicating, downloading, publishing, modifying,
-              or distributing material unless expressly permitted in writing.
-            </p>
-            <p className="etc-text">
-              8)Users agree to use the platform solely for personal purposes.
-              Creating derivative works with commercial intent from content on
-              Hirelink Infotech Pvt Ltd and its Affiliated Products without
-              prior written approval is strictly forbidden.
-            </p>
-            <p className="etc-text">
-              9)Users must not send unsolicited bulk or commercial emails using
-              the platform. Hirelink Infotech Pvt Ltd and its Affiliated
-              Products reserves the right to monitor, filter, and block emails
-              sent via its servers and to terminate services for violations,
-              including forfeiture of any fees paid.
-            </p>
-            <p className="etc-text">
-              10)Users are prohibited from spamming the platform through
-              repeated or indiscriminate posting of jobs or messages. Any such
-              violation entitles Hirelink Infotech Pvt Ltd and its Affiliated
-              Products to immediately terminate services without notice.
-            </p>
-            <p className="etc-text">
-              11)Users must not upload, post, transmit, publish, or distribute
-              any material that is illegal, harmful, threatening, abusive,
-              harassing, defamatory, libellous, vulgar, obscene, or racially,
-              ethnically, or otherwise objectionable.
-            </p>
-            <p className="etc-text">
-              12)Users confirm that any resume, information, or data entered
-              into the Hirelink Infotech Pvt Ltd and its Affiliated Products
-              network is accurate, complete, and free from false, misleading,
-              fraudulent, or distorted content. The company disclaims all
-              liability arising from such submissions and users agree to assure
-              Hirelink Infotech Pvt Ltd and its Affiliated Products against any
-              losses resulting from inaccurate or objectionable content provided
-              by them.
-            </p>
-            <p className="etc-text">
-              13)Users are solely responsible for the confidentiality of their
-              password and user ID, and for all activities conducted through
-              their account, including transactions involving credit/debit
-              cards, UPI,eetc. Hirelink Infotech Pvt Ltd and its Affiliated
-              Products accept no liability for improper use of such information.
-            </p>
-            <p className="etc-text">
-              14)Users agree to comply fully with the Information Technology
-              Act, 2000 and all related rules, regulations, and notifications
-              when accessing or submitting data to the platform. Any violation
-              makes the user solely liable for civil or criminal consequences.
-            </p>
-            <p className="etc-text">
-              15)Users are responsible for obtaining, at their own expense, all
-              necessary licences, permits, consents, approvals, and intellectual
-              property rights required for using the services.
-            </p>
-            <p className="etc-text">
-              16) You acknowledge and undertake that you are accessing the
-              services on the website and transacting at your own risk and are
-              using your best and prudent judgment before entering into any
-              transactions through the website.
-            </p>
-            <p className="etc-text">
-              17)You shall not involve in accessing the platform to extract
-              content for training machine learning.
-            </p>
-            <p className="etc-text">
-              18)You shall not Breach any applicable law, regulation, or
-              ordinance.
-            </p>
-            <p className="etc-text">
-              19)You shall not Disrupt or interfere with networks connected to
-              the platform.
-            </p>
-            <p className="etc-text">
-              20)You shall not Impersonate any person or entity or misrepresent
-              affiliations.
-            </p>
-            <p className="etc-text">
-              21)You shall not Forge headers or manipulate identifiers to
-              conceal the origin of information.
-            </p>
-            <p className="etc-text">
-              22) You shall not Harass, threaten, stalk, or disrupt other users.
-            </p>
-            <p className="etc-text">
-              23)You shall not Gain unauthorized access to others' computer
-              systems.
-            </p>
-            <p className="etc-text">
-              24)You shall not exploit the platform or its components for
-              commercial purposes without permission, including reproducing,
-              copying, modifying, selling, storing, or distributing content.
-            </p>
-            <p className="etc-text">
-              25)You shall not Use site content for commercial derivative works
-              without prior written consent.
-            </p>
-            <p className="etc-text">
-              26)You shall not employ devices, software, or routines that
-              interfere with the platform's proper functioning.
-            </p>
-            <p className="etc-text">
-              27)You shall not impose an excessive load on the platform's
-              infrastructure.
-            </p>
-            <p className="etc-text">
-              28)You shall not Spam the platform through repeated or
-              indiscriminate content posting.
-            </p>
-            <p className="etc-text">
-              29)You shall not Access data or accounts not intended for you.
-            </p>
-            <p className="etc-text">
-              30)You shall not Reverse engineer, decompile, disassemble, or
-              attempt to derive source code.
-            </p>
-            <p className="etc-text">
-              31)You shall not Frame, mirror, or simulate the platform's
-              appearance or functionality.
-            </p>
-            <p className="etc-text">
-              32)You shall not Probe, scan, or test system/network
-              vulnerabilities.
-            </p>
-            <p className="etc-text">
-              33)You shall not Use automated or manual means to crawl or scrape
-              content.
-            </p>
-            <p className="etc-text">
-              34)You shall not bypass technological measures designed to prevent
-              robots from crawling or scraping.
-            </p>
-            <p className="etc-text">
-              35)You shall not Access the platform other than through provided
-              interfaces.
-            </p>
-            <p className="etc-text">
-              36)You shall not Breach security or authentication measures
-              without authorization.
-            </p>
-            <p className="etc-text">
-              37)You shall not provide deep links without permission or extract
-              data via unauthorized automated or manual processes.
-            </p>
-            <p className="etc-text">
-              38)You shall not send unsolicited bulk or commercial emails.
-            </p>
-            <p className="etc-text">
-              39)You shall not Sublicense, assign, or transfer any license.
-            </p>
-            <p className="etc-text">
-              40)You shall not Host, modify, upload, post, transmit, publish, or
-              distribute material for which you lack necessary rights or
-              licenses.
-            </p>
-            <p className="etc-text">
-              41)You shall not perform any activity that infringes third-party
-              rights, including copyright, trademark, privacy, or proprietary
-              rights.
-            </p>
-            <p className="etc-text">
-              42)You shall not perform any activity that Contains viruses or
-              code intended to disrupt operations.
-            </p>
-            <p className="etc-text">
-              43)You shall not perform any activity that is harmful, harassing,
-              hateful, invasive of privacy, or otherwise unlawful.
-            </p>
-            <p className="etc-text">
-              44)You shall not perform any activity that encourages criminal
-              conduct or violates laws.
-            </p>
-            <p className="etc-text">
-              45)You shall not perform any activity that is deceptive,
-              offensive, or menacing.
-            </p>
-            <p className="etc-text">
-              46)You shall not perform any activity that belongs to others
-              without rights.
-            </p>
-            <p className="etc-text">
-              47)You shall not perform any activity that threatens India's
-              unity, integrity, security, sovereignty, public order, or
-              international relations.
-            </p>
-            <p className="etc-text">
-              48)You shall not perform any activity that infringe intellectual
-              property rights or retain information with intent to do so.
-            </p>
-            <p className="text-center">
-              Hirelink Infotech Pvt Ltd and its Affiliated Products strive to
-              ensure error-free operation but do not warrant absence of viruses,
-              contaminants, or operational issues. Subscriptions are subject to
-              applicable quotas. Provided email addresses must be genuine and
-              accessible only to authorized personnel. Clients must use only
-              domain-owned email addresses for registration and activities.
-              Violation may result in suspension or termination.
-            </p>
-            <h3 className="etc-heading">SECURITY MEASURES</h3>
-            <p className="etc-text">
-              To safeguard accounts and services, automated and manual checks
-              detect unusual activity. Elevated risk may require additional
-              verification, including installation of a security application
-              with your consent. Refusal may limit access. The application may
-              use biometric, photo, SMS, or other authentication methods.
-              Limited data may be shared with fraud prevention providers. You
-              may request human review of automated decisions via support; the
-              final decision is binding. You agree to install updates, maintain
-              device security, and not tamper with features. <br />
-              <br />
-              By registering, you consent to receiving SMS verification codes
-              and security messages. Standard rates apply. You confirm ownership
-              of the provided mobile number and responsibility for device/SIM
-              security. Do not share codes. Delivery issues are beyond control.
-              <br />
-              <br />
-              Hirelink Infotech Pvt Ltd and its Affiliated Products is not
-              liable for inadvertent disclosure of account or transaction
-              information, errors in legal processes, or related issues.
+            <p className="ect-text">
+              By registering or using this job portal, employers agree to comply
+              fully with these Terms & Conditions.
             </p>
 
-            <h3 className="etc-heading">Payment</h3>
-            <p className="etc-text">
-              Payments are 100% in advance. Refunds are at the company's sole
-              discretion, with no guarantees on timeliness. No warranties are
-              provided for uptime or functionality; liability is limited to
-              refunds. Free services carry no liability. Terms may be amended
-              without prior notice.
-              <br />
-              <br />
-              Performance obligations are limited to providing portal access for
-              the subscription period. Usage limits do not create additional
-              obligations.
-              <br />
-              <br /> The company may set off amounts owed against payments due
-              under other agreements. <br />
-              <br />
-              Data may be posted on affiliated sites at no extra cost. <br />
-              <br />
-              Subscriptions do not confer exclusivity or constitute non-poach
-              agreements, as the platform is public.
-              <br />
-              <br /> The company will not participate in disputes between users
-              and third parties contracted via the site but will comply with
-              court orders. Costs from involvement will be recovered from the
-              initiating party. The platform operates from Nashik, India; users
-              from other locations are responsible for local compliance. <br />
-              <br />
-              The company is not responsible for spam or viruses linking to its
-              sites or for acting as an agent.
-              <br />
-              <br /> Violations of these Terms render users liable to civil and
-              criminal action.
-              <br />
-              <br /> You agree to indemnify and hold harmless Hirelink Infotech
-              Pvt Ltd and its Affiliated Products, its directors, officers,
-              employees, agents, subsidiaries, affiliates, and partners from any
-              damages arising from your use of the services or information
-              provided. <br />
-              <br />
-              Disputes shall be resolved through arbitration in Nashik under the
-              Arbitration & Conciliation Act, 1996, with governing law being
-              Indian law and exclusive jurisdiction in Nashik courts.
-              <br />
-              <br /> Non-compliance may lead to termination of access and
-              removal of content.
+            <h3 className="ect-heading">
+              2. Employer Registration & Account Eligibility
+            </h3>
+            <p className="ect-text">
+              To access employer features, organizations must:
             </p>
-            <p className="etc-footer-text">
+            <p className="ect-text">
+              ● Be a legitimate pharmaceutical company, staffing agency, or
+              authorized recruiter<br></br>● Provide accurate company details
+              <br></br>● Use official company email addresses for registration
+              <br></br>● Maintain updated business information
+            </p>
+            <p className="ect-text">
+              The platform reserves the right to verify employer credentials
+              before activating accounts.
+            </p>
+
+            <h3 className="ect-heading">
+              3. Employer Signup Fees (Strictly Non-Refundable)
+            </h3>
+            <p className="ect-text">The following charges apply:</p>
+            <table class="tblx9-wrapper">
+              <thead class="tblx9-head">
+                <tr class="tblx9-row">
+                  <th class="tblx9-th">Service</th>
+                  <th class="tblx9-th">Fee</th>
+                  <th class="tblx9-th">GST</th>
+                  <th class="tblx9-th">Total</th>
+                </tr>
+              </thead>
+
+              <tbody class="tblx9-body">
+                <tr class="tblx9-row">
+                  <td class="tblx9-td">Employer Registration</td>
+                  <td class="tblx9-td">₹5000</td>
+                  <td class="tblx9-td">18%</td>
+                  <td class="tblx9-td">As applicable</td>
+                </tr>
+
+                <tr class="tblx9-row">
+                  <td class="tblx9-td">Staff Sub-Account Creation</td>
+                  <td class="tblx9-td">₹2500</td>
+                  <td class="tblx9-td">18%</td>
+                  <td class="tblx9-td">As applicable</td>
+                </tr>
+
+                <tr className="tblx9-row">
+                  <td class="tblx9-td">Resume Download (Per Candidate)</td>
+                  <td class="tblx9-td">₹60</td>
+                  <td class="tblx9-td">18%</td>
+                  <td class="tblx9-td">As applicable</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h3 className="ect-heading">Important Payment Conditions</h3>
+            <p className="ect-text">
+              ● All fees are <b>100% advance</b>
+              <br></br>● All payments are <b>strictly non-refundable</b>
+              <br></br>● GST once paid cannot be reversed
+              <br></br>● Payment does not guarantee hiring success
+            </p>
+
+            <p className="ect-text">
+              Fees are charged solely for{" "}
+              <b>
+                platform access, resume visibility, and candidate search
+                features
+              </b>{" "}
+              within the pharma job portal.
+            </p>
+
+            <h3 className="ect-heading">4. Employer Staff Access</h3>
+            <p className="ect-text">
+              Registered employers may create staff logins for internal HR
+              teams.
+            </p>
+            <p className="ect-text">
+              ● Each staff login requires payment of ₹2500 + GST<br></br> ●
+              Staff accounts must be used only by authorized employees <br></br>
+              ● Login sharing is strictly prohibited<br></br> ● Employers are
+              fully responsible for actions performed through staff accounts
+              <br></br>
+              <br></br>Violation may result in suspension of all associated
+              accounts.
+            </p>
+
+            <p className="ect-text">
+              Each resume download costs <b>₹60 + 18% GST</b> and is{" "}
+              <b>non-refundable,</b>
+              regardless of hiring outcome.
+            </p>
+
+            <p className="ect-text">
+              Downloaded resumes must be used{" "}
+              <b>only for recruitment purposes</b> and not for:
+            </p>
+            <p className="ect-text">
+              ● Marketing databases<br></br> ● Lead generation<br></br>● Login
+              sharing is strictly prohibited<br></br> ● Data resale<br></br> ●
+              Third-party sharing
+            </p>
+
+            <h3 className="ect-heading">5. Resume Search & Download Policy</h3>
+            <p className="ect-text">Employers and authorized staff may:</p>
+            <p className="ect-text">
+              ● Search candidates by category<br></br>● Filter profiles by
+              experience, qualification, and location<br></br>● Download resumes
+              individually<br></br>● Impersonate employers, recruiters, or other
+              candidates<br></br>● Manipulate platform features or scores
+              <br></br>
+              <br></br>
+              Any misuse will invite legal action, damages, and account
+              termination.
+            </p>
+
+            <h3 className="ect-heading">6. Acceptable Employer Conduct</h3>
+            <p className="ect-text">
+              Employers using this pharma job portal must NOT:
+            </p>
+            <p className="ect-text">
+              ● Post fake jobs or misleading vacancies<br></br>● Collect
+              candidate data for non-recruitment purposes<br></br>● Harass or
+              spam candidates
+              <br></br>● Offer illegal or unethical employment
+              <br></br>● Misrepresent company identity<br></br>● Conduct
+              fraudulent interviews
+              <br></br>
+              <br></br>
+              Strict action, including account termination and legal reporting,
+              may be taken for violations.
+            </p>
+
+            <h3 className="ect-heading">7. Data Usage Restrictions</h3>
+            <p className="ect-text">
+              All candidate data available on the platform is protected.
+              <br></br>
+              <br></br>Employers are strictly prohibited from:<br></br>
+              <br></br>● Scraping or copying data
+              <br></br>● Using bots or automation tools<br></br>● Building
+              databases from profiles
+              <br></br>● Selling candidate information<br></br>● Using data for
+              AI or machine-learning training
+              <br></br>
+              <br></br>Unauthorized extraction or misuse may lead to legal
+              action and permanent platform ban.
+            </p>
+
+            <h3 className="ect-heading">8. Accuracy of Job Listings</h3>
+            <p className="ect-text">
+              Employers must ensure that all job postings:
+              <br></br>
+              <br></br>● Represent genuine openings<br></br>● Include correct
+              role descriptions<br></br>● Specify accurate qualifications
+              <br></br>● Clearly state salary details (if provided)
+              <br></br>
+              <br></br>The platform is not responsible for disputes arising from
+              incorrect job descriptions posted by employers.
+            </p>
+
+            <h3 className="ect-heading">
+              9. Platform Nature & Liability Disclaimer
+            </h3>
+            <p className="ect-text">
+              PharmaJobsHireLink operates solely as a <b>digital job portal.</b>{" "}
+              We:
+            </p>
+            <p className="ect-text">
+              ● Do not participate in recruitment decisions
+              <br></br>● Do not screen candidates for employers<br></br>● Do not
+              verify every profile detail
+              <br></br>● Do not guarantee hiring results
+            </p>
+            <p className="ect-text">
+              Employers must independently verify candidate credentials before
+              hiring.
+            </p>
+
+            <h3 className="ect-heading">10. Security & Account Protection</h3>
+            <p className="ect-text">
+              Employers are responsible for:<br></br>
+              <br></br>● Candidate data is used to improve job matching,
+              visibility, recommendations, and platform performance.Protecting
+              login credentials<br></br> ● Preventing unauthorized access
+              <br></br> ● Monitoring staff usage<br></br>
+              <br></br>
+              The platform may use automated fraud detection systems. Suspicious
+              activity may trigger verification checks or temporary
+              restrictions.
+            </p>
+
+            <h3 className="ect-heading">11. App Usage Compliance</h3>
+            <p className="ect-text">
+              Employers using mobile applications must comply with policies of
+              <br></br>
+              <br></br>● <b>Google Play Store</b> and
+              <br></br>● <b>Apple App Store</b>
+              <br></br>
+              <br></br>The platform does not collect unnecessary device data and
+              uses permissions only for essential job portal functionality.
+            </p>
+
+            <h3 className="ect-heading">12. Intellectual Property Rights</h3>
+            <p className="ect-text">
+              All platform elements including:
+              <br></br>
+              <br></br>● Software<br></br> ● Interface
+              <br></br> ● Design<br></br> ● Databases
+              <br></br> ● Content
+              <br></br>
+              <br></br>
+              are the exclusive property of PharmaJobsHireLink.
+            </p>
+            <p className="ect-text">
+              Employers may not reproduce, modify, reverse engineer, copy, or
+              distribute any platform component without written permission.
+            </p>
+
+            <h3 className="ect-heading">13. Prohibited Technical Activities</h3>
+            <p className="ect-text">Employers must not:</p>
+            <p className="ect-text">
+              ● Attempt to hack or probe platform security<br></br>● Reverse
+              engineer system architecture
+              <br></br>● Use scraping software
+              <br></br>● Mirror or clone the job portal
+            </p>
+            <p className="ect-text">
+              Any such action will result in immediate legal enforcement
+            </p>
+
+            <h3 className="ect-heading">14. Suspension & Termination Rights</h3>
+            <p className="ect-text">
+              The platform may suspend or terminate employer accounts without
+              notice if:
+            </p>
+            <p className="ect-text">
+              ● Payment disputes occur<br></br>● Fraud is suspected<br></br>●
+              Terms are violated<br></br>● Complaints are received from
+              candidates<br></br>
+              <br></br>Termination does not entitle employer to refunds.
+            </p>
+
+            <h3 className="ect-heading">15. Limitation of Liability</h3>
+            <p className="ect-text">
+              PharmaJobsHireLink shall not be liable for:
+            </p>
+            <p className="ect-text">
+              ● Hiring losses<br></br>● Candidate performance issues<br></br>●
+              Interview no-shows<br></br>● Technical downtime<br></br>● Data
+              delays<br></br>
+              <br></br>Maximum liability, if any, is limited to the amount paid
+              for platform services.
+            </p>
+
+            <h3 className="ect-heading">16. Legal Compliance</h3>
+            <p className="ect-text">Employers must comply with:</p>
+            <p className="ect-text">
+              ● Information Technology laws of India
+              <br></br>● Employment laws<br></br>● Data protection regulations
+              <br></br>● Anti-spam rules<br></br>
+              <br></br>Non-compliance may result in civil or criminal liability.
+            </p>
+
+            <h3 className="ect-heading">17. Indemnification</h3>
+            <p className="ect-text">
+              Employers agree to indemnify and hold harmless PharmaJobsHireLink,
+              its directors, employees, partners, and affiliates against claims
+              arising from:
+            </p>
+            <p className="ect-text">
+              ● Job postings
+              <br></br>● Hiring practices<br></br>● Misuse of candidate data
+              <br></br>● Legal disputes with candidates
+            </p>
+
+            <h3 className="ect-heading">
+              18. Jurisdiction & Dispute Resolution
+            </h3>
+            <p className="ect-text">
+              All disputes shall be governed by Indian law and subject to
+              jurisdiction of courts located in <b>Nashik.</b>
+            </p>
+            <p className="ect-text">
+              Disputes may first be attempted to be resolved through arbitration
+              before legal proceedings.
+            </p>
+
+            <h3 className="ect-heading">19. Policy Updates</h3>
+            <p className="ect-text">
+              PharmaJobsHireLink reserves the right to update these Terms at any
+              time without prior notice. Continued use of the pharma job portal
+              indicates acceptance of revised terms.
+            </p>
+
+            <h3 className="ect-heading">20. Acceptance Declaration</h3>
+            <p className="ect-text">
+              By registering, paying employer fees, creating staff accounts, or
+              downloading resumes, you confirm that:
+            </p>
+            <p className="ect-text">
+              ● You have read these Terms
+              <br></br>● You understand all charges are non-refundable
+              <br></br>● You agree to use the pharma job portal lawfully
+              <br></br>● You accept all rules stated above
+            </p>
+
+            <p className="ect-footer-text" style={{ fontWeight: "bold" }}>
               © {new Date().getFullYear()} All Rights Reserved
             </p>
           </div>

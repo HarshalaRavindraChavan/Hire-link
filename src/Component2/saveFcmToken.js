@@ -9,7 +9,8 @@ export const saveFcmToken = async (candidateId) => {
 
     const token = await getToken(messaging, {
       vapidKey:
-        "BOA4JP6l1J_UvQ1VjBxc9SGlP-IulMYipKnb2EHuz6bvvKTwlf8-r9Y5T5Na1qc4plv2rUxrNs7U_ck8X5oElZc",
+        // "BOA4JP6l1J_UvQ1VjBxc9SGlP-IulMYipKnb2EHuz6bvvKTwlf8-r9Y5T5Na1qc4plv2rUxrNs7U_ck8X5oElZc",
+        "BNLPr-g1ZxuqSz9pZfkpoPoOeA0y5oTqcmP0KBRjQZJKHyx3AJ7k1Plp3o8SBBH4N5W_Lrwoa4-xPgvV7uxorLA"
     });
 
     console.log("FCM TOKEN:", token);

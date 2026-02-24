@@ -425,8 +425,8 @@ const Signup = () => {
 
               <div className="my-3 d-flex justify-content-center">
                 <ReCAPTCHA
-                  // sitekey="6LfE8EgsAAAAANyUHlqJ_RMe1Klg_WVpVx7NimPG" //hirelink
-                  sitekey="6LdU2HQsAAAAAGrvguav-Xg6Cmn9UoM0D-lymAyJ" //pharmajobshirelink
+                  sitekey="6LfE8EgsAAAAANyUHlqJ_RMe1Klg_WVpVx7NimPG" //hirelink
+                  // sitekey="6LdU2HQsAAAAAGrvguav-Xg6Cmn9UoM0D-lymAyJ" //pharmajobshirelink
                   onChange={(token) => setCaptchaToken(token)}
                   onExpired={() => setCaptchaToken(null)}
                 />

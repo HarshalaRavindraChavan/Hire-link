@@ -1,3 +1,1 @@
-export const BASE_URL = "https://hirelinkinfo.com/hirelink_apis/";
-
-
+export const BASE_URL = "https://pharmajobshirelink.com/hirelink_apis/";

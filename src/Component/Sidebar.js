@@ -26,6 +26,7 @@ function Sidebar() {
     { id: 11, label: "Profile", path: "/emp-profile", icon: "fa fa-user" },
     { id: 12, label: "Staffs", path: "/staff", icon: "fa fa-user" },
     { id: 13, label: "Setting", path: "/setting", icon: "fa-solid fa-gear" },
+    { id: 14, label: "Blogs", path: "/admin-blogs", icon: "fa-solid fa-gear" },
   ];
 
   // ================= MENU LOGIC =================

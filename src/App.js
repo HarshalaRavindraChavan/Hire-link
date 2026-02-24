@@ -47,6 +47,7 @@ import ResetPassword from "./Component/ResetPassword";
 import PaymentHistory from "./Component/PaymentHistory";
 // import InterManage from "./Component/InterManage";
 import Setting from "./Component/Setting";
+import AdminBlogs from "./Component/Blogs";
 
 /* ================= EMPLOYER ================= */
 import Header3 from "./Component3/Header";
@@ -169,6 +170,7 @@ function App() {
           <Route path="user" element={<Users />} />
           <Route path="staff" element={<Staff />} />
           <Route path="Setting" element={<Setting />} />
+          <Route path="Admin-Blogs" element={<AdminBlogs />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -4,6 +4,39 @@ import { seoConfig } from "../config/seoConfig";
 import image from "../Component2/Image/aboutus.png";
 import "./css/About.css";
 
+const aboutCards = [
+  {
+    title: "🚀 Our Mission",
+    text: "Our mission is to streamline pharma recruitment by providing a reliable, fast, and secure jobportal where employers find qualified candidates and job seekers access genuine pharmajob opportunities without hassle",
+  },
+  {
+    title: "🎯 Our Vision",
+    text: "We aim to become India’s most trusted pharma job portal by delivering advanced hiringtools, verified job listings, and a transparent recruitment ecosystem for both employers and candidates.",
+  },
+  {
+    title: "🤝 Our Values ",
+    list: [
+      "Transparency in recruitment",
+      " Data privacy and security",
+      "Equal job opportunities",
+      "Professional integrity",
+      "Industry-focused innovation",
+    ],
+  },
+  {
+    title: "⚡ Fast Hiring",
+    text: "Our system is optimized for quick recruitment. Employers can post pharma jobs instantly and search candidate databases efficiently, reducing hiring time and improving productivity",
+  },
+  {
+    title: "🔒 Secure Platform",
+    text: "We maintain strict data protection measures, encrypted logins, and secure payment processing to ensure employer and candidate information remains safe at all times.",
+  },
+  {
+    title: "🌍 Career Growth",
+    text: "PharmaJobshireLink supports career advancement by providing access to verified pharma job openings, industry insights, and opportunities across multiple pharmaceutical sectors",
+  },
+];
+
 const About = () => {
   return (
     <>
@@ -11,91 +44,83 @@ const About = () => {
         title={seoConfig.about.title}
         description={seoConfig.about.description}
       />
+
       <div className="about-page">
-        {/* HERO SECTION */}
+        {/* HERO */}
         <div className="about-hero">
           <h1>About Hirelink</h1>
           <p>
             A smart recruitment platform connecting employers with the right
-            candidates, faster and simpler.
+            candidates — faster and simpler.
           </p>
         </div>
 
-        {/* MAIN CONTENT */}
         <div className="about-container">
-          {/* IMAGE + TEXT + CARDS */}
+          {/* IMAGE + CONTENT */}
           <div className="about-flex-wrapper">
-            {/* IMAGE */}
             <img
               src={image}
               alt="Recruitment Platform"
               className="about-image-box"
             />
 
-            {/* TEXT + CARDS */}
             <div className="about-content-box">
               <h2>Who We Are</h2>
               <p>
-                Hirelinkinfo.com is a modern job portal designed to simplify the
-                hiring process. We provide a trusted digital space where
-                employers can discover talent and candidates can explore genuine
-                career opportunities.
+                PharmaJobshireLink is a dedicated <b>pharma job portal</b> built
+                to connect pharmaceutical companies, healthcare organizations,
+                and life-science recruiters with skilled professionals seeking
+                pharma jobs. Our platform is designed to simplify hiring and job
+                searching by offering a focused recruitment environment
+                specifically for the pharmaceutical industry.
               </p>
 
               {/* CARDS */}
               <div className="about-cards-box">
-                {[
-                  {
-                    title: "🚀 Our Mission",
-                    text: "To make recruitment simple, transparent, and accessible for everyone.",
-                  },
-                  {
-                    title: "🎯 Our Vision",
-                    text: "To become a trusted platform for job seekers and employers across industries.",
-                  },
-                  {
-                    title: "🤝 Our Values",
-                    text: "Trust, transparency, and genuine opportunities for growth.",
-                  },
-                  {
-                    title: "⚡ Fast Hiring",
-                    text: "We help employers reduce hiring time with smart tools and instant candidate access.",
-                  },
-                  {
-                    title: "🔒 Secure Platform",
-                    text: "User data and job information are protected with strong security and privacy practices.",
-                  },
-                  {
-                    title: "🌍 Career Growth",
-                    text: "We support candidates in finding meaningful jobs that help them grow professionally.",
-                  },
-                ].map((item, i) => (
-                  <div className="about-card" key={i}>
+                {aboutCards.map((item, index) => (
+                  <div className="about-card" key={index}>
                     <h3>{item.title}</h3>
-                    <p>{item.text}</p>
+
+                    {item.text && <p>{item.text}</p>}
+
+                    {item.list && (
+                      <ul>
+                        {item.list.map((li, i) => (
+                          <li key={i}>{li}</li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* EMPLOYER + CANDIDATE */}
+          {/* EMPLOYER / CANDIDATE */}
           <div className="about-role-grid">
             <div className="about-role-card">
               <h2>👔 For Employers</h2>
-              <p>
-                Employers can register, post job openings, manage applications,
-                and connect with relevant candidates efficiently through our
-                platform.
-              </p>
+              <ul>
+                <li>Post pharma jobs quickly</li>
+                <li>Access targeted candidate profiles</li>
+                <li>Download resumes by category</li>
+                <li>Manage recruiter accounts</li>
+                <li>Simplified hiring workflow</li>
+              </ul>
+              Our pharma job portal helps companies find the right talent faster
+              and more accurately.
             </div>
 
             <div className="about-role-card">
               <h2>🧑‍💼 For Candidates</h2>
-              <p>
-                Candidates can create profiles, search jobs, and apply easily
-                while exploring career opportunities across multiple industries.
-              </p>
+              <ul>
+                <li>Search verified pharma jobs</li>
+                <li>Apply instantly</li>
+                <li>Create professional profiles</li>
+                <li>Get discovered by recruiters</li>
+                <li>Explore career opportunities nationwide</li>
+              </ul>
+              We make job searching simple, reliable, and industry-focused.
             </div>
           </div>
 
@@ -103,10 +128,18 @@ const About = () => {
           <div className="about-why">
             <h2>Why Choose Hirelinkinfo.com?</h2>
             <p>
-              ✔ Simple & user-friendly platform <br />
-              ✔ Genuine job opportunities <br />
-              ✔ Secure data handling <br />✔ Dedicated support for employers and
-              candidates
+              ✔ Industry-specific pharma job portal
+              <br />
+              ✔ Verified employer listings
+              <br />
+              ✔ Affordable recruitment tools
+              <br />✔ User-friendly website + mobile apps
+              <br />
+              ✔ Designed for Android & iOS compliance
+              <br />✔ Optimized for speed and performance
+              <br></br>
+              <br></br>Hirelinkinfo provides a trusted environment where pharma
+              employers meet qualified professionals efficiently.
             </p>
           </div>
         </div>

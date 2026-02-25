@@ -45,7 +45,7 @@ function Blogs() {
 
   const onSubmit = async (data) => {
     try {
-      await axios.post(`${BASE_URL}admin/insert`, data);
+      await axios.post(`${BASE_URL}admin/insert/tbl_blogs`, data);
       toast.success("Blog added successfully 🎉");
       reset();
       document.querySelector(".btn-close")?.click();

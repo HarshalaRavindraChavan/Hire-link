@@ -712,8 +712,9 @@ function Profile() {
             {/* Profile Image */}
             <img
               src={
-                `${BASE_URL}Uploads/${candidate.can_image}` ||
-                "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                candidate?.can_image
+                  ? `${BASE_URL}Uploads/${candidate.can_image}`
+                  : "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
               }
               className="rounded-circle"
               width="90"
@@ -981,7 +982,7 @@ function Profile() {
                 <div className="d-flex align-items-center gap-3 mb-3">
                   <img
                     src={
-                      candidate.can_image
+                      candidate?.can_image
                         ? `${BASE_URL}Uploads/${candidate.can_image}`
                         : "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
                     }

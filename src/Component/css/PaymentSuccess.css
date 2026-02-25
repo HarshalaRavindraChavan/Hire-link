@@ -1,7 +1,10 @@
 /* ================= Wrapper ================= */
 .hl-success-wrapper {
   min-height: 100vh;
-  background: linear-gradient(135deg, #156e37, #4a9b1b);
+  background-image: url("../logo/payment.png"); /* तुमची image path */
+  background-size: cover; /* पूर्ण screen cover */
+  background-position: center; /* image center */
+  background-repeat: no-repeat;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -74,7 +77,7 @@
   width: 100%;
   padding: 14px;
   border-radius: 14px;
-  border: .2px solid #fff;
+  border: 0.2px solid #fff;
   font-weight: 700;
   font-size: 16px;
   color: #fff;
@@ -85,8 +88,8 @@
 
 .hl-success-btn:hover {
   transform: translateY(-2px);
-    background: #136b01;
-}
+  background: #136b01;
+} 
 
 .hl-success-btn:disabled {
   background: #888;

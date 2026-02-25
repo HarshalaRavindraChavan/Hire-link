@@ -174,29 +174,24 @@ const EmpProfile = () => {
             emp_instagram: values.instagram,
             emp_youtube: values.youtube,
             emp_com_logo: values.emp_com_logo,
+
+            // ✅ IMPORTANT FLAG
+            profile_completed: true,
           };
 
-          // ✅ employer update
           localStorage.setItem("employer", JSON.stringify(updatedEmployer));
 
-          // ✅ auth ALSO update (THIS WAS MISSING 🔥)
+          // auth update (as you already do)
           const oldAuth = JSON.parse(localStorage.getItem("auth"));
-
           if (oldAuth) {
-            const updatedAuth = {
-              ...oldAuth,
-              emp_companyname: values.emp_companyname,
-              emp_com_logo: values.emp_com_logo,
-            };
-
-            localStorage.setItem("auth", JSON.stringify(updatedAuth));
+            localStorage.setItem(
+              "auth",
+              JSON.stringify({
+                ...oldAuth,
+                profile_completed: true,
+              }),
+            );
           }
-
-          // 🔄 notify other components
-          window.dispatchEvent(new Event("storage"));
-          setTimeout(() => {
-            window.location.reload();
-          }, 2000);
         } else {
           toast.error("Update failed");
         }

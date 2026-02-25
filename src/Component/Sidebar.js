@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import logo from "./logo/admin-logo.png";
+import { toast, ToastContainer } from "react-toastify";
 
 function Sidebar() {
   const auth = JSON.parse(localStorage.getItem("auth"));
@@ -7,6 +8,24 @@ function Sidebar() {
   const role = auth?.role;
   const assignedMenuIds = auth?.menu_ids || [];
   const assignedMenus = assignedMenuIds.map(Number);
+
+  const handleMenuClick = (e, path) => {
+    const auth = JSON.parse(localStorage.getItem("auth"));
+
+    // Employer only (role 100)
+    if (Number(auth?.role) === 100) {
+      // Profile page always allowed
+      if (path === "/emp-profile") return;
+
+      // ❌ profile not completed
+      if (!auth?.profile_completed) {
+        e.preventDefault(); // 🚫 stop navigation
+        toast.warning("⚠️ First update your profile");
+        return;
+      }
+    }
+  };
+
   // Employer fixed menus
   const employerMenuIds = [1, 2, 3, 4, 5, 11, 12];
   const allMenus = [
@@ -82,6 +101,7 @@ function Sidebar() {
               <li className="nav-item" key={i}>
                 <NavLink
                   to={menu.path}
+                  onClick={(e) => handleMenuClick(e, menu.path)}
                   className={({ isActive }) => (isActive ? "active" : "")}
                 >
                   <i className={menu.icon}></i>

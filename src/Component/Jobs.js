@@ -1550,7 +1550,7 @@ function Jobs() {
                 </div>
 
                 {/* Company Name */}
-                <div className="col-md-4 mb-2">
+                {/* <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">Company Name</label>
                   <input
                     type="text"
@@ -1558,7 +1558,7 @@ function Jobs() {
                     className="form-control form-control-md rounded-3"
                     readOnly
                   />
-                </div>
+                </div> */}
 
                 {/* Job Category */}
                 <div className="col-md-4 mb-2">

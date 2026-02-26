@@ -17,11 +17,11 @@ function Blogs() {
   const [blogs, setBlogs] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
 
-    const recordsPerPage = 5;
-    const lastIndex = currentPage * recordsPerPage;
-    const firstIndex = lastIndex - recordsPerPage;
-    const records = blogs.slice(firstIndex, lastIndex);
-    const nPages = Math.ceil(blogs.length / recordsPerPage);
+  const recordsPerPage = 5;
+  const lastIndex = currentPage * recordsPerPage;
+  const firstIndex = lastIndex - recordsPerPage;
+  const records = blogs.slice(firstIndex, lastIndex);
+  const nPages = Math.ceil(blogs.length / recordsPerPage);
 
   const blogSchema = yup.object({
     blog_title: yup.string().required("Title required"),
@@ -43,11 +43,37 @@ function Blogs() {
     resolver: yupResolver(blogSchema),
   });
 
+  // const onSubmit = async (data) => {
+  //   try {
+  //     await axios.post(`${BASE_URL}admin/insert/tbl_blogs`, data);
+  //     toast.success("Blog added successfully 🎉");
+  //     reset();
+  //     document.querySelector(".btn-close")?.click();
+  //   } catch {
+  //     toast.error("Something went wrong ❌");
+  //   }
+  // };
+
   const onSubmit = async (data) => {
     try {
-      await axios.post(`${BASE_URL}admin/insert/tbl_blogs`, data);
-      toast.success("Blog added successfully 🎉");
+      if (isEditMode) {
+        // UPDATE API
+        await axios.post(
+          `${BASE_URL}admin/updatedata/tbl_blogs/blog_id/${selectedBlogId}`,
+          data,
+        );
+
+        toast.success("Blog updated successfully 🎉");
+      } else {
+        // INSERT API
+        await axios.post(`${BASE_URL}admin/insert/tbl_blogs`, data);
+        toast.success("Blog added successfully 🎉");
+      }
+
       reset();
+      setIsEditMode(false);
+      setSelectedBlogId(null);
+
       document.querySelector(".btn-close")?.click();
     } catch {
       toast.error("Something went wrong ❌");
@@ -58,8 +84,8 @@ function Blogs() {
     const file = e.target.files[0];
     if (!file) return;
 
-      setUploading(true);
-      setUploadSuccess(false);
+    setUploading(true);
+    setUploadSuccess(false);
 
     const formData = new FormData();
     formData.append("image", file);
@@ -84,6 +110,29 @@ function Blogs() {
     }
   };
 
+  // edit model code
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [selectedBlogId, setSelectedBlogId] = useState(null);
+
+  const handleEdit = (blog) => {
+    setIsEditMode(true);
+    setSelectedBlogId(blog.blog_id);
+
+    // Fill form values
+    setValue("blog_title", blog.btitle);
+    setValue("blog_category", blog.category);
+    setValue("blog_status", blog.status);
+    setValue("blog_short_description", blog.short_description);
+    setValue("blog_content", blog.content);
+    setValue("blog_featured_image", blog.featured_image);
+
+    // Open modal manually
+    const modal = new window.bootstrap.Modal(
+      document.getElementById("exampleModal"),
+    );
+    modal.show();
+  };
+
   return (
     <>
       <SEO
@@ -95,10 +144,22 @@ function Blogs() {
 
       <div className="d-flex justify-content-between mb-3">
         <h3 className="fw-bold">Blogs</h3>
+        {/* <button
+          className="btn btn-success"
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModal"
+        >
+          + Add Blog
+        </button> */}
         <button
           className="btn btn-success"
           data-bs-toggle="modal"
           data-bs-target="#exampleModal"
+          onClick={() => {
+            reset();
+            setIsEditMode(false);
+            setSelectedBlogId(null);
+          }}
         >
           + Add Blog
         </button>
@@ -120,7 +181,16 @@ function Blogs() {
               records.map((blog, index) => (
                 <tr key={index}>
                   <td>{firstIndex + index + 1}</td>
-                  <td>{blog.btitle}</td>
+                  {/* <td>{blog.btitle}</td> */}
+                  <td>
+                    <span
+                      className="text-primary fw-bold cursor-pointer"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => handleEdit(blog)}
+                    >
+                      {blog.btitle}
+                    </span>
+                  </td>
                   <td>{blog.category}</td>
                   <td>{blog.status}</td>
                 </tr>
@@ -164,16 +234,16 @@ function Blogs() {
                     </small>
                   </div>
 
-                    <div className="col-md-6 mb-3">
-                      <label>Main Image</label>
+                  <div className="col-md-6 mb-3">
+                    <label>Main Image</label>
 
-                      <div className="position-relative">
-                        <input
-                          type="file"
-                          className="form-control pe-5"
-                          onChange={uploadImage}
-                          disabled={uploading}
-                        />
+                    <div className="position-relative">
+                      <input
+                        type="file"
+                        className="form-control pe-5"
+                        onChange={uploadImage}
+                        disabled={uploading}
+                      />
 
                       {/* LOADER */}
                       {uploading && (
@@ -196,10 +266,10 @@ function Blogs() {
                     {/* Hidden RHF field */}
                     <input type="hidden" {...register("blog_featured_image")} />
 
-                      <small className="text-danger">
-                        {errors.blog_featured_image?.message}
-                      </small>
-                    </div>
+                    <small className="text-danger">
+                      {errors.blog_featured_image?.message}
+                    </small>
+                  </div>
 
                   <div className="col-md-6 mb-3">
                     <label>Category</label>
@@ -273,7 +343,11 @@ function Blogs() {
                   className="btn btn-success px-4 ms-auto"
                   disabled={uploading}
                 >
-                  {uploading ? "Uploading..." : "Submit"}
+                  {uploading
+                    ? "Uploading..."
+                    : isEditMode
+                      ? "Update"
+                      : "Submit"}{" "}
                 </button>
               </div>
             </form>
@@ -284,4 +358,4 @@ function Blogs() {
   );
 }
 
-  export default Blogs;
+export default Blogs;

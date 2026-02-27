@@ -244,7 +244,7 @@ function BlogCate() {
     <>
       <ToastContainer />
 
-      <div className="d-flex justify-content-between mb-3">
+      <div className="d-flex justify-content-between mb-3 mt-4">
         <h3>Blog Categories</h3>
         <button
           className="btn btn-success"
@@ -330,15 +330,15 @@ function BlogCate() {
                 </div>
               </div>
 
-              <div className="modal-footer">
+              <div className="modal-footer bg-light d-flex">
                 <button
                   type="button"
-                  className="btn btn-secondary"
+                  className="btn btn-outline-secondary"
                   data-bs-dismiss="modal"
                 >
                   Cancel
                 </button>
-                <button className="btn btn-success" type="submit">
+                <button className="btn btn-success ms-auto" type="submit">
                   {editId ? "Update" : "Save"}
                 </button>
               </div>

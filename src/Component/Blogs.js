@@ -12,12 +12,22 @@ import RichTextEditor from "../Component/commenuse/RichTextEditor";
 import BlogCate from "../Component/BlogCate";
 
 function Blogs() {
-  const [activeTab, setActiveTab] = useState("blogs");
+  const [activeTab, setActiveTab] = useState("categories");
   const [uploading, setUploading] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [blogs, setBlogs] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedBlogId, setSelectedBlogId] = useState(null);
+  const [categories, setCategories] = useState([]);
+
+  const fetchCategories = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}admin/getdata/tbl_blog_cate`);
+      setCategories(res.data?.data || []);
+    } catch {
+      setCategories([]);
+    }
+  };
 
   const fetchBlogs = async () => {
     try {
@@ -30,6 +40,7 @@ function Blogs() {
 
   useEffect(() => {
     fetchBlogs();
+    fetchCategories();
   }, []);
 
   const recordsPerPage = 100;
@@ -200,28 +211,29 @@ function Blogs() {
       />
       <ToastContainer position="top-right" autoClose={3000} theme="colored" />
 
-      <ul className="nav nav-tabs mb-3">
-        <li className="nav-item">
-          <button
-            className={`nav-link ${activeTab === "categories" ? "active" : ""}`}
-            onClick={() => setActiveTab("categories")}
-          >
-            Categories
-          </button>
-        </li>
-        <li className="nav-item">
-          <button
-            className={`nav-link ${activeTab === "blogs" ? "active" : ""}`}
-            onClick={() => setActiveTab("blogs")}
-          >
-            Blogs
-          </button>
-        </li>
-      </ul>
+      <div className="d-flex gap-2">
+        <button
+          className={`btn btn-md ${
+            activeTab === "categories" ? "btn-success" : "btn-outline-success"
+          }`}
+          onClick={() => setActiveTab("categories")}
+        >
+          Categories
+        </button>
+
+        <button
+          className={`btn btn-md ${
+            activeTab === "blogs" ? "btn-success" : "btn-outline-success"
+          }`}
+          onClick={() => setActiveTab("blogs")}
+        >
+          Blogs
+        </button>
+      </div>
 
       {activeTab === "blogs" && (
         <>
-          <div className="d-flex justify-content-between mb-3">
+          <div className="d-flex justify-content-between mb-3 mt-4">
             <h3 className="fw-bold">Blogs</h3>
 
             <button
@@ -264,7 +276,7 @@ function Blogs() {
                         </span>
                         <br></br>
                         <b>Category:</b>
-                        {blog.blog_category}
+                        {blog.bc_name}
                         <br></br>
                         <b>Views:</b>
                         {blog.blog_views}
@@ -323,6 +335,7 @@ function Blogs() {
                   uploadSuccess={uploadSuccess}
                   watch={addWatch}
                   setValue={addSetValue}
+                  categories={categories}
                 />
               </div>
               <div className="modal-footer bg-light">
@@ -360,6 +373,7 @@ function Blogs() {
                   uploadSuccess={uploadSuccess}
                   watch={editWatch}
                   setValue={editSetValue}
+                  categories={categories}
                 />
               </div>
               <div className="modal-footer bg-light">
@@ -389,6 +403,7 @@ function BlogFormUI({
   uploadSuccess,
   watch,
   setValue,
+  categories,
 }) {
   return (
     <div className="row">
@@ -445,9 +460,12 @@ function BlogFormUI({
           {...register("blog_category")}
         >
           <option value="">Select</option>
-          <option value="Career">Career</option>
-          <option value="Jobs">Jobs</option>
-          <option value="Technology">Technology</option>
+
+          {categories.map((cat) => (
+            <option key={cat.bc_id} value={cat.bc_id}>
+              {cat.bc_name}
+            </option>
+          ))}
         </select>
       </div>
 

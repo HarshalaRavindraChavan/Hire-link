@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import ConfirmDelete from "./commenuse/ConfirmDelete";
 import { useForm } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
 import Pagination from "./commenuse/Pagination";
@@ -42,6 +43,36 @@ function Blogs() {
     fetchBlogs();
     fetchCategories();
   }, []);
+
+  // Delete modal state
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+
+  // Open Confirm Delete Modal
+  const handleDeleteClick = (id) => {
+    setDeleteId(id);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = async () => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}admin/deletedata/tbl_blogs/blog_id/${deleteId}`,
+      );
+
+      if (res.data.status === true) {
+        setShowDeleteModal(false);
+        setDeleteId(null);
+
+        fetchBlogs();
+      } else {
+        toast.error("Failed to delete Categories");
+      }
+    } catch (error) {
+      console.error("Delete error:", error);
+      toast.error("Something went wrong while deleting");
+    }
+  };
 
   const recordsPerPage = 100;
   const lastIndex = currentPage * recordsPerPage;
@@ -267,13 +298,42 @@ function Blogs() {
                       <td>{firstIndex + index + 1}</td>
                       <td className="text-start">
                         <b>Title:</b>
-                        <span
+                        {/* <span
                           className="text-primary fw-bold"
                           style={{ cursor: "pointer" }}
                           onClick={() => handleEdit(blog)}
                         >
                           {blog.blog_title}
-                        </span>
+                        </span> */}
+                        <div className="dropdown d-inline ms-2">
+                          <span
+                            className="fw-bold text-primary"
+                            role="button"
+                            data-bs-toggle="dropdown"
+                          >
+                            {blog.blog_title}
+                          </span>
+
+                          <ul className="dropdown-menu shadow">
+                            <li>
+                              <button
+                                className="dropdown-item"
+                                onClick={() => handleEdit(blog)}
+                              >
+                                <i className="fas fa-edit me-2"></i> Edit
+                              </button>
+                            </li>
+
+                            <li>
+                              <button
+                                className="dropdown-item text-danger"
+                                onClick={() => handleDeleteClick(blog.blog_id)}
+                              >
+                                <i className="fas fa-trash me-2"></i>Delete
+                              </button>
+                            </li>
+                          </ul>
+                        </div>
                         <br></br>
                         <b>Category:</b>
                         {blog.bc_name}
@@ -311,6 +371,12 @@ function Blogs() {
               onPageChange={setCurrentPage}
             />
           </div>
+
+          <ConfirmDelete
+            show={showDeleteModal}
+            onConfirm={confirmDelete}
+            onCancel={() => setShowDeleteModal(false)}
+          />
         </>
       )}
 

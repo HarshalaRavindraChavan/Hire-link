@@ -144,11 +144,11 @@
 
 // export default BlogCate;
 
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import ConfirmDelete from "./commenuse/ConfirmDelete";
 import { useForm } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
 import { BASE_URL } from "../config/constants";
@@ -192,15 +192,15 @@ function BlogCate() {
     try {
       if (editId) {
         // 🔹 UPDATE
-        await axios.put(
+        await axios.post(
           `${BASE_URL}admin/updatedata/tbl_blog_cate/bc_id/${editId}`,
-          data
+          data,
         );
-        toast.success("Category updated successfully 🎉");
+        toast.success("Category updated successfully");
       } else {
         // 🔹 INSERT
         await axios.post(`${BASE_URL}admin/insert/tbl_blog_cate`, data);
-        toast.success("Category added successfully 🎉");
+        toast.success("Category added successfully");
       }
 
       reset();
@@ -219,24 +219,54 @@ function BlogCate() {
     setValue("bc_name", blog.bc_name);
 
     const modal = new window.bootstrap.Modal(
-      document.getElementById("exampleModal")
+      document.getElementById("exampleModal"),
     );
     modal.show();
   };
 
-  // ================= DELETE =================
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete?")) return;
+  // Delete modal state
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
 
+  // Open Confirm Delete Modal
+  const handleDeleteClick = (id) => {
+    setDeleteId(id);
+    setShowDeleteModal(true);
+  };
+
+  // ================= DELETE =================
+  // const handleDelete = async (id) => {
+  //   if (!window.confirm("Are you sure you want to delete?")) return;
+
+  //   try {
+  //     await axios.delete(
+  //       `${BASE_URL}admin/deletedata/tbl_blog_cate/bc_id/${id}`,
+  //     );
+  //     toast.success("Category deleted successfully 🗑️");
+  //     fetchBlogs();
+  //   } catch (error) {
+  //     console.error(error);
+  //     toast.error("Delete failed ❌");
+  //   }
+  // };
+
+  const confirmDelete = async () => {
     try {
-      await axios.delete(
-        `${BASE_URL}admin/deletedata/tbl_blog_cate/bc_id/${id}`
+      const res = await axios.get(
+        `${BASE_URL}admin/deletedata/tbl_blog_cate/bc_id/${deleteId}`,
       );
-      toast.success("Category deleted successfully 🗑️");
-      fetchBlogs();
+
+      if (res.data.status === true) {
+        setShowDeleteModal(false);
+        setDeleteId(null);
+
+        fetchBlogs();
+      } else {
+        toast.error("Failed to delete Categories");
+      }
     } catch (error) {
-      console.error(error);
-      toast.error("Delete failed ❌");
+      console.error("Delete error:", error);
+      toast.error("Something went wrong while deleting");
     }
   };
 
@@ -284,7 +314,8 @@ function BlogCate() {
                     </button>
                     <button
                       className="btn btn-sm btn-danger"
-                      onClick={() => handleDelete(blog.bc_id)}
+                      // onClick={() => handleDelete(blog.bc_id)}
+                      onClick={() => handleDeleteClick(blog.bc_id)}
                     >
                       Delete
                     </button>
@@ -299,6 +330,12 @@ function BlogCate() {
           </tbody>
         </table>
       </div>
+
+      <ConfirmDelete
+        show={showDeleteModal}
+        onConfirm={confirmDelete}
+        onCancel={() => setShowDeleteModal(false)}
+      />
 
       {/* MODAL */}
       <div className="modal fade" id="exampleModal">

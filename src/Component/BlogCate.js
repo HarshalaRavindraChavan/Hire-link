@@ -4,20 +4,19 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
-
+import { BASE_URL } from "../config/constants";
 
 function BlogCate() {
   const [blogcate, setBlogcate] = useState([]);
- 
+
+  // 🔹 FETCH DATA
   const fetchBlogs = async () => {
     try {
       const res = await axios.get(`${BASE_URL}admin/getdata/tbl_blog_cate`);
-
-      // ✅ backend response structure handle
-      setBlogs(res.data?.data || []);
+      setBlogcate(res.data?.data || []);
     } catch (err) {
       console.error("Fetch blog Cate failed", err);
-      setBlogcate([]); // safety
+      setBlogcate([]);
     }
   };
 
@@ -25,9 +24,9 @@ function BlogCate() {
     fetchBlogs();
   }, []);
 
-  
+  // 🔹 VALIDATION
   const blogSchema = yup.object({
-    bc_name: yup.string().required("Title required"),
+    bc_name: yup.string().required("Category name required"),
   });
 
   const {
@@ -39,7 +38,7 @@ function BlogCate() {
     resolver: yupResolver(blogSchema),
   });
 
-  
+  // 🔹 INSERT
   const onSubmit = async (data) => {
     try {
       await axios.post(`${BASE_URL}admin/insert/tbl_blog_cate`, data);
@@ -57,7 +56,7 @@ function BlogCate() {
       <ToastContainer />
 
       <div className="d-flex justify-content-between mb-3">
-        <h3>Blogs</h3>
+        <h3>Blog Categories</h3>
         <button
           className="btn btn-success"
           data-bs-toggle="modal"
@@ -68,28 +67,30 @@ function BlogCate() {
       </div>
 
       {/* TABLE */}
-      <table className="table table-bordered text-center">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Category</th>
-          </tr>
-        </thead>
-        <tbody>
-          {records.length ? (
-            records.map((blog, i) => (
-              <tr key={blog.blog_id}>
-                <td>{firstIndex + i + 1}</td>
-                <td className="text-center"> {blog.bc_name}</td>
-              </tr>
-            ))
-          ) : (
+      <div className="card shadow-sm p-3">
+        <table className="table table-bordered text-center">
+          <thead className="table-light">
             <tr>
-              <td colSpan="4">No blogs found</td>
+              <th>#</th>
+              <th>Categories</th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {blogcate.length > 0 ? (
+              blogcate.map((blog, i) => (
+                <tr key={blog.blog_id}>
+                  <td>{i + 1}</td>
+                  <td>{blog.bc_name}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="2">No blog cate found</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
 
       {/* MODAL */}
       <div className="modal fade" id="exampleModal">
@@ -103,13 +104,14 @@ function BlogCate() {
                 data-bs-dismiss="modal"
               ></button>
             </div>
+
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="modal-body">
                 <div className="row">
                   <div className="col-md-12 mb-3">
                     <label>Blog Category</label>
                     <input
-                      className="form-control "
+                      className="form-control"
                       placeholder="Category"
                       {...register("bc_name")}
                     />
@@ -122,6 +124,7 @@ function BlogCate() {
 
               <div className="modal-footer bg-light d-flex">
                 <button
+                  type="button"
                   className="btn btn-outline-secondary"
                   data-bs-dismiss="modal"
                 >

@@ -32,7 +32,7 @@ function Information() {
         });
       }
     } catch (error) {
-      console.log(error);
+      toast.error(error);
     }
   };
 
@@ -69,7 +69,6 @@ function Information() {
         toast.error("Update Failed");
       }
     } catch (error) {
-      console.log(error);
       toast.error("Something went wrong");
     }
   };

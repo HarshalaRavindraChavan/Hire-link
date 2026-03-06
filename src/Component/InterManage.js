@@ -63,7 +63,7 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
         setInterviews([]);
       }
     } catch (err) {
-      console.log(err);
+      toast.error(err);
       setInterviews([]);
     } finally {
       setLoading(false);
@@ -132,7 +132,7 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
 
       fetchInterviews();
     } catch (error) {
-      console.log(error);
+      toast.error(error);
       alert("Something went wrong!");
     } finally {
       setIsUpdatingStatus(false); // 🔓 unlock
@@ -258,16 +258,7 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
       </div>
 
       {/* Filters */}
-      {/* <div className="d-flex gap-2 flex-wrap mb-3">
-        <select className="form-select w-auto fw-bold">
-          <option>All accounts</option>
-        </select>
-        <select className="form-select w-auto fw-bold">
-          <option>Last 14 days</option>
-        </select>
-      </div> */}
-
-      <div className="row g-3">
+        <div className="row g-3">
         {/* LEFT PANEL */}
         <div className="col-lg-5 col-md-5">
           <div className="card shadow-sm h-100">
@@ -455,14 +446,6 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
                     {selectedInterview.itv_date} · {selectedInterview.itv_time}{" "}
                     · <FaPhone /> {selectedInterview.itv_type}
                   </div>
-
-                  {/* <button
-                    className="btn btn-outline-success btn-sm fw-bold mb-4"
-                    onClick={() => alert("Reschedule clicked")}
-                    type="button"
-                  >
-                    Reschedule
-                  </button> */}
 
                   {selectedInterview.itv_status === "Reschedule Request" && (
                     <div className="mb-4">

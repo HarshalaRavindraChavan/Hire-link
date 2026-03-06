@@ -65,7 +65,7 @@ function Staff() {
         setStates(res.data.data || []);
       }
     } catch (err) {
-      console.error("State fetch error", err);
+      toast.error("State fetch error", err);
     }
   };
 
@@ -89,7 +89,7 @@ function Staff() {
         }
       }
     } catch (err) {
-      console.error("City fetch error", err);
+      toast.error("City fetch error", err);
     }
   };
 
@@ -127,7 +127,7 @@ function Staff() {
         setUsers(res.data.data || []);
       }
     } catch (err) {
-      console.error(err);
+      toast.error(err);
       toast.error("Failed to load staff ❌");
     } finally {
       setLoading(false);
@@ -173,8 +173,6 @@ function Staff() {
 
   /* ================= FILE STATE ================= */
   const [User, setUser] = useState({
-    // staff_aadhar_image: "",
-    // staff_pan_image: "",
     staff_bankpassbook: "",
   });
 
@@ -192,8 +190,6 @@ function Staff() {
     state: yup.string().required(),
     city: yup.string().required(),
     joindate: yup.date().required(),
-    // adharupload: yup.string().required("Aadhar upload required"),
-    // panupload: yup.string().required("PAN upload required"),
     bankpassbook: yup.string().required("BackPassbook upload required"),
     experience: yup.string().required(),
     education_type: yup.string().required("Education Type is required"),
@@ -208,8 +204,6 @@ function Staff() {
     defaultValues: {
       state: "",
       city: "",
-      // adharupload: "",
-      // panupload: "",
       bankpassbook: "",
       menus: ["1"],
     },
@@ -240,10 +234,9 @@ function Staff() {
 
   /* ================= SUBMIT ================= */
   const onSubmit = async (data) => {
-    if (isSubmitting) return; // ✅ double click block
+    if (isSubmitting) return; 
 
-    setIsSubmitting(true); // ✅ disable + spinner start
-
+    setIsSubmitting(true); 
     try {
       // ✅ Role check
       if (Number(role) !== 100) {
@@ -301,8 +294,6 @@ function Staff() {
         staff_education_detail: data.education_detail,
         staff_role: data.role,
         staff_menu_id: data.menus.join(","),
-        // staff_aadhar_image: User.staff_aadhar_image,
-        // staff_pan_image: User.staff_pan_image,
         staff_adhar: data.adhar,
         staff_pan: data.pan,
         staff_bankpassbook: User.staff_bankpassbook,
@@ -339,7 +330,7 @@ function Staff() {
       // ✅ 6) Redirect to payment
       window.location.href = "/payment";
     } catch (err) {
-      console.error("Staff Submit Error:", err);
+     toast.error("Staff Submit Error:", err);
 
       const msg = err?.response?.data?.message;
 
@@ -555,7 +546,7 @@ function Staff() {
         toast.error("Staff update failed ❌");
       }
     } catch (error) {
-      console.error("Staff Update Error:", error);
+      toast.error("Staff Update Error:", error);
       toast.error("Server error ❌");
     } finally {
       setIsSubmitting(false); // 🔓 unlock
@@ -650,7 +641,7 @@ function Staff() {
         toast.error("Status update failed ❌");
       }
     } catch (err) {
-      console.error(err);
+      toast.error(err);
       toast.error("Server error ❌");
     } finally {
       setLoading(false);
@@ -1074,42 +1065,6 @@ function Staff() {
                   />
                   <p className="text-danger">{addErrors.pan?.message}</p>
                 </div>
-
-                {/* Aadhaar Upload */}
-                {/* <div className="col-md-4">
-                  <label className="fw-semibold">
-                    Aadhar Card Upload
-                    {User.staff_aadhar_image && (
-                      <i className="fa-solid fa-circle-check text-success ms-2"></i>
-                    )}
-                  </label>
-                  <input
-                    type="file"
-                    className="form-control"
-                    onChange={(e) => uploadFile(e, "staff_aadhar_image")}
-                  />
-                  <input type="hidden" {...addRegister("adharupload")} />
-                  <p className="text-danger">
-                    {addErrors.adharupload?.message}
-                  </p>
-                </div> */}
-
-                {/* PAN Upload */}
-                {/* <div className="col-md-4">
-                  <label className="fw-semibold">
-                    PAN Card Upload
-                    {User.staff_pan_image && (
-                      <i className="fa-solid fa-circle-check text-success ms-2"></i>
-                    )}
-                  </label>
-                  <input
-                    type="file"
-                    className="form-control"
-                    onChange={(e) => uploadFile(e, "staff_pan_image")}
-                  />
-                  <input type="hidden" {...addRegister("panupload")} />
-                  <p className="text-danger">{addErrors.panupload?.message}</p>
-                </div> */}
 
                 {/* Bank Upload */}
                 <div className="col-md-4">

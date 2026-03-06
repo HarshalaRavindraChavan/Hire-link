@@ -33,7 +33,7 @@ export default function Blog() {
         setLatestBlogs(latest);
       }
     } catch (err) {
-      console.log(err);
+      toast.error(err);
     }
   };
 
@@ -51,7 +51,7 @@ export default function Blog() {
         });
       }
     } catch (err) {
-      console.log(err);
+      toast.error(err);
     }
   };
 
@@ -73,7 +73,7 @@ export default function Blog() {
         }));
       }
     } catch (err) {
-      console.log(err);
+      toast.error(err);
     }
   };
 

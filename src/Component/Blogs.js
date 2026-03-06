@@ -68,7 +68,7 @@ function Blogs() {
         toast.error("Failed to delete Categories");
       }
     } catch (error) {
-      console.error("Delete error:", error);
+      toast.error("Delete error:", error);
       toast.error("Something went wrong while deleting");
     }
   };
@@ -220,7 +220,7 @@ function Blogs() {
     setSelectedBlogId(blog.blog_id);
 
     editSetValue("blog_title", blog.blog_title);
-    editSetValue("blog_slug", blog.blog_slug); // 🔥 ADD THIS
+    editSetValue("blog_slug", blog.blog_slug); 
     editSetValue("blog_category", blog.blog_category);
     editSetValue("blog_status", blog.blog_status);
     editSetValue("blog_short_description", blog.blog_short_description);

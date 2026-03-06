@@ -20,7 +20,7 @@ function Home() {
         }
       })
       .catch((error) => {
-        console.error("API Error:", error);
+       toast.error("API Error:", error);
       });
   }, []);
 

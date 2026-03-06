@@ -265,47 +265,6 @@ function JobDetail() {
           }}
           dangerouslySetInnerHTML={{ __html: job.job_description }}
         />
-
-        {/* <p
-          style={{
-            fontSize: "14px",
-            color: "#333",
-            lineHeight: 1.6,
-          }}
-        >
-          The ideal candidate must be able to solve tough technical problems,
-          understand previous written code, update existing websites, create new
-          websites and write clean, well documented code.
-        </p> */}
-
-        {/* <p
-          style={{
-            fontSize: "14px",
-            color: "#333",
-            fontWeight: "bold",
-          }}
-        >
-          Energetic, Honest, Punctual.
-        </p>
-
-        <p
-          style={{
-            fontSize: "14px",
-            color: "#333",
-          }}
-        >
-          Minimum 6 months experience in PHP, MySQL, JavaScript, jQuery,
-          WordPress required.
-        </p>
-
-        <p
-          style={{
-            fontSize: "14px",
-            color: "#333",
-          }}
-        >
-          Knowledge of Node.js and AngularJS is preferred.
-        </p> */}
       </div>
 
       {/* ACTION BUTTONS */}
@@ -336,19 +295,6 @@ function JobDetail() {
         >
           Apply now
         </button>
-
-        {/* <button
-          style={{
-            background: "#ffffff",
-            color: "#b1b1b1",
-            border: "1px solid #b1b1b1",
-            borderRadius: "6px",
-            padding: "12px 14px",
-            fontSize: "14px",
-          }}
-        >
-          Save
-        </button> */}
       </div>
     </>
   );

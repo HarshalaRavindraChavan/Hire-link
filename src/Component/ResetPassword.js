@@ -89,7 +89,7 @@ function ResetPassword() {
       setErrorMsg("Unable to reset password. Try again.");
       setIsValidToken(false);
     } finally {
-      setIsSubmitting(false); // 🔓 unlock (if page stays here)
+      setIsSubmitting(false); 
     }
   };
 

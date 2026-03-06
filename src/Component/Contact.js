@@ -42,7 +42,7 @@ function Contact() {
         setContact(res.data.data);
       }
     } catch (error) {
-      console.error("Error fetching Contact", error);
+      toast.error("Error fetching Contact", error);
     } finally {
       setLoading(false); // loader stop
     }

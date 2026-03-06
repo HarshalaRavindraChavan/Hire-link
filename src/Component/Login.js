@@ -33,22 +33,11 @@ function Login() {
     }),
 
     onSubmit: async (values, { setSubmitting, resetForm }) => {
-      console.log("Form Submitted");
-      console.log("Form Values:", values);
-
       try {
-        console.log("Sending login API request...");
-
-        const response = await axios.post(
-          `${BASE_URL}admin/login`,
-          {
-            user_email: values.user_email.trim(),
-            user_password: values.user_password.trim(),
-          }
-        );
-
-        console.log("Full Axios Response:", response);
-        console.log("Response Data:", response.data);
+        const response = await axios.post(`${BASE_URL}admin/login`, {
+          user_email: values.user_email.trim(),
+          user_password: values.user_password.trim(),
+        });
 
         const data = response.data;
 
@@ -62,8 +51,8 @@ function Login() {
             JSON.stringify({
               role: response.data.data.user_role,
               user_id: response.data.data.user_id,
-              menu_ids: menuIds, 
-            })
+              menu_ids: menuIds,
+            }),
           );
 
           localStorage.setItem("admin", JSON.stringify(data.data));
@@ -75,23 +64,15 @@ function Login() {
             navigate("/dashboard");
           }, 1500);
         } else {
-          console.log("Login FAILED:", data.message || data.msg);
-
           // ❌ FAILURE TOAST
           toast.error(data.message || data.msg || "Login failed");
         }
       } catch (error) {
-        console.log("LOGIN ERROR OCCURRED");
-        console.log("Error Object:", error);
-        console.log("Error Response:", error.response);
-        console.log("Error Data:", error.response?.data);
-
         // ❌ ERROR TOAST
         toast.error(
-          error.response?.data?.message || "Invalid email or password"
+          error.response?.data?.message || "Invalid email or password",
         );
       } finally {
-        console.log("Login request completed");
         setSubmitting(false);
       }
     },

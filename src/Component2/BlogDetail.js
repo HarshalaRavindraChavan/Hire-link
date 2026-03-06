@@ -24,7 +24,7 @@ export default function BlogDetail() {
         setBlog(res.data.data[0]);
       }
     } catch (err) {
-      console.log(err);
+      toast.error(err);
     }
   };
 

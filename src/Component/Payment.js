@@ -60,7 +60,7 @@ function PaymentPage() {
 
       setLoading(false);
     } catch (error) {
-      console.error(error);
+      toast.error(error);
 
       if (error?.response?.status === 503) {
         setErrorMsg("Server down (503). Please try again after sometime.");
@@ -156,7 +156,7 @@ function PaymentPage() {
                   return;
                 }
               } catch (err) {
-                console.error(err);
+                toast.error(err);
                 toast.error("Payment done but staff insert failed ❌");
                 return;
               }
@@ -197,7 +197,7 @@ function PaymentPage() {
       const rzp = new window.Razorpay(options);
       rzp.open();
     } catch (error) {
-      console.error(error);
+      toast.error(error);
       toast.error("Payment failed. Please try again.");
     }
   };

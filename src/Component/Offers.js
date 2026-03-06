@@ -36,7 +36,7 @@ function Offer() {
         setOffers(res.data.data);
       }
     } catch (error) {
-      console.error("Error fetching offers", error);
+      toast.error("Error fetching offers", error);
       toast.error("Failed to load offers ❌", {
         position: "top-right",
         autoClose: 3000,
@@ -87,7 +87,7 @@ function Offer() {
         });
       }
     } catch (error) {
-      console.error("Delete error:", error);
+     toast.error("Delete error:", error);
 
       toast.error("Server error while deleting offer ⚠️", {
         position: "top-right",
@@ -179,7 +179,7 @@ function Offer() {
         toast.warning(res.data.message || "Something went wrong ⚠️");
       }
     } catch (error) {
-      console.error("Add offer error:", error);
+      toast.error("Add offer error:", error);
       toast.error("Failed to add offer. Please try again ❌", {
         position: "top-right",
         autoClose: 3000,
@@ -257,7 +257,7 @@ function Offer() {
         toast.error("Offer update failed");
       }
     } catch (error) {
-      console.error("Update Offer Error:", error);
+      toast.error("Update Offer Error:", error);
       toast.error("Server error");
     } finally {
       setLoading(false);

@@ -16,14 +16,14 @@ export default function NotificationPage() {
   const loadNotifications = async (candidateId) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}candidate/notifications/${candidateId}`
+        `${BASE_URL}candidate/notifications/${candidateId}`,
       );
 
       if (res.data.status) {
         setNotifications(res.data.data || []);
       }
     } catch (err) {
-      console.error("Notification load error", err);
+      toast.error("Notification load error", err);
     }
   };
 
@@ -43,8 +43,6 @@ export default function NotificationPage() {
   // 🔔 REAL-TIME update (NO REFRESH)
   useEffect(() => {
     const unsubscribe = onMessage(messaging, (payload) => {
-      console.log("🔥 Foreground FCM:", payload);
-
       const candidate = JSON.parse(localStorage.getItem("candidate"));
 
       if (
@@ -67,22 +65,20 @@ export default function NotificationPage() {
 
       setNotifications((prev) =>
         prev.map((n) =>
-          n.noti_id === item.noti_id ? { ...n, noti_is_read: 1 } : n
-        )
+          n.noti_id === item.noti_id ? { ...n, noti_is_read: 1 } : n,
+        ),
       );
     }
   };
 
   const markAsRead = async (notiId, candidateId) => {
     try {
-      await axios.get(
-        `${BASE_URL}candidate/notification-read/${notiId}`
-      );
+      await axios.get(`${BASE_URL}candidate/notification-read/${notiId}`);
 
       // 🔄 Reload notifications after update
       loadNotifications(candidateId);
     } catch (err) {
-      console.error("Mark read error", err);
+      toast.error("Mark read error", err);
     }
   };
 

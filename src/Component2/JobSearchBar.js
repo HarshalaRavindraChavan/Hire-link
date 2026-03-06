@@ -111,7 +111,7 @@ function JobSearchBar({
               setSearchKeyword(e.target.value);
               setAppliedKeyword("");
             }}
-            // onFocus={() => searchKeyword && setShowKeywordSug(true)}
+            
             style={{ boxShadow: "none" }}
           />
         </div>

@@ -227,26 +227,6 @@ function Verify() {
             Mobile OTP sent to <b>{maskMobile(mobile)}</b>
           </p>
 
-          {/* <div className="d-flex gap-2 mb-5">
-            <input
-              className="form-control"
-              placeholder="Mobile OTP"
-              maxLength={6}
-              disabled={mobileVerified}
-              value={mobileOtp}
-              onChange={(e) =>
-                setMobileOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
-              }
-            />
-            <button
-              className="btn btn-success"
-              disabled={mobileVerified || loading}
-              onClick={verifyMobileOtp}
-            >
-              {mobileVerified ? "Verified" : "Verify"}
-            </button>
-          </div> */}
-
           <div className="otp-wrapper mb-5">
             <div className="otp-box">
               <input
@@ -291,26 +271,6 @@ function Verify() {
           <p className="small">
             Email OTP sent to <b>{maskEmail(email)}</b>
           </p>
-
-          {/* <div className="d-flex gap-2 mb-5">
-            <input
-              className="form-control"
-              placeholder="Email OTP"
-              maxLength={6}
-              disabled={emailVerified}
-              value={emailOtp}
-              onChange={(e) =>
-                setEmailOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
-              }
-            />
-            <button
-              className="btn btn-success"
-              disabled={emailVerified || loading}
-              onClick={verifyEmailOtp}
-            >
-              {emailVerified ? "Verified" : "Verify"}
-            </button>
-          </div> */}
 
           <div className="otp-wrapper mb-5">
             <div className="otp-box">

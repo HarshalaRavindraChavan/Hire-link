@@ -31,7 +31,7 @@ export default function CateBlog() {
         setBlogs(filtered);
       }
     } catch (err) {
-      console.log("Category Blog Error", err);
+      toast.error("Category Blog Error", err);
     }
   };
 
@@ -53,7 +53,7 @@ export default function CateBlog() {
         }
       }
     } catch (err) {
-      console.log("Category Error", err);
+      toast.error("Category Error", err);
     }
   };
 

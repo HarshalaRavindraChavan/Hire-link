@@ -56,14 +56,12 @@ function Jobs() {
 
   // ================= FILTER STATES =================
 
-  // 🔵 Draft (UI – typing/select करताना)
   const [companySearch, setCompanySearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [search, setSearch] = useState("");
 
-  // 🟢 Applied (Submit button नंतरच apply होणारे)
   const [appliedCompany, setAppliedCompany] = useState("");
   const [appliedStatus, setAppliedStatus] = useState("");
   const [appliedFromDate, setAppliedFromDate] = useState("");
@@ -82,7 +80,7 @@ function Jobs() {
         setStates(res.data.data || []);
       }
     } catch (err) {
-      console.error("State fetch error", err);
+      toast.error("State fetch error", err);
     }
   };
 
@@ -107,7 +105,7 @@ function Jobs() {
         }
       }
     } catch (err) {
-      console.error("City fetch error", err);
+      toast.error("City fetch error", err);
     }
   };
 
@@ -166,7 +164,7 @@ function Jobs() {
         setJobs(res.data.data);
       }
     } catch (error) {
-      console.error("Jobs fetch error:", error);
+      toast.error("Jobs fetch error:", error);
       toast.error("Failed to load jobs");
     } finally {
       setLoading(false);
@@ -201,7 +199,7 @@ function Jobs() {
         toast.error("Failed to delete job");
       }
     } catch (error) {
-      console.error("Delete error:", error);
+      toast.error("Delete error:", error);
       toast.error("Something went wrong while deleting");
     }
   };
@@ -349,7 +347,7 @@ function Jobs() {
         );
       }
     } catch (error) {
-      console.error("Add job error:", error);
+      toast.error("Add job error:", error);
 
       toast.error(
         error.response?.data?.message || "Failed to add job. Please try again.",
@@ -413,7 +411,7 @@ function Jobs() {
       const res = await axios.get(`${BASE_URL}admin/getdata/tbl_main_category`);
       setCategories(res.data.data || []);
     } catch (err) {
-      console.error("Main category error", err);
+      toast.error("Main category error", err);
     }
   };
 
@@ -434,7 +432,7 @@ function Jobs() {
       );
       setSubCategories(res.data.data || []);
     } catch (err) {
-      console.error("Sub category error", err);
+      toast.error("Sub category error", err);
     }
   };
 
@@ -455,7 +453,7 @@ function Jobs() {
       );
       setSubCat1(res.data.data || []);
     } catch (err) {
-      console.error("Sub category 1 error", err);
+      toast.error("Sub category 1 error", err);
     }
   };
 
@@ -476,7 +474,7 @@ function Jobs() {
       );
       setSubCat2(res.data.data || []);
     } catch (err) {
-      console.error("Sub category 2 error", err);
+      toast.error("Sub category 2 error", err);
     }
   };
 
@@ -497,7 +495,7 @@ function Jobs() {
       );
       setSubCat3(res.data.data || []);
     } catch (err) {
-      console.error("Sub category 3 error", err);
+      toast.error("Sub category 3 error", err);
     }
   };
 
@@ -621,7 +619,7 @@ function Jobs() {
         toast.error("Job update failed");
       }
     } catch (error) {
-      console.error("Job Update Error:", error);
+      toast.error("Job Update Error:", error);
       toast.error("Server error");
     } finally {
       setIsSubmitting(false); // 🔓 unlock
@@ -650,7 +648,7 @@ function Jobs() {
 
       fetchJobs();
     } catch (err) {
-      console.log("Auto Active Error", err);
+      toast.error("Auto Active Error", err);
     }
   };
 
@@ -665,7 +663,6 @@ function Jobs() {
   };
 
   // filter code
-  // const [search, setSearch] = useState("");
   const [jobType, setJobType] = useState("");
 
   const filteredJobs = React.useMemo(() => {
@@ -1081,17 +1078,6 @@ function Jobs() {
                   </span>
                 </div>
 
-                {/* Company Name */}
-                {/* <div className="col-md-4 mb-2">
-                  <label className="form-label fw-semibold">Company Name</label>
-                  <input
-                    type="text"
-                    value={auth?.emp_companyname || staff?.emp_companyname}
-                    className="form-control form-control-md rounded-3"
-                    readOnly
-                  />
-                </div> */}
-
                 {/* Job Category */}
                 <div className="col-md-4 mb-2">
                   <label className="form-label fw-semibold">
@@ -1273,29 +1259,6 @@ function Jobs() {
                   </span>
                 </div>
 
-                {/* state */}
-                {/* <div className="col-md-4">
-                  <label className="fw-semibold">State</label>
-                  <select
-                    className="form-select form-control"
-                    {...addRegister("job_state")}
-                    onChange={(e) => {
-                      const stateId = e.target.value;
-                      setAddValue("job_state", stateId);
-                      setAddValue("job_city", "");
-                      fetchCities(stateId);
-                    }}
-                  >
-                    <option value="">Select State</option>
-                    {states.map((state) => (
-                      <option key={state.state_id} value={state.state_id}>
-                        {state.state_name}
-                      </option>
-                    ))}
-                  </select>
-                  <p className="text-danger">{addErrors.job_state?.message}</p>
-                </div> */}
-
                 <div className="col-md-4">
                   <label className="fw-semibold">State</label>
 
@@ -1313,26 +1276,6 @@ function Jobs() {
                   />
                 </div>
 
-                {/* city */}
-                {/* <div className="col-md-4">
-                  <label className="fw-semibold">City</label>
-                  <select
-                    className="form-select form-control"
-                    {...addRegister("job_city")}
-                    disabled={!cities.length}
-                  >
-                    <option value="">
-                      {!cities.length ? "Select state first" : "Select City"}
-                    </option>
-
-                    {cities.map((city) => (
-                      <option key={city.city_id} value={city.city_id}>
-                        {city.city_name}
-                      </option>
-                    ))}
-                  </select>
-                  <p className="text-danger">{addErrors.job_city?.message}</p>
-                </div> */}
                 <div className="col-md-4">
                   <label className="fw-semibold">City</label>
 
@@ -1548,17 +1491,6 @@ function Jobs() {
                     {editErrors.job_title?.message}
                   </span>
                 </div>
-
-                {/* Company Name */}
-                {/* <div className="col-md-4 mb-2">
-                  <label className="form-label fw-semibold">Company Name</label>
-                  <input
-                    type="text"
-                    value={auth?.emp_companyname}
-                    className="form-control form-control-md rounded-3"
-                    readOnly
-                  />
-                </div> */}
 
                 {/* Job Category */}
                 <div className="col-md-4 mb-2">
@@ -1789,28 +1721,6 @@ function Jobs() {
                     }}
                   />
                 </div>
-
-                {/* City */}
-                {/* <div className="col-md-4">
-                  <label className="fw-semibold">City</label>
-                  <select
-                    className="form-select form-control"
-                    {...editRegister("job_city")}
-                    disabled={!cities.length}
-                  >
-                    <option value="">
-                      {!cities.length ? "Select state first" : "Select City"}
-                    </option>
-
-                    {cities.map((city) => (
-                      <option key={city.city_id} value={city.city_id}>
-                        {city.city_name}
-                      </option>
-                    ))}
-                  </select>
-
-                  <p className="text-danger">{editErrors.job_city?.message}</p>
-                </div> */}
 
                 <div className="col-md-4">
                   <label className="fw-semibold">City</label>

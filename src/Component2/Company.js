@@ -21,7 +21,7 @@ function Company() {
         }
       })
       .catch((err) => {
-        console.error("API Error:", err);
+        toast.error("API Error:", err);
       });
   }, []);
 
@@ -122,14 +122,6 @@ function Company() {
             </button>
           </div>
 
-          {/* EXTRA LINK */}
-          {/* <a
-          href="#"
-          style={{ fontSize: "14px", color: "#2557a7", fontWeight: 600 }}
-        >
-          Do you want to search for salaries?
-        </a> */}
-
           {/* POPULAR COMPANIES */}
           <h3 className="text-start mt-5 fw-bold ps-3">Popular Companies</h3>
 
@@ -151,7 +143,7 @@ function Company() {
                   />
                   <h6 className="mt-2 mb-1 fw-semibold">{c.emp_companyname}</h6>
                   <p style={{ fontSize: "13px", color: "#777" }}>
-                    {/* {c.total_reviews || "0"} reviews */}
+                    
                   </p>
                 </div>
               </div>

@@ -160,7 +160,7 @@ function Dashboard() {
         });
       }
     } catch (error) {
-      console.error("Dashboard Count Error", error);
+      toast.error("Dashboard Count Error", error);
     }
   };
 

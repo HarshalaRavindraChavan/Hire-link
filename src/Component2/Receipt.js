@@ -55,10 +55,6 @@ function Receipt({ payment }) {
       <div className="hl-rec-header">
         <div className="hl-rec-company">
           <img src={logo} alt="Hirelink" />
-          {/* <div>
-            <h2>Hirelinkinfo</h2>
-            <p>123 Business Rd, Mumbai – 400001</p>
-          </div> */}
         </div>
 
         <div className="hl-rec-meta">

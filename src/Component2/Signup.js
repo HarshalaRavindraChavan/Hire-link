@@ -439,10 +439,6 @@ const Signup = () => {
                     type="button"
                     disabled
                     className={`role-pill ${activeRole === "candidate" ? "active" : ""}`}
-                    // onClick={() => {
-                    //   setActiveRole("candidate");
-                    //   setValue("terms", false);
-                    // }}
                   >
                     Candidate
                   </button>
@@ -451,10 +447,6 @@ const Signup = () => {
                     type="button"
                     disabled
                     className={`role-pill ${activeRole === "employer" ? "active" : ""}`}
-                    // onClick={() => {
-                    //   setActiveRole("employer");
-                    //   setValue("terms", false);
-                    // }}
                   >
                     Employer / Recruiter
                   </button>

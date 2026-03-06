@@ -17,7 +17,6 @@ const EmpProfile = () => {
 
   const [activeTab, setActiveTab] = useState("profile");
   const employer = JSON.parse(localStorage.getItem("employer"));
-  // const auth = JSON.parse(localStorage.getItem("auth"));
 
   useEffect(() => {
     if (!employer) {
@@ -47,7 +46,7 @@ const EmpProfile = () => {
         setStates(res.data.data || []);
       }
     } catch (err) {
-      console.error("State fetch error", err);
+      toast.error("State fetch error", err);
     }
   };
 
@@ -61,7 +60,7 @@ const EmpProfile = () => {
         setCities(res.data.data || []);
       }
     } catch (err) {
-      console.error("City fetch error", err);
+      toast.error("City fetch error", err);
     }
   };
   const handleStateChange = async (e) => {
@@ -308,7 +307,7 @@ const EmpProfile = () => {
       setConfirmPassword("");
     } catch (error) {
       toast.error("Password update failed");
-      console.error(error);
+      toast.error(error);
     } finally {
       setLoading(false);
     }

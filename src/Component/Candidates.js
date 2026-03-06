@@ -88,7 +88,7 @@ function Candidates() {
         setCandidates(res.data.data);
       }
     } catch (error) {
-      console.error("Error fetching candidates", error);
+      toast.error("Error fetching candidates", error);
     } finally {
       setLoading(false);
     }
@@ -141,7 +141,7 @@ function Candidates() {
         fetchCandidates();
       }
     } catch (error) {
-      console.error("Delete failed", error);
+      toast.error("Delete failed", error);
     }
   };
 
@@ -239,7 +239,7 @@ function Candidates() {
         toast.error("Status update failed ❌");
       }
     } catch (error) {
-      console.error(error);
+     toast.error(error);
       toast.error("Server error ❌");
     } finally {
       setIsUpdatingStatus(false); // 🔓 unlock
@@ -326,7 +326,6 @@ function Candidates() {
 
       navigate("/payment");
     } catch (err) {
-      console.log(err);
       toast.error("Payment check failed!");
     }
   };
@@ -412,9 +411,9 @@ function Candidates() {
         `${BASE_URL}candidate/getdata/tbl_main_category`,
       );
       setCategories(res.data.data || []);
-      console.log("Main categories:", res.data.data);
+     
     } catch (err) {
-      console.error("Main category error", err);
+      toast.error("Main category error", err);
     }
   };
 
@@ -435,7 +434,7 @@ function Candidates() {
       );
       setSubCategories(res.data.data || []);
     } catch (err) {
-      console.error("Sub category error", err);
+      toast.error("Sub category error", err);
     }
   };
 
@@ -456,7 +455,7 @@ function Candidates() {
       );
       setSubCat1(res.data.data || []);
     } catch (err) {
-      console.error("Sub category 1 error", err);
+      toast.error("Sub category 1 error", err);
     }
   };
 
@@ -477,7 +476,7 @@ function Candidates() {
       );
       setSubCat2(res.data.data || []);
     } catch (err) {
-      console.error("Sub category 2 error", err);
+      toast.error("Sub category 2 error", err);
     }
   };
 
@@ -498,7 +497,7 @@ function Candidates() {
       );
       setSubCat3(res.data.data || []);
     } catch (err) {
-      console.error("Sub category 3 error", err);
+      toast.error("Sub category 3 error", err);
     }
   };
 

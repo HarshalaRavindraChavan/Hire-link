@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import "../Component2/css/Profile.css";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
-// import { resume } from "react-dom/server";
 import JobsSAI from "./JobsSAI";
 import { BASE_URL } from "../config/constants";
 import SearchableDropdown from "../Component/SearchableDropdown";
@@ -78,7 +77,7 @@ function Profile() {
         setStates(res.data.data || []);
       }
     } catch (err) {
-      console.error("State fetch error", err);
+      toast.error("State fetch error", err);
     }
   };
 
@@ -92,7 +91,7 @@ function Profile() {
         setCities(res.data.data || []);
       }
     } catch (err) {
-      console.error("City fetch error", err);
+      toast.error("City fetch error", err);
     }
   };
 
@@ -133,7 +132,7 @@ function Profile() {
       );
       setCategories(res.data.data || []);
     } catch (err) {
-      console.error("Main category error", err);
+      toast.error("Main category error", err);
     }
   };
 
@@ -154,7 +153,7 @@ function Profile() {
       );
       setSubCategories(res.data.data || []);
     } catch (err) {
-      console.error("Sub category error", err);
+      toast.error("Sub category error", err);
     }
   };
 
@@ -175,7 +174,7 @@ function Profile() {
       );
       setSubCat1(res.data.data || []);
     } catch (err) {
-      console.error("Sub category 1 error", err);
+      toast.error("Sub category 1 error", err);
     }
   };
 
@@ -196,7 +195,7 @@ function Profile() {
       );
       setSubCat2(res.data.data || []);
     } catch (err) {
-      console.error("Sub category 2 error", err);
+      toast.error("Sub category 2 error", err);
     }
   };
 
@@ -217,7 +216,7 @@ function Profile() {
       );
       setSubCat3(res.data.data || []);
     } catch (err) {
-      console.error("Sub category 3 error", err);
+      toast.error("Sub category 3 error", err);
     }
   };
 
@@ -282,7 +281,7 @@ function Profile() {
         setIsPanLocked((freshCandidate.can_pan || "").length === 10);
       }
     } catch (err) {
-      console.error("Fetch candidate error", err);
+      toast.error("Fetch candidate error", err);
     }
   };
 
@@ -300,25 +299,13 @@ function Profile() {
 
       if (res.data?.status && res.data?.data?.length > 0) {
         const freshCandidate = res.data.data[0];
-
-        // ✅ ONLY update score
-        // setCandidate((prev) => {
-        //   const updated = {
-        //     ...prev,
-        //     can_score: freshCandidate.can_score,
-        //   };
-
-        //   localStorage.setItem("candidate", JSON.stringify(updated));
-        //   return updated;
-        // });
-
         setCandidate((prev) => ({
           ...prev,
           can_score: freshCandidate.can_score,
         }));
       }
     } catch (err) {
-      console.error("Fetch score error", err);
+      toast.error("Fetch score error", err);
     }
   };
 
@@ -347,10 +334,6 @@ function Profile() {
       [name]: value,
     }));
   };
-
-  console.log("IMAGE:", candidate.can_image);
-  console.log("RESUME:", candidate.can_resume);
-  console.log("CV:", candidate.can_cv);
 
   // ============ Profile Update ============
   const handleUpdateProfile = async (e) => {
@@ -496,7 +479,7 @@ function Profile() {
         toast.error(result?.message || "Update failed");
       }
     } catch (error) {
-      console.error("UPDATE ERROR:", error);
+      toast.error("UPDATE ERROR:", error);
       toast.error(error.response?.data?.message || "Server error. Try again.");
     }
   };
@@ -560,7 +543,7 @@ function Profile() {
       }
     } catch (err) {
       toast.error("File not uploaded ❌");
-      console.error(err);
+      toast.error(err);
     }
   };
 
@@ -605,7 +588,7 @@ function Profile() {
         toast.error(response.data?.message || "Current password is incorrect");
       }
     } catch (error) {
-      console.error(error);
+      toast.error(error);
       toast.error("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
@@ -736,8 +719,6 @@ function Profile() {
                 {candidate.can_email?.toLowerCase()} | {candidate.can_mobile}
               </p>
               <p className="mb-0 text-muted">
-                {/* {candidate.can_address}
-                <br /> */}
                 {candidate.city_name}, {candidate.state_name}
               </p>
             </div>
@@ -1010,8 +991,6 @@ function Profile() {
                       {candidate.can_mobile}
                     </p>
                     <p className="mb-0 text-muted">
-                      {/* {candidate.city_name}, {candidate.state_name} <br /> */}
-                      {/* {candidate.can_address}  */}
                     </p>
                   </div>
                 </div>

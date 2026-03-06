@@ -17,7 +17,7 @@ function BlogCate() {
       const res = await axios.get(`${BASE_URL}admin/getdata/tbl_blog_cate`);
       setBlogcate(res.data?.data || []);
     } catch (err) {
-      console.error("Fetch failed", err);
+      toast.error("Fetch failed", err);
       setBlogcate([]);
     }
   };
@@ -63,7 +63,7 @@ function BlogCate() {
       document.querySelector(".btn-close")?.click();
       fetchBlogs();
     } catch (error) {
-      console.error(error);
+     toast.error(error);
       toast.error("Something went wrong ❌");
     }
   };
@@ -106,7 +106,7 @@ function BlogCate() {
         toast.error("Failed to delete Categories");
       }
     } catch (error) {
-      console.error("Delete error:", error);
+      toast.error("Delete error:", error);
       toast.error("Something went wrong while deleting");
     }
   };
@@ -163,7 +163,6 @@ function BlogCate() {
                     </button>
                     <button
                       className="btn btn-sm btn-danger"
-                      // onClick={() => handleDelete(blog.bc_id)}
                       onClick={() => handleDeleteClick(blog.bc_id)}
                     >
                       Delete

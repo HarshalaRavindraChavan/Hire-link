@@ -79,7 +79,7 @@ function Applicant() {
         setUsers(res.data.data);
       }
     } catch (error) {
-      console.error("Jobs fetch error:", error);
+     toast.error("Jobs fetch error:", error);
     } finally {
       setLoading(false);
     }
@@ -98,9 +98,6 @@ function Applicant() {
         schema.required("Meeting link is required").url("Invalid URL"),
       otherwise: (schema) => schema.notRequired(),
     }),
-    // interviewer: yup.string().required("Interviewer name is required"),
-    // status: yup.string().required("Status is required"),
-    // createdDate: yup.string().required("Created date is required"),
   });
 
   // React Hook Form Initialization
@@ -148,7 +145,6 @@ function Applicant() {
         toast.error("Insert failed");
       }
     } catch (err) {
-      console.error(err);
       toast.error("Something went wrong");
     } finally {
       setIsSubmitting(false);

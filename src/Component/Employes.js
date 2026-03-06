@@ -42,7 +42,7 @@ function Employes() {
         setEmployer(res.data.data);
       }
     } catch (error) {
-      console.error("Error Employer Fetch:", error);
+      toast.error("Error Employer Fetch:", error);
     } finally {
       setLoading(false);
     }
@@ -82,7 +82,7 @@ function Employes() {
         toast.error("Employer delete failed");
       }
     } catch (error) {
-      console.error("Delete Error:", error);
+      toast.error("Delete Error:", error);
       toast.error("Server error while deleting employer");
     }
   };
@@ -110,7 +110,7 @@ function Employes() {
     register,
     handleSubmit,
     reset,
-    setValue, // ✅ MUST ADD
+    setValue,
     watch,
     formState: { errors },
   } = useForm({
@@ -122,7 +122,7 @@ function Employes() {
 
   // Submit form as JSON
   const onSubmit = async (data) => {
-    if (isSubmitting) return; // 🔒 double click block
+    if (isSubmitting) return;
     setIsSubmitting(true);
 
     try {
@@ -314,7 +314,7 @@ function Employes() {
         toast.error("Status update failed ❌");
       }
     } catch (error) {
-      console.error(error);
+      toast.error(error);
       toast.error("Server error ❌");
     } finally {
       setIsUpdatingStatus(false); // 🔓 unlock
@@ -330,16 +330,6 @@ function Employes() {
       {/* HEADER */}
       <div className="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
         <h3 className="fw-bold mb-3">Employers</h3>
-
-        <div className="ms-auto">
-          {/* <button
-            data-bs-toggle="modal"
-            data-bs-target="#exampleModal"
-            className="btn btn-success"
-          >
-            <i className="fa fa-plus"></i> Add Employer
-          </button> */}
-        </div>
       </div>
 
       {/* TABLE */}
@@ -435,33 +425,6 @@ function Employes() {
 
                       {/* User Details */}
                       <td style={{ width: "35%" }}>
-                        {/* <div className="fw-bold">
-                        Name:
-                        <div className="dropdown d-inline ms-2">
-                          <span
-                            className="fw-bold text-primary"
-                            role="button"
-                            data-bs-toggle="dropdown"
-                          >
-                            {emp.emp_name}
-                          </span>
-                          <ul className="dropdown-menu shadow">
-                            <li>
-                              <button className="dropdown-item">
-                                <i className="fas fa-edit me-2"></i>Edit
-                              </button>
-                            </li>
-                            <li>
-                              <button
-                                className="dropdown-item text-danger"
-                                onClick={() => handleDeleteClick(emp.emp_id)}
-                              >
-                                <i className="fas fa-trash me-2"></i>Delete
-                              </button>
-                            </li>
-                          </ul>
-                        </div>
-                      </div> */}
                         <div className="fw-bold ">
                           Name:{" "}
                           <span className="text-dark fw-normal">

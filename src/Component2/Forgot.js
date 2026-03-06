@@ -105,9 +105,6 @@ function Forgot() {
 
             {/* User Type */}
             <div className="mb-3 text-center">
-              {/* <label className="form-label fw-bold d-block">
-                Select Account Type
-              </label> */}
 
               <div className="d-flex justify-content-center gap-4">
                 <div className="form-check">

@@ -432,12 +432,6 @@ function Signin() {
                   : "Login"}
               </button>
             </form>
-
-            {/* <p className="text-center text-muted mt-3">
-              By continuing, you agree to Hirelink’s{" "}
-              <NavLink to="/">Terms</NavLink> &{" "}
-              <NavLink to="/">Privacy Policy</NavLink>.
-            </p> */}
           </div>
         </div>
       </div>

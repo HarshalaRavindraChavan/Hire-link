@@ -54,7 +54,7 @@ function Users() {
         setStates(res.data.data || []);
       }
     } catch (err) {
-      console.error("State fetch error", err);
+      toast.error("State fetch error", err);
     }
   };
 
@@ -79,7 +79,7 @@ function Users() {
         }
       }
     } catch (err) {
-      console.error("City fetch error", err);
+      toast.error("City fetch error", err);
     }
   };
 
@@ -98,7 +98,7 @@ function Users() {
         setUsers(res.data.data);
       }
     } catch (err) {
-      console.error(err);
+      toast.error(err);
     } finally {
       setLoading(false);
     }
@@ -144,9 +144,7 @@ function Users() {
 
   /* ================= FILE STATE ================= */
   const [User, setUser] = useState({
-    // user_aadhar_image: "",
-    // user_pan_image: "",
-    user_bankpassbook: "", // ✅ ADD THIS
+    user_bankpassbook: "",
   });
 
   /* ================= VALIDATION ================= */
@@ -195,8 +193,6 @@ function Users() {
     defaultValues: {
       state: "",
       city: "",
-      // adharupload: "",
-      // panupload: "",
       bankpassbook: "",
     },
   });
@@ -212,7 +208,7 @@ function Users() {
 
   /* ================= SUBMIT ================= */
   const onSubmit = async (data) => {
-    if (isSubmitting) return; // 🔒 block double click
+    if (isSubmitting) return;
     setIsSubmitting(true);
 
     const payload = {
@@ -231,8 +227,6 @@ function Users() {
       user_education_detail: data.education_detail,
       user_role: data.role,
       user_menu_id: data.menus.join(","),
-      // user_aadhar_image: User.user_aadhar_image,
-      // user_pan_image: User.user_pan_image,
       user_adhar: User.adhar,
       user_pan: User.pan,
       user_status: "Active",
@@ -246,8 +240,6 @@ function Users() {
 
         resetAdd(); // form reset
         setUser({
-          // user_aadhar_image: "",
-          // user_pan_image: "",
           user_bankpassbook: "",
         });
         // reset file state
@@ -282,8 +274,6 @@ function Users() {
 
     // helper to reset RHF value
     const resetRHF = () => {
-      // if (field === "user_aadhar_image") addSetValue("adharupload", "");
-      // if (field === "user_pan_image") addSetValue("panupload", "");
       if (field === "user_bankpassbook") addSetValue("bankpassbook", "");
     };
 
@@ -338,15 +328,6 @@ function Users() {
           [field]: filename,
         }));
 
-        // React Hook Form hidden field
-        // if (field === "user_aadhar_image") {
-        //   addSetValue("adharupload", filename, { shouldValidate: true });
-        // }
-
-        // if (field === "user_pan_image") {
-        //   addSetValue("panupload", filename, { shouldValidate: true });
-        // }
-
         if (field === "user_bankpassbook") {
           addSetValue("bankpassbook", filename, { shouldValidate: true });
         }
@@ -376,7 +357,6 @@ function Users() {
     state: yup.string().required(),
     city: yup.string().required(),
     joindate: yup.date().required(),
-    // bankpassbook: yup.string().required(),
     experience: yup.string().required(),
     education_type: yup.string().required("Education Type is required"),
     education_detail: yup.string().required("Education Detail is required"),
@@ -465,7 +445,6 @@ function Users() {
         user_state: data.state,
         user_city: data.city,
         user_joindate: data.joindate,
-        // user_bankpassbook: data.bankpassbook,
         user_experience: data.experience,
         user_education_type: data.education_type,
         user_education_detail: data.education_detail,
@@ -493,7 +472,7 @@ function Users() {
         toast.error("User update failed");
       }
     } catch (error) {
-      console.error("User Update Error:", error);
+      toast.error("User Update Error:", error);
       toast.error("Server error");
     } finally {
       setIsSubmitting(false);
@@ -596,7 +575,7 @@ function Users() {
         toast.error("Status update failed ❌");
       }
     } catch (err) {
-      console.error(err);
+      toast.error(err);
       toast.error("Server error ❌");
     } finally {
       setLoading(false);
@@ -707,7 +686,6 @@ function Users() {
                       <td className="text-center fw-bold">
                         {firstIndex + index + 1}
                       </td>
-                      {/* <td className="text-center">{u.user_id}</td> */}
                       <td className="text-start">
                         <div className="fw-bold">
                           Name:
@@ -764,18 +742,6 @@ function Users() {
 
                       {/* User Id Proof */}
                       <td className="text-start">
-                        {/* <div className="fw-bold">
-                          Aadhar No:{"  "}
-                          <span className="text-dark fw-normal">
-                            {u.user_adhar}
-                          </span>
-                        </div> */}
-                        {/* <div className="fw-bold">
-                          Pan Card No:{"  "}
-                          <span className="text-dark fw-normal">
-                            {u.user_pan}
-                          </span>
-                        </div> */}
                         <div className="fw-bold">
                           Join:{" "}
                           <span className="text-dark fw-normal">
@@ -950,29 +916,6 @@ function Users() {
                   <p className="text-danger">{addErrors.address?.message}</p>
                 </div>
 
-                {/* State */}
-                {/* <div className="col-md-4">
-                  <label className="fw-semibold">State</label>
-                  <select
-                    className="form-select form-control"
-                    {...addRegister("state")}
-                    onChange={(e) => {
-                      const stateId = e.target.value;
-                      addSetValue("state", stateId);
-                      addSetValue("city", ""); // ✅ reset city
-                      fetchCities(stateId); // ✅ fetch cities
-                    }}
-                  >
-                    <option value="">Select State</option>
-                    {states.map((state) => (
-                      <option key={state.state_id} value={state.state_id}>
-                        {state.state_name}
-                      </option>
-                    ))}
-                  </select>
-                  <p className="text-danger">{addErrors.state?.message}</p>
-                </div> */}
-
                 <div className="col-md-4">
                   <label className="fw-semibold">State</label>
 
@@ -992,27 +935,6 @@ function Users() {
                     }}
                   />
                 </div>
-
-                {/* city */}
-                {/* <div className="col-md-4">
-                  <label className="fw-semibold">City</label>
-                  <select
-                    className="form-select form-control"
-                    {...addRegister("city")}
-                    disabled={!cities.length}
-                  >
-                    <option value="">
-                      {!cities.length ? "Select state first" : "Select City"}
-                    </option>
-
-                    {cities.map((city) => (
-                      <option key={city.city_id} value={city.city_id}>
-                        {city.city_name}
-                      </option>
-                    ))}
-                  </select>
-                  <p className="text-danger">{addErrors.city?.message}</p>
-                </div> */}
 
                 <div className="col-md-4">
                   <label className="fw-semibold">City</label>
@@ -1082,43 +1004,6 @@ function Users() {
                   <p className="text-danger">{addErrors.pan?.message}</p>
                 </div>
 
-                {/* Aadhaar Upload */}
-                {/* <div className="col-md-4">
-                  <label className="fw-semibold">
-                    Aadhar Card Upload
-                    {User.user_aadhar_image && (
-                      <i className="fa-solid fa-circle-check text-success ms-2"></i>
-                    )}
-                  </label>
-                  <input
-                    type="file"
-                    className="form-control"
-                    onChange={(e) => uploadFile(e, "user_aadhar_image")}
-                  />
-                  <input type="hidden" {...addRegister("adharupload")} />
-
-                  <p className="text-danger">
-                    {addErrors.adharupload?.message}
-                  </p>
-                </div> */}
-
-                {/* PAN Upload */}
-                {/* <div className="col-md-4">
-                  <label className="fw-semibold">
-                    PAN Card Upload
-                    {User.user_pan_image && (
-                      <i className="fa-solid fa-circle-check text-success ms-2"></i>
-                    )}
-                  </label>
-                  <input
-                    type="file"
-                    className="form-control"
-                    onChange={(e) => uploadFile(e, "user_pan_image")}
-                  />
-                  <input type="hidden" {...addRegister("panupload")} />
-                  <p className="text-danger">{addErrors.panupload?.message}</p>
-                </div> */}
-
                 {/* Back Upload */}
                 <div className="col-md-4">
                   <label className="fw-semibold">
@@ -1137,20 +1022,6 @@ function Users() {
                     {addErrors.bankpassbook?.message}
                   </p>
                 </div>
-
-                {/* Bank */}
-                {/* <div className="col-md-4">
-                  <label className="fw-semibold">Bank Passbook</label>
-                  <input
-                    type="text"
-                    {...addRegister("bankpassbook")}
-                    className="form-control"
-                    placeholder="Enter Bank Details"
-                  />
-                  <p className="text-danger">
-                    {addErrors.bankpassbook?.message}
-                  </p>
-                </div> */}
 
                 {/* Education Type */}
                 <div className="col-md-4">
@@ -1268,10 +1139,11 @@ function Users() {
                     <option value="4">Applicant</option>
                     <option value="5">Interview</option>
                     <option value="6">Employer</option>
-                    {/* <option value="7">Packages</option>
-                    <option value="8">Offers</option> */}
                     <option value="9">Contact</option>
                     <option value="10">User</option>
+                    <option value="13">Setting</option>
+                    <option value="14">Blog Categories</option>
+                    <option value="15">Website Blogs</option>
                   </select>
                   <p className="text-danger">{addErrors.menus?.message}</p>
                 </div>
@@ -1374,29 +1246,6 @@ function Users() {
                   <p className="text-danger">{editErrors.address?.message}</p>
                 </div>
 
-                {/* State */}
-                {/* <div className="col-md-4">
-                  <label className="fw-semibold">State</label>
-                  <select
-                    className="form-select form-control"
-                    {...editRegister("state")}
-                    onChange={(e) => {
-                      const stateId = e.target.value;
-                      editSetValue("state", stateId);
-                      editSetValue("city", "");
-                      fetchCities(stateId);
-                    }}
-                  >
-                    <option value="">Select State</option>
-                    {states.map((s) => (
-                      <option key={s.state_id} value={s.state_id}>
-                        {s.state_name}
-                      </option>
-                    ))}
-                  </select>
-                  <p className="text-danger">{editErrors.state?.message}</p>
-                </div> */}
-
                 <div className="col-md-4 mt-2">
                   <label className="fw-semibold">State</label>
 
@@ -1447,20 +1296,6 @@ function Users() {
                   />
                   <p className="text-danger">{editErrors.joindate?.message}</p>
                 </div>
-
-                {/* Bank */}
-                {/* <div className="col-md-4">
-                  <label className="fw-semibold">Bank Passbook</label>
-                  <input
-                    type="text"
-                    {...editRegister("bankpassbook")}
-                    className="form-control"
-                    placeholder="Enter Bank Details"
-                  />
-                  <p className="text-danger">
-                    {editErrors.bankpassbook?.message}
-                  </p>
-                </div> */}
 
                 {/* Education Type */}
                 <div className="col-md-4">
@@ -1579,10 +1414,11 @@ function Users() {
                     <option value="4">Applicant</option>
                     <option value="5">Interview</option>
                     <option value="6">Employer</option>
-                    {/* <option value="7">Packages</option>
-                    <option value="8">Offers</option> */}
                     <option value="9">Contact</option>
                     <option value="10">User</option>
+                    <option value="13">Setting</option>
+                    <option value="14">Blog Categories</option>
+                    <option value="15">Website Blogs</option>
                   </select>
                   <p className="text-danger">{editErrors.menus?.message}</p>
                 </div>

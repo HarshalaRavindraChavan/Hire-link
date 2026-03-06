@@ -59,12 +59,6 @@ export default function Footer() {
                     Privacy & Policies
                   </NavLink>
                 </li>
-                {/* <li>
-                  <a href="#">Careers</a>
-                </li> */}
-                {/* <li>
-                  <a href="#">Sitemap</a>
-                </li> */}
               </ul>
             </div>
 
@@ -75,15 +69,6 @@ export default function Footer() {
                 <li>
                   <NavLink to="/employer">Post a Job</NavLink>
                 </li>
-                {/* <li>
-                  <a href="#">Products</a>
-                </li>
-                <li>
-                  <a href="#">Pricing</a>
-                </li>
-                <li>
-                  <a href="#">Insights</a>
-                </li> */}
                 <li>
                   <NavLink to="/help">FAQ</NavLink>
                 </li>

@@ -8,8 +8,6 @@ function Footer() {
       <div className="d-flex flex-wrap justify-content-center gap-3">
         <NavLink to="/jobs">Browse Jobs</NavLink>
         <NavLink to="/companies">Browse Companies</NavLink>
-        {/* <NavLink to="/dashboard">Work at JobFinder</NavLink> */}
-        {/* <NavLink to="/dashboard">Countries</NavLink> */}
         <NavLink to="/about">About</NavLink>
         <NavLink to="/blogs">Blogs</NavLink>
         <NavLink to="/help">Help</NavLink>

@@ -39,7 +39,7 @@ function Apply() {
     experience: "",
     skills: "",
 
-    can_resume: "", // ✅ hidden resume filename
+    can_resume: "",
   });
 
   /* ================= JOB DETAIL ================= */
@@ -54,11 +54,9 @@ function Apply() {
           ? res.data.data[0]
           : res.data.data;
 
-        console.log("✅ JOB DATA =>", jData);
         setJob(jData);
       }
     } catch (error) {
-      console.log(error);
       toast.error("Failed to load job details");
     }
   };
@@ -103,7 +101,6 @@ function Apply() {
         );
       }
     } catch (error) {
-      console.log(error);
       toast.error("Failed to load candidate profile");
     }
   };
@@ -142,9 +139,7 @@ function Apply() {
           setAlreadyApplied(false);
         }
       }
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
 
   const handleEducationTypeChange = (e) => {
@@ -205,7 +200,7 @@ function Apply() {
       }
     } catch (err) {
       toast.error("Resume not uploaded ❌");
-      console.error(err);
+      toast.error(err);
     } finally {
       setResumeUploading(false);
     }
@@ -303,7 +298,6 @@ function Apply() {
         return false;
       }
     } catch (error) {
-      console.log(error);
       toast.error("Server error while updating profile");
       return false;
     } finally {
@@ -362,7 +356,6 @@ function Apply() {
         toast.error(res.data.message || "Failed to apply job");
       }
     } catch (error) {
-      console.log(error);
       toast.error("Server error while applying job");
     } finally {
       setLoading(false);
@@ -390,9 +383,6 @@ function Apply() {
             <p className="text-muted m-0">
               {job.job_company} · {job.city_name}, {job.state_name}
             </p>
-            {/* <p className="text-success fw-semibold mt-2">
-              ₹{job.job_salary}/month
-            </p> */}
           </div>
         )}
 

@@ -18,8 +18,6 @@ function JobsSAI() {
 
   const candidate = JSON.parse(localStorage.getItem("candidate"));
   const candidateId = candidate?.can_id;
-  console.log("Candidate LS:", candidate);
-  console.log("Candidate ID:", candidate?.can_id);
 
   const fetchAllCounts = async () => {
     if (!candidateId) return;
@@ -44,7 +42,7 @@ function JobsSAI() {
       if (interviewRes.data.status)
         setInterviewCount(interviewRes.data.data.length);
     } catch (err) {
-      console.error("Count fetch error", err);
+      toast.error("Count fetch error", err);
     }
   };
 
@@ -69,8 +67,6 @@ function JobsSAI() {
         `${BASE_URL}candidate/getdatawhere/tbl_save_job/save_candidate_id/${candidateId}`,
       );
 
-      console.log("Saved API:", res.data);
-
       if (res.data.status) {
         const savedList = res.data.data || [];
 
@@ -82,7 +78,7 @@ function JobsSAI() {
         setSavedJobs(filteredSaved);
       }
     } catch (error) {
-      console.error("Saved jobs fetch error", error);
+      toast.error("Saved jobs fetch error", error);
     } finally {
       setLoading(false);
     }
@@ -103,8 +99,6 @@ function JobsSAI() {
         `${BASE_URL}candidate/getdatawhere/tbl_applied/apl_candidate_id/${candidateId}`,
       );
 
-      console.log("Applied API:", res.data);
-
       if (res.data.status) {
         setAppliedJobs(res.data.data);
 
@@ -112,7 +106,7 @@ function JobsSAI() {
         setAppliedJobIds(ids);
       }
     } catch (error) {
-      console.error("Applied jobs fetch error", error);
+      toast.error("Applied jobs fetch error", error);
     } finally {
       setAppliedLoading(false);
     }
@@ -142,7 +136,7 @@ function JobsSAI() {
         setInterviewJobs(res.data.data);
       }
     } catch (error) {
-      console.error("Interview jobs fetch error", error);
+      toast.error("Interview jobs fetch error", error);
     } finally {
       setInterviewLoading(false);
     }
@@ -192,7 +186,7 @@ function JobsSAI() {
         fetchAllCounts(); // ✅ refresh counts
       }
     } catch (error) {
-      console.error("Status update error:", error);
+      toast.error("Status update error:", error);
     } finally {
       setIsUpdatingInterview(false); // 🔓 unlock
     }
@@ -356,11 +350,6 @@ function JobsSAI() {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      console.log("Offer File:", offerFile);
-      console.log("Joining Date:", joiningDate);
-
-      // API CALL HERE (FormData)
-
       setShowOfferForm(false);
     }
   };
@@ -661,8 +650,7 @@ function JobsSAI() {
                         <p className="mb-0">{job.job_company}</p>
                         <small className="text-muted">
                           {job.city_name}, {job.state_name}
-                        </small>
-                        {/* <p className="mb-0 text-muted">Saved {job.saved_at}</p> */}
+                        </small>                   
                       </div>
                     </div>
 
@@ -675,9 +663,6 @@ function JobsSAI() {
                           Apply now
                         </button>
                       )}
-
-                      {/* <i className="fa fa-bookmark text-success"></i>
-                      <i className="fa fa-ellipsis-vertical"></i> */}
                     </div>
                   </div>
                 </div>
@@ -703,10 +688,6 @@ function JobsSAI() {
                       </div>
 
                       <div>
-                        {/* <span className="badge bg-success mb-1">
-                          {job.application_status}
-                        </span> */}
-
                         <h6 className="fw-bold mb-1">
                           {toTitleCase(job.job_title)}
                         </h6>

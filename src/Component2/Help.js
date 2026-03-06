@@ -38,15 +38,6 @@ function Help() {
           >
             Employer
           </button>
-
-          {/* <button
-          className={
-            activeTab === "Other" ? "hl-tab-btn hl-tab-active" : "hl-tab-btn"
-          }
-          onClick={() => setActiveTab("Other")}
-        >
-          Other
-        </button> */}
         </div>
 
         {/* Tabs Content */}

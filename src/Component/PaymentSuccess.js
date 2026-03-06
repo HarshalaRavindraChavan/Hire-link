@@ -171,7 +171,7 @@ function PaymentSuccess() {
 
       pdf.save(fileName);
     } catch (err) {
-      console.log(err);
+      toast.error(err);
       toast.error("PDF download failed!");
     } finally {
       setLoading(false);

@@ -100,7 +100,7 @@ function Jobs() {
         }
       })
       .catch((error) => {
-        console.error("API Error:", error);
+        toast.error("API Error:", error);
       });
   }, []);
 
@@ -327,15 +327,6 @@ function Jobs() {
                 </p>
                 <h6 className="fw-bold mt-3 fs-6">Skills</h6>
                 <p className="small">{selectedJob.job_skills}</p>
-                {/* <div className="d-flex gap-2 mb-3">
-                  <button className="btn btn-outline-primary btn-sm">
-                    Yes
-                  </button>
-                  <button className="btn btn-outline-secondary btn-sm">
-                    No
-                  </button>
-                  <button className="btn btn-outline-dark btn-sm">Skip</button>
-                </div> */}
                 <hr /> <h6 className="fw-bold fs-5">Job details</h6>
                 <p>
                   <strong>Pay:</strong> {selectedJob.job_salary} month

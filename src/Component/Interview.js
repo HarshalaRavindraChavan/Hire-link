@@ -272,24 +272,7 @@ function Interview() {
                             {i.can_name}
                             {/* (Interview Reschedule) */}
                           </span>
-                          {/* <ul className="dropdown-menu">
-                            <li>
-                              <button
-                                className="dropdown-item"
-                                onClick={() => openEditInterviewModal(i)}
-                              >
-                                Edit
-                              </button>
-                            </li>
-                            <li>
-                              <button
-                                className="dropdown-item text-danger"
-                                onClick={() => handleDeleteClick(i.itv_id)}
-                              >
-                                Delete
-                              </button>
-                            </li>
-                          </ul> */}
+                          
                         </div>
                         <div className="fw-bold">
                           Score:{" "}

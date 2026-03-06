@@ -44,7 +44,7 @@ export default function Footer() {
                   <NavLink to="/about">About Us</NavLink>
                 </li>
                 <li>
-                  <NavLink to="/blogs">Hirelink Blogs</NavLink>
+                  <NavLink to="/blogs">Blogs</NavLink>
                 </li>
                 <li>
                   <NavLink to="/employer-terms-condition">

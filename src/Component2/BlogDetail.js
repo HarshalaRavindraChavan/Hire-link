@@ -1,104 +1,88 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../Component2/css/BlogDetail.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL } from "../config/constants";
 
 export default function BlogDetail() {
   const navigate = useNavigate();
+  const { slug } = useParams();
+
+  const [blog, setBlog] = useState(null);
+
+  useEffect(() => {
+    getBlogDetail();
+  }, [slug]);
+
+  const getBlogDetail = async () => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}admin/getdatawhere/tbl_blogs/blog_slug/${slug}`,
+      );
+
+      if (res.data.status && res.data.data.length > 0) {
+        setBlog(res.data.data[0]);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  if (!blog) return <p className="bd-loading">Loading...</p>;
+
   return (
     <>
-      {/* ===== HERO BANNER ===== */}
+      {/* HERO */}
       <section className="bd-hero">
         <img
-          src="https://images.unsplash.com/photo-1551288049-bebda4e38f71"
-          alt="blog cover"
+          src={`${BASE_URL}Uploads/${blog.blog_featured_image}`}
+          alt={blog.blog_title}
         />
+
         <div className="bd-hero-overlay">
-          <h1>What is MIS Report? Types, Examples & How to Create One</h1>
-          <p>Hirelink Content Team · Career Advice · Jan 2026</p>
+          <div className="bd-hero-content">
+            <span className="bd-category">{blog.blog_category}</span>
+
+            <h1>{blog.blog_title}</h1>
+
+            <div className="bd-meta">
+              <span className="bd-author">✍ {blog.blog_author}</span>
+              <span>•</span>
+              <span>{blog.blog_created_at}</span>
+              <span>•</span>
+              <span>5 min read</span>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* ===== CONTENT WRAPPER ===== */}
+      {/* CONTENT */}
       <section className="bd-wrapper">
         <div className="bd-container">
-          {/* ===== LEFT CONTENT ===== */}
+          {/* SHARE BAR */}
+          {/* <div className="bd-share">
+            <p>Share</p>
+            <button>🔗</button>
+            <button>📘</button>
+            <button>🐦</button>
+          </div> */}
+
           <article className="bd-content">
-            <p className="bd-intro">
-              Are you curious about MIS reports but not sure what they really
-              mean or how they help in business decisions? This guide explains
-              everything in simple terms.
-            </p>
+            <p className="bd-intro">{blog.blog_short_description}</p>
 
-            <h2 id="mis">What is an MIS report?</h2>
-            <p>
-              MIS (Management Information System) reports provide structured and
-              summarized data to managers so they can make informed decisions.
-            </p>
-
-            <h2 id="work">How do MIS reports work?</h2>
-            <p>
-              MIS reports collect data from multiple departments, process it,
-              and present it in charts, tables, and summaries.
-            </p>
-
-            <h2 id="types">Types of MIS reports</h2>
-            <ul>
-              <li>Sales MIS Report</li>
-              <li>Finance MIS Report</li>
-              <li>HR MIS Report</li>
-              <li>Inventory MIS Report</li>
-            </ul>
-
-            <h2 id="format">MIS report format</h2>
-            <p>
-              A standard MIS report includes objectives, data summary, analysis,
-              and recommendations.
-            </p>
-
-            <h2 id="excel">How to make MIS report in Excel</h2>
-            <p>
-              Excel is widely used for MIS reports due to its formulas, charts,
-              and pivot tables.
-            </p>
-
-            <h2 id="benefits">Benefits of MIS reports</h2>
-            <p>
-              MIS reports improve efficiency, track performance, and support
-              strategic planning.
-            </p>
+            <div
+              className="bd-description"
+              dangerouslySetInnerHTML={{
+                __html: blog.blog_content || "<p>No description available</p>",
+              }}
+            />
           </article>
-
-          {/* ===== RIGHT SIDEBAR ===== */}
-          <aside className="bd-sidebar">
-            <div className="bd-toc">
-              <h4>In this article</h4>
-              <ul>
-                <li>
-                  <a href="#mis">What is MIS report?</a>
-                </li>
-                <li>
-                  <a href="#work">How MIS reports work</a>
-                </li>
-                <li>
-                  <a href="#types">Types of MIS reports</a>
-                </li>
-                <li>
-                  <a href="#format">MIS report format</a>
-                </li>
-                <li>
-                  <a href="#excel">MIS report in Excel</a>
-                </li>
-                <li>
-                  <a href="#benefits">Benefits of MIS</a>
-                </li>
-              </ul>
-            </div>
-          </aside>
         </div>
       </section>
-      {/* ===== FLOATING JOB BUTTON ===== */}
+
+      {/* FLOAT BUTTON */}
       <button className="job-float-btn" onClick={() => navigate("/")}>
-        Looking for a job?
+        🚀 Explore Jobs
       </button>
     </>
   );

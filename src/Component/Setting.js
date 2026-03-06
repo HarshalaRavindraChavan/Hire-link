@@ -6,6 +6,7 @@ import SEO from "../SEO";
 import { seoConfig } from "../config/seoConfig";
 import { BASE_URL } from "../config/constants";
 import { useNavigate } from "react-router-dom";
+import Information from "../Component/Information";
 
 function Setting() {
   const navigate = useNavigate();
@@ -27,6 +28,7 @@ function Setting() {
   };
 
   // ================= STATES =================
+  const [activeTab, setActiveTab] = useState("Payment");
   const [employer, setEmployer] = useState({ base: "", gst: "", total: "" });
   const [candidate, setCandidate] = useState({ base: "", gst: "", total: "" });
   const [resume, setResume] = useState({ base: "", gst: "", total: "" });
@@ -71,7 +73,7 @@ function Setting() {
 
   // ================= COMMON UPDATE FUNCTION =================
   const updateFee = async (role, data, successMsg, errorMsg) => {
-    if (!data.base || data.base <= 0) {
+    if (!data.base) {
       toast.error("Please enter valid base amount");
       return;
     }
@@ -106,163 +108,201 @@ function Setting() {
         description={seoConfig.a_setting.description}
       />
 
-      <h3 className="fw-bold mb-4">Setting</h3>
+      <button
+        type="button"
+        className={`btn btn-md me-2 ${
+          activeTab === "Payment" ? "btn-success" : "btn-outline-success"
+        }`}
+        onClick={() => setActiveTab("Payment")}
+      >
+        Payment
+      </button>
 
-      {/* ================= EMPLOYER ================= */}
-      <div className="card mb-4">
-        <h4 className="ms-3 mt-3">Employer Signup Fee</h4>
-        <div className="card-body row">
-          <div className="col-lg-3">
-            <label>Base Price</label>
-            <input
-              type="number"
-              className="form-control"
-              value={employer.base}
-              onChange={(e) => setEmployer(calculateAmount(e.target.value))}
-            />
+      <button
+        type="button"
+        className={`btn btn-md ${
+          activeTab === "info" ? "btn-success" : "btn-outline-success"
+        }`}
+        onClick={() => setActiveTab("info")}
+      >
+        Information
+      </button>
+      {activeTab === "Payment" && (
+        <>
+          <h3 className="fw-bold mb-4 mt-4">Payments</h3>
+          {/* ================= EMPLOYER ================= */}
+          <div className="card mb-4">
+            <h4 className="ms-3 mt-3">Employer Signup Fee</h4>
+            <div className="card-body row">
+              <div className="col-lg-3">
+                <label>Base Price</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  value={employer.base}
+                  onChange={(e) => setEmployer(calculateAmount(e.target.value))}
+                />
+              </div>
+              <div className="col-lg-3">
+                <label>18% GST</label>
+                <input className="form-control" value={employer.gst} disabled />
+              </div>
+              <div className="col-lg-3">
+                <label>Total</label>
+                <input
+                  className="form-control"
+                  value={employer.total}
+                  disabled
+                />
+              </div>
+              <div className="col-lg-3 d-flex align-items-end">
+                <button
+                  className="btn btn-success w-100"
+                  onClick={() =>
+                    updateFee(
+                      "employer",
+                      employer,
+                      "Employer fee updated",
+                      "Employer update failed",
+                    )
+                  }
+                >
+                  Update
+                </button>
+              </div>
+            </div>
           </div>
-          <div className="col-lg-3">
-            <label>18% GST</label>
-            <input className="form-control" value={employer.gst} disabled />
-          </div>
-          <div className="col-lg-3">
-            <label>Total</label>
-            <input className="form-control" value={employer.total} disabled />
-          </div>
-          <div className="col-lg-3 d-flex align-items-end">
-            <button
-              className="btn btn-success w-100"
-              onClick={() =>
-                updateFee(
-                  "employer",
-                  employer,
-                  "Employer fee updated",
-                  "Employer update failed",
-                )
-              }
-            >
-              Update
-            </button>
-          </div>
-        </div>
-      </div>
 
-      {/* ================= CANDIDATE ================= */}
-      <div className="card mb-4">
-        <h4 className="ms-3 mt-3">Candidate Signup Fee</h4>
-        <div className="card-body row">
-          <div className="col-lg-3">
-            <label>Base Price</label>
-            <input
-              type="number"
-              className="form-control"
-              value={candidate.base}
-              onChange={(e) => setCandidate(calculateAmount(e.target.value))}
-            />
+          {/* ================= CANDIDATE ================= */}
+          <div className="card mb-4">
+            <h4 className="ms-3 mt-3">Candidate Signup Fee</h4>
+            <div className="card-body row">
+              <div className="col-lg-3">
+                <label>Base Price</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  value={candidate.base}
+                  onChange={(e) =>
+                    setCandidate(calculateAmount(e.target.value))
+                  }
+                />
+              </div>
+              <div className="col-lg-3">
+                <label>18% GST</label>
+                <input
+                  className="form-control"
+                  value={candidate.gst}
+                  disabled
+                />
+              </div>
+              <div className="col-lg-3">
+                <label>Total</label>
+                <input
+                  className="form-control"
+                  value={candidate.total}
+                  disabled
+                />
+              </div>
+              <div className="col-lg-3 d-flex align-items-end">
+                <button
+                  className="btn btn-success w-100"
+                  onClick={() =>
+                    updateFee(
+                      "candidate",
+                      candidate,
+                      "Candidate fee updated",
+                      "Candidate update failed",
+                    )
+                  }
+                >
+                  Update
+                </button>
+              </div>
+            </div>
           </div>
-          <div className="col-lg-3">
-            <label>18% GST</label>
-            <input className="form-control" value={candidate.gst} disabled />
-          </div>
-          <div className="col-lg-3">
-            <label>Total</label>
-            <input className="form-control" value={candidate.total} disabled />
-          </div>
-          <div className="col-lg-3 d-flex align-items-end">
-            <button
-              className="btn btn-success w-100"
-              onClick={() =>
-                updateFee(
-                  "candidate",
-                  candidate,
-                  "Candidate fee updated",
-                  "Candidate update failed",
-                )
-              }
-            >
-              Update
-            </button>
-          </div>
-        </div>
-      </div>
 
-      {/* ================= RESUME ================= */}
-      <div className="card mb-4">
-        <h4 className="ms-3 mt-3">Resume Download Fee</h4>
-        <div className="card-body row">
-          <div className="col-lg-3">
-            <label>Base Price</label>
-            <input
-              type="number"
-              className="form-control"
-              value={resume.base}
-              onChange={(e) => setResume(calculateAmount(e.target.value))}
-            />
+          {/* ================= RESUME ================= */}
+          <div className="card mb-4">
+            <h4 className="ms-3 mt-3">Resume Download Fee</h4>
+            <div className="card-body row">
+              <div className="col-lg-3">
+                <label>Base Price</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  value={resume.base}
+                  onChange={(e) => setResume(calculateAmount(e.target.value))}
+                />
+              </div>
+              <div className="col-lg-3">
+                <label>18% GST</label>
+                <input className="form-control" value={resume.gst} disabled />
+              </div>
+              <div className="col-lg-3">
+                <label>Total</label>
+                <input className="form-control" value={resume.total} disabled />
+              </div>
+              <div className="col-lg-3 d-flex align-items-end">
+                <button
+                  className="btn btn-success w-100"
+                  onClick={() =>
+                    updateFee(
+                      "resume_download",
+                      resume,
+                      "Resume fee updated",
+                      "Resume update failed",
+                    )
+                  }
+                >
+                  Update
+                </button>
+              </div>
+            </div>
           </div>
-          <div className="col-lg-3">
-            <label>18% GST</label>
-            <input className="form-control" value={resume.gst} disabled />
-          </div>
-          <div className="col-lg-3">
-            <label>Total</label>
-            <input className="form-control" value={resume.total} disabled />
-          </div>
-          <div className="col-lg-3 d-flex align-items-end">
-            <button
-              className="btn btn-success w-100"
-              onClick={() =>
-                updateFee(
-                  "resume_download",
-                  resume,
-                  "Resume fee updated",
-                  "Resume update failed",
-                )
-              }
-            >
-              Update
-            </button>
-          </div>
-        </div>
-      </div>
 
-      {/* ================= STAFF ================= */}
-      <div className="card mb-4">
-        <h4 className="ms-3 mt-3">Staff Extended Fee</h4>
-        <div className="card-body row">
-          <div className="col-lg-3">
-            <label>Base Price</label>
-            <input
-              type="number"
-              className="form-control"
-              value={staff.base}
-              onChange={(e) => setStaff(calculateAmount(e.target.value))}
-            />
+          {/* ================= STAFF ================= */}
+          <div className="card mb-4">
+            <h4 className="ms-3 mt-3">Staff Extended Fee</h4>
+            <div className="card-body row">
+              <div className="col-lg-3">
+                <label>Base Price</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  value={staff.base}
+                  onChange={(e) => setStaff(calculateAmount(e.target.value))}
+                />
+              </div>
+              <div className="col-lg-3">
+                <label>18% GST</label>
+                <input className="form-control" value={staff.gst} disabled />
+              </div>
+              <div className="col-lg-3">
+                <label>Total</label>
+                <input className="form-control" value={staff.total} disabled />
+              </div>
+              <div className="col-lg-3 d-flex align-items-end">
+                <button
+                  className="btn btn-success w-100"
+                  onClick={() =>
+                    updateFee(
+                      "employer_staff",
+                      staff,
+                      "Staff fee updated",
+                      "Staff update failed",
+                    )
+                  }
+                >
+                  Update
+                </button>
+              </div>
+            </div>
           </div>
-          <div className="col-lg-3">
-            <label>18% GST</label>
-            <input className="form-control" value={staff.gst} disabled />
-          </div>
-          <div className="col-lg-3">
-            <label>Total</label>
-            <input className="form-control" value={staff.total} disabled />
-          </div>
-          <div className="col-lg-3 d-flex align-items-end">
-            <button
-              className="btn btn-success w-100"
-              onClick={() =>
-                updateFee(
-                  "employer_staff",
-                  staff,
-                  "Staff fee updated",
-                  "Staff update failed",
-                )
-              }
-            >
-              Update
-            </button>
-          </div>
-        </div>
-      </div>
+        </>
+      )}
+
+      {activeTab === "info" && <Information />}
     </>
   );
 }

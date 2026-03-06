@@ -48,6 +48,7 @@ import PaymentHistory from "./Component/PaymentHistory";
 // import InterManage from "./Component/InterManage";
 import Setting from "./Component/Setting";
 import AdminBlogs from "./Component/Blogs";
+import CateBlog from "./Component/BlogCate";
 
 /* ================= EMPLOYER ================= */
 import Header3 from "./Component3/Header";
@@ -107,8 +108,8 @@ function App() {
         <Route path="/candidate-receipt" element={<CandidateReceiptPage />} />
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/blogs" element={<BlogPage />} />
-        <Route path="/blog-detail" element={<BlogDetailPage />} />
-        <Route path="/blog-cate" element={<CateBlogPage />} />
+        <Route path="/blog-detail/:slug" element={<BlogDetailPage />} />
+        <Route path="/category/:slug" element={<CateBlogPage />} />
         <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/reset-password" element={<ResetPassword />} />
 
@@ -171,6 +172,7 @@ function App() {
           <Route path="staff" element={<Staff />} />
           <Route path="Setting" element={<Setting />} />
           <Route path="Admin-Blogs" element={<AdminBlogs />} />
+          <Route path="cate-blog" element={<CateBlog />} />
         </Route>
       </Routes>
     </BrowserRouter>

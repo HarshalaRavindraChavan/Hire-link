@@ -10,7 +10,6 @@ import { BASE_URL } from "../config/constants";
 import SEO from "../SEO";
 import { seoConfig } from "../config/seoConfig";
 import RichTextEditor from "../Component/commenuse/RichTextEditor";
-import BlogCate from "../Component/BlogCate";
 
 function Blogs() {
   const [activeTab, setActiveTab] = useState("categories");
@@ -74,7 +73,7 @@ function Blogs() {
     }
   };
 
-  const recordsPerPage = 100;
+  const recordsPerPage = 10;
   const lastIndex = currentPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
   const records = blogs.slice(firstIndex, lastIndex);
@@ -184,7 +183,8 @@ function Blogs() {
   // ADD
   const onAddSubmit = async (data) => {
     data.blog_slug = generateSlug(data.blog_title);
-    data.blog_author = "Admin";
+    data.blog_author = "Hirelink Content Team";
+    data.blog_status = 2; // Processing
 
     try {
       await axios.post(`${BASE_URL}admin/insert/tbl_blogs`, data);
@@ -242,145 +242,135 @@ function Blogs() {
       />
       <ToastContainer position="top-right" autoClose={3000} theme="colored" />
 
-      <div className="d-flex gap-2">
-        <button
-          className={`btn btn-md ${
-            activeTab === "categories" ? "btn-success" : "btn-outline-success"
-          }`}
-          onClick={() => setActiveTab("categories")}
-        >
-          Categories
-        </button>
+      <>
+        <div className="d-flex justify-content-between mb-3 mt-4">
+          <h3 className="fw-bold">Blogs</h3>
 
-        <button
-          className={`btn btn-md ${
-            activeTab === "blogs" ? "btn-success" : "btn-outline-success"
-          }`}
-          onClick={() => setActiveTab("blogs")}
-        >
-          Blogs
-        </button>
-      </div>
+          <button
+            className="btn btn-success"
+            data-bs-toggle="modal"
+            data-bs-target="#addBlogModal"
+            onClick={() => {
+              addReset();
+              setUploadSuccess(false);
+              setSelectedBlogId(null);
+            }}
+          >
+            + Add Blog
+          </button>
+        </div>
 
-      {activeTab === "blogs" && (
-        <>
-          <div className="d-flex justify-content-between mb-3 mt-4">
-            <h3 className="fw-bold">Blogs</h3>
-
-            <button
-              className="btn btn-success"
-              data-bs-toggle="modal"
-              data-bs-target="#addBlogModal"
-              onClick={() => {
-                addReset();
-                setUploadSuccess(false);
-                setSelectedBlogId(null);
-              }}
-            >
-              + Add Blog
-            </button>
-          </div>
-
-          <div className="card shadow-sm p-3">
-            <table className="table table-bordered text-center">
-              <thead className="table-light">
-                <tr>
-                  <th>ID</th>
-                  <th>Title</th>
-                  <th>Category</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {records && records.length > 0 ? (
-                  records.map((blog, index) => (
-                    <tr key={index}>
-                      <td>{firstIndex + index + 1}</td>
-                      <td className="text-start">
-                        <b>Title:</b>
-                        {/* <span
+        <div className="card shadow-sm p-3">
+          <table className="table table-bordered text-center">
+            <thead className="table-light">
+              <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {records && records.length > 0 ? (
+                records.map((blog, index) => (
+                  <tr key={index}>
+                    <td>{firstIndex + index + 1}</td>
+                    <td className="text-start">
+                      <b>Title:</b>
+                      {/* <span
                           className="text-primary fw-bold"
                           style={{ cursor: "pointer" }}
                           onClick={() => handleEdit(blog)}
                         >
                           {blog.blog_title}
                         </span> */}
-                        <div className="dropdown d-inline ms-2">
-                          <span
-                            className="fw-bold text-primary"
-                            role="button"
-                            data-bs-toggle="dropdown"
-                          >
-                            {blog.blog_title}
-                          </span>
+                      <div className="dropdown d-inline ms-2">
+                        <span
+                          className="fw-bold text-primary"
+                          role="button"
+                          data-bs-toggle="dropdown"
+                        >
+                          {blog.blog_title}
+                        </span>
 
-                          <ul className="dropdown-menu shadow">
-                            <li>
-                              <button
-                                className="dropdown-item"
-                                onClick={() => handleEdit(blog)}
-                              >
-                                <i className="fas fa-edit me-2"></i> Edit
-                              </button>
-                            </li>
+                        <ul className="dropdown-menu shadow">
+                          <li>
+                            <button
+                              className="dropdown-item"
+                              onClick={() => handleEdit(blog)}
+                            >
+                              <i className="fas fa-edit me-2"></i> Edit
+                            </button>
+                          </li>
 
-                            <li>
-                              <button
-                                className="dropdown-item text-danger"
-                                onClick={() => handleDeleteClick(blog.blog_id)}
-                              >
-                                <i className="fas fa-trash me-2"></i>Delete
-                              </button>
-                            </li>
-                          </ul>
-                        </div>
-                        <br></br>
-                        <b>Category:</b>
-                        {blog.bc_name}
-                        <br></br>
-                        <b>Views:</b>
-                        {blog.blog_views}
-                      </td>
-                      <td className="text-center">
-                        {blog.blog_featured_image ? (
-                          <img
-                            style={{ width: "100px" }}
-                            src={`${BASE_URL}Uploads/${blog.blog_featured_image}`}
-                            alt="blog"
-                          />
-                        ) : (
-                          "No Image"
-                        )}
-                      </td>
-                      <td>{blog.blog_status}</td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="4" className="text-center fw-bold">
-                      No Blogs Found
+                          <li>
+                            <button
+                              className="dropdown-item text-danger"
+                              onClick={() => handleDeleteClick(blog.blog_id)}
+                            >
+                              <i className="fas fa-trash me-2"></i>Delete
+                            </button>
+                          </li>
+                        </ul>
+                      </div>
+                      <br></br>
+                      <b>Category:</b>
+                      {blog.bc_name}
+                      {/* <br></br> 
+                       <b>Views:</b>
+                      {blog.blog_views} */}
+                    </td>
+                    <td className="text-center">
+                      {blog.blog_featured_image ? (
+                        <img
+                          style={{ width: "100px" }}
+                          src={`${BASE_URL}Uploads/${blog.blog_featured_image}`}
+                          alt="blog"
+                        />
+                      ) : (
+                        "No Image"
+                      )}
+                    </td>
+                    <td className="text-center">
+                      {blog.blog_status == 1 && (
+                        <span className="badge bg-success">Approved</span>
+                      )}
+
+                      {blog.blog_status == 0 && (
+                        <span className="badge bg-danger">Declined</span>
+                      )}
+
+                      {blog.blog_status == 2 && (
+                        <span className="badge bg-warning text-dark">
+                          Processing
+                        </span>
+                      )}
                     </td>
                   </tr>
-                )}
-              </tbody>
-            </table>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4" className="text-center fw-bold">
+                    No Blogs Found
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
 
-            <Pagination
-              currentPage={currentPage}
-              totalPages={nPages}
-              onPageChange={setCurrentPage}
-            />
-          </div>
-
-          <ConfirmDelete
-            show={showDeleteModal}
-            onConfirm={confirmDelete}
-            onCancel={() => setShowDeleteModal(false)}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={nPages}
+            onPageChange={setCurrentPage}
           />
-        </>
-      )}
+        </div>
 
-      {activeTab === "categories" && <BlogCate />}
+        <ConfirmDelete
+          show={showDeleteModal}
+          onConfirm={confirmDelete}
+          onCancel={() => setShowDeleteModal(false)}
+        />
+      </>
 
       {/* ================= ADD MODAL ================= */}
       <div className="modal fade" id="addBlogModal">
@@ -402,6 +392,7 @@ function Blogs() {
                   watch={addWatch}
                   setValue={addSetValue}
                   categories={categories}
+                  isEdit={false}
                 />
               </div>
               <div className="modal-footer bg-light">
@@ -440,6 +431,7 @@ function Blogs() {
                   watch={editWatch}
                   setValue={editSetValue}
                   categories={categories}
+                  isEdit={true}
                 />
               </div>
               <div className="modal-footer bg-light">
@@ -470,12 +462,43 @@ function BlogFormUI({
   watch,
   setValue,
   categories,
+  isEdit,
 }) {
   return (
     <div className="row">
       <div className="col-md-6 mb-3">
+        <label>Category</label>
+        <select
+          className="form-select form-control"
+          {...register("blog_category")}
+        >
+          <option value="">Select</option>
+
+          {categories.map((cat) => (
+            <option key={cat.bc_id} value={cat.bc_id}>
+              {cat.bc_name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {isEdit && (
+        <div className="col-md-6 mb-3">
+          <label>Status</label>
+          <select
+            className="form-select form-control"
+            {...register("blog_status")}
+          >
+            <option value="">Select</option>
+            <option value="0">Declined</option>
+            <option value="1">Approved</option>
+            <option value="2">Processing</option>
+          </select>
+        </div>
+      )}
+
+      <div className="col-md-6 mb-3">
         <label>Blog Title</label>
-        {/* 🔥 ADD THIS */}
         <input type="hidden" {...register("blog_slug")} />
         <input
           className="form-control"
@@ -487,7 +510,6 @@ function BlogFormUI({
 
       <div className="col-md-6 mb-3">
         <label>Main Image</label>
-
         <div className="position-relative">
           <input
             type="file"
@@ -517,34 +539,6 @@ function BlogFormUI({
         <small className="text-danger">
           {errors.blog_featured_image?.message}
         </small>
-      </div>
-
-      <div className="col-md-6 mb-3">
-        <label>Category</label>
-        <select
-          className="form-select form-control"
-          {...register("blog_category")}
-        >
-          <option value="">Select</option>
-
-          {categories.map((cat) => (
-            <option key={cat.bc_id} value={cat.bc_id}>
-              {cat.bc_name}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div className="col-md-6 mb-3">
-        <label>Status</label>
-        <select
-          className="form-select form-control"
-          {...register("blog_status")}
-        >
-          <option value="">Select</option>
-          <option value="published">Published</option>
-          <option value="draft">Draft</option>
-        </select>
       </div>
 
       <div className="mb-3">

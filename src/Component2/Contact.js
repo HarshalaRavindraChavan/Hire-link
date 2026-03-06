@@ -4,12 +4,43 @@ import { seoConfig } from "../config/seoConfig";
 import * as Yup from "yup";
 import "../Component2/css/Contacts.css"; // ✔ YOU ASKED TO ADD THIS
 import axios from "axios";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { BASE_URL } from "../config/constants";
 
 export default function Contact() {
   const [loading, setLoading] = useState(false);
+  const [info, setInfo] = useState({
+    info_email: "",
+    info_mobile: "",
+    info_address: "",
+    info_pincode: "",
+  });
+
+  const getInformation = async () => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}admin/getdatawhere/tbl_setting/sett_id/5`,
+      );
+
+      if (res.data && res.data.data.length > 0) {
+        const data = res.data.data[0];
+
+        setInfo({
+          info_email: data.info_email || "",
+          info_mobile: data.info_mobile || "",
+          info_address: data.info_address || "",
+          info_pincode: data.info_pincode || "",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getInformation();
+  }, []);
 
   const validationSchema = Yup.object({
     con_name: Yup.string()
@@ -41,7 +72,7 @@ export default function Contact() {
       try {
         const res = await axios.post(
           `${BASE_URL}candidate/insert/tbl_contact`,
-          values
+          values,
         );
 
         if (res.data?.status) {
@@ -60,7 +91,7 @@ export default function Contact() {
 
   return (
     <>
-     <SEO
+      <SEO
         title={seoConfig.c_contact.title}
         description={seoConfig.c_contact.description}
       />
@@ -125,15 +156,15 @@ export default function Contact() {
                   <h5 className="fw-bold mb-2">📍 Contact Details</h5>
                   <p>
                     <i className="fa-solid fa-envelope text-success me-2"></i>{" "}
-                    support@hirelink.com
+                    {info.info_email || ""}
                   </p>
                   <p>
                     <i className="fa-solid fa-phone text-primary me-2"></i> +91
-                    9876543210
+                    {info.info_mobile || ""}
                   </p>
                   <p>
                     <i className="fa-solid fa-location-dot text-danger me-2"></i>{" "}
-                    Pune, Maharashtra
+                    {info.info_address || ""}-{info.info_pincode || ""}
                   </p>
                 </div>
               </div>

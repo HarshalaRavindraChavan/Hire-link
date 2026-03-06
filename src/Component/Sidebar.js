@@ -45,7 +45,18 @@ function Sidebar() {
     { id: 11, label: "Profile", path: "/emp-profile", icon: "fa fa-user" },
     { id: 12, label: "Staffs", path: "/staff", icon: "fa fa-user" },
     { id: 13, label: "Setting", path: "/setting", icon: "fa-solid fa-gear" },
-    { id: 14, label: "Blogs", path: "/admin-blogs", icon: "fa-solid fa-gear" },
+    {
+      id: 14,
+      label: "Blog Categories",
+      path: "/cate-blog",
+      icon: "fa-solid fa-layer-group",
+    },
+    {
+      id: 15,
+      label: "Website Blogs",
+      path: "/admin-blogs",
+      icon: "fa-solid fa-blog",
+    },
   ];
 
   // ================= MENU LOGIC =================

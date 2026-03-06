@@ -1,76 +1,118 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../Component2/css/Blog.css";
-import logo from "../Component2/logo/hirelink.png";
 import { useNavigate, NavLink } from "react-router-dom";
-
-const blogs = [
-  {
-    id: 1,
-    title: "Career Objective Or Resume Objective Samples",
-    desc: "A career objective is a crucial aspect of a professional resume. Get it right with examples.",
-    img: "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
-    author: "Hirelink Content Team",
-    image: logo,
-  },
-  {
-    id: 2,
-    title: "White-Collar Hiring Opens 2026 with 3% YoY Growth",
-    desc: "India’s white-collar hiring sees steady growth driven by non-IT sectors.",
-    img: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
-    author: "Hirelink Content Team",
-    image: logo,
-  },
-  {
-    id: 3,
-    title: "Job Application Letter: Format, Samples & Tips (2026)",
-    desc: "Here’s a detailed guide on job application letters with samples.",
-    img: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40",
-    author: "Hirelink Content Team",
-    image: logo,
-  },
-  {
-    id: 4,
-    title: "How to Write a Perfect Resume in 2026",
-    desc: "Step-by-step guide to creating a modern resume recruiters love.",
-    img: "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
-    author: "Hirelink Content Team",
-    image: logo,
-  },
-];
+import axios from "axios";
+import { BASE_URL } from "../config/constants";
+import logo from "../Component/logo/hirelink.png";
 
 export default function Blog() {
   const navigate = useNavigate();
+
+  const [latestBlogs, setLatestBlogs] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [blogsByCategory, setBlogsByCategory] = useState({});
+
+  useEffect(() => {
+    getLatestBlogs();
+    getCategories();
+  }, []);
+
+  // Latest Blogs
+  const getLatestBlogs = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}admin/getdata/tbl_blogs`);
+
+      if (res.data.status) {
+        const latest = res.data.data
+          .filter((blog) => blog.blog_status === "1" || !blog.blog_status)
+          .sort(
+            (a, b) => new Date(b.blog_created_at) - new Date(a.blog_created_at),
+          )
+          .slice(0, 4);
+
+        setLatestBlogs(latest);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // Categories
+  const getCategories = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}admin/getdata/tbl_blog_cate`);
+
+      if (res.data.status) {
+        const cats = res.data.data;
+        setCategories(cats);
+
+        cats.forEach((cat) => {
+          getBlogsByCategory(cat.bc_id);
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // Blogs by Category
+  const getBlogsByCategory = async (categoryId) => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}admin/getdatawhere/tbl_blogs/blog_category/${categoryId}`,
+      );
+
+      if (res.data.status) {
+        const filtered = res.data.data.filter(
+          (blog) => blog.blog_status === "1" || !blog.blog_status,
+        );
+
+        setBlogsByCategory((prev) => ({
+          ...prev,
+          [categoryId]: filtered.slice(0, 4),
+        }));
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <>
-      {/* ===== HEADER ===== */}
+      {/* HEADER */}
       <header className="hlb-header">
         <div className="hlb-header-inner">
-          <h1 className="hlb-logo-text">hirelink blog</h1>
-          <p className="hlb-tagline">Maximizing Your Career Potential</p>
+          <h1 className="hlb-logo-text">HireLink Blog</h1>
+          <p className="hlb-tagline">
+            Career Growth • Hiring Tips • Industry Insights
+          </p>
         </div>
       </header>
 
-      {/* ===== RECENT POSTS ===== */}
+      {/* LATEST BLOGS */}
       <section className="hl-blog-wrapper">
         <div className="hl-container">
-          <h3 className="hl-section-title">Recent Posts</h3>
+          <h3 className="hl-section-title">Latest Blogs</h3>
 
           <div className="hl-blog-grid">
-            {blogs.map((blog) => (
-              <NavLink to="/blog-Detail">
-                <div className="hl-blog-card" key={blog.id}>
+            {latestBlogs.map((blog) => (
+              <NavLink to={`/blog-detail/${blog.blog_slug}`} key={blog.blog_id}>
+                <div className="hl-blog-card">
                   <div className="hl-blog-img">
-                    <img src={blog.img} alt={blog.title} />
+                    <img
+                      src={`${BASE_URL}Uploads/${blog.blog_featured_image}`}
+                      alt={blog.blog_title}
+                    />
                   </div>
 
                   <div className="hl-blog-body">
-                    <h4 className="hl-blog-title">{blog.title}</h4>
-                    <p className="hl-blog-desc">{blog.desc}</p>
+                    <h4>{blog.blog_title}</h4>
+                    <p>{blog.blog_short_description}</p>
                   </div>
 
                   <div className="hl-blog-footer">
-                    <img src={blog.image} alt="author" />
-                    <span className="hl-author">{blog.author}</span>
+                    <img src={logo} alt="author" />
+                    <span>{blog.blog_author}</span>
                   </div>
                 </div>
               </NavLink>
@@ -79,38 +121,51 @@ export default function Blog() {
         </div>
       </section>
 
-      {/* ===== CATEGORY POSTS ===== */}
-      <section className="hl-blog-wrapper">
-        <div className="hl-container">
-          <h3 className="hl-section-title">
-            Category Posts (132)
-            <span>View All</span>
-          </h3>
-
-          <div className="hl-blog-grid">
-            {blogs.map((blog) => (
-              <NavLink to="/blog-Detail">
-                <div className="hl-blog-card" key={`cat-${blog.id}`}>
-                  <div className="hl-blog-img">
-                    <img src={blog.img} alt={blog.title} />
-                  </div>
-
-                  <div className="hl-blog-body">
-                    <h4 className="hl-blog-title">{blog.title}</h4>
-                    <p className="hl-blog-desc">{blog.desc}</p>
-                  </div>
-
-                  <div className="hl-blog-footer">
-                    <img src={blog.image} alt="author" />
-                    <span className="hl-author">{blog.author}</span>
-                  </div>
-                </div>
+      {/* CATEGORY BLOGS */}
+      {categories.map((cat) => (
+        <section key={cat.bc_id} className="hl-blog-wrapper">
+          <div className="hl-container">
+            <h3 className="hl-section-title">
+              {cat.bc_name}
+              <NavLink
+                to={`/category/${cat.bc_name.toLowerCase().replace(/\s+/g, "-")}`}
+              >
+                View All
               </NavLink>
-            ))}
+            </h3>
+
+            <div className="hl-blog-grid">
+              {blogsByCategory[cat.bc_id]?.map((blog) => (
+                <NavLink
+                  to={`/blog-detail/${blog.blog_slug}`}
+                  key={blog.blog_id}
+                >
+                  <div className="hl-blog-card">
+                    <div className="hl-blog-img">
+                      <img
+                        src={`${BASE_URL}Uploads/${blog.blog_featured_image}`}
+                        alt={blog.blog_title}
+                      />
+                    </div>
+
+                    <div className="hl-blog-body">
+                      <h4>{blog.blog_title}</h4>
+                      <p>{blog.blog_short_description}</p>
+                    </div>
+
+                    <div className="hl-blog-footer">
+                      <img src={logo} alt="author" />
+                      <span>{blog.blog_author}</span>
+                    </div>
+                  </div>
+                </NavLink>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
-      {/* ===== FLOATING JOB BUTTON ===== */}
+        </section>
+      ))}
+
+      {/* FLOAT BUTTON */}
       <button className="job-float-btn" onClick={() => navigate("/")}>
         Looking for a job?
       </button>

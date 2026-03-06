@@ -2,9 +2,9 @@ function Footer() {
   return (
     <footer
       className="footer bg-white text-center"
-      style={{ color: "black", fontWeight: "bold" }}
+      style={{ color: "black", fontWeight: "bold", }}
     >
-      <p>
+      <p  style={{ margin:"-15px 0" }}>
         All rights reserved © {new Date().getFullYear()} Hirelink Infotech Pvt
         Ltd | Design By{" "}
         <a

@@ -3,6 +3,8 @@ import "../Component2/css/BlogDetail.css";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../config/constants";
+import { toast, ToastContainer } from "react-toastify";
+
 
 export default function BlogDetail() {
   const navigate = useNavigate();

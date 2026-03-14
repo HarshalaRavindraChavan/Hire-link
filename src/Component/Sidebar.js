@@ -17,7 +17,7 @@ function Sidebar() {
       // Profile page always allowed
       if (path === "/emp-profile") return;
 
-      // ❌ profile not completed
+      //profile not completed
       if (!auth?.profile_completed) {
         e.preventDefault(); // 🚫 stop navigation
         toast.warning("⚠️ First update your profile");

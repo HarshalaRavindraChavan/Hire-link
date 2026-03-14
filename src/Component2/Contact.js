@@ -8,6 +8,7 @@ import React, { useState, useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { BASE_URL } from "../config/constants";
 
+
 export default function Contact() {
   const [loading, setLoading] = useState(false);
   const [info, setInfo] = useState({

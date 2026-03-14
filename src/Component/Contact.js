@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../config/constants";
 import TableSkeleton from "./commenuse/TableSkeleton";
 import SEO from "../SEO";
+import { toast, ToastContainer } from "react-toastify";
 import { seoConfig } from "../config/seoConfig";
 
 function Contact() {

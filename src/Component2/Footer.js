@@ -6,20 +6,21 @@ function Footer() {
   return (
     <footer className="footer mt-5">
       <div className="d-flex flex-wrap justify-content-center gap-3">
-        <NavLink to="/jobs">Browse Jobs</NavLink>
-        <NavLink to="/companies">Browse Companies</NavLink>
+        {/* <NavLink to="/jobs">Browse Jobs</NavLink> */}
+        <NavLink to="/companies">Companies</NavLink>
         <NavLink to="/about">About</NavLink>
+        <NavLink to="/contacts">Contact</NavLink>
         <NavLink to="/blogs">Blogs</NavLink>
         <NavLink to="/help">Help</NavLink>
         <NavLink to="/candidate-terms-condition">Terms & Condition</NavLink>
-        <NavLink to="/employer">Post a Job</NavLink>
+        {/* <NavLink to="/employer">Post a Job</NavLink> */}
         <NavLink to="/candidate-return-policy">Return Policy</NavLink>
-        <NavLink to="/candidate-privacy-policies">Privacy & Policies</NavLink>
+        <NavLink to="/candidate-privacy-policies">Privacy Policies</NavLink>
       </div>
 
-      <p className="copy mt-5">
+      <p className="copy mt-3">
         All rights reserved © {new Date().getFullYear()} Hirelink Infotech Pvt
-        Ltd | Design By{" "}
+        Ltd | Developed By{" "}
         <a
           href="https://www.esenceweb.com/"
           target="_blank"

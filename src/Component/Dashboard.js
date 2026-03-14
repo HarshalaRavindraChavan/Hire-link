@@ -4,6 +4,7 @@ import { seoConfig } from "../config/seoConfig";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../config/constants";
+import { toast, ToastContainer } from "react-toastify";
 
 function Dashboard() {
   const navigate = useNavigate();

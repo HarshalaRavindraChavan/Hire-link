@@ -4,6 +4,7 @@ import "./css/InterManage.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../config/constants";
+import { toast, ToastContainer } from "react-toastify";
 
 const InterviewsPage = ({ openEditInterviewModal }) => {
   const navigate = useNavigate();
@@ -258,7 +259,7 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
       </div>
 
       {/* Filters */}
-        <div className="row g-3">
+      <div className="row g-3">
         {/* LEFT PANEL */}
         <div className="col-lg-5 col-md-5">
           <div className="card shadow-sm h-100">

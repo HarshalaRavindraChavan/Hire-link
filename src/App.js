@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
+import { useEffect } from "react";
 
 /* ================= USER ================= */
 import Header2 from "./Component2/Header";
@@ -97,6 +98,42 @@ const EmployerLayout = () => (
 
 /* ================= MAIN APP ================= */
 function App() {
+  // useEffect(() => {
+  //   const preventDefault = (e) => e.preventDefault();
+
+  //   // Right click disable
+  //   document.addEventListener("contextmenu", preventDefault);
+
+  //   // Copy paste disable
+  //   document.addEventListener("copy", preventDefault);
+  //   document.addEventListener("cut", preventDefault);
+  //   document.addEventListener("paste", preventDefault);
+
+  //   // Text selection disable
+  //   document.addEventListener("selectstart", preventDefault);
+
+  //   // Keyboard shortcuts disable
+  //   const handleKeyDown = (e) => {
+  //     if (
+  //       (e.ctrlKey && ["c", "v", "u"].includes(e.key.toLowerCase())) ||
+  //       e.key === "F12"
+  //     ) {
+  //       e.preventDefault();
+  //     }
+  //   };
+
+  //   document.addEventListener("keydown", handleKeyDown);
+
+  //   return () => {
+  //     document.removeEventListener("contextmenu", preventDefault);
+  //     document.removeEventListener("copy", preventDefault);
+  //     document.removeEventListener("cut", preventDefault);
+  //     document.removeEventListener("paste", preventDefault);
+  //     document.removeEventListener("selectstart", preventDefault);
+  //     document.removeEventListener("keydown", handleKeyDown);
+  //   };
+  // }, []);
+
   return (
     <BrowserRouter>
       <Routes>
@@ -170,8 +207,8 @@ function App() {
           <Route path="contact" element={<Contact />} />
           <Route path="user" element={<Users />} />
           <Route path="staff" element={<Staff />} />
-          <Route path="Setting" element={<Setting />} />
-          <Route path="Admin-Blogs" element={<AdminBlogs />} />
+          <Route path="setting" element={<Setting />} />
+          <Route path="admin-Blogs" element={<AdminBlogs />} />
           <Route path="cate-blog" element={<CateBlog />} />
         </Route>
       </Routes>

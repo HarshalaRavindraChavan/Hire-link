@@ -6,10 +6,20 @@ import ConfirmDelete from "./commenuse/ConfirmDelete";
 import { useForm } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
 import { BASE_URL } from "../config/constants";
+import { useNavigate } from "react-router-dom";
 
 function BlogCate() {
+    const navigate = useNavigate();
   const [blogcate, setBlogcate] = useState([]);
   const [editId, setEditId] = useState(null);
+
+   const auth = JSON.parse(localStorage.getItem("auth"));
+  
+    useEffect(() => {
+      if (!auth) {
+        navigate("/signin");
+      }
+    }, [auth, navigate]);
 
   // ================= FETCH =================
   const fetchBlogs = async () => {

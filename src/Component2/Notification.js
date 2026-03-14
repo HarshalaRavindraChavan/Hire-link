@@ -7,6 +7,7 @@ import { BASE_URL } from "../config/constants";
 import { onMessage } from "firebase/messaging";
 import { messaging } from "./FirebaseConfig";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function NotificationPage() {
   const [notifications, setNotifications] = useState([]);

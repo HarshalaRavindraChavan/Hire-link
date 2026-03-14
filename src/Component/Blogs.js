@@ -10,8 +10,10 @@ import { BASE_URL } from "../config/constants";
 import SEO from "../SEO";
 import { seoConfig } from "../config/seoConfig";
 import RichTextEditor from "../Component/commenuse/RichTextEditor";
+import { useNavigate } from "react-router-dom";
 
 function Blogs() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("categories");
   const [uploading, setUploading] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
@@ -19,6 +21,14 @@ function Blogs() {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedBlogId, setSelectedBlogId] = useState(null);
   const [categories, setCategories] = useState([]);
+
+  const auth = JSON.parse(localStorage.getItem("auth"));
+
+  useEffect(() => {
+    if (!auth) {
+      navigate("/signin");
+    }
+  }, [auth, navigate]);
 
   const fetchCategories = async () => {
     try {
@@ -220,7 +230,7 @@ function Blogs() {
     setSelectedBlogId(blog.blog_id);
 
     editSetValue("blog_title", blog.blog_title);
-    editSetValue("blog_slug", blog.blog_slug); 
+    editSetValue("blog_slug", blog.blog_slug);
     editSetValue("blog_category", blog.blog_category);
     editSetValue("blog_status", blog.blog_status);
     editSetValue("blog_short_description", blog.blog_short_description);

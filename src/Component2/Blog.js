@@ -4,6 +4,8 @@ import { useNavigate, NavLink } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../config/constants";
 import logo from "../Component/logo/hirelink.png";
+import { toast, ToastContainer } from "react-toastify";
+
 
 export default function Blog() {
   const navigate = useNavigate();

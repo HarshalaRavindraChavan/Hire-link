@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../Component2/css/Company.css";
 import { BASE_URL } from "../config/constants";
+import { toast, ToastContainer } from "react-toastify";
 import SEO from "../SEO";
 import { seoConfig } from "../config/seoConfig";
 

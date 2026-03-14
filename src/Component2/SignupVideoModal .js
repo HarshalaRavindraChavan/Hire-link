@@ -1,11 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL } from "../config/constants";
 import "../Component2/css/SignupVideoModal.css";
-
-const videos = {
-  candidate: "d95PPykB2vE",
-  employer: null,
-};
 
 const SignupVideoModal = ({ show }) => {
   const navigate = useNavigate();
@@ -17,6 +14,40 @@ const SignupVideoModal = ({ show }) => {
   const [videoCompleted, setVideoCompleted] = useState(false);
   const [progress, setProgress] = useState(0);
   const [playedSeconds, setPlayedSeconds] = useState(0);
+
+  // 🔹 dynamic info state
+  const [info, setInfo] = useState({
+    info_can_signup: "",
+  });
+
+  // 🔹 dynamic videos object
+  const videos = {
+    candidate: info.info_can_signup,
+    employer: null,
+  };
+
+  /* 🔹 Get video id from database */
+  useEffect(() => {
+    getInformation();
+  }, []);
+
+  const getInformation = async () => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}admin/getdatawhere/tbl_setting/sett_id/5`,
+      );
+
+      if (res.data && res.data.data.length > 0) {
+        const data = res.data.data[0];
+
+        setInfo({
+          info_can_signup: data.info_can_signup || "",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   /* 🔹 Load YouTube API once */
   useEffect(() => {
@@ -68,12 +99,12 @@ const SignupVideoModal = ({ show }) => {
         playerRef.current = null;
       }
     };
-  }, [selectedRole, show]);
+  }, [selectedRole, show, info]);
 
   const handleRoleSelect = (role) => {
     if (role === "employer" && !videos.employer) {
       localStorage.setItem("signupRole", role);
-      localStorage.setItem("videoCompleted", "true"); // ✅ allow
+      localStorage.setItem("videoCompleted", "true");
       navigate("/signup");
       return;
     }
@@ -89,20 +120,18 @@ const SignupVideoModal = ({ show }) => {
       const currentTime = playerRef.current.getCurrentTime();
       const duration = playerRef.current.getDuration();
 
-      // ❌ Forward seek block (buffer safe)
       if (currentTime > lastAllowedTime.current + 2) {
         playerRef.current.seekTo(lastAllowedTime.current);
         return;
       }
 
-      // ✅ Natural play allowed
       if (currentTime > lastAllowedTime.current) {
         lastAllowedTime.current = currentTime;
       }
 
       setPlayedSeconds(Math.floor(currentTime));
       setProgress(Math.floor((currentTime / duration) * 100));
-    }, 500); // 🔥 Smooth interval
+    }, 500);
   };
 
   const onPlayerStateChange = (event) => {
@@ -111,7 +140,6 @@ const SignupVideoModal = ({ show }) => {
       setVideoCompleted(true);
       setProgress(100);
 
-      // ✅ Save completion status
       localStorage.setItem("videoCompleted", "true");
     }
   };

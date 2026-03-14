@@ -12,6 +12,7 @@ function Information() {
     info_mobile: "",
     info_address: "",
     info_pincode: "",
+    info_can_signup: "",
   });
 
   // GET DATA
@@ -29,6 +30,7 @@ function Information() {
           info_mobile: data.info_mobile || "",
           info_address: data.info_address || "",
           info_pincode: data.info_pincode || "",
+          info_can_signup: data.info_can_signup || "",
         });
       }
     } catch (error) {
@@ -56,6 +58,7 @@ function Information() {
         info_mobile: info.info_mobile,
         info_address: info.info_address,
         info_pincode: info.info_pincode,
+        info_can_signup: info.info_can_signup,
       };
 
       const res = await axios.post(
@@ -126,6 +129,17 @@ function Information() {
               name="info_pincode"
               value={info.info_pincode || ""}
               placeholder="Enter Pin Code"
+              onChange={handleChange}
+              className="form-control"
+            />
+          </div>
+
+          <div className="col-lg-6">
+            <label>Candidate Signup Video</label>
+            <input
+              name="info_can_signup"
+              value={info.info_can_signup || ""}
+              placeholder="Enter Video Code"
               onChange={handleChange}
               className="form-control"
             />

@@ -11,7 +11,8 @@ import { toast, ToastContainer } from "react-toastify";
 import { BASE_URL } from "../config/constants";
 import { saveFcmToken } from "./saveFcmToken";
 import ReCAPTCHA from "react-google-recaptcha";
-import SignupVideoModal from "./SignupVideoModal ";
+import SignupVideoModal from "./SignupVideoModal";
+import { parseApiResponse } from "../config/parseApiResponse";
 
 function Signin() {
   const navigate = useNavigate();
@@ -19,7 +20,6 @@ function Signin() {
   const [successMsg, setSuccessMsg] = useState("");
   const [apiError, setApiError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [captchaToken, setCaptchaToken] = useState(null);
 
   // ✅ FIX 1: activeRole state
   const [activeRole, setActiveRole] = useState("candidate");
@@ -49,11 +49,6 @@ function Signin() {
     }),
 
     onSubmit: async (values, { resetForm }) => {
-      if (!captchaToken) {
-        toast.error("Please verify captcha!");
-        return;
-      }
-
       setLoading(true);
 
       try {
@@ -65,24 +60,52 @@ function Signin() {
           payload = {
             can_email: values.email,
             can_password: values.password,
-            captchaToken: captchaToken,
           };
         } else {
           url = `${BASE_URL}employer/signin/tbl_employer`;
           payload = {
             emp_email: values.email,
             emp_password: values.password,
-            captchaToken: captchaToken,
           };
         }
 
         let response = await axios.post(url, payload);
-        let data = response.data;
+        // let data = response.data;
+
+        let data = parseApiResponse(response);
 
         /* ==============================
-           IF NOT EMPLOYER → TRY STAFF
-           ================================ */
-        if (data.loginstatus === "0") {
+       ✅ OTP REQUIRED (FIXED)
+    ============================== */
+        if (data.otp_required === true) {
+          toast.error(data.message || "OTP verification required");
+
+          localStorage.setItem(
+            "signupTempData",
+            JSON.stringify({
+              role: activeRole,
+              data: data.data,
+              createdAt: Date.now(),
+            }),
+          );
+
+          localStorage.setItem(
+            "verifyUser",
+            JSON.stringify({
+              email: data.email || values.email,
+              role: activeRole,
+              mobile: data.mobile,
+            }),
+          );
+
+          navigate("/verify");
+          return;
+        }
+
+        /* ==============================
+       IF NOT EMPLOYER → TRY STAFF
+    ============================== */
+        if (Number(data.loginstatus) === 0) {
           response = await axios.post(
             `${BASE_URL}employer/signinstaff/tbl_staff`,
             {
@@ -91,12 +114,119 @@ function Signin() {
             },
           );
 
-          data = response.data;
+          data = parseApiResponse(response);
         }
 
-        // ✅ ✅ 1) LOGIN SUCCESS => Store data and navigate
+        /* ==============================
+       ✅ LOGIN SUCCESS
+    ============================== */
+        // if (data.status === true) {
+        //   toast.success("Login successful!");
+
+        //   if (activeRole === "candidate") {
+        //     localStorage.setItem("candidate", JSON.stringify(data.data));
+
+        //     if (data.data?.can_id) {
+        //       saveFcmToken(data.data.can_id);
+        //     }
+
+        //     navigate("/profile");
+        //   } else {
+        //     if (data.staff_id) {
+        //       localStorage.setItem(
+        //         "auth",
+        //         JSON.stringify({
+        //           role: 200,
+        //           staff_id: data.data.staff_id,
+        //           staff_email: data.data.staff_email,
+        //           menu_ids: data.menu_ids || [],
+        //         }),
+        //       );
+
+        //       localStorage.setItem("staff", JSON.stringify(data.data));
+        //       navigate("/dashboard");
+        //     } else {
+        //       const oldAuth = JSON.parse(localStorage.getItem("auth"));
+
+        //       localStorage.setItem(
+        //         "auth",
+        //         JSON.stringify({
+        //           role: 100,
+        //           emp_id: data.data.emp_id,
+        //           emp_email: data.data.emp_email,
+        //           emp_companyname: data.data.emp_companyname,
+        //           emp_com_logo: data.data.emp_com_logo,
+
+        //           // 🔥 IMPORTANT
+        //           profile_completed:
+        //             Number(data.data.profile_completed) ||
+        //             oldAuth?.profile_completed ||
+        //             0,
+        //         }),
+        //       );
+
+        //       localStorage.setItem("employer", JSON.stringify(data.data));
+        //       navigate("/emp-profile");
+        //     }
+        //   }
+
+        //   resetForm();
+        //   return;
+        // }
+
+        // if (data.status === true) {
+        //   toast.success(data.message || "Login successful!");
+
+        //   // ✅ FREE USER HANDLE
+        //   if (data.is_free === true || data.amount === 0) {
+        //     console.log("FREE LOGIN");
+
+        //     localStorage.setItem("paymentDone", "true");
+        //   }
+
+        //   if (activeRole === "candidate") {
+        //     localStorage.setItem("candidate", JSON.stringify(data.data));
+
+        //     if (data.data?.can_id) {
+        //       saveFcmToken(data.data.can_id);
+        //     }
+
+        //     navigate("/profile");
+        //   } else {
+        //     if (data.staff_id) {
+        //       localStorage.setItem(
+        //         "auth",
+        //         JSON.stringify({
+        //           role: 200,
+        //           staff_id: data.data.staff_id,
+        //           staff_email: data.data.staff_email,
+        //           menu_ids: data.menu_ids || [],
+        //         }),
+        //       );
+
+        //       localStorage.setItem("staff", JSON.stringify(data.data));
+        //       navigate("/dashboard");
+        //     } else {
+        //       localStorage.setItem(
+        //         "auth",
+        //         JSON.stringify({
+        //           role: 100,
+        //           emp_id: data.data.emp_id,
+        //           emp_email: data.data.emp_email,
+        //         }),
+        //       );
+
+        //       localStorage.setItem("employer", JSON.stringify(data.data));
+        //       navigate("/emp-profile");
+        //     }
+        //   }
+
+        //   resetForm();
+        //   return;
+        // }
+
         if (data.status === true) {
-          toast.success("Login successful!");
+          toast.success(data.message || "Login successful!");
 
           if (activeRole === "candidate") {
             localStorage.setItem("candidate", JSON.stringify(data.data));
@@ -107,6 +237,7 @@ function Signin() {
 
             navigate("/profile");
           } else {
+            // ✅ STAFF LOGIN
             if (data.data?.staff_id) {
               localStorage.setItem(
                 "auth",
@@ -118,21 +249,20 @@ function Signin() {
                 }),
               );
 
-              // STAFF LOGIN
               localStorage.setItem("staff", JSON.stringify(data.data));
               navigate("/dashboard");
             } else {
+              // EMPLOYER LOGIN
               localStorage.setItem(
                 "auth",
                 JSON.stringify({
                   role: 100,
                   emp_id: data.data.emp_id,
                   emp_email: data.data.emp_email,
-                  emp_companyname: data.data.emp_companyname,
-                  emp_com_logo: data.data.emp_com_logo,
+                  profile_completed: Number(data.data.profile_completed) || 0, // ✅ ADD THIS
                 }),
               );
-              // EMPLOYER LOGIN
+
               localStorage.setItem("employer", JSON.stringify(data.data));
               navigate("/emp-profile");
             }
@@ -142,7 +272,9 @@ function Signin() {
           return;
         }
 
-        // ✅ ✅ 2) PAYMENT REQUIRED => Don't store candidate/employer, go payment
+        /* ==============================
+       ✅ PAYMENT REQUIRED
+    ============================== */
         if (data.payment_required === true) {
           toast.error(
             data.message || "Payment pending. Please complete payment.",
@@ -151,7 +283,7 @@ function Signin() {
           localStorage.setItem(
             "signupTempData",
             JSON.stringify({
-              role: activeRole, // candidate | employer
+              role: activeRole,
               data: data.data,
               createdAt: Date.now(),
             }),
@@ -161,7 +293,7 @@ function Signin() {
             "paymentUser",
             JSON.stringify({
               email: values.email,
-              role: activeRole.toLowerCase(), //must be "candidate" / "employer"
+              role: activeRole.toLowerCase(),
             }),
           );
 
@@ -169,19 +301,25 @@ function Signin() {
           return;
         }
 
-        // ✅ ✅ 3) Normal fail
+        /* ==============================
+       ❌ NORMAL FAIL
+    ============================== */
         toast.error(data.message || "Login failed");
       } catch (error) {
         const errData = error.response?.data;
 
-        // ✅ OTP required -> redirect verify
+        console.log("ERROR RESPONSE:", errData);
+
+        /* ==============================
+       OTP REQUIRED (if backend sends 403)
+    ============================== */
         if (errData?.otp_required === true) {
           toast.error(errData.message || "OTP verification required");
 
           localStorage.setItem(
             "signupTempData",
             JSON.stringify({
-              role: activeRole, // candidate | employer
+              role: activeRole,
               data: errData.data,
               createdAt: Date.now(),
             }),
@@ -200,7 +338,9 @@ function Signin() {
           return;
         }
 
-        // ✅ Payment pending -> redirect to payment
+        /* ==============================
+       PAYMENT REQUIRED
+    ============================== */
         if (errData?.payment_required === true) {
           toast.error(
             errData.message || "Payment pending. Please complete payment.",
@@ -209,7 +349,7 @@ function Signin() {
           localStorage.setItem(
             "signupTempData",
             JSON.stringify({
-              role: activeRole, // candidate | employer
+              role: activeRole,
               data: errData.data,
               createdAt: Date.now(),
             }),
@@ -220,7 +360,7 @@ function Signin() {
             JSON.stringify({
               email: values.email,
               role: activeRole.toLowerCase(),
-              for: "Account Creat",
+              for: "AccountCreate",
               returnTo:
                 activeRole === "candidate" ? "/profile" : "/emp-profile",
             }),
@@ -321,7 +461,7 @@ function Signin() {
                 onClick={handleSignupClick}
                 className="btn btn-sm btn-outline-auth"
               >
-                <b>Register</b>
+                <b>New Register</b>
               </NavLink>
             </div>
 
@@ -383,15 +523,6 @@ function Signin() {
                 )}
               </div>
 
-              <div className="my-3 d-flex justify-content-center">
-                <ReCAPTCHA
-                  sitekey="6LfE8EgsAAAAANyUHlqJ_RMe1Klg_WVpVx7NimPG" //hirelink
-                  //sitekey="6LdU2HQsAAAAAGrvguav-Xg6Cmn9UoM0D-lymAyJ" //pharmajobshirelink
-                  onChange={(token) => setCaptchaToken(token)}
-                  onExpired={() => setCaptchaToken(null)}
-                />
-              </div>
-
               {/* ROLE */}
               <div className="mt-3 mb-4">
                 <label className="small fw-medium d-block">Login as</label>
@@ -423,7 +554,7 @@ function Signin() {
               <button
                 type="submit"
                 className="btn btn-primary-auth w-100"
-                disabled={loading || !captchaToken}
+                disabled={loading}
               >
                 {loading
                   ? activeRole === "candidate"

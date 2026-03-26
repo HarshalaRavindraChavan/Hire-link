@@ -13,6 +13,7 @@ import { saveFcmToken } from "./saveFcmToken";
 import ReCAPTCHA from "react-google-recaptcha";
 import SEO from "../SEO";
 import { seoConfig } from "../config/seoConfig";
+import { parseApiResponse } from "../config/parseApiResponse";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -59,86 +60,6 @@ const Signup = () => {
     resolver: yupResolver(validationSchema),
   });
 
-  /* ---------------- SUBMIT ---------------- */
-  // const onSubmit = async (values) => {
-  //   if (!captchaToken) {
-  //     toast.error("Please verify captcha!");
-  //     return;
-  //   }
-
-  //   setLoading(true);
-
-  //   try {
-  //     let url = "";
-  //     let payload = {};
-
-  //     if (activeRole === "Candidate") {
-  //       // 🔹 Candidate Signup API
-  //       url = `${BASE_URL}candidate/signup/tbl_candidate`;
-  //       payload = {
-  //         can_name: values.fullname,
-  //         can_email: values.email,
-  //         can_password: values.password,
-  //         can_mobile: values.mobile,
-  //         can_status: "Active",
-  //         captchaToken: captchaToken,
-  //       };
-  //     } else {
-  //       // 🔹 Employer Signup API
-  //       url = `${BASE_URL}employer/signup/tbl_employer`;
-  //       payload = {
-  //         emp_name: values.fullname,
-  //         emp_email: values.email,
-  //         emp_password: values.password,
-  //         emp_mobile: values.mobile,
-  //         emp_status: "Active",
-  //         captchaToken: captchaToken,
-  //       };
-  //     }
-
-  //     const response = await axios.post(url, payload);
-  //     const data = response.data;
-
-  //     if (data.status === true) {
-  //       toast.success(`${activeRole} account created successfully!`);
-
-  //       // 🔹 Store & Redirect based on role
-  //       if (activeRole === "Candidate") {
-  //         localStorage.setItem("candidate", JSON.stringify(data.data));
-  //         saveFcmToken(data.data.can_id);
-
-  //         setTimeout(() => navigate("/profile"), 1200);
-  //       } else {
-  //         // 🔹 Auth (role & permission)
-  //         localStorage.setItem(
-  //           "auth",
-  //           JSON.stringify({
-  //             role: 100,
-  //             emp_id: data.data.emp_id,
-  //             emp_companyname: data.data.emp_companyname,
-  //           })
-  //         );
-
-  //         // 🔹 FULL employer table data
-  //         localStorage.setItem(
-  //           "employer",
-  //           JSON.stringify(data.data) // 🔥 full row
-  //         );
-
-  //         setTimeout(() => navigate("/emp-profile"), 1200);
-  //       }
-
-  //       reset(); // ✅ react-hook-form correct reset
-  //     } else {
-  //       toast.error(data.message || "Signup failed");
-  //     }
-  //   } catch (error) {
-  //     toast.error(error.response?.data?.message || "Server error. Try again.");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const onSubmit = async (values) => {
     if (!captchaToken) {
       toast.error("Please verify captcha!");
@@ -176,48 +97,36 @@ const Signup = () => {
         };
       }
 
-      const response = await axios.post(url, payload);
-      const data = response.data;
+      // ✅ API call
+      const response = await axios.post(url, payload, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-      if (data?.status === true || data?.status === "success") {
+      const res = parseApiResponse(response);
+
+      if (res.status === true) {
+        console.log("REGISTER SUCCESS", res);
+
         toast.success("Signup successful! OTP sent to your email ✅");
 
-        // ✅ Store full data in localStorage (same as your first code)
-        if (activeRole === "candidate") {
-          //store data after signup
-          // localStorage.setItem("candidate", JSON.stringify(data.data));
-
-          // ✅ FCM token (optional)
-          if (data.data?.can_id) {
-            saveFcmToken(data.data.can_id);
-          }
+        // ✅ Candidate FCM
+        if (activeRole === "candidate" && res.data?.can_id) {
+          saveFcmToken(res.data.can_id);
         }
-        //else {
-        //   // ✅ auth store (same as old code)
-        //   localStorage.setItem(
-        //     "auth",
-        //     JSON.stringify({
-        //       role: 100,
-        //       emp_id: data.data.emp_id,
-        //       emp_companyname: data.data.emp_companyname,
-        //     }),
-        //   );
 
-        //   // ✅ full employer row store
-        //   localStorage.setItem("employer", JSON.stringify(data.data));
-        // }
-
-        // 🔹 ONLY TEMP STORAGE (payment pending)
+        // 🔹 TEMP STORAGE
         localStorage.setItem(
           "signupTempData",
           JSON.stringify({
-            role: activeRole, // candidate | employer
-            data: data.data,
+            role: activeRole,
+            data: res.data,
             createdAt: Date.now(),
           }),
         );
 
-        // ✅ store payment user info
+        // ✅ VERIFY USER
         localStorage.setItem(
           "verifyUser",
           JSON.stringify({
@@ -227,13 +136,13 @@ const Signup = () => {
           }),
         );
 
-        // ✅ REQUIRED for PaymentSuccess redirect
+        // ✅ PAYMENT USER
         localStorage.setItem(
           "paymentUser",
           JSON.stringify({
             name: values.fullname,
             email: values.email,
-            role: activeRole, // "candidate" | "employer"
+            role: activeRole,
             mobile: values.mobile,
             returnTo: activeRole === "candidate" ? "/profile" : "/emp-profile",
           }),
@@ -243,15 +152,24 @@ const Signup = () => {
 
         reset();
 
-        // ✅ go to verify page first
+        // ✅ REDIRECT
         setTimeout(() => {
           navigate("/verify");
         }, 1000);
       } else {
-        toast.error(data.message || "Signup failed");
+        console.log("REGISTER ERROR", res);
+        toast.error(res.message || "Signup failed");
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "Server error. Try again.");
+      console.log("ERROR:", error);
+
+      if (error.response) {
+        toast.error(error.response.data.message || "Server error");
+      } else if (error.request) {
+        toast.error("Server not responding");
+      } else {
+        toast.error("Unexpected error");
+      }
     } finally {
       setLoading(false);
     }
@@ -344,9 +262,7 @@ const Signup = () => {
                 >
                   Create Your Pharma Jobs Account
                 </h4>
-                <p className="text-muted">
-                  It takes less than a minute to get started.
-                </p>
+                <p className="text-muted">New Member Register Here</p>
               </div>
 
               <NavLink to="/signin" className="btn btn-sm btn-outline-auth">
@@ -420,6 +336,11 @@ const Signup = () => {
                     {...register("password")}
                     placeholder="Enter password"
                   />
+                  {errors.password && (
+                    <div className="invalid-feedback">
+                      {errors.password.message}
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -454,29 +375,34 @@ const Signup = () => {
               </div>
 
               {/* TERMS & CONDITIONS */}
-              <div className="form-check mt-1 d-flex align-items-start">
-                <input
-                  className={`form-check-input me-2 ${errors?.terms ? "is-invalid" : ""}`}
-                  type="checkbox"
-                  id="terms"
-                  {...register("terms")}
-                />
+              <div className="mt-2">
+                <div className="form-check mb-1">
+                  <input
+                    className={`form-check-input ${errors?.terms ? "is-invalid" : ""}`}
+                    type="checkbox"
+                    id="terms"
+                    {...register("terms")}
+                  />
 
-                <label className="form-check-label" htmlFor="terms">
-                  I agree to{" "}
-                  <NavLink
-                    to={termsRoute}
-                    target="_blank"
-                    className="fw-semibold text-decoration-underline ms-1"
-                  >
-                    {termsLabel}
-                  </NavLink>
-                </label>
+                  <label className="form-check-label ms-2" htmlFor="terms">
+                    I agree to{" "}
+                    <NavLink
+                      to={termsRoute}
+                      target="_blank"
+                      className="fw-semibold text-decoration-underline"
+                    >
+                      {termsLabel}
+                    </NavLink>
+                  </label>
+                </div>
 
                 {errors?.terms && (
-                  <div className="invalid-feedback d-block">
+                  <small
+                    className="team-error ms-1 d-block"
+                    style={{ marginTop: "0px" }}
+                  >
                     {errors.terms.message}
-                  </div>
+                  </small>
                 )}
               </div>
 

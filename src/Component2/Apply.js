@@ -338,7 +338,7 @@ function Apply() {
 
     const payload = {
       apl_candidate_id: candidate.can_id,
-      apl_job_id: Number(job_id),
+      apl_job_id: job.job_id,
       apl_employer_id: job.job_employer_id,
     };
 
@@ -359,7 +359,7 @@ function Apply() {
       toast.error("Server error while applying job");
     } finally {
       setLoading(false);
-      setIsApplying(false); // 🔓 unlock
+      setIsApplying(false);
     }
   };
 

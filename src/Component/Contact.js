@@ -7,6 +7,7 @@ import TableSkeleton from "./commenuse/TableSkeleton";
 import SEO from "../SEO";
 import { toast, ToastContainer } from "react-toastify";
 import { seoConfig } from "../config/seoConfig";
+import { parseApiResponse } from "../config/parseApiResponse";
 
 function Contact() {
   const navigate = useNavigate();
@@ -37,9 +38,11 @@ function Contact() {
     try {
       setLoading(true); // loader start
 
-      const res = await axios.get(`${BASE_URL}admin/getdata/tbl_contact`);
+      const response = await axios.get(`${BASE_URL}admin/getdata/tbl_contact`);
 
-      if (res.data.status === true) {
+      const res = parseApiResponse(response);
+
+      if (res.status === true) {
         setContact(res.data.data);
       }
     } catch (error) {
@@ -109,7 +112,7 @@ function Contact() {
       </div>
 
       <div className="card shadow-sm p-3 border">
-        <div className="row g-2 align-items-center mb-3">
+        {/* <div className="row g-2 align-items-center mb-3">
           <div className="col-md-2">
             <input
               className="form-control"
@@ -168,7 +171,7 @@ function Contact() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-        </div>
+        </div> */}
 
         {/* TABLE START */}
         <div className="table-responsive">

@@ -11,6 +11,8 @@ import SEO from "../SEO";
 import { seoConfig } from "../config/seoConfig";
 import RichTextEditor from "../Component/commenuse/RichTextEditor";
 import { useNavigate } from "react-router-dom";
+import { parseApiResponse } from "../config/parseApiResponse";
+
 
 function Blogs() {
   const navigate = useNavigate();
@@ -65,11 +67,13 @@ function Blogs() {
 
   const confirmDelete = async () => {
     try {
-      const res = await axios.get(
+      const response = await axios.get(
         `${BASE_URL}admin/deletedata/tbl_blogs/blog_id/${deleteId}`,
       );
 
-      if (res.data.status === true) {
+       const res = parseApiResponse(response);
+
+      if (res.status === true) {
         setShowDeleteModal(false);
         setDeleteId(null);
 
@@ -90,11 +94,10 @@ function Blogs() {
   const nPages = Math.ceil(blogs.length / recordsPerPage);
 
   const blogSchema = yup.object({
+    blog_category: yup.string().required("Category required"),
     blog_title: yup.string().required("Title required"),
     blog_short_description: yup.string().required("Short description required"),
     blog_content: yup.string().required("Content required"),
-    blog_category: yup.string().required("Category required"),
-    blog_status: yup.string().required("Status required"),
     blog_featured_image: yup.string().required("Image required"),
   });
 
@@ -490,22 +493,8 @@ function BlogFormUI({
             </option>
           ))}
         </select>
+        <small className="text-danger">{errors.blog_category?.message}</small>
       </div>
-
-      {isEdit && (
-        <div className="col-md-6 mb-3">
-          <label>Status</label>
-          <select
-            className="form-select form-control"
-            {...register("blog_status")}
-          >
-            <option value="">Select</option>
-            <option value="0">Declined</option>
-            <option value="1">Approved</option>
-            <option value="2">Processing</option>
-          </select>
-        </div>
-      )}
 
       <div className="col-md-6 mb-3">
         <label>Blog Title</label>
@@ -551,6 +540,21 @@ function BlogFormUI({
         </small>
       </div>
 
+      {isEdit && (
+        <div className="col-md-6 mb-3">
+          <label>Status</label>
+          <select
+            className="form-select form-control"
+            {...register("blog_status")}
+          >
+            <option value="">Select</option>
+            <option value="0">Declined</option>
+            <option value="1">Approved</option>
+            <option value="2">Processing</option>
+          </select>
+        </div>
+      )}
+
       <div className="mb-3">
         <label>Short Description</label>
         <textarea
@@ -559,6 +563,9 @@ function BlogFormUI({
           rows="4"
           {...register("blog_short_description")}
         />
+        <small className="text-danger">
+          {errors.blog_short_description?.message}
+        </small>
       </div>
 
       <div className="mb-3">
@@ -569,6 +576,7 @@ function BlogFormUI({
             setValue("blog_content", html, { shouldValidate: true })
           }
         />
+        <small className="text-danger">{errors.blog_content?.message}</small>
       </div>
     </div>
   );

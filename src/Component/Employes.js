@@ -11,6 +11,8 @@ import Pagination from "./commenuse/Pagination";
 import { toast } from "react-toastify";
 import { BASE_URL } from "../config/constants";
 import TableSkeleton from "./commenuse/TableSkeleton";
+import { parseApiResponse } from "../config/parseApiResponse";
+
 
 function Employes() {
   const navigate = useNavigate();
@@ -36,10 +38,12 @@ function Employes() {
   const fetchEmployers = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`${BASE_URL}admin/getdata/tbl_employer`);
+      const response = await axios.get(`${BASE_URL}admin/getdata/tbl_employer`);
 
-      if (res.data.status === true) {
-        setEmployer(res.data.data);
+      const res = parseApiResponse(response);
+
+      if (res.status === true) {
+        setEmployer(res.data);
       }
     } catch (error) {
       toast.error("Error Employer Fetch:", error);
@@ -69,11 +73,13 @@ function Employes() {
 
   const confirmDelete = async () => {
     try {
-      const res = await axios.get(
+      const response = await axios.get(
         `${BASE_URL}admin/deletedata/tbl_employer/emp_id/${deleteId}`,
       );
 
-      if (res.data.status === true) {
+      const res = parseApiResponse(response);
+
+      if (res.status === true) {
         setShowDeleteModal(false);
         setDeleteId(null);
 
@@ -143,12 +149,14 @@ function Employes() {
         emp_com_logo: data.emp_logo, // ✅ FILE NAME
       };
 
-      const res = await axios.post(
+      const response = await axios.post(
         `${BASE_URL}employer/insert/tbl_employer`,
         payload,
       );
 
-      if (res.data.status === true) {
+      const res = parseApiResponse(response);
+
+      if (res.status === true) {
         toast.success("Employer added successfully");
 
         // ✅ 1. reset form
@@ -294,14 +302,16 @@ function Employes() {
     if (isUpdatingStatus) return; // 🔒 block
     setIsUpdatingStatus(true);
     try {
-      const res = await axios.post(
+      const response = await axios.post(
         `${BASE_URL}admin/updatedata/tbl_employer/emp_id/${empId}`,
         {
           emp_status: newStatus,
         },
       );
 
-      if (res.data?.status === true) {
+      const res = parseApiResponse(response);
+
+      if (res.status === true) {
         toast.success(`Status updated to ${newStatus} ✅`);
 
         // ✅ instant UI update
@@ -335,8 +345,8 @@ function Employes() {
       {/* TABLE */}
       <div className="card shadow-sm p-3 border">
         {/* 🔍 FILTER ROW */}
-        <div className="row g-2 align-items-center mb-3">
-          {/* Category */}
+        {/* <div className="row g-2 align-items-center mb-3">
+          
           <div className="col-12 col-md-2">
             <select
               className="form-select form-control"
@@ -350,7 +360,7 @@ function Employes() {
               <option value="HR">HR</option>
             </select>
           </div>
-          {/* From Date */}
+         
           <div className="col-6 col-md-2">
             <input
               type="date"
@@ -360,7 +370,7 @@ function Employes() {
             />
           </div>
 
-          {/* To Date */}
+        
           <div className="col-6 col-md-2">
             <input
               type="date"
@@ -370,7 +380,7 @@ function Employes() {
             />
           </div>
 
-          {/* Submit + Reset */}
+        
           <div className="col-12 col-md-3 d-flex justify-content-md-start justify-content-between">
             <button className="btn px-4 me-2 btn-success">Submit</button>
             <button
@@ -387,7 +397,7 @@ function Employes() {
             </button>
           </div>
 
-          {/* Search */}
+         
           <div className="col-12 col-md-3">
             <input
               type="text"
@@ -397,7 +407,7 @@ function Employes() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-        </div>
+        </div> */}
 
         {/* TABLE */}
         <div className="table-responsive">

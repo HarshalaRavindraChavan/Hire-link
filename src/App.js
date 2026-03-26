@@ -66,7 +66,9 @@ import Staff from "./Component/Staff";
 const UserLayout = () => (
   <div className="home-page-wrapper">
     <Header2 />
-    <Outlet />
+    <main className="main-content">
+      <Outlet />
+    </main>
     <Footer2 />
   </div>
 );

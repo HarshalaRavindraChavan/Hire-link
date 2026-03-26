@@ -10,6 +10,8 @@ import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../config/constants";
 import TableSkeleton from "./commenuse/TableSkeleton";
 import InterviewsPage from "./InterManage";
+import { parseApiResponse } from "../config/parseApiResponse";
+
 
 function Interview() {
   const navigate = useNavigate();
@@ -77,24 +79,26 @@ function Interview() {
   const fetchInterviews = async () => {
     try {
       setLoading(true);
-      let res;
+      let response;
       if (["1", "2", "3", "4"].includes(role)) {
-        res = await axios.get(`${BASE_URL}admin/getdata/tbl_interview`);
+        response = await axios.get(`${BASE_URL}admin/getdata/tbl_interview`);
       }
 
       if (Number(role) === 100) {
-        res = await axios.get(
+        response = await axios.get(
           `${BASE_URL}employer/getdatawhere/tbl_interview/itv_employer_id/${employerId}`,
         );
       }
       if (Number(role) === 200) {
-        res = await axios.get(
+        response = await axios.get(
           `${BASE_URL}employer/getdatawhere/tbl_interview/itv_employer_id/${staffemploId}`,
         );
       }
 
-      if (res.data.status) {
-        setInterviews(res.data.data);
+      const res = parseApiResponse(response);
+
+      if (res.status) {
+        setInterviews(res.data);
       } else {
         toast.error("Failed to load interviews");
       }
@@ -122,10 +126,13 @@ function Interview() {
     }
 
     try {
-      const res = await axios.get(
+      const response = await axios.get(
         `${BASE_URL}admin/deletedata/tbl_interview/itv_id/${deleteId}`,
       );
-      if (res.data.status) {
+
+      const res = parseApiResponse(response);
+
+      if (res.status) {
         toast.success("Interview deleted successfully");
         setShowDeleteModal(false);
         fetchInterviews();
@@ -183,13 +190,15 @@ function Interview() {
         itv_status: data.status,
       };
 
-      const res = await axios.post(
+      const response = await axios.post(
         `${BASE_URL}admin/updatedata/tbl_interview/itv_id/${editInterviewId}`,
         payload,
         { headers: { "Content-Type": "application/json" } },
       );
 
-      if (res.data.status) {
+      const res = parseApiResponse(response);
+
+      if (res.status=== true) {
         toast.success("Interview updated successfully ✅");
         fetchInterviews();
         window.bootstrap.Modal.getInstance(

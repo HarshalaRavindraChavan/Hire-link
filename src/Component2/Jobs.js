@@ -184,7 +184,8 @@ function Jobs() {
       return;
     }
 
-    navigate(`/apply/${selectedJob.job_id}`);
+    const slug = makeSlug(selectedJob.job_title);
+    navigate(`/apply/${selectedJob.job_id}-${slug}`);
   };
 
   return (

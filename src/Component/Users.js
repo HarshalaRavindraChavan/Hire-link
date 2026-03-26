@@ -12,6 +12,7 @@ import { BASE_URL } from "../config/constants";
 import TableSkeleton from "./commenuse/TableSkeleton";
 import SearchableDropdown from "./SearchableDropdown";
 import { useNavigate } from "react-router-dom";
+import { parseApiResponse } from "../config/parseApiResponse";
 
 function Users() {
   const navigate = useNavigate();
@@ -48,10 +49,14 @@ function Users() {
 
   const fetchStates = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}candidate/getdata/tbl_state`);
+      const response = await axios.get(
+        `${BASE_URL}candidate/getdata/tbl_state`,
+      );
 
-      if (res.data?.status) {
-        setStates(res.data.data || []);
+      const res = parseApiResponse(response);
+
+      if (res.status) {
+        setStates(res.data || []);
       }
     } catch (err) {
       toast.error("State fetch error", err);
@@ -60,12 +65,14 @@ function Users() {
 
   const fetchCities = async (stateId, selectedCity = null) => {
     try {
-      const res = await axios.get(
+      const response = await axios.get(
         `${BASE_URL}candidate/getdatawhere/tbl_city/city_state_id/${stateId}`,
       );
 
-      if (res.data?.status) {
-        const cityData = res.data.data || [];
+      const res = parseApiResponse(response);
+
+      if (res.status) {
+        const cityData = res.data || [];
         setCities(cityData);
 
         // ✅ IMPORTANT: wait till cities set, then set city
@@ -93,9 +100,12 @@ function Users() {
     try {
       setLoading(true);
 
-      const res = await axios.get(`${BASE_URL}admin/getdata/tbl_user`);
-      if (res.data.status === true) {
-        setUsers(res.data.data);
+      const response = await axios.get(`${BASE_URL}admin/getdata/tbl_user`);
+
+      const res = parseApiResponse(response);
+
+      if (res.status === true) {
+        setUsers(res.data);
       }
     } catch (err) {
       toast.error(err);
@@ -126,11 +136,13 @@ function Users() {
 
   const confirmDelete = async () => {
     try {
-      const res = await axios.get(
+      const response = await axios.get(
         `${BASE_URL}admin/deletedata/tbl_user/user_id/${deleteId}`,
       );
 
-      if (res.data.status === true) {
+      const res = parseApiResponse(response);
+
+      if (res.status === true) {
         setShowDeleteModal(false);
         setDeleteId(null);
         fetchUsers();
@@ -150,9 +162,7 @@ function Users() {
   /* ================= VALIDATION ================= */
   const addschema = yup.object({
     fullname: yup.string().required("Full name is required"),
-
     email: yup.string().email("Invalid email").required("Email is required"),
-
     mobile: yup
       .string()
       .matches(/^\d{10}$/, "Mobile number must be 10 digits")
@@ -233,9 +243,14 @@ function Users() {
     };
 
     try {
-      const res = await axios.post(`${BASE_URL}admin/insert/tbl_user`, payload);
+      const response = await axios.post(
+        `${BASE_URL}admin/insert/tbl_user`,
+        payload,
+      );
 
-      if (res.data.status) {
+      const res = parseApiResponse(response);
+
+      if (res.status === true) {
         toast.success("User added successfully");
 
         resetAdd(); // form reset
@@ -319,7 +334,7 @@ function Users() {
     try {
       const res = await axios.post(`${BASE_URL}admin/fileupload`, formData);
 
-      if (res.data.status) {
+      if (res.status === true) {
         const filename = res.data.files[field];
 
         // ✔ icon UI state
@@ -338,7 +353,7 @@ function Users() {
         resetRHF();
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "File upload error ❌");
+      toast.error(error.data.message || "File upload error ❌");
       resetRHF();
     }
   };
@@ -459,7 +474,9 @@ function Users() {
         payload,
       );
 
-      if (response?.data?.status === true) {
+      const res = parseApiResponse(response);
+
+      if (res.status === true) {
         toast.success("User updated successfully ✅");
         fetchUsers();
 
@@ -555,14 +572,16 @@ function Users() {
       // ✅ optional: loader show
       setLoading(true);
 
-      const res = await axios.post(
+      const response = await axios.post(
         `${BASE_URL}admin/updatedata/tbl_user/user_id/${userId}`,
         {
           user_status: newStatus,
         },
       );
 
-      if (res.data?.status === true) {
+      const res = parseApiResponse(response);
+
+      if (res.status === true) {
         toast.success(`Status updated to ${newStatus} ✅`);
 
         // ✅ UI instant update without refetch
@@ -605,7 +624,7 @@ function Users() {
 
       {/* TABLE */}
       <div className="card shadow-sm p-3 border">
-        <div className="row g-2 align-items-center mb-3">
+        {/* <div className="row g-2 align-items-center mb-3">
           <div className="col-md-2">
             <select
               className="form-select form-control"
@@ -657,7 +676,7 @@ function Users() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-        </div>
+        </div> */}
 
         <div className="table-responsive">
           <table className="table table-bordered align-middle">

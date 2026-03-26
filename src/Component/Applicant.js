@@ -79,7 +79,7 @@ function Applicant() {
         setUsers(res.data.data);
       }
     } catch (error) {
-     toast.error("Jobs fetch error:", error);
+      toast.error("Jobs fetch error:", error);
     } finally {
       setLoading(false);
     }
@@ -235,9 +235,8 @@ function Applicant() {
       </div>
 
       <div className="card shadow-sm p-3 border">
-        {/* FILTER ROW */}
-        <div className="row g-2 align-items-center mb-3">
-          {/* Job Type */}
+        {/* <div className="row g-2 align-items-center mb-3">
+         
           <div className="col-12 col-md-2">
             <select
               className="form-select form-control"
@@ -246,7 +245,7 @@ function Applicant() {
             ></select>
           </div>
 
-          {/* From Date */}
+         
           <div className="col-6 col-md-2">
             <input
               type="date"
@@ -256,7 +255,7 @@ function Applicant() {
             />
           </div>
 
-          {/* To Date */}
+         
           <div className="col-6 col-md-2">
             <input
               type="date"
@@ -266,7 +265,7 @@ function Applicant() {
             />
           </div>
 
-          {/* Submit + Reset */}
+         
           <div className="col-12 col-md-3 d-flex justify-content-md-start justify-content-between">
             <button className="btn px-4 me-2 btn-success">Submit</button>
 
@@ -284,7 +283,7 @@ function Applicant() {
             </button>
           </div>
 
-          {/* Search */}
+          
           <div className="col-12 col-md-3">
             <input
               type="text"
@@ -294,7 +293,7 @@ function Applicant() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-        </div>
+        </div> */}
 
         {/* TABLE */}
         <div className="table-responsive">

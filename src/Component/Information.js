@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import SEO from "../SEO";
 import { seoConfig } from "../config/seoConfig";
 import { BASE_URL } from "../config/constants";
+import { parseApiResponse } from "../config/parseApiResponse";
 
 function Information() {
   const [info, setInfo] = useState({
@@ -18,12 +19,14 @@ function Information() {
   // GET DATA
   const getInformation = async () => {
     try {
-      const res = await axios.get(
+      const response = await axios.get(
         `${BASE_URL}admin/getdatawhere/tbl_setting/sett_id/5`,
       );
 
-      if (res.data && res.data.data.length > 0) {
-        const data = res.data.data[0];
+      const res = parseApiResponse(response);
+
+      if (res.data === true && res.data.length > 0) {
+        const data = res.data[0];
 
         setInfo({
           info_email: data.info_email || "",
@@ -61,12 +64,14 @@ function Information() {
         info_can_signup: info.info_can_signup,
       };
 
-      const res = await axios.post(
+      const response = await axios.post(
         `${BASE_URL}admin/updatedata/tbl_setting/sett_id/5`,
         payload,
       );
 
-      if (res.data.status) {
+      const res = parseApiResponse(response);
+
+      if (res.status === true) {
         toast.success("Information Updated Successfully");
       } else {
         toast.error("Update Failed");

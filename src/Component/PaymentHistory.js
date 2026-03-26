@@ -50,7 +50,6 @@ function PaymentHistory() {
         i + 1,
         p.pay_email,
         p.pay_role,
-        p.pay_for,
         p.razorpay_payment_id,
         base,
         gst,
@@ -67,7 +66,6 @@ function PaymentHistory() {
           "#",
           "Email",
           "role",
-          "For",
           "Payment ID",
           "Base",
           "GST",
@@ -116,9 +114,6 @@ function PaymentHistory() {
                     <br></br>
                     <b>Role:</b>
                     {pay.pay_role}
-                    <br></br>
-                    <b>Pay For:</b>
-                    {pay.pay_for}
                   </td>
                   <td>{pay.razorpay_payment_id}</td>
                   <td>₹{pay.pay_amount}</td>

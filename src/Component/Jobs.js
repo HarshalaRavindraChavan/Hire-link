@@ -580,6 +580,7 @@ function Jobs() {
     try {
       const payload = {
         job_title: data.job_title,
+        job_company: auth?.emp_companyname || staff?.emp_companyname,
         job_mc: selectedCategory || null,
         job_sc: selectedSubCategory || null,
         job_sc1: selectedSubCat1 || null,

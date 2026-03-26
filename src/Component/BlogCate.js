@@ -7,19 +7,20 @@ import { useForm } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
 import { BASE_URL } from "../config/constants";
 import { useNavigate } from "react-router-dom";
+import { parseApiResponse } from "../config/parseApiResponse";
 
 function BlogCate() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [blogcate, setBlogcate] = useState([]);
   const [editId, setEditId] = useState(null);
 
-   const auth = JSON.parse(localStorage.getItem("auth"));
-  
-    useEffect(() => {
-      if (!auth) {
-        navigate("/signin");
-      }
-    }, [auth, navigate]);
+  const auth = JSON.parse(localStorage.getItem("auth"));
+
+  useEffect(() => {
+    if (!auth) {
+      navigate("/signin");
+    }
+  }, [auth, navigate]);
 
   // ================= FETCH =================
   const fetchBlogs = async () => {
@@ -73,7 +74,7 @@ function BlogCate() {
       document.querySelector(".btn-close")?.click();
       fetchBlogs();
     } catch (error) {
-     toast.error(error);
+      toast.error(error);
       toast.error("Something went wrong ❌");
     }
   };
@@ -103,9 +104,11 @@ function BlogCate() {
 
   const confirmDelete = async () => {
     try {
-      const res = await axios.get(
+      const response = await axios.get(
         `${BASE_URL}admin/deletedata/tbl_blog_cate/bc_id/${deleteId}`,
       );
+
+      const res = parseApiResponse(response);
 
       if (res.data.status === true) {
         setShowDeleteModal(false);

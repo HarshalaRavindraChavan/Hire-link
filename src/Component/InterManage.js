@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../config/constants";
 import { toast, ToastContainer } from "react-toastify";
+import { parseApiResponse } from "../config/parseApiResponse";
+
 
 const InterviewsPage = ({ openEditInterviewModal }) => {
   const navigate = useNavigate();
@@ -54,12 +56,14 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
         return;
       }
 
-      const res = await axios.get(
+      const response = await axios.get(
         `${BASE_URL}employer/getdatawhere/tbl_interview/itv_employer_id/${employerId}`,
       );
 
-      if (res?.data?.status) {
-        setInterviews(res.data.data || []);
+      const res = parseApiResponse(response);
+
+      if (res.status) {
+        setInterviews(res.data || []);
       } else {
         setInterviews([]);
       }
@@ -72,11 +76,13 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
   };
 
   const getCandidateById = async (can_id) => {
-    const res = await axios.get(
+    const response = await axios.get(
       `${BASE_URL}candidate/getdatawhere/tbl_candidate/can_id/${can_id}`,
     );
 
-    if (res?.data?.status && res?.data?.data?.length > 0) {
+    const res = parseApiResponse(response);
+
+    if (res.status=== true && res.data.length > 0) {
       return res.data.data[0]; // full candidate object
     }
 
@@ -89,13 +95,15 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
 
     try {
       // 1) Interview status update
-      const res = await axios.post(
+      const response = await axios.post(
         `${BASE_URL}employer/updatedata/tbl_interview/itv_id/${itv_id}`,
         { itv_status: newStatus },
       );
 
-      if (!res?.data?.status) {
-        alert(res?.data?.message || "Failed to update status");
+      const res = parseApiResponse(response);
+
+      if (!res.status=== true) {
+        alert(res.message || "Failed to update status");
         return;
       }
 
@@ -118,14 +126,16 @@ const InterviewsPage = ({ openEditInterviewModal }) => {
 
         const newScore = oldScore - deduction;
 
-        const scoreRes = await axios.post(
+        const response = await axios.post(
           `${BASE_URL}candidate/updatedata/tbl_candidate/can_id/${can_id}`,
           {
             can_score: newScore,
           },
         );
 
-        if (!scoreRes?.data?.status) {
+        const scoreRes = parseApiResponse(response);
+
+        if (!scoreRes.status) {
           alert("Score update failed!");
           return;
         }

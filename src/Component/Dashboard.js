@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../config/constants";
 import { toast, ToastContainer } from "react-toastify";
+import { parseApiResponse } from "../config/parseApiResponse";
+
 
 function Dashboard() {
   const navigate = useNavigate();

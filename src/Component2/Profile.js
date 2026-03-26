@@ -718,9 +718,11 @@ function Profile() {
               <p className="mb-1 text-muted">
                 {candidate.can_email?.toLowerCase()} | {candidate.can_mobile}
               </p>
-              <p className="mb-0 text-muted">
-                {candidate.city_name}, {candidate.state_name}
-              </p>
+              {candidate.can_city && candidate.can_state && (
+                <p className="mb-0 text-muted">
+                  {candidate.city_name}, {candidate.state_name}
+                </p>
+              )}
             </div>
 
             <div className="d-flex flex-column align-items-center align-items-md-end gap-2 mt-3">
@@ -802,7 +804,7 @@ function Profile() {
                   className="mt-0 mb-0 fw-semibold"
                   style={{ color: scoreTextColor }}
                 >
-                  Score
+                  Credit Grade
                 </p>
               </div>
             </div>
@@ -990,8 +992,7 @@ function Profile() {
                       {candidate.can_email?.toLowerCase()}|{" "}
                       {candidate.can_mobile}
                     </p>
-                    <p className="mb-0 text-muted">
-                    </p>
+                    <p className="mb-0 text-muted"></p>
                   </div>
                 </div>
 
@@ -1054,77 +1055,125 @@ function Profile() {
                       Aadhar Card Number
                     </label>
 
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Enter 12-digit Aadhar number"
-                      value={candidate.can_aadhar || ""}
-                      maxLength={12}
-                      disabled={
-                        isAadharLocked ||
-                        (candidate.can_aadhar || "").length === 12
-                      }
-                      onChange={(e) => {
-                        const value = e.target.value.replace(/\D/g, ""); // only numbers
-                        setCandidate((prev) => ({
-                          ...prev,
-                          can_aadhar: value,
-                        }));
-                      }}
-                    />
+                    <div style={{ position: "relative" }}>
+                      <input
+                        type="text"
+                        className="form-control pe-5"
+                        placeholder="Enter 12-digit Aadhar number"
+                        value={candidate.can_aadhar || ""}
+                        maxLength={12}
+                        disabled={
+                          isAadharLocked ||
+                          (candidate.can_aadhar || "").length === 12
+                        }
+                        onChange={(e) => {
+                          const value = e.target.value.replace(/\D/g, "");
+                          setCandidate((prev) => ({
+                            ...prev,
+                            can_aadhar: value,
+                          }));
+                        }}
+                      />
 
+                      {/* ✅ RESET ONLY BEFORE FINAL SAVE */}
+                      {!isAadharLocked &&
+                        candidate.can_aadhar?.length === 12 && (
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "10px",
+                              top: "50%",
+                              transform: "translateY(-50%)",
+                              cursor: "pointer",
+                              color: "#dc3545",
+                            }}
+                            onClick={() => {
+                              setCandidate((prev) => ({
+                                ...prev,
+                                can_aadhar: "",
+                              }));
+                            }}
+                          >
+                            <i className="fa fa-refresh"></i>
+                          </span>
+                        )}
+                    </div>
+
+                    {/* 🔒 FINAL LOCK MESSAGE */}
                     {isAadharLocked && (
                       <small className="text-danger">
-                        Aadhar number once saved cannot be changed.
+                        Aadhar once saved cannot be changed.
                       </small>
                     )}
                   </div>
+
                   {/* pan number */}
                   <div className="col-md-6">
                     <label className="form-label fw-semibold">
                       PAN Card Number
                     </label>
 
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Enter PAN number (ABCDE1234F)"
-                      value={candidate.can_pan || ""}
-                      maxLength={10}
-                      style={{ textTransform: "uppercase" }}
-                      disabled={
-                        isPanLocked || (candidate.can_pan || "").length === 10
-                      }
-                      onChange={(e) => {
-                        let value = e.target.value.toUpperCase();
-
-                        // Remove invalid characters
-                        value = value.replace(/[^A-Z0-9]/g, "");
-
-                        // Enforce PAN structure step-by-step
-                        if (value.length <= 5) {
-                          value = value.replace(/[^A-Z]/g, "");
-                        } else if (value.length <= 9) {
-                          value =
-                            value.slice(0, 5).replace(/[^A-Z]/g, "") +
-                            value.slice(5).replace(/[^0-9]/g, "");
-                        } else {
-                          value =
-                            value.slice(0, 5).replace(/[^A-Z]/g, "") +
-                            value.slice(5, 9).replace(/[^0-9]/g, "") +
-                            value.slice(9, 10).replace(/[^A-Z]/g, "");
+                    <div style={{ position: "relative" }}>
+                      <input
+                        type="text"
+                        className="form-control pe-5"
+                        placeholder="ABCDE1234F"
+                        value={candidate.can_pan || ""}
+                        maxLength={10}
+                        style={{ textTransform: "uppercase" }}
+                        disabled={
+                          isPanLocked || (candidate.can_pan || "").length === 10
                         }
+                        onChange={(e) => {
+                          let value = e.target.value.toUpperCase();
+                          value = value.replace(/[^A-Z0-9]/g, "");
 
-                        setCandidate((prev) => ({
-                          ...prev,
-                          can_pan: value,
-                        }));
-                      }}
-                    />
+                          if (value.length <= 5) {
+                            value = value.replace(/[^A-Z]/g, "");
+                          } else if (value.length <= 9) {
+                            value =
+                              value.slice(0, 5).replace(/[^A-Z]/g, "") +
+                              value.slice(5).replace(/[^0-9]/g, "");
+                          } else {
+                            value =
+                              value.slice(0, 5).replace(/[^A-Z]/g, "") +
+                              value.slice(5, 9).replace(/[^0-9]/g, "") +
+                              value.slice(9, 10).replace(/[^A-Z]/g, "");
+                          }
+
+                          setCandidate((prev) => ({
+                            ...prev,
+                            can_pan: value,
+                          }));
+                        }}
+                      />
+
+                      {/* ✅ RESET ONLY BEFORE SAVE */}
+                      {!isPanLocked && candidate.can_pan?.length === 10 && (
+                        <span
+                          style={{
+                            position: "absolute",
+                            right: "10px",
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                            cursor: "pointer",
+                            color: "#dc3545",
+                          }}
+                          onClick={() => {
+                            setCandidate((prev) => ({
+                              ...prev,
+                              can_pan: "",
+                            }));
+                          }}
+                        >
+                          <i className="fa fa-refresh"></i>
+                        </span>
+                      )}
+                    </div>
 
                     {isPanLocked && (
                       <small className="text-danger">
-                        PAN number once saved cannot be changed.
+                        PAN once saved cannot be changed.
                       </small>
                     )}
                   </div>

@@ -13,6 +13,7 @@ import * as Yup from "yup";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import { BASE_URL } from "../config/constants";
+import { parseApiResponse } from "../config/parseApiResponse";
 
 function Login() {
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ function Login() {
           user_password: values.user_password.trim(),
         });
 
-        const data = response.data;
+        const data = parseApiResponse(response);
 
         if (data.status === true) {
           const menuIds = response.data.data.user_menu_id

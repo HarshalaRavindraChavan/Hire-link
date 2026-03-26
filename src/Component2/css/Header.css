@@ -54,3 +54,24 @@
 .dropdown-item:hover {
   background-color: #f5f5f5;
 }
+
+.bell-badge {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  background: red;
+  color: white;
+  font-size: 10px;
+  padding: 1px 4px;
+  border-radius: 50%;
+  font-weight: 400;
+}
+
+@media (max-width: 768px) {
+  .bell-badge {
+    top: 0.5px;
+    right: auto;
+    font-size: 10px;
+    padding: 1px 5px;
+  }
+}

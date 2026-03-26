@@ -1,66 +1,81 @@
-/* OTP Shake Animation */
-@keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-6px); }
-  50% { transform: translateX(6px); }
-  75% { transform: translateX(-6px); }
-  100% { transform: translateX(0); }
-}
-
-.otp-shake {
-  animation: shake 0.4s;
-}
-
-/* Focus accessibility */
-.otp-input:focus {
-  outline: 2px solid #15b400;
-  box-shadow: none;
-}
-
-
-.otp-wrapper {
+/* CARD */
+.otp-card {
+  width: 100%;
   max-width: 420px;
+  padding: 25px;
+  border-radius: 16px;
 }
 
+/* WRAPPER */
+.otp-wrapper {
+  width: 100%;
+  margin-top: 10px;
+}
+
+/* BOX */
 .otp-box {
   display: flex;
   align-items: center;
+  width: 100%;
   background: #fff;
-  border-radius: 25px;
-  height: 50px;
+  border-radius: 30px;
   overflow: hidden;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
 }
 
+/* INPUT */
 .otp-input {
   flex: 1;
+  min-width: 0;
   border: none;
   outline: none;
-  padding: 14px 20px;
-  font-size: 16px;
+  padding: 14px 16px;
+  font-size: 15px;
 }
 
-.otp-input:disabled {
-  background-color: #f5f5f5;
-  cursor: not-allowed;
-}
-
+/* BUTTON */
 .otp-btn {
+  height: 50px;
+  padding: 0 18px;
   border: none;
-  padding: 0 26px;
-  height: 100%;
   background: #32ca03;
   color: #fff;
   font-weight: 600;
-  cursor: pointer;
+  /* border-radius: 30px; */
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
-.otp-btn:hover:not(:disabled) {
-  background: #03945f;
-}
-
+/* VERIFIED STATE */
 .otp-btn:disabled {
   background: #9adbc4;
-  cursor: not-allowed;
+}
+
+/* RESEND */
+.resend-text {
+  margin-top: 10px;
+}
+
+.resend-btn {
+  background: none;
+  border: none;
+  color: #007bff;
+  font-weight: 500;
+}
+
+/* MOBILE FIX */
+@media (max-width: 480px) {
+  .otp-card {
+    padding: 20px;
+  }
+
+  .otp-input {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  .otp-btn {
+    padding: 0 12px;
+    font-size: 13px;
+  }
 }

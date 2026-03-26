@@ -3,10 +3,37 @@ import { useEffect, useRef, useState } from "react";
 import logo from "../Component2/Image/logo.png";
 import "../Component2/css/Header.css";
 import { FaUserCircle } from "react-icons/fa";
+import axios from "axios";
+import { BASE_URL } from "../config/constants";
 
 function Header() {
   const [isLogin, setIsLogin] = useState(false);
   const navigate = useNavigate();
+
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  const loadUnreadCount = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("candidate"));
+      if (!user) return;
+
+      const res = await axios.get(
+        `${BASE_URL}candidate/notifications/${user.can_id}`,
+      );
+
+      if (res.data.status) {
+        const unread = res.data.data.filter((n) => n.noti_is_read == 0).length;
+
+        setUnreadCount(unread);
+      }
+    } catch (err) {
+      console.log("Unread count error");
+    }
+  };
+
+  useEffect(() => {
+    loadUnreadCount();
+  }, []);
 
   useEffect(() => {
     const user = localStorage.getItem("candidate");
@@ -59,14 +86,21 @@ function Header() {
         <div className="d-none d-md-flex gap-3 align-items-center">
           {isLogin ? (
             <>
-              <NavLink to="/notification" className="nav-link-custom ms-2 me-2">
+              <NavLink
+                to="/notification"
+                className="nav-link-custom me-3 fs-5 mt-1 position-relative"
+              >
                 <i className="fa fa-bell"></i>
+
+                {unreadCount > 0 && (
+                  <span className="bell-badge">{unreadCount}</span>
+                )}
               </NavLink>
 
               {/* ✅ DROPDOWN */}
-              <div className="dropdown-container" ref={dropdownRef}>
+              <div className="dropdown-container me-2" ref={dropdownRef}>
                 <FaUserCircle
-                  className="dropdown-icon"
+                  className="dropdown-icon fs-2"
                   onClick={(e) => {
                     e.stopPropagation();
                     setOpen((prev) => !prev);
@@ -114,15 +148,28 @@ function Header() {
           )}
         </div>
 
-        {/* MOBILE TOGGLER */}
-        <button
-          className="navbar-toggler d-md-none btn btn-outline-dark"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#mobileMenu"
-        >
-          <i className="fa fa-bars"></i>
-        </button>
+        {/* MOBILE RIGHT SIDE */}
+        <div className="d-flex align-items-center gap-3 d-md-none">
+          {/* 🔔 Notification Icon */}
+          {isLogin && (
+            <NavLink to="/notification" className="mobile-bell text-dark">
+              <i className="fa fa-bell fs-5"></i>
+              {unreadCount > 0 && (
+                <span className="bell-badge">{unreadCount}</span>
+              )}
+            </NavLink>
+          )}
+
+          {/* ☰ Menu */}
+          <button
+            className="navbar-toggler btn btn-outline-dark"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#mobileMenu"
+          >
+            <i className="fa fa-bars"></i>
+          </button>
+        </div>
       </header>
 
       {/* MOBILE MENU */}
@@ -145,6 +192,10 @@ function Header() {
             >
               Payment Receipt
             </div>
+
+            {/* <NavLink to="/notification" className="mobile-link">
+              Notification
+            </NavLink> */}
 
             <button className="btn btn-danger w-100 mt-2" onClick={logout}>
               Logout

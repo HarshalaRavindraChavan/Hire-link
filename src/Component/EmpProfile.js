@@ -11,6 +11,7 @@ import SearchableDropdown from "./SearchableDropdown";
 import "../Component/css/Emp-profile.css";
 import Cropper from "react-easy-crop";
 import { getCroppedImg } from "../Component/commenuse/CropImage";
+import { parseApiResponse } from "../config/parseApiResponse";
 
 const EmpProfile = () => {
   const navigate = useNavigate();
@@ -40,10 +41,13 @@ const EmpProfile = () => {
 
   const fetchStates = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}candidate/getdata/tbl_state`);
+      const response = await axios.get(
+        `${BASE_URL}candidate/getdata/tbl_state`,
+      );
+      const res = parseApiResponse(response);
 
-      if (res.data?.status) {
-        setStates(res.data.data || []);
+      if (res.status) {
+        setStates(res.data || []);
       }
     } catch (err) {
       toast.error("State fetch error", err);
@@ -52,12 +56,14 @@ const EmpProfile = () => {
 
   const fetchCities = async (stateId) => {
     try {
-      const res = await axios.get(
+      const response = await axios.get(
         `${BASE_URL}candidate/getdatawhere/tbl_city/city_state_id/${stateId}`,
       );
 
-      if (res.data?.status) {
-        setCities(res.data.data || []);
+      const res = parseApiResponse(response);
+
+      if (res.status) {
+        setCities(res.data || []);
       }
     } catch (err) {
       toast.error("City fetch error", err);
@@ -103,6 +109,7 @@ const EmpProfile = () => {
       youtube: employer?.emp_youtube || "",
 
       emp_com_logo: employer?.emp_com_logo || "",
+      profile_completed: employer?.profile_completed || "",
     },
 
     enableReinitialize: true,
@@ -144,18 +151,21 @@ const EmpProfile = () => {
           emp_instagram: values.instagram,
           emp_youtube: values.youtube,
           emp_com_logo: values.emp_com_logo,
+          profile_completed: 1,
         };
 
         if (values.password) {
           payload.emp_password = values.password;
         }
 
-        const res = await axios.post(
+        const response = await axios.post(
           `${BASE_URL}employer/updatedata/tbl_employer/emp_id/${employer?.emp_id}`,
           payload,
         );
 
-        if (res.data.status) {
+        const res = parseApiResponse(response);
+
+        if (res.status === true) {
           toast.success("Profile updated successfully");
 
           const updatedEmployer = {
@@ -173,24 +183,20 @@ const EmpProfile = () => {
             emp_instagram: values.instagram,
             emp_youtube: values.youtube,
             emp_com_logo: values.emp_com_logo,
-
             // ✅ IMPORTANT FLAG
-            profile_completed: true,
+            profile_completed: 1,
           };
 
-          localStorage.setItem("employer", JSON.stringify(updatedEmployer));
-
-          // auth update (as you already do)
           const oldAuth = JSON.parse(localStorage.getItem("auth"));
-          if (oldAuth) {
-            localStorage.setItem(
-              "auth",
-              JSON.stringify({
-                ...oldAuth,
-                profile_completed: true,
-              }),
-            );
-          }
+
+          const updatedAuth = {
+            ...oldAuth,
+            ...updatedEmployer,
+          };
+
+          localStorage.setItem("employer", JSON.stringify(updatedAuth));
+          localStorage.setItem("auth", JSON.stringify(updatedAuth));
+          
         } else {
           toast.error("Update failed");
         }
@@ -434,6 +440,7 @@ const EmpProfile = () => {
                         className={fieldClass("email")}
                         placeholder="Enter email"
                         {...formik.getFieldProps("email")}
+                        readOnly
                       />
                       <div className="invalid-feedback">
                         {formik.errors.email}
@@ -447,6 +454,7 @@ const EmpProfile = () => {
                         className={fieldClass("mobile")}
                         placeholder="Enter mobile"
                         {...formik.getFieldProps("mobile")}
+                        readOnly
                       />
                       <div className="invalid-feedback">
                         {formik.errors.mobile}
@@ -492,20 +500,7 @@ const EmpProfile = () => {
 
                     <div className="col-md-4">
                       <label className="fw-semibold">State</label>
-                      {/* <select
-                        className={fieldClass("state")}
-                        value={formik.values.state}
-                        onChange={handleStateChange}
-                      >
-                        <option value="">Select State</option>
-                       
-                        {states.map((state) => (
-                          <option key={state.state_id} value={state.state_id}>
-                            {state.state_name}
-                          </option>
-                        ))}
-                    
-                      </select> */}
+
                       <SearchableDropdown
                         value={formik.values.state}
                         options={states}
@@ -518,7 +513,6 @@ const EmpProfile = () => {
                           formik.setFieldValue("city", "");
                           handleStateChange({ target: { value } });
                         }}
-                        // error={formik.errors.state}
                       />
 
                       <div className="invalid-feedback d-block">
@@ -529,24 +523,7 @@ const EmpProfile = () => {
                     {/* citys */}
                     <div className="col-md-4">
                       <label className="fw-semibold">City</label>
-                      {/* <select
-                        className={fieldClass("city")}
-                        value={formik.values.city}
-                        onChange={handleCityChange}
-                        disabled={!formik.values.state}
-                      >
-                        <option value="">
-                          {!formik.values.state
-                            ? "Select state first"
-                            : "Select City"}
-                        </option>
 
-                        {cities.map((city) => (
-                          <option key={city.city_id} value={city.city_id}>
-                            {city.city_name}
-                          </option>
-                        ))}
-                      </select> */}
                       <SearchableDropdown
                         value={formik.values.city}
                         options={cities}
@@ -561,7 +538,6 @@ const EmpProfile = () => {
                         onChange={(value) => {
                           formik.setFieldValue("city", value);
                         }}
-                        // error={formik.errors.city}
                       />
 
                       <div className="invalid-feedback d-block">

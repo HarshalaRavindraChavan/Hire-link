@@ -5,7 +5,8 @@ import { BASE_URL } from "../config/constants";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
-import "./css/Verify.css"
+import "./css/Verify.css";
+import { parseApiResponse } from "../config/parseApiResponse";
 
 const RESEND_TIME = 30;
 
@@ -101,15 +102,17 @@ function Verify() {
           ? { can_mobile: mobile, otp: mobileOtp }
           : { emp_mobile: mobile, otp: mobileOtp };
 
-      const res = await axios.post(url, payload);
+      const response = await axios.post(url, payload);
 
-      if (res.data?.status) {
+      const res = parseApiResponse(response);
+
+      if (res.status === true) {
         toast.success("Mobile verified ✅");
         setMobileVerified(true);
         localStorage.removeItem("mobileOtpTime");
         setMobileTimer(0);
       } else {
-        toast.error(res.data?.message || "Mobile OTP failed");
+        toast.error(res.message || "Mobile OTP failed");
       }
     } catch {
       toast.error("Mobile OTP failed");
@@ -139,15 +142,17 @@ function Verify() {
           ? { can_email: email, otp: emailOtp }
           : { emp_email: email, otp: emailOtp };
 
-      const res = await axios.post(url, payload);
+      const response = await axios.post(url, payload);
 
-      if (res.data?.status) {
+      const res = parseApiResponse(response);
+
+      if (res.status === true) {
         toast.success("Email verified ✅");
         setEmailVerified(true);
         localStorage.removeItem("emailOtpTime");
         setEmailTimer(0);
       } else {
-        toast.error(res.data?.message || "Email OTP failed");
+        toast.error(res.message || "Email OTP failed");
       }
     } catch {
       toast.error("Email OTP failed");
@@ -168,8 +173,11 @@ function Verify() {
     const payload =
       role === "candidate" ? { can_mobile: mobile } : { emp_mobile: mobile };
 
-    const res = await axios.post(url, payload);
-    if (res.data?.status) {
+    const response = await axios.post(url, payload);
+
+    const res = parseApiResponse(response);
+
+    if (res.status === true) {
       toast.success("OTP resent to mobile");
       localStorage.setItem("mobileOtpTime", Date.now());
       setMobileTimer(RESEND_TIME);
@@ -185,8 +193,11 @@ function Verify() {
     const payload =
       role === "candidate" ? { can_email: email } : { emp_email: email };
 
-    const res = await axios.post(url, payload);
-    if (res.data?.status) {
+    const response = await axios.post(url, payload);
+
+    const res = parseApiResponse(response);
+
+    if (res.status === true) {
       toast.success("OTP resent to email");
       localStorage.setItem("emailOtpTime", Date.now());
       setEmailTimer(RESEND_TIME);
@@ -219,7 +230,7 @@ function Verify() {
       <ToastContainer position="top-right" autoClose={3000} theme="colored" />
 
       <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
-        <div className="card shadow p-4" style={{ width: "420px" }}>
+        <div className="card otp-card shadow">
           <h5 className="text-center fw-bold mb-4">Account Verification</h5>
 
           {/* MOBILE */}
@@ -227,7 +238,7 @@ function Verify() {
             Mobile OTP sent to <b>{maskMobile(mobile)}</b>
           </p>
 
-          <div className="otp-wrapper mb-5">
+          <div className="otp-wrapper">
             <div className="otp-box">
               <input
                 className="otp-input"
@@ -239,7 +250,6 @@ function Verify() {
                   setMobileOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
                 }
               />
-
               <button
                 className="otp-btn"
                 disabled={mobileVerified || loading}
@@ -251,16 +261,13 @@ function Verify() {
           </div>
 
           {!mobileVerified && (
-            <div className="text-center " style={{ margin: "-25px 0 0 0" }}>
+            <div className="text-center resend-text">
               {mobileTimer > 0 ? (
                 <small className="text-muted">
                   Resend OTP in {mobileTimer}s
                 </small>
               ) : (
-                <button
-                  className="btn btn-link text-decoration-none"
-                  onClick={resendMobileOtp}
-                >
+                <button className="resend-btn" onClick={resendMobileOtp}>
                   Send new code
                 </button>
               )}
@@ -268,11 +275,11 @@ function Verify() {
           )}
 
           {/* EMAIL */}
-          <p className="small">
+          <p className="small mt-4">
             Email OTP sent to <b>{maskEmail(email)}</b>
           </p>
 
-          <div className="otp-wrapper mb-5">
+          <div className="otp-wrapper">
             <div className="otp-box">
               <input
                 className="otp-input"
@@ -284,7 +291,6 @@ function Verify() {
                   setEmailOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
                 }
               />
-
               <button
                 className="otp-btn"
                 disabled={emailVerified || loading}
@@ -296,32 +302,27 @@ function Verify() {
           </div>
 
           {!emailVerified && (
-            <div className="text-center" style={{ margin: "-25px 0 0 0" }}>
+            <div className="text-center resend-text">
               {emailTimer > 0 ? (
                 <small className="text-muted">
                   Resend OTP in {emailTimer}s
                 </small>
               ) : (
-                <button
-                  className="btn btn-link text-decoration-none"
-                  onClick={resendEmailOtp}
-                >
+                <button className="resend-btn" onClick={resendEmailOtp}>
                   Send new code
                 </button>
               )}
             </div>
           )}
-
           {mobileVerified && emailVerified && (
             <button
-              className="btn btn-success w-100 fw-semibold"
+              className="btn btn-success w-100 fw-semibold mt-5"
               onClick={proceedToPayment}
             >
               Proceed to Payment
             </button>
           )}
-
-          <footer className="text-center mt-3 small text-warning">
+          <footer className="text-center mt-4 small text-warning">
             © {new Date().getFullYear()} Pharma Jobs
           </footer>
         </div>

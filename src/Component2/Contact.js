@@ -8,7 +8,6 @@ import React, { useState, useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { BASE_URL } from "../config/constants";
 
-
 export default function Contact() {
   const [loading, setLoading] = useState(false);
   const [info, setInfo] = useState({
@@ -114,21 +113,21 @@ export default function Contact() {
             <div className="col-md-5">
               <div className="info-glass-card p-4">
                 <h3 className="info-title mb-3">
-                  <i className="fa-solid fa-briefcase me-2"></i> About Hirelink
+                  <i className="fa-solid fa-briefcase me-2"></i> About Pharmajobshirelink
                 </h3>
 
                 <p className="info-text">
-                  Hirelink is a modern job portal designed to connect job
+                  pharmajobshirelink is a modern job portal designed to connect job
                   seekers and employers efficiently — just like Indeed and
                   LinkedIn. Whether you are searching for your next career
-                  opportunity or hiring skilled talent, Hirelink makes the
+                  opportunity or hiring skilled talent, pharmajobshirelink makes the
                   entire process fast, smart, and seamless.
                 </p>
 
                 <div className="info-features mt-4">
                   <h5 className="fw-bold mb-2">
                     <i className="fa-solid fa-users-line me-2 text-primary"></i>
-                    Why Job Seekers Love Hirelink
+                    Why Job Seekers Love Pharmajobshirelink
                   </h5>
                   <ul>
                     <li>🔍 Explore thousands of job openings</li>
@@ -142,7 +141,7 @@ export default function Contact() {
                 <div className="info-features mt-4">
                   <h5 className="fw-bold mb-2">
                     <i className="fa-solid fa-building me-2 text-success"></i>
-                    Why Employers Choose Hirelink
+                    Why Employers Choose Pharmajobshirelink
                   </h5>
                   <ul>
                     <li>🏢 Post jobs in seconds with easy dashboard</li>
@@ -155,15 +154,15 @@ export default function Contact() {
 
                 <div className="contact-details mt-4">
                   <h5 className="fw-bold mb-2">📍 Contact Details</h5>
-                  <p>
+                  <p style={{ marginBottom: "5px" }}>
                     <i className="fa-solid fa-envelope text-success me-2"></i>{" "}
                     {info.info_email || ""}
                   </p>
-                  <p>
+                  <p style={{ marginBottom: "5px" }}>
                     <i className="fa-solid fa-phone text-primary me-2"></i> +91
                     {info.info_mobile || ""}
                   </p>
-                  <p>
+                  <p style={{ marginBottom: "5px" }}>
                     <i className="fa-solid fa-location-dot text-danger me-2"></i>{" "}
                     {info.info_address || ""}-{info.info_pincode || ""}
                   </p>

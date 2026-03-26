@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../config/constants";
 import "../Component2/css/SignupVideoModal.css";
+import { parseApiResponse } from "../config/parseApiResponse";
 
 const SignupVideoModal = ({ show }) => {
   const navigate = useNavigate();
@@ -33,12 +34,15 @@ const SignupVideoModal = ({ show }) => {
 
   const getInformation = async () => {
     try {
-      const res = await axios.get(
+      const response = await axios.get(
         `${BASE_URL}admin/getdatawhere/tbl_setting/sett_id/5`,
       );
 
-      if (res.data && res.data.data.length > 0) {
-        const data = res.data.data[0];
+      const res = parseApiResponse(response);
+      console.log("video", res.info_can_signup, "status", res.status);
+
+      if (res.status === true && res.data.length > 0) {
+        const data = res.data[0];
 
         setInfo({
           info_can_signup: data.info_can_signup || "",

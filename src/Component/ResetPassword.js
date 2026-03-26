@@ -6,6 +6,8 @@ import SEO from "../SEO";
 import { seoConfig } from "../config/seoConfig";
 import { useEffect, useState } from "react";
 import { BASE_URL } from "../config/constants";
+import { parseApiResponse } from "../config/parseApiResponse";
+
 
 function ResetPassword() {
   const [searchParams] = useSearchParams();

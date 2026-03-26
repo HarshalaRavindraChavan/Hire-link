@@ -8,12 +8,13 @@ import { onMessage } from "firebase/messaging";
 import { messaging } from "./FirebaseConfig";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import logo from "../Component2/logo/hirelink.png";
 
 export default function NotificationPage() {
   const [notifications, setNotifications] = useState([]);
   const navigate = useNavigate();
 
-  // 🔹 Load notifications from backend (DB)
+  // 🔹 Load notifications from DB
   const loadNotifications = async (candidateId) => {
     try {
       const res = await axios.get(
@@ -24,15 +25,14 @@ export default function NotificationPage() {
         setNotifications(res.data.data || []);
       }
     } catch (err) {
-      toast.error("Notification load error", err);
+      toast.error("Notification load error");
     }
   };
 
-  // 🔹 Initial load
+  // 🔹 Initial load + LOGIN check
   useEffect(() => {
     const candidate = JSON.parse(localStorage.getItem("candidate"));
 
-    // 🔐 LOGIN CHECK
     if (!candidate) {
       navigate("/signin");
       return;
@@ -41,26 +41,47 @@ export default function NotificationPage() {
     loadNotifications(candidate.can_id);
   }, [navigate]);
 
-  // 🔔 REAL-TIME update (NO REFRESH)
+  // 🔔 REAL-TIME + POPUP
   useEffect(() => {
     const unsubscribe = onMessage(messaging, (payload) => {
+      console.log("Foreground:", payload);
+
       const candidate = JSON.parse(localStorage.getItem("candidate"));
 
       if (
         candidate &&
         payload?.data?.candidate_id === String(candidate.can_id)
       ) {
-        loadNotifications(candidate.can_id);
+        // 🔥 Add notification instantly (no refresh)
+        const newNoti = {
+          noti_id: Date.now(),
+          noti_title: payload.notification.title,
+          noti_message: payload.notification.body,
+          noti_is_read: 0,
+          noti_created_date: new Date().toISOString(),
+        };
+
+        setNotifications((prev) => [newNoti, ...prev]);
+
+        // 🔔 Popup
+        if (Notification.permission === "granted") {
+          new Notification(payload.notification.title, {
+            body: payload.notification.body,
+            icon: logo,
+          });
+        }
       }
     });
 
     return () => unsubscribe();
   }, []);
 
+  // 🔹 Mark as read
   const handleClick = async (item) => {
     const candidate = JSON.parse(localStorage.getItem("candidate"));
     if (!candidate) return;
 
+    // 🔹 Mark as read
     if (item.noti_is_read == 0) {
       await markAsRead(item.noti_id, candidate.can_id);
 
@@ -70,16 +91,30 @@ export default function NotificationPage() {
         ),
       );
     }
+
+    // 🚀 NAVIGATION
+    if (item.noti_type === "apply") {
+      navigate("/profile/applied-jobs");
+      window.location.reload();
+    } else if (item.noti_type === "interview") {
+      navigate("/profile/interviews");
+      window.location.reload();
+    } else if (item.noti_type === "job") {
+      const keyword = encodeURIComponent(item.noti_job_title || "");
+      const place = encodeURIComponent(item.noti_job_place || "");
+
+      navigate(`/jobs?keyword=${keyword}&place=${place}`);
+      window.location.reload();
+    }
   };
 
   const markAsRead = async (notiId, candidateId) => {
     try {
       await axios.get(`${BASE_URL}candidate/notification-read/${notiId}`);
 
-      // 🔄 Reload notifications after update
       loadNotifications(candidateId);
     } catch (err) {
-      toast.error("Mark read error", err);
+      toast.error("Mark read error");
     }
   };
 
@@ -89,6 +124,9 @@ export default function NotificationPage() {
         title={seoConfig.notification.title}
         description={seoConfig.notification.description}
       />
+
+      <ToastContainer />
+
       <div className="notification-page">
         {/* HEADER */}
         <div className="notification-header">
@@ -98,36 +136,42 @@ export default function NotificationPage() {
 
         {/* LIST */}
         <div className="notification-list">
-          {notifications.length === 0 && (
-            <p className="text-muted">No notifications yet</p>
-          )}
-
           {notifications.map((item) => (
             <div
               key={item.noti_id}
-              className={`notification-item ${
-                item.noti_is_read == 0 ? "unread" : ""
-              }`}
+              className={`ncard ${item.noti_is_read == 0 ? "ncard-unread" : ""}`}
               onClick={() => handleClick(item)}
             >
-              {/* ICON */}
-              <div className="icon-box">
-                {item.noti_type === "interview" ? "📅" : "🔔"}
+              {/* LEFT ICON */}
+              <div className="ncard-icon">
+                {item.noti_type === "job" ? (
+                  <img
+                    src={`${BASE_URL}Uploads/${item.noti_employer_logo}`}
+                    alt="company"
+                    className="company-logo"
+                  />
+                ) : item.noti_type === "interview" ? (
+                  "📅"
+                ) : item.noti_type === "apply" ? (
+                  "🔔"
+                ) : (
+                  "🔔"
+                )}
               </div>
 
-              {/* CONTENT */}
-              <div className="notification-content">
-                <p className="title">{item.noti_title}</p>
-                <p className="message">{item.noti_message}</p>
-              </div>
+              {/* RIGHT BODY */}
+              <div className="ncard-body">
+                {/* TOP ROW */}
+                <div className="ncard-top">
+                  <span className="ncard-title">{item.noti_title}</span>
 
-              {/* RIGHT SIDE */}
-              <div className="right">
-                <span className="time">
-                  {new Date(item.noti_created_date).toLocaleString()}
-                </span>
+                  <span className="ncard-time">
+                    {new Date(item.noti_created_date).toLocaleString()}
+                  </span>
+                </div>
 
-                {item.noti_is_read == 0 && <span className="dot" />}
+                {/* MESSAGE */}
+                <div className="ncard-message">{item.noti_message}</div>
               </div>
             </div>
           ))}

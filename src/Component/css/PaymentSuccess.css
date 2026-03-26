@@ -89,7 +89,7 @@
 .hl-success-btn:hover {
   transform: translateY(-2px);
   background: #136b01;
-} 
+}
 
 .hl-success-btn:disabled {
   background: #888;
@@ -101,4 +101,42 @@
   margin-top: 15px;
   font-size: 13px;
   opacity: 0.8;
+}
+
+/* ================= Animation States ================= */
+
+/* 💳 Processing (spin) */
+.hl-success-icon.processing {
+  background: linear-gradient(135deg, #59fd0d, #05f825);
+  box-shadow: 0 8px 20px rgba(221, 230, 97, 0.5);
+  animation: spin 1s linear infinite;
+}
+
+/* ✅ Success */
+.hl-success-icon.success {
+  background: linear-gradient(135deg, #00ff99, #00cc66);
+  box-shadow: 0 8px 20px rgba(0, 255, 153, 0.5);
+  animation: pop 0.4s ease;
+}
+
+/* 🔄 Spin animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 🎉 Pop animation */
+@keyframes pop {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }

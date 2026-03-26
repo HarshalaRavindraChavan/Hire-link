@@ -12,6 +12,7 @@ import { BASE_URL } from "../config/constants";
 import TableSkeleton from "./commenuse/TableSkeleton";
 import SEO from "../SEO";
 import { seoConfig } from "../config/seoConfig";
+import { parseApiResponse } from "../config/parseApiResponse";
 
 function Candidates() {
   const navigate = useNavigate();
@@ -82,10 +83,14 @@ function Candidates() {
   const fetchCandidates = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`${BASE_URL}admin/getdata/tbl_candidate`);
+      const response = await axios.get(
+        `${BASE_URL}admin/getdata/tbl_candidate`,
+      );
 
-      if (res.data.status === true) {
-        setCandidates(res.data.data);
+      const res = parseApiResponse(response);
+
+      if (res.status === true) {
+        setCandidates(res.data);
       }
     } catch (error) {
       toast.error("Error fetching candidates", error);
@@ -130,11 +135,13 @@ function Candidates() {
   // DELETE CONFIRM
   const confirmDelete = async () => {
     try {
-      const res = await axios.get(
+      const response = await axios.get(
         `${BASE_URL}admin/deletedata/tbl_candidate/can_id/${deleteId}`,
       );
 
-      if (res.data.status === true) {
+      const res = parseApiResponse(response);
+
+      if (res.status === true) {
         setShowDeleteModal(false);
         setDeleteId(null);
 
@@ -186,12 +193,14 @@ function Candidates() {
     };
 
     try {
-      const res = await axios.post(
+      const response = await axios.post(
         `${BASE_URL}admin/insert/tbl_candidate`,
         payload,
       );
 
-      if (res.data.status) {
+      const res = parseApiResponse(response);
+
+      if (res.status === true) {
         toast.success("Candidate added successfully");
 
         reset(); // form reset
@@ -219,14 +228,16 @@ function Candidates() {
     setIsUpdatingStatus(true);
 
     try {
-      const res = await axios.post(
+      const response = await axios.post(
         `${BASE_URL}admin/updatedata/tbl_candidate/can_id/${canId}`,
         {
           can_status: newStatus,
         },
       );
 
-      if (res.data?.status === true) {
+      const res = parseApiResponse(response);
+
+      if (res.status === true) {
         toast.success(`Status updated to ${newStatus} ✅`);
 
         // ✅ instant UI update
@@ -239,7 +250,7 @@ function Candidates() {
         toast.error("Status update failed ❌");
       }
     } catch (error) {
-     toast.error(error);
+      toast.error(error);
       toast.error("Server error ❌");
     } finally {
       setIsUpdatingStatus(false); // 🔓 unlock
@@ -286,7 +297,7 @@ function Candidates() {
       const userEmail = employer?.emp_email || staff?.emp_email;
 
       // ✅ Check payment done for this employer + this candidate
-      const checkRes = await axios.post(
+      const response = await axios.post(
         `${BASE_URL}payment/check-resume-payment`,
         {
           email: userEmail,
@@ -294,8 +305,10 @@ function Candidates() {
         },
       );
 
+      const checkRes = parseApiResponse(response);
+
       // ✅ If paid => download resume now
-      if (checkRes.data?.status === true && checkRes.data?.paid === true) {
+      if (checkRes.status === true && checkRes.paid === true) {
         const fileUrl = `${BASE_URL}Uploads/${candidate.can_resume}`;
 
         const link = document.createElement("a");
@@ -411,7 +424,6 @@ function Candidates() {
         `${BASE_URL}candidate/getdata/tbl_main_category`,
       );
       setCategories(res.data.data || []);
-     
     } catch (err) {
       toast.error("Main category error", err);
     }

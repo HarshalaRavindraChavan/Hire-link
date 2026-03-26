@@ -224,6 +224,8 @@ function Staff() {
     if (paid === "true") {
       resetAdd();
 
+      fetchUsers(); // 🔥 VERY IMPORTANT (missing)
+
       const modalEl = document.getElementById("exampleModal");
       const modalInstance = window.bootstrap.Modal.getInstance(modalEl);
       modalInstance?.hide();
@@ -234,9 +236,9 @@ function Staff() {
 
   /* ================= SUBMIT ================= */
   const onSubmit = async (data) => {
-    if (isSubmitting) return; 
+    if (isSubmitting) return;
 
-    setIsSubmitting(true); 
+    setIsSubmitting(true);
     try {
       // ✅ Role check
       if (Number(role) !== 100) {
@@ -330,7 +332,7 @@ function Staff() {
       // ✅ 6) Redirect to payment
       window.location.href = "/payment";
     } catch (err) {
-     toast.error("Staff Submit Error:", err);
+      toast.error("Staff Submit Error:", err);
 
       const msg = err?.response?.data?.message;
 
@@ -680,7 +682,7 @@ function Staff() {
 
       {/* TABLE */}
       <div className="card shadow-sm p-3 border">
-        <div className="row g-2 align-items-center mb-3">
+        {/* <div className="row g-2 align-items-center mb-3">
           <div className="col-md-2">
             <select
               className="form-select form-control"
@@ -733,7 +735,7 @@ function Staff() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-        </div>
+        </div> */}
 
         <div className="table-responsive">
           <table className="table table-bordered align-middle">
@@ -1355,7 +1357,7 @@ function Staff() {
                 <div className="col-md-4">
                   <label className="fw-semibold">Education Type</label>
                   <select
-                    className="form-select"
+                    className="form-select form-control"
                     {...editRegister("education_type")}
                     value={educationType}
                     onChange={(e) => {
@@ -1399,7 +1401,7 @@ function Staff() {
                     />
                   ) : (
                     <select
-                      className="form-select"
+                      className="form-select form-control"
                       {...editRegister("education_detail")}
                       value={educationDetail}
                       onChange={(e) => {
@@ -1451,19 +1453,21 @@ function Staff() {
                   <p className="text-danger">{editErrors.role?.message}</p>
                 </div>
 
-                <select
-                  className="form-select form-control"
-                  multiple
-                  {...editRegister("menus")}
-                >
-                  <option value="1" disabled>
-                    Dashboard
-                  </option>
-                  <option value="2">Jobs</option>
-                  <option value="3">Candidates</option>
-                  <option value="4">Applicants</option>
-                  <option value="5">Interviews</option>
-                </select>
+                <div className="col-md-4">
+                  <select
+                    className="form-select form-control"
+                    multiple
+                    {...editRegister("menus")}
+                  >
+                    <option value="1" disabled>
+                      Dashboard
+                    </option>
+                    <option value="2">Jobs</option>
+                    <option value="3">Candidates</option>
+                    <option value="4">Applicants</option>
+                    <option value="5">Interviews</option>
+                  </select>
+                </div>
               </div>
 
               <div className="modal-footer bg-light rounded-bottom-4 d-flex">

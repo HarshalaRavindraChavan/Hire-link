@@ -18,7 +18,7 @@ function Footer() {
         <NavLink to="/candidate-privacy-policies">Privacy Policies</NavLink>
       </div>
 
-      <p className="copy mt-3">
+      <p className="copy mt-5">
         All rights reserved © {new Date().getFullYear()} Hirelink Infotech Pvt
         Ltd | Developed By{" "}
         <a

@@ -4,22 +4,24 @@ import { toast, ToastContainer } from "react-toastify";
 
 function Sidebar() {
   const auth = JSON.parse(localStorage.getItem("auth"));
+  
 
   const role = auth?.role;
   const assignedMenuIds = auth?.menu_ids || [];
   const assignedMenus = assignedMenuIds.map(Number);
 
   const handleMenuClick = (e, path) => {
-    const auth = JSON.parse(localStorage.getItem("auth"));
+    const latestAuth = JSON.parse(localStorage.getItem("auth"));
+    const employer = JSON.parse(localStorage.getItem("employer"));
 
-    // Employer only (role 100)
-    if (Number(auth?.role) === 100) {
-      // Profile page always allowed
+    if (!latestAuth || !employer) return;
+
+    if (Number(latestAuth.role) === 100) {
+      // Profile page allow
       if (path === "/emp-profile") return;
 
-      //profile not completed
-      if (!auth?.profile_completed) {
-        e.preventDefault(); // 🚫 stop navigation
+      if (Number(employer.profile_completed) !== 1) {
+        e.preventDefault();
         toast.warning("⚠️ First update your profile");
         return;
       }

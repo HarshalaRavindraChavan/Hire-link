@@ -7,6 +7,8 @@ import { seoConfig } from "../config/seoConfig";
 import { BASE_URL } from "../config/constants";
 import { useNavigate } from "react-router-dom";
 import Information from "../Component/Information";
+import { parseApiResponse } from "../config/parseApiResponse";
+
 
 function Setting() {
   const navigate = useNavigate();
@@ -21,9 +23,14 @@ function Setting() {
 
   // ================= COMMON GST CALCULATION =================
   const calculateAmount = (value) => {
-    const base = Number(value) || 0;
+    if (value === "") {
+      return { base: "", gst: "", total: "" };
+    }
+
+    const base = Number(value);
     const gst = +(base * 0.18).toFixed(2);
     const total = +(base + gst).toFixed(2);
+
     return { base, gst, total };
   };
 
@@ -73,7 +80,9 @@ function Setting() {
 
   // ================= COMMON UPDATE FUNCTION =================
   const updateFee = async (role, data, successMsg, errorMsg) => {
-    if (!data.base) {
+    const baseValue = Number(data.base);
+
+    if (isNaN(baseValue)) {
       toast.error("Please enter valid base amount");
       return;
     }
@@ -82,7 +91,7 @@ function Setting() {
       await axios.post(
         `${BASE_URL}admin/updatedata/tbl_setting/sett_pay_role/${role}`,
         {
-          sett_base_amount: data.base,
+          sett_base_amount: baseValue,
           sett_gst_amount: data.gst,
           sett_pay_amount: data.total,
           sett_update_date: new Date()

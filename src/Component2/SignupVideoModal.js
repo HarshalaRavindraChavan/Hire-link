@@ -5,7 +5,7 @@ import { BASE_URL } from "../config/constants";
 import "../Component2/css/SignupVideoModal.css";
 import { parseApiResponse } from "../config/parseApiResponse";
 
-const SignupVideoModal = ({ show }) => {
+const SignupVideoModal = ({ show, forceRole, onClose }) => {
   const navigate = useNavigate();
   const playerRef = useRef(null);
   const progressTimer = useRef(null);
@@ -20,6 +20,12 @@ const SignupVideoModal = ({ show }) => {
   const [info, setInfo] = useState({
     info_can_signup: "",
   });
+
+  useEffect(() => {
+    if (forceRole) {
+      setSelectedRole(forceRole);
+    }
+  }, [forceRole]);
 
   // 🔹 dynamic videos object
   const videos = {
@@ -106,6 +112,15 @@ const SignupVideoModal = ({ show }) => {
   }, [selectedRole, show, info]);
 
   const handleRoleSelect = (role) => {
+    // ✅ Candidate → direct signup (NO video)
+    if (role === "candidate") {
+      localStorage.setItem("signupRole", role);
+      localStorage.setItem("videoCompleted", "true"); // bypass video
+      navigate("/signup");
+      return;
+    }
+
+    // ✅ Employer → same flow (जर video नसेल तर direct)
     if (role === "employer" && !videos.employer) {
       localStorage.setItem("signupRole", role);
       localStorage.setItem("videoCompleted", "true");
@@ -113,6 +128,7 @@ const SignupVideoModal = ({ show }) => {
       return;
     }
 
+    // ❌ video play only if needed
     setSelectedRole(role);
   };
 
@@ -158,6 +174,20 @@ const SignupVideoModal = ({ show }) => {
   return (
     <div className="modal-overlay">
       <div className="modal-box">
+        <button
+          style={{
+            position: "absolute",
+            top: "10px",
+            right: "10px",
+            background: "none",
+            border: "none",
+            fontSize: "18px",
+            cursor: "pointer",
+          }}
+          onClick={onClose}
+        >
+          ✖
+        </button>
         {!selectedRole ? (
           <>
             <h4 style={{ fontWeight: "bold" }}>Select Register Type</h4>

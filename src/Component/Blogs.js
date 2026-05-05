@@ -9,10 +9,10 @@ import Pagination from "./commenuse/Pagination";
 import { BASE_URL } from "../config/constants";
 import SEO from "../SEO";
 import { seoConfig } from "../config/seoConfig";
-import RichTextEditor from "../Component/commenuse/RichTextEditor";
+// import RichTextEditor from "../Component/commenuse/RichTextEditor";
+import JoditEditor from "jodit-react";
 import { useNavigate } from "react-router-dom";
 import { parseApiResponse } from "../config/parseApiResponse";
-
 
 function Blogs() {
   const navigate = useNavigate();
@@ -26,11 +26,11 @@ function Blogs() {
 
   const auth = JSON.parse(localStorage.getItem("auth"));
 
-  useEffect(() => {
-    if (!auth) {
-      navigate("/signin");
-    }
-  }, [auth, navigate]);
+  // useEffect(() => {
+  //   if (!auth) {
+  //     navigate("/signin");
+  //   }
+  // }, [auth, navigate]);
 
   const fetchCategories = async () => {
     try {
@@ -71,7 +71,7 @@ function Blogs() {
         `${BASE_URL}admin/deletedata/tbl_blogs/blog_id/${deleteId}`,
       );
 
-       const res = parseApiResponse(response);
+      const res = parseApiResponse(response);
 
       if (res.status === true) {
         setShowDeleteModal(false);
@@ -570,10 +570,11 @@ function BlogFormUI({
 
       <div className="mb-3">
         <label>Blog Content</label>
-        <RichTextEditor
+
+        <JoditEditor
           value={watch("blog_content")}
-          onChange={(html) =>
-            setValue("blog_content", html, { shouldValidate: true })
+          onBlur={(newContent) =>
+            setValue("blog_content", newContent, { shouldValidate: true })
           }
         />
         <small className="text-danger">{errors.blog_content?.message}</small>

@@ -7,8 +7,7 @@ import { seoConfig } from "../config/seoConfig";
 import { BASE_URL } from "../config/constants";
 import { useNavigate } from "react-router-dom";
 import Information from "../Component/Information";
-import { parseApiResponse } from "../config/parseApiResponse";
-
+// import { parseApiResponse } from "../config/parseApiResponse";
 
 function Setting() {
   const navigate = useNavigate();
@@ -40,6 +39,7 @@ function Setting() {
   const [candidate, setCandidate] = useState({ base: "", gst: "", total: "" });
   const [resume, setResume] = useState({ base: "", gst: "", total: "" });
   const [staff, setStaff] = useState({ base: "", gst: "", total: "" });
+  const [jobnoti, setJobnoti] = useState({ base: "", gst: "", total: "" });
 
   useEffect(() => {
     fetchSettings();
@@ -68,6 +68,9 @@ function Setting() {
             break;
           case "employer_staff":
             setStaff(data);
+            break;
+          case "job_notification":
+            setJobnoti(data);
             break;
           default:
             break;
@@ -300,6 +303,48 @@ function Setting() {
                       staff,
                       "Staff fee updated",
                       "Staff update failed",
+                    )
+                  }
+                >
+                  Update
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="card mb-4">
+            <h4 className="ms-3 mt-3">Job Notification Fee</h4>
+            <div className="card-body row">
+              <div className="col-lg-3">
+                <label>Base Price</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  value={jobnoti.base}
+                  onChange={(e) => setJobnoti(calculateAmount(e.target.value))}
+                />
+              </div>
+              <div className="col-lg-3">
+                <label>18% GST</label>
+                <input className="form-control" value={jobnoti.gst} disabled />
+              </div>
+              <div className="col-lg-3">
+                <label>Total</label>
+                <input
+                  className="form-control"
+                  value={jobnoti.total}
+                  disabled
+                />
+              </div>
+              <div className="col-lg-3 d-flex align-items-end">
+                <button
+                  className="btn btn-success w-100"
+                  onClick={() =>
+                    updateFee(
+                      "job_notification",
+                      jobnoti,
+                      "Job Notification Fee updated",
+                      "Job Notification Fee update failed",
                     )
                   }
                 >

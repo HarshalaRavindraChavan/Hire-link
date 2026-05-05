@@ -14,6 +14,8 @@ import ReCAPTCHA from "react-google-recaptcha";
 import SEO from "../SEO";
 import { seoConfig } from "../config/seoConfig";
 import { parseApiResponse } from "../config/parseApiResponse";
+import SignupVideoModal from "./SignupVideoModal";
+
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -22,6 +24,7 @@ const Signup = () => {
   const [activeRole, setActiveRole] = useState("candidate");
   const [loading, setLoading] = useState(false);
   const [captchaToken, setCaptchaToken] = useState(null);
+  const [showVideo, setShowVideo] = useState(false);
 
   useEffect(() => {
     const lockedRole = localStorage.getItem("signupRole");
@@ -197,6 +200,14 @@ const Signup = () => {
   /* ---------------- JSX ---------------- */
   return (
     <>
+      {showVideo && (
+        <SignupVideoModal
+          show={true}
+          forceRole="candidate"
+          onClose={() => setShowVideo(false)}
+        />
+      )}
+
       <SEO
         title={seoConfig.signup.title}
         description={seoConfig.signup.description}
@@ -363,6 +374,18 @@ const Signup = () => {
                   >
                     Candidate
                   </button>
+                  {activeRole === "candidate" ? (
+                    <button
+                      type="button"
+                      style={{ border: "none" }}
+                      className="me-2"
+                      onClick={() => setShowVideo(true)}
+                    >
+                      <i className="fa fa-circle-info fs-4 text-dark"></i>
+                    </button>
+                  ) : (
+                    ""
+                  )}
 
                   <button
                     type="button"

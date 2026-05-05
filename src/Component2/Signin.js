@@ -258,7 +258,10 @@ function Signin() {
                 JSON.stringify({
                   role: 100,
                   emp_id: data.data.emp_id,
+                  emp_name: data.data.emp_name,
                   emp_email: data.data.emp_email,
+                  emp_mobile: data.data.emp_mobile,
+                  emp_companyname: data.data.emp_companyname,
                   profile_completed: Number(data.data.profile_completed) || 0, // ✅ ADD THIS
                 }),
               );

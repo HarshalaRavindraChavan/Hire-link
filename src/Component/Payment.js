@@ -18,6 +18,7 @@ function PaymentPage() {
 
   /* ================= CREATE ORDER ================= */
   const createOrder = async () => {
+    
     try {
       if (!user?.email || !user?.role) {
         toast.error("Payment session expired.");
@@ -35,6 +36,7 @@ function PaymentPage() {
         role: roleLower,
         for: user.for,
         employer_id: user.employer_id || null,
+        job_id: user.job_id,
       };
 
       if (roleLower === "resume_download") {
@@ -110,6 +112,8 @@ function PaymentPage() {
           navigate("/candidate");
         } else if (roleLower === "employer_staff") {
           navigate("/staff");
+        } else if (roleLower === "job_notification") {
+          navigate("/job");
         } else {
           navigate("/signin");
         }
@@ -182,14 +186,15 @@ function PaymentPage() {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_signature: response.razorpay_signature,
               email: user.email,
-              mobile: user.mobile,
               role: roleLower,
-              for: user.for,
             };
 
             if (roleLower === "resume_download") {
               verifyPayload.candidate_id = user.candidate_id;
             }
+
+            if (user.mobile) verifyPayload.mobile = user.mobile;
+            if (user.job_id) verifyPayload.job_id = user.job_id;
 
             const verifyRes = await axios.post(
               `${BASE_URL}payment/verify`,
@@ -197,6 +202,7 @@ function PaymentPage() {
             );
 
             let verify = verifyRes.data;
+            console.log("VERIFY RESPONSE:", verify);
 
             // ✅ HANDLE STRING RESPONSE
             if (typeof verify === "string") {
@@ -208,6 +214,13 @@ function PaymentPage() {
 
             if (verify?.status === true) {
               toast.success("Payment successful 🎉");
+
+              if (user.role === "job_notification" && user.job_id) {
+                await axios.post(
+                  `${BASE_URL}admin/updatedata/tbl_job/job_id/${user.job_id}`,
+                  { job_send_noti: "yes" },
+                );
+              }
 
               // ✅ GET STAFF DATA
               const pendingStaff = JSON.parse(

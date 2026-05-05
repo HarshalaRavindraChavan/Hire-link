@@ -12,24 +12,32 @@ import { toast } from "react-toastify";
 import { BASE_URL } from "../config/constants";
 import TableSkeleton from "./commenuse/TableSkeleton";
 import { parseApiResponse } from "../config/parseApiResponse";
-
+import SearchableDropdown from "./SearchableDropdown";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 function Employes() {
   const navigate = useNavigate();
-  const auth = JSON.parse(localStorage.getItem("auth") || "{}");
+  const auth = JSON.parse(localStorage.getItem("auth"));
   const isAdmin = Number(auth?.role) === 1;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
 
-  useEffect(() => {
-    if (!auth) {
-      navigate("/signin");
-    }
-  }, [auth, navigate]);
+  // useEffect(() => {
+  //   if (!auth) {
+  //     navigate("/signin");
+  //   }
+  // }, [auth, navigate]);
 
   const [search, setSearch] = useState("");
   const [employer, setEmployer] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
+
+  const [selectedState, setSelectedState] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
 
   useEffect(() => {
     fetchEmployers();
@@ -263,10 +271,9 @@ function Employes() {
   const [toDate, setToDate] = useState("");
 
   const filteredRecords = React.useMemo(() => {
-    return records.filter((emp) => {
+    return employer.filter((emp) => {
       const searchValue = search.trim().toLowerCase();
 
-      /* 🔍 SEARCH FILTER */
       const matchesSearch =
         !searchValue ||
         emp?.emp_name?.toLowerCase().includes(searchValue) ||
@@ -277,25 +284,15 @@ function Employes() {
         emp?.city_name?.toLowerCase().includes(searchValue) ||
         emp?.state_name?.toLowerCase().includes(searchValue);
 
-      /* 🏷 CATEGORY FILTER */
-      const matchesCategory = !category || emp?.emp_category === category;
+      const matchesState =
+        !selectedState || String(emp.emp_state) === String(selectedState);
 
-      /* 📅 DATE FILTER */
-      const regDate = emp?.emp_added_date ? new Date(emp.emp_added_date) : null;
+      const matchesCity =
+        !selectedCity || String(emp.emp_city) === String(selectedCity);
 
-      const from = fromDate ? new Date(fromDate) : null;
-      const to = toDate ? new Date(toDate) : null;
-
-      let matchesDate = true;
-      if (regDate) {
-        if (from && to) matchesDate = regDate >= from && regDate <= to;
-        else if (from) matchesDate = regDate >= from;
-        else if (to) matchesDate = regDate <= to;
-      }
-
-      return matchesSearch && matchesCategory && matchesDate;
+      return matchesSearch && matchesState && matchesCity;
     });
-  }, [records, search, category, fromDate, toDate]);
+  }, [employer, search, selectedState, selectedCity]);
 
   //Status Update Fuction
   const handleEmployerStatusChange = async (empId, newStatus) => {
@@ -331,6 +328,59 @@ function Employes() {
     }
   };
 
+  useEffect(() => {
+    fetchStates();
+  }, []);
+
+  const fetchStates = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}candidate/getdata/tbl_state`);
+      setStates(res.data.data || []);
+    } catch {
+      toast.error("State load failed");
+    }
+  };
+
+  useEffect(() => {
+    if (selectedState) {
+      fetchCities(selectedState);
+    } else {
+      setCities([]);
+      setSelectedCity("");
+    }
+  }, [selectedState]);
+
+  const fetchCities = async (state_id) => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}candidate/getdatawhere/tbl_city/city_state_id/${state_id}`,
+      );
+      setCities(res.data.data || []);
+    } catch {
+      toast.error("City load failed");
+    }
+  };
+
+  const exportToExcel = (data) => {
+    const formatted = data.map((e) => ({
+      ID: e.emp_id,
+      Name: e.emp_name,
+      Email: e.emp_email,
+      Mobile: e.emp_mobile,
+      Company: e.emp_companyname,
+      City: e.city_name,
+      State: e.state_name,
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(formatted);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Employers");
+
+    const buffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+
+    saveAs(new Blob([buffer]), "Employers.xlsx");
+  };
+
   return (
     <>
       <SEO
@@ -345,69 +395,62 @@ function Employes() {
       {/* TABLE */}
       <div className="card shadow-sm p-3 border">
         {/* 🔍 FILTER ROW */}
-        {/* <div className="row g-2 align-items-center mb-3">
-          
-          <div className="col-12 col-md-2">
-            <select
-              className="form-select form-control"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-            >
-              <option value="">Select Category</option>
-              <option value="IT">IT</option>
-              <option value="Finance">Finance</option>
-              <option value="Marketing">Marketing</option>
-              <option value="HR">HR</option>
-            </select>
-          </div>
-         
-          <div className="col-6 col-md-2">
-            <input
-              type="date"
-              className="form-control"
-              value={fromDate}
-              onChange={(e) => setFromDate(e.target.value)}
-            />
-          </div>
-
-        
-          <div className="col-6 col-md-2">
-            <input
-              type="date"
-              className="form-control"
-              value={toDate}
-              onChange={(e) => setToDate(e.target.value)}
-            />
-          </div>
-
-        
-          <div className="col-12 col-md-3 d-flex justify-content-md-start justify-content-between">
-            <button className="btn px-4 me-2 btn-success">Submit</button>
-            <button
-              className="btn btn-light border px-3"
-              onClick={() => {
-                setSearch("");
-                setCategory("");
-                setFromDate("");
-                setToDate("");
-                setCurrentPage(1);
+        <div className="row mb-3">
+          {/* STATE */}
+          <div className="col-md-3">
+            <SearchableDropdown
+              value={selectedState}
+              options={states}
+              onChange={(val) => {
+                setSelectedState(val);
+                setSelectedCity("");
               }}
-            >
-              <i className="fa fa-refresh"></i>
-            </button>
+              placeholder="Select State"
+              searchPlaceholder="Search State"
+              labelKey="state_name"
+              valueKey="state_id"
+            />
           </div>
 
-         
-          <div className="col-12 col-md-3">
+          {/* CITY */}
+          <div className="col-md-3">
+            <SearchableDropdown
+              value={selectedCity}
+              options={cities}
+              onChange={(val) => setSelectedCity(val)}
+              placeholder="Select City"
+              searchPlaceholder="Search City"
+              labelKey="city_name"
+              valueKey="city_id"
+            />
+          </div>
+
+          {/* SEARCH */}
+          <div className="col-md-3">
             <input
               type="text"
               className="form-control"
-              placeholder="Search by name, email, company..."
+              placeholder="Search..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-        </div> */}
+
+          <div className="col-md-3 text-center">
+            <button
+              className="btn btn-outline-success mb-3"
+              onClick={() => {
+                const isFilterApplied = search || selectedState || selectedCity;
+
+                const data = isFilterApplied ? filteredRecords : employer;
+
+                exportToExcel(data);
+              }}
+            >
+              Export XL Sheet
+            </button>
+          </div>
+        </div>
 
         {/* TABLE */}
         <div className="table-responsive">
@@ -452,6 +495,19 @@ function Employes() {
                           <span className="text-dark fw-normal">
                             {maskMobile(emp.emp_mobile)}
                           </span>
+                        </div>
+
+                        <div className="fw-bold">
+                          Pay Status:{" "}
+                          {emp.emp_pay_status === "Success" ? (
+                            <span className="fw-normal text-success">
+                              Success
+                            </span>
+                          ) : (
+                            <span className="fw-normal text-danger">
+                              Pending
+                            </span>
+                          )}
                         </div>
                       </td>
 

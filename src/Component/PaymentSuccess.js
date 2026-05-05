@@ -240,7 +240,7 @@ function PaymentSuccess() {
       const paymentUser =
         JSON.parse(localStorage.getItem("paymentUser")) ||
         JSON.parse(localStorage.getItem("auth")) ||
-        {}; 
+        {};
 
       const returnTo =
         paymentUser.role === "candidate"
@@ -251,7 +251,9 @@ function PaymentSuccess() {
               ? "/candidate"
               : paymentUser.role === "employer_staff"
                 ? "/staff"
-                : "/signin";
+                : paymentUser.role === "job_notification"
+                  ? "/job"
+                  : "/signin";
 
       navigate(returnTo);
     }, 3000);

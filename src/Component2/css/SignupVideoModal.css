@@ -12,6 +12,7 @@
 /* ================= MODAL BOX ================= */
 .modal-box {
   background: #ffffff;
+  position: relative;
   width: 520px;
   max-width: 92%;
   padding: 22px;

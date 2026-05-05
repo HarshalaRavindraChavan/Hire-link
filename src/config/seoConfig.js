@@ -80,15 +80,21 @@ export const seoConfig = {
 
   //Component2 (Candidate Side)
   home: {
-    title: "Welcome To Hirelink",
+    title: "Pharma Jobs India 2026 | Freshers & Experienced Hiring",
     description:
-      "Discover top job opportunities, apply instantly and connect with employers easily using Hirelink.",
+      "Find latest pharma jobs in India for freshers & experienced. Apply to QA, QC, production roles. Fast hiring, verified pharma companies",
   },
 
   about: {
-    title: "Hirelink | About Us",
+    title: "About Pharma Jobs HL | Trusted Pharma Job Portal India",
     description:
-      "Learn about Hirelink, our mission and how we connect candidates with the right job opportunities.",
+      "Learn about Pharma Jobs HL, a trusted platform connecting pharma job seekers with top companies across India. Fast, verified hiring",
+  },
+
+  contacts: {
+    title: "Contact Pharma Jobs HL | Hire Candidates & Support",
+    description:
+      "Contact Pharma Jobs HL for hiring support, job posting, or queries. Connect with our team to recruit pharma talent faster",
   },
 
   c_apply: {
@@ -98,21 +104,21 @@ export const seoConfig = {
   },
 
   companies: {
-    title: "Hirelink | Popular Companies",
+    title: "Top Pharma Companies Hiring in India 2026 | Apply Now",
     description:
-      "Explore popular companies hiring on Hirelink and find jobs that match your skills and interests.",
+      "Explore top pharma companies hiring in India. Find verified employers and apply for QA, QC, production, and R&D jobs easily",
   },
 
   c_contact: {
-    title: "Hirelink | Contact",
+    title: "Contact Pharma Jobs HL | Pharma Hiring Support India",
     description:
-      "Contact Hirelink support team for assistance, queries or feedback related to your account and services.",
+      "Get in touch for pharma job support, hiring queries, or partnerships. Fast response for job seekers and pharma employers",
   },
 
   forgot: {
-    title: "Forgot Password | Hirelink",
+    title: "Forgot Password | Recover Pharma Jobs HL Account",
     description:
-      "Forgot your Hirelink password? Reset it securely and regain access to your account in just a few simple steps.",
+      "Reset your Pharma Jobs HL account password easily. Secure and quick recovery for job seekers",
   },
 
   resetpass: {
@@ -121,10 +127,16 @@ export const seoConfig = {
       "Create a new password for your Hirelink account securely and continue managing your profile without interruption.",
   },
 
-  help: {
-    title: "Hirelink | Help & Support",
+  blog: {
+    title: "Pharma Career Blogs 2026 | Jobs, Salary & Skills Guide",
     description:
-      "Get help for your Hirelink account, job applications, profile updates and other platform support.",
+      "Read latest pharma career blogs, salary insights, job trends, and skills required for pharma jobs in India. Stay updated and get hired",
+  },
+
+  help: {
+    title: "Help Center | Pharma Jobs HL Support & FAQs",
+    description:
+      "Get help with job applications, account issues, and employer queries. Visit our pharma job support center and FAQs",
   },
 
   c_jobdetail: {
@@ -146,9 +158,9 @@ export const seoConfig = {
   },
 
   c_privacy: {
-    title: "Hirelink | Candidate Privacy & Policies",
+    title: "Privacy Policy | Pharma Jobs HL Data Protection",
     description:
-      "Read Hirelink candidate privacy policy and understand how we protect your personal data and information.",
+      "Learn how Pharma Jobs HL protects your data. Secure, trusted platform for pharma job seekers and employers in India",
   },
 
   c_profile: {
@@ -158,30 +170,37 @@ export const seoConfig = {
   },
 
   c_return: {
-    title: "Hirelink | Candidate Return Policy",
+    title: "Refund & Return Policy | Pharma Jobs HL Candidates",
     description:
-      "Review Hirelink candidate return policy and platform rules for services and account usage.",
+      "Check refund and return policy for Pharma Jobs HL services. Transparent policies for candidate subscriptions and services",
   },
 
   signin: {
-    title: "Hirelink | Sign In",
+    title: "Login Pharma Jobs HL | Access Your Job Dashboard",
     description:
-      "Sign in to your Hirelink account to apply jobs, manage profile and track your application progress.",
+      "Sign in to Pharma Jobs HL to apply for jobs, track applications, and get latest pharma job alerts in India",
   },
 
   signup: {
-    title: "Hirelink | Sign Up",
+    title: "Register Pharma Jobs HL | Create Free Job Account",
     description:
-      "Create your Hirelink account to explore jobs, apply faster and connect with verified employers.",
+      "Sign up for free and apply to latest pharma jobs in India. Get instant alerts for QA, QC, production jobs",
   },
 
   c_term: {
-    title: "Hirelink | Candidate Terms & Conditions",
+    title: "Terms & Conditions | Pharma Jobs HL Candidate Policy",
     description:
-      "Read Hirelink candidate terms and conditions to understand platform usage guidelines and policies.",
+      "Read terms and conditions for using Pharma Jobs HL. Understand rules, policies, and guidelines for job seekers",
   },
 
   //Component3 (Employer Side)
+
+  employer: {
+    title: "Hire Pharma Candidates | Post Jobs & Recruit Faster",
+    description:
+      "Hire skilled pharma candidates quickly. Post jobs, find QA, QC, production professionals, and streamline hiring",
+  },
+
   e_employers: {
     title: "Hirelink | Employers",
     description:
@@ -189,20 +208,20 @@ export const seoConfig = {
   },
 
   e_privacy: {
-    title: "Hirelink | Employer Privacy & Policies",
+    title: "Employer Privacy Policy | Secure Hiring Platform India",
     description:
-      "Read Hirelink employer privacy policy to understand data security and how your information is protected.",
+      "Learn how employer data is protected on Pharma Jobs HL. Secure, trusted platform for pharma hiring and recruitment",
   },
 
   e_return: {
-    title: "Hirelink | Employer Return Policy",
+    title: "Employer Refund Policy | Pharma Jobs HL Services",
     description:
-      "Check Hirelink employer return policy and service terms for platform usage and support guidelines.",
+      "Check employer refund policy for Pharma Jobs HL. Transparent terms for job postings, hiring services, and subscriptions",
   },
 
   e_term: {
-    title: "Hirelink | Employer Terms & Conditions",
+    title: "Employer Terms & Conditions | Pharma Jobs HL Hiring",
     description:
-      "Read Hirelink employer terms and conditions to know the rules for posting jobs and hiring candidates.",
+      "Read employer terms for Pharma Jobs HL. Understand job posting rules, hiring policies, and platform guidelines for recruiters",
   },
 };

@@ -27,8 +27,8 @@ function Sidebar() {
   };
 
   if (Number(role) === 100) {
-    displayName = employer?.emp_name || "Employer";
-    rolename = `${employer?.emp_companyname || "Company"} (Super Admin)`;
+    displayName = auth?.user_name;
+    rolename = "Super Admin";
     if (employer?.emp_com_logo) {
       com_logo = `${BASE_URL}Uploads/${employer.emp_com_logo}`;
     } else {
@@ -134,12 +134,19 @@ function Sidebar() {
                     className="avatar-img rounded-circle me-2"
                   />
                 </div>
-                <span className="fw-bold ms-1">
-                  {displayName
-                    ?.split(" ")
-                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                    .join(" ")}
-                </span>
+                <div className="d-flex flex-column ms-2">
+                  <span className="fw-bold">
+                    {displayName
+                      ?.split(" ")
+                      .map(
+                        (word) => word.charAt(0).toUpperCase() + word.slice(1),
+                      )
+                      .join(" ")}
+                  </span>
+                  <span style={{ fontSize: "12px", color: "#6c757d" }}>
+                    {rolename}
+                  </span>
+                </div>
               </a>
               <ul className="dropdown-menu dropdown-user animated fadeIn shadow-lg">
                 <div className="dropdown-user-scroll">

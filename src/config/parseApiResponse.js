@@ -7,7 +7,7 @@ export const parseApiResponse = (res) => {
       return JSON.parse(raw);
     }
 
-    return raw; // already JSON असेल तर
+    return raw; // already JSON 
   } catch (err) {
     console.error("Parse Error:", err);
     return null;

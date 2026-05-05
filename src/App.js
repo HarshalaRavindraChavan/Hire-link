@@ -1,5 +1,13 @@
-import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
+import {
+  BrowserRouter,
+  useLocation,
+  Routes,
+  Route,
+  Outlet,
+} from "react-router-dom";
 import { useEffect } from "react";
+import PlayStoreButton from "./config/PlayStoreButton";
+import HelpSupport from "./config/HelpSupport";
 
 /* ================= USER ================= */
 import Header2 from "./Component2/Header";
@@ -98,48 +106,57 @@ const EmployerLayout = () => (
   </>
 );
 
-/* ================= MAIN APP ================= */
-function App() {
-  // useEffect(() => {
-  //   const preventDefault = (e) => e.preventDefault();
+function MainApp() {
+  const location = useLocation();
 
-  //   // Right click disable
-  //   document.addEventListener("contextmenu", preventDefault);
+  // ✅ Help Support show only here
+  const showSupportOnPaths = ["/signin", "/signup", "/verify", "/payment"];
 
-  //   // Copy paste disable
-  //   document.addEventListener("copy", preventDefault);
-  //   document.addEventListener("cut", preventDefault);
-  //   document.addEventListener("paste", preventDefault);
+  const shouldShowSupport = showSupportOnPaths.some((path) =>
+    location.pathname.startsWith(path),
+  );
 
-  //   // Text selection disable
-  //   document.addEventListener("selectstart", preventDefault);
+  // ✅ Playstore hide logic
+  const hideOnPaths = [
+    "/signin",
+    "/signup",
+    "/forgot",
+    "/admin",
+    "/registar",
+    "/verify",
+    "/payment",
+    "/blogs",
+    "/blog-detail",
+    "/category",
+    "/payment-success",
+    "/reset-password",
+    "/candidate-receipt",
+    "/dashboard",
+    "/job",
+    "/candidate",
+    "/interview",
+    "/payment-history",
+    "/employers",
+    "/applicant",
+    "/emp-profile",
+    "/package",
+    "/offer",
+    "/contact",
+    "/user",
+    "/staff",
+    "/setting",
+    "/admin-Blogs",
+    "/cate-blog",
+  ];
 
-  //   // Keyboard shortcuts disable
-  //   const handleKeyDown = (e) => {
-  //     if (
-  //       (e.ctrlKey && ["c", "v", "u"].includes(e.key.toLowerCase())) ||
-  //       e.key === "F12"
-  //     ) {
-  //       e.preventDefault();
-  //     }
-  //   };
-
-  //   document.addEventListener("keydown", handleKeyDown);
-
-  //   return () => {
-  //     document.removeEventListener("contextmenu", preventDefault);
-  //     document.removeEventListener("copy", preventDefault);
-  //     document.removeEventListener("cut", preventDefault);
-  //     document.removeEventListener("paste", preventDefault);
-  //     document.removeEventListener("selectstart", preventDefault);
-  //     document.removeEventListener("keydown", handleKeyDown);
-  //   };
-  // }, []);
+  const shouldHide = hideOnPaths.some((path) =>
+    location.pathname.startsWith(path),
+  );
 
   return (
-    <BrowserRouter>
+    <>
       <Routes>
-        {/* ---------- AUTH ---------- */}
+        {/* ---------- AUTH ----------*/}
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgot" element={<Forgot />} />
@@ -175,7 +192,6 @@ function App() {
           />
         </Route>
 
-        {/* ---------- EMPLOYER ---------- */}
         <Route element={<EmployerLayout />}>
           <Route path="employer" element={<Employer />} />
           <Route path="employer-return-policy" element={<Ereturnpolicy />} />
@@ -190,6 +206,7 @@ function App() {
         </Route>
 
         {/* ---------- ADMIN ---------- */}
+
         <Route path="/admin" element={<Login />} />
         <Route path="/registar" element={<Registar />} />
         <Route path="/verify" element={<Verify />} />
@@ -201,7 +218,7 @@ function App() {
           <Route path="interview" element={<Interview />} />
           <Route path="payment-history" element={<PaymentHistory />} />
           {/* <Route path="intermanage" element={<InterManage />} /> */}
-          <Route path="employe" element={<Employes />} />
+          <Route path="employers" element={<Employes />} />
           <Route path="applicant" element={<Applicant />} />
           <Route path="emp-profile" element={<EmpProfile />} />
           <Route path="package" element={<Packages />} />
@@ -214,6 +231,57 @@ function App() {
           <Route path="cate-blog" element={<CateBlog />} />
         </Route>
       </Routes>
+
+      {/* ✅ Help Support */}
+      {shouldShowSupport && <HelpSupport />}
+
+      {/* ✅ PlayStore Button */}
+      {!shouldHide && <PlayStoreButton />}
+    </>
+  );
+}
+
+/* ================= MAIN APP ================= */
+function App() {
+  useEffect(() => {
+    const preventDefault = (e) => e.preventDefault();
+
+    // Right click disable
+    document.addEventListener("contextmenu", preventDefault);
+
+    // Copy paste disable
+    document.addEventListener("copy", preventDefault);
+    document.addEventListener("cut", preventDefault);
+    document.addEventListener("paste", preventDefault);
+
+    // Text selection disable
+    document.addEventListener("selectstart", preventDefault);
+
+    // Keyboard shortcuts disable
+    const handleKeyDown = (e) => {
+      if (
+        (e.ctrlKey && ["c", "v", "u"].includes(e.key.toLowerCase())) ||
+        e.key === "F12"
+      ) {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("contextmenu", preventDefault);
+      document.removeEventListener("copy", preventDefault);
+      document.removeEventListener("cut", preventDefault);
+      document.removeEventListener("paste", preventDefault);
+      document.removeEventListener("selectstart", preventDefault);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  return (
+    <BrowserRouter>
+      <MainApp />
     </BrowserRouter>
   );
 }

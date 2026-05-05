@@ -22,6 +22,9 @@ function Jobs() {
   const staff = JSON.parse(localStorage.getItem("staff"));
   const role = auth?.role;
   const employerId = auth?.emp_id;
+  const employerName = auth?.emp_name;
+  const employerEmail = auth?.emp_email;
+  const employerMobile = auth?.emp_mobile;
   const staffemploId = staff?.staff_employer_id;
 
   useEffect(() => {
@@ -37,6 +40,8 @@ function Jobs() {
 
   const [timeNow, setTimeNow] = useState(Date.now());
   const [jobs, setJobs] = useState([]);
+
+  const [showNotiModal, setShowNotiModal] = useState(false);
 
   // ================= EDUCATION =================
   const [educationType, setEducationType] = useState("");
@@ -317,11 +322,30 @@ function Jobs() {
         job_experience: data.job_experience,
         job_employer_id: employerId || staffemploId,
         job_description: data.job_description,
+        job_send_noti: "no",
       };
 
       const res = await axios.post(`${BASE_URL}admin/insert/tbl_job`, payload);
 
       if (res.data?.status === true) {
+        if (data.job_send_noti === "yes") {
+          localStorage.setItem(
+            "paymentUser",
+            JSON.stringify({
+              email: employerEmail,
+              role: "job_notification",
+              job_id: res.data?.data?.job_id,
+              returnTo: "/job",
+            }),
+          );
+
+          resetAdd();
+          const modal = window.bootstrap.Modal.getInstance(addModalRef.current);
+          modal.hide();
+          navigate("/payment");
+          return;
+        }
+
         resetAdd();
 
         // ✅ state-city reset
@@ -737,17 +761,17 @@ function Jobs() {
         <div>
           <h3 className="fw-bold mb-3">Jobs</h3>
         </div>
-        {canManageJob && (
-          <div className="ms-auto py-2 py-md-0">
-            <a
-              data-bs-toggle="modal"
-              data-bs-target="#exampleModal"
-              className="btn btn-success"
-            >
-              <i className="fa fa-plus"></i> Add Jobs
-            </a>
-          </div>
-        )}
+        {/* {canManageJob && ( */}
+        <div className="ms-auto py-2 py-md-0">
+          <a
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+            className="btn btn-success"
+          >
+            <i className="fa fa-plus"></i> Add Jobs
+          </a>
+        </div>
+        {/* )} */}
       </div>
 
       <div className="card shadow-sm p-3 border">
@@ -1064,6 +1088,47 @@ function Jobs() {
             </div>
 
             <form onSubmit={handleAddSubmit(onSubmit)}>
+              <div className="mt-3 ms-3 me-3 ">
+                <label className="form-label fw-semibold">
+                  Notification Permission
+                </label>
+
+                <div className="d-flex gap-3">
+                  {/* YES */}
+                  <div>
+                    <input
+                      type="radio"
+                      value="yes"
+                      {...addRegister("job_send_noti")}
+                      onChange={(e) => {
+                        setAddValue("job_send_noti", e.target.value);
+                        if (e.target.value === "yes") {
+                          setShowNotiModal(true);
+                        }
+                      }}
+                    />
+                    <label className="ms-1">Yes</label>
+                  </div>
+
+                  {/* NO (default selected) */}
+                  <div>
+                    <input
+                      type="radio"
+                      value="no"
+                      defaultChecked
+                      {...addRegister("job_send_noti")}
+                      onChange={(e) => {
+                        setAddValue("job_send_noti", e.target.value);
+                      }}
+                    />
+                    <label className="ms-1">No</label>
+                  </div>
+                </div>
+
+                <span className="text-danger">
+                  {addErrors.job_send_noti?.message}
+                </span>
+              </div>
               <div className="modal-body row">
                 {/* Job Title */}
                 <div className="col-md-4 mb-2">
@@ -1940,6 +2005,81 @@ function Jobs() {
         onConfirm={confirmDelete}
         onCancel={() => setShowDeleteModal(false)}
       />
+
+      {showNotiModal && (
+        <>
+          {/* BACKDROP */}
+          <div className="modal-backdrop fade show"></div>
+
+          {/* MODAL */}
+          <div className="modal fade show d-block">
+            <div className="modal-dialog modal-dialog-centered">
+              <div className="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+                {/* 🔥 TOP HEADER (GRADIENT) */}
+                <div
+                  className="px-4 py-3 text-white"
+                  style={{
+                    background: "linear-gradient(135deg, #198754, #20c997)",
+                  }}
+                >
+                  <h5 className="mb-0 fw-bold">🔔 Enable Notifications</h5>
+                </div>
+
+                {/* BODY */}
+                <div className="modal-body text-center py-4">
+                  <div style={{ fontSize: "40px" }}>📢</div>
+
+                  <h6 className="fw-bold mt-2">
+                    {" "}
+                    Notify All Registered Candidates?
+                  </h6>
+
+                  <p
+                    className="text-muted mb-0 text-start"
+                    style={{ fontSize: "14px" }}
+                  >
+                    <p>
+                      {" "}
+                      When enabled, this job will be sent as an instant
+                      notification to all relevant candidates registered on
+                      Pharma Jobs Hire Link.{" "}
+                    </p>
+                    <p>
+                      This feature helps employers receive more applications
+                      from active pharma job seekers.
+                    </p>
+
+                    <p>
+                      💳 Notification charges will be applied if this option is
+                      selected.
+                    </p>
+                  </p>
+                </div>
+
+                {/* FOOTER */}
+                <div className="modal-footer border-0 d-flex justify-content-between px-4 pb-4">
+                  <button
+                    className="btn btn-light px-4 rounded-3"
+                    onClick={() => {
+                      setShowNotiModal(false);
+                      setAddValue("job_send_noti", "no");
+                    }}
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    className="btn btn-success px-4 rounded-3 shadow-sm"
+                    onClick={() => setShowNotiModal(false)}
+                  >
+                    Yes, Enable
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 }

@@ -19,14 +19,14 @@ function Information() {
   // GET DATA
   const getInformation = async () => {
     try {
-      const response = await axios.get(
+      const res = await axios.get(
         `${BASE_URL}admin/getdatawhere/tbl_setting/sett_id/5`,
       );
 
-      const res = parseApiResponse(response);
+      // const res = parseApiResponse(response);
 
-      if (res.data === true && res.data.length > 0) {
-        const data = res.data[0];
+      if (res.data && res.data.data.length > 0) {
+        const data = res.data.data[0];
 
         setInfo({
           info_email: data.info_email || "",
@@ -64,14 +64,14 @@ function Information() {
         info_can_signup: info.info_can_signup,
       };
 
-      const response = await axios.post(
+      const res = await axios.post(
         `${BASE_URL}admin/updatedata/tbl_setting/sett_id/5`,
         payload,
       );
 
-      const res = parseApiResponse(response);
+      // const res = parseApiResponse(response);
 
-      if (res.status === true) {
+      if (res.data === true) {
         toast.success("Information Updated Successfully");
       } else {
         toast.error("Update Failed");

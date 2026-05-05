@@ -4,7 +4,6 @@ import { toast, ToastContainer } from "react-toastify";
 
 function Sidebar() {
   const auth = JSON.parse(localStorage.getItem("auth"));
-  
 
   const role = auth?.role;
   const assignedMenuIds = auth?.menu_ids || [];
@@ -41,7 +40,7 @@ function Sidebar() {
       icon: "fa-brands fa-wpforms",
     },
     { id: 5, label: "Interviews", path: "/interview", icon: "fa fa-comments" },
-    { id: 6, label: "Employers", path: "/employe", icon: "fa fa-user-tie" },
+    { id: 6, label: "Employers", path: "/employers", icon: "fa fa-user-tie" },
     { id: 9, label: "Contacts", path: "/contact", icon: "fa fa-headphones" },
     { id: 10, label: "Users", path: "/user", icon: "fa fa-user" },
     { id: 11, label: "Profile", path: "/emp-profile", icon: "fa fa-user" },
@@ -70,7 +69,7 @@ function Sidebar() {
     finalMenus = allMenus.filter((menu) => employerMenuIds.includes(menu.id));
   } else if (role === "1") {
     // 🔓 Admin → ALL menus EXCEPT Profile (id 11)
-    finalMenus = allMenus.filter((menu) => menu.id !== 11 && menu.id !== 12);
+    finalMenus = allMenus.filter((menu) => menu.id !== 11);
   } else if (Number(role) === 200) {
     // Staff → assigned menus only
     finalMenus = allMenus.filter((menu) => assignedMenus.includes(menu.id));

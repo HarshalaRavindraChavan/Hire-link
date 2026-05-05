@@ -13,17 +13,19 @@ import TableSkeleton from "./commenuse/TableSkeleton";
 import SEO from "../SEO";
 import { seoConfig } from "../config/seoConfig";
 import { parseApiResponse } from "../config/parseApiResponse";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 function Candidates() {
   const navigate = useNavigate();
   const auth = JSON.parse(localStorage.getItem("auth"));
   const isAdmin = Number(auth?.role) === 1;
 
-  useEffect(() => {
-    if (!auth) {
-      navigate("/signin");
-    }
-  }, [auth, navigate]);
+  // useEffect(() => {
+  //   if (!auth) {
+  //     navigate("/signin");
+  //   }
+  // }, [auth, navigate]);
 
   // const [search, setSearch] = useState("");
   const [candidates, setCandidates] = useState([]);
@@ -49,6 +51,7 @@ function Candidates() {
   const [selectedSubCat1, setSelectedSubCat1] = useState("");
   const [selectedSubCat2, setSelectedSubCat2] = useState("");
   const [selectedSubCat3, setSelectedSubCat3] = useState("");
+  const [payStatus, setPayStatus] = useState("");
 
   useEffect(() => {
     const paymentUser = JSON.parse(localStorage.getItem("paymentUser") || "{}");
@@ -367,6 +370,9 @@ function Candidates() {
     const matchesSubCate3 =
       !selectedSubCat3 || String(candidate.can_sc3) === String(selectedSubCat3);
 
+    const matchesPayStatus =
+      !payStatus || candidate.can_pay_status === payStatus;
+
     const matchesExperience =
       !experience ||
       (() => {
@@ -394,7 +400,8 @@ function Candidates() {
       matchesSubCate3 &&
       matchesExperience &&
       matchesGender &&
-      matchesDate
+      matchesDate &&
+      matchesPayStatus
     );
   });
 
@@ -412,6 +419,7 @@ function Candidates() {
     setGender("");
     setFromDate("");
     setToDate("");
+    setPayStatus("");
   };
 
   useEffect(() => {
@@ -521,6 +529,43 @@ function Candidates() {
       selectedSubCat2,
       selectedSubCat3,
     });
+  };
+
+  const exportToExcel = (data, fileName = "candidates") => {
+    if (!data || data.length === 0) {
+      toast.error("No data to export");
+      return;
+    }
+
+    const formattedData = data.map((c, index) => ({
+      ID: c.can_id,
+      Name: c.can_name,
+      Email: c.can_email,
+      Gender:c.can_gender,
+      Mobile: c.can_mobile,
+      Experience: c.can_experience,
+      Education: c.can_education_detail,
+      Skills: c.can_skill,
+      Score: c.can_score,
+      Status: c.can_status,
+      Pay_Status: c.can_pay_status,
+      Date: c.can_added_date,
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(formattedData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Candidates");
+
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
+
+    const file = new Blob([excelBuffer], {
+      type: "application/octet-stream",
+    });
+
+    saveAs(file, `${fileName}.xlsx`);
   };
 
   return (
@@ -634,21 +679,16 @@ function Candidates() {
             </select>
           </div>
 
-          {/* Buttons */}
-          <div className="col-12 col-md-2 d-flex justify-content-md-start justify-content-between">
-            <button
-              className="btn px-4 me-2 btn-success"
-              onClick={handleSubmitData}
+          <div className="col-12 col-md-2">
+            <select
+              className="form-select"
+              value={payStatus}
+              onChange={(e) => setPayStatus(e.target.value)}
             >
-              Submit
-            </button>
-
-            <button
-              className="btn btn-light border px-3"
-              onClick={handleResetAll}
-            >
-              <i className="fa fa-refresh"></i>
-            </button>
+              <option value="">Pay Status</option>
+              <option value="Success">Success</option>
+              <option value="Pending">Pending</option>
+            </select>
           </div>
         </div>
 
@@ -729,6 +769,27 @@ function Candidates() {
           </div>
         </div>
 
+        <div className="mb-3 d-flex gap-2">
+          <button
+            className="btn btn-outline-success"
+            onClick={() => {
+              const dataToExport =
+                filteredCandidates.length !== candidates.length
+                  ? filteredCandidates
+                  : candidates;
+
+              exportToExcel(
+                dataToExport,
+                filteredCandidates.length !== candidates.length
+                  ? "Filtered_Candidates"
+                  : "All_Candidates",
+              );
+            }}
+          >
+            Export Xl Sheet
+          </button>
+        </div>
+
         {/* TABLE */}
         <div className="table-responsive">
           <table className="table table-bordered align-middle">
@@ -806,6 +867,17 @@ function Candidates() {
                         >
                           {candidate.can_score}/1000
                         </span>
+                      </div>
+
+                      <div className="fw-bold">
+                        Pay Status:{" "}
+                        {candidate.can_pay_status === "Success" ? (
+                          <span className="fw-normal text-success">
+                            Success
+                          </span>
+                        ) : (
+                          <span className="fw-normal text-danger">Pending</span>
+                        )}
                       </div>
 
                       {/* <div className="fw-bold">

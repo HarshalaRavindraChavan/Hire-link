@@ -13,11 +13,11 @@ function Contact() {
   const navigate = useNavigate();
   const auth = JSON.parse(localStorage.getItem("auth"));
 
-  useEffect(() => {
-    if (!auth) {
-      navigate("/signin");
-    }
-  }, [auth, navigate]);
+  // useEffect(() => {
+  //   if (!auth) {
+  //     navigate("/signin");
+  //   }
+  // }, [auth, navigate]);
 
   const [contacts, setContact] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -40,10 +40,10 @@ function Contact() {
 
       const response = await axios.get(`${BASE_URL}admin/getdata/tbl_contact`);
 
-      const res = parseApiResponse(response);
+      // const res = parseApiResponse(response);
 
-      if (res.status === true) {
-        setContact(res.data.data);
+      if (response.data.status === true) {
+        setContact(response.data.data);
       }
     } catch (error) {
       toast.error("Error fetching Contact", error);

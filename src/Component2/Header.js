@@ -1,6 +1,6 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import logo from "../Component2/Image/logo.png";
+import logo from "../Component2/Image/logo2.png";
 import "../Component2/css/Header.css";
 import { FaUserCircle } from "react-icons/fa";
 import axios from "axios";

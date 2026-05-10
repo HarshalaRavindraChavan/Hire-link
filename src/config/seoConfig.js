@@ -127,7 +127,7 @@ export const seoConfig = {
       "Create a new password for your Hirelink account securely and continue managing your profile without interruption.",
   },
 
-  blog: {
+  blogs: {
     title: "Pharma Career Blogs 2026 | Jobs, Salary & Skills Guide",
     description:
       "Read latest pharma career blogs, salary insights, job trends, and skills required for pharma jobs in India. Stay updated and get hired",
@@ -194,8 +194,7 @@ export const seoConfig = {
   },
 
   //Component3 (Employer Side)
-
-  employer: {
+  e_employer: {
     title: "Hire Pharma Candidates | Post Jobs & Recruit Faster",
     description:
       "Hire skilled pharma candidates quickly. Post jobs, find QA, QC, production professionals, and streamline hiring",

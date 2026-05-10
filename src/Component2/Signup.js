@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "../Component2/css/Signup.css";
-import logo from "../Component2/Image/logo.png";
+import logo from "../Component2/Image/logo2.png";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
@@ -15,7 +15,6 @@ import SEO from "../SEO";
 import { seoConfig } from "../config/seoConfig";
 import { parseApiResponse } from "../config/parseApiResponse";
 import SignupVideoModal from "./SignupVideoModal";
-
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -220,13 +219,14 @@ const Signup = () => {
         theme="colored"
       />
 
-      <div className="min-vh-100 d-flex align-items-center justify-content-center p-3">
+      <div className="min-vh-100 d-flex align-items-center justify-content-center p-3 mt-3 mb-5 ms-2 me-2">
         <div
           className="row g-0 shadow-lg rounded-4 overflow-hidden bg-white"
           style={{ maxWidth: "1000px" }}
         >
           {/* LEFT PANEL */}
-          <div className="col-lg-6 d-none d-lg-flex flex-column justify-content-between text-white p-4 signup-brand-panel">
+          <div className="col-lg-6 d-none d-lg-flex flex-column justify-content-between signup-brand-panel">
+            {" "}
             <div>
               <h2 className="fw-bold">Pharma Jobs</h2>
               <h4 className="fw-semibold">
@@ -247,40 +247,37 @@ const Signup = () => {
                 </span>
               </div>
             </div>
-
             <p className="small opacity-75">
               Pharma Jobs helped us close roles 2x faster.”
             </p>
           </div>
 
           {/* RIGHT FORM */}
-          <div className="col-lg-6 p-4 p-md-5">
-            <div className="text-center mb-2">
+          <div className="col-lg-6 signup-form-side">
+            {" "}
+            <div className="signup-logo text-center mb-3">
+              {" "}
               <NavLink to="/">
                 <img
                   src={logo}
-                  style={{ width: "150px", height: "50px" }}
+                  // style={{ width: "400px", height: "70px" }}
                   alt="logo"
                 />
               </NavLink>
             </div>
-
-            <div className="d-flex justify-content-between align-items-center">
+            <div className="Create-account-header">
               <div>
-                <h4
-                  className=""
-                  style={{ fontSize: "16px", fontWeight: "bold" }}
-                >
-                  Create Your Pharma Jobs Account
-                </h4>
-                <p className="text-muted">New Member Register Here</p>
+                <h2 className="signup-title">Create Your Account</h2>
+
+                <p className="signup-subtitle">
+                  Join Pharma Jobs & start your journey
+                </p>
               </div>
 
               <NavLink to="/signin" className="btn btn-sm btn-outline-auth">
                 <b>Login</b>
               </NavLink>
             </div>
-
             {/* FORM */}
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="row g-2">
@@ -364,7 +361,7 @@ const Signup = () => {
                 />
               </div>
 
-              <div className="mt-2">
+              {/* <div className="mt-2">
                 <label className="small fw-medium d-block ">Signup as</label>
                 <div className="d-flex gap-2">
                   <button
@@ -395,6 +392,48 @@ const Signup = () => {
                     Employer / Recruiter
                   </button>
                 </div>
+              </div> */}
+
+              {/* SIGNUP AS */}
+              <div className="mt-2">
+                <label className="small fw-medium d-block mb-2">
+                  Signup as
+                </label>
+
+                <div className="signup-role-wrap">
+                  {/* CANDIDATE */}
+                  <button
+                    type="button"
+                    disabled
+                    className={`role-pill ${
+                      activeRole === "candidate" ? "active" : ""
+                    }`}
+                  >
+                    Candidate
+                  </button>
+
+                  {/* INFO BUTTON */}
+                  {activeRole === "candidate" && (
+                    <button
+                      type="button"
+                      className="signup-info-btn"
+                      onClick={() => setShowVideo(true)}
+                    >
+                      <i className="fa fa-circle-info"></i>
+                    </button>
+                  )}
+
+                  {/* EMPLOYER */}
+                  <button
+                    type="button"
+                    disabled
+                    className={`role-pill ${
+                      activeRole === "employer" ? "active" : ""
+                    }`}
+                  >
+                    Employer / Recruiter
+                  </button>
+                </div>
               </div>
 
               {/* TERMS & CONDITIONS */}
@@ -407,7 +446,7 @@ const Signup = () => {
                     {...register("terms")}
                   />
 
-                  <label className="form-check-label ms-2" htmlFor="terms">
+                  <label className="form-check-label ms-1" htmlFor="terms">
                     I agree to{" "}
                     <NavLink
                       to={termsRoute}

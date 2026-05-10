@@ -13,11 +13,11 @@ function Contact() {
   const navigate = useNavigate();
   const auth = JSON.parse(localStorage.getItem("auth"));
 
-  // useEffect(() => {
-  //   if (!auth) {
-  //     navigate("/signin");
-  //   }
-  // }, [auth, navigate]);
+  useEffect(() => {
+    if (!auth) {
+      navigate("/signin");
+    }
+  }, [auth, navigate]);
 
   const [contacts, setContact] = useState([]);
   const [loading, setLoading] = useState(true);

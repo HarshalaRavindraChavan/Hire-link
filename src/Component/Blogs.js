@@ -26,11 +26,11 @@ function Blogs() {
 
   const auth = JSON.parse(localStorage.getItem("auth"));
 
-  // useEffect(() => {
-  //   if (!auth) {
-  //     navigate("/signin");
-  //   }
-  // }, [auth, navigate]);
+  useEffect(() => {
+    if (!auth) {
+      navigate("/signin");
+    }
+  }, [auth, navigate]);
 
   const fetchCategories = async () => {
     try {
@@ -194,20 +194,41 @@ function Blogs() {
       .replace(/(^-|-$)/g, "");
 
   // ADD
+  // ADD
   const onAddSubmit = async (data) => {
     data.blog_slug = generateSlug(data.blog_title);
     data.blog_author = "Hirelink Content Team";
-    data.blog_status = 2; // Processing
+    data.blog_status = 2;
 
     try {
-      await axios.post(`${BASE_URL}admin/insert/tbl_blogs`, data);
-      toast.success("Blog added successfully");
-      fetchBlogs();
-      addReset();
-      setUploadSuccess(false);
-      document.querySelector("#addBlogModal .btn-close")?.click();
-    } catch {
-      toast.error("Something went wrong");
+      const response = await axios.post(
+        `${BASE_URL}admin/insert/tbl_blogs`,
+        data,
+      );
+
+      console.log(response.data);
+
+      const res = parseApiResponse(response);
+
+      if (res.status === true) {
+        toast.success("Blog added successfully ✅");
+
+        fetchBlogs();
+        addReset();
+        setUploadSuccess(false);
+
+        document.querySelector("#addBlogModal .btn-close")?.click();
+      } else {
+        toast.error(res.message || "Blog save failed ❌");
+      }
+    } catch (error) {
+      console.log(error);
+
+      toast.error(
+        error.response?.data?.message ||
+          error.message ||
+          "Something went wrong ❌",
+      );
     }
   };
 

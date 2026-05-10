@@ -1,4 +1,4 @@
-import logo from "../Component2/Image/logo.png";
+import logo from "../Component2/Image/logo2.png";
 import SEO from "../SEO";
 import { seoConfig } from "../config/seoConfig";
 import { NavLink } from "react-router-dom";
@@ -81,7 +81,7 @@ function Forgot() {
             src={logo}
             alt="Forgot Password"
             className="d-block mx-auto mb-3"
-            style={{ width: "150px" }}
+            style={{ width: "250px" }}
           />
 
           <h3 className="text-center mb-2">Forgot your password?</h3>
@@ -105,7 +105,6 @@ function Forgot() {
 
             {/* User Type */}
             <div className="mb-3 text-center">
-
               <div className="d-flex justify-content-center gap-4">
                 <div className="form-check">
                   <input
@@ -138,7 +137,7 @@ function Forgot() {
             </div>
 
             {/* Submit */}
-            <button type="submit" className="btn btn-success w-100">
+            <button type="submit" className="btn btn-outline-success w-100">
               Send reset link
             </button>
           </form>

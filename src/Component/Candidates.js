@@ -21,11 +21,11 @@ function Candidates() {
   const auth = JSON.parse(localStorage.getItem("auth"));
   const isAdmin = Number(auth?.role) === 1;
 
-  // useEffect(() => {
-  //   if (!auth) {
-  //     navigate("/signin");
-  //   }
-  // }, [auth, navigate]);
+  useEffect(() => {
+    if (!auth) {
+      navigate("/signin");
+    }
+  }, [auth, navigate]);
 
   // const [search, setSearch] = useState("");
   const [candidates, setCandidates] = useState([]);
@@ -541,7 +541,7 @@ function Candidates() {
       ID: c.can_id,
       Name: c.can_name,
       Email: c.can_email,
-      Gender:c.can_gender,
+      Gender: c.can_gender,
       Mobile: c.can_mobile,
       Experience: c.can_experience,
       Education: c.can_education_detail,

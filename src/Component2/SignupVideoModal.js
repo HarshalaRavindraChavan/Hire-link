@@ -190,21 +190,46 @@ const SignupVideoModal = ({ show, forceRole, onClose }) => {
         </button>
         {!selectedRole ? (
           <>
-            <h4 style={{ fontWeight: "bold" }}>Select Register Type</h4>
-            <div className="d-flex gap-3 justify-content-center mt-3">
-              <button
-                className="role-pill"
+            <h4 className="select-role-title">Select Register Type</h4>
+
+            <p className="select-role-subtitle">
+              Choose how you want to continue with Pharma Jobs
+            </p>
+
+            <div className="role-selection-wrapper">
+              {/* CANDIDATE */}
+              <div
+                className="role-card candidate"
                 onClick={() => handleRoleSelect("candidate")}
               >
-                Candidate
-              </button>
+                <div className="role-icon">
+                  <i className="fa-solid fa-user"></i>
+                </div>
 
-              <button
-                className="role-pill"
+                <h5>Candidate</h5>
+
+                <p>
+                  Apply for jobs, track applications, and build your
+                  professional profile.
+                </p>
+              </div>
+
+              {/* EMPLOYER */}
+              <div
+                className="role-card employer"
                 onClick={() => handleRoleSelect("employer")}
               >
-                Employer
-              </button>
+                <div className="role-icon">
+                  <i className="fa-solid fa-briefcase"></i>
+                </div>
+
+                <h5>Employer</h5>
+
+                <p>
+                  Post jobs, manage candidates, and hire top pharma talent
+                  faster.
+                </p>
+              </div>
             </div>
           </>
         ) : (

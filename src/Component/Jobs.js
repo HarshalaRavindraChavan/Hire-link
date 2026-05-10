@@ -27,11 +27,11 @@ function Jobs() {
   const employerMobile = auth?.emp_mobile;
   const staffemploId = staff?.staff_employer_id;
 
-  useEffect(() => {
-    if (!auth && !staff) {
-      navigate("/signin");
-    }
-  }, [auth, staff, navigate]);
+    useEffect(() => {
+      if (!auth && !staff) {
+        navigate("/signin");
+      }
+    }, [auth, staff, navigate]);
 
   //=================
 
@@ -761,17 +761,17 @@ function Jobs() {
         <div>
           <h3 className="fw-bold mb-3">Jobs</h3>
         </div>
-        {/* {canManageJob && ( */}
-        <div className="ms-auto py-2 py-md-0">
-          <a
-            data-bs-toggle="modal"
-            data-bs-target="#exampleModal"
-            className="btn btn-success"
-          >
-            <i className="fa fa-plus"></i> Add Jobs
-          </a>
-        </div>
-        {/* )} */}
+        {canManageJob && (
+          <div className="ms-auto py-2 py-md-0">
+            <a
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+              className="btn btn-success"
+            >
+              <i className="fa fa-plus"></i> Add Jobs
+            </a>
+          </div>
+        )}
       </div>
 
       <div className="card shadow-sm p-3 border">
@@ -779,7 +779,7 @@ function Jobs() {
         <div className="row g-2 align-items-center mb-3">
           {/* ✅ COMPANY FILTER (ONLY ADMIN) */}
           {["1", "2", "3", "4"].includes(role) && (
-            <div className="col-12 col-md-2">
+            <div className="col-12 col-md-3">
               <SearchableDropdown
                 options={companies}
                 value={companySearch}

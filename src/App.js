@@ -54,7 +54,7 @@ import Registar from "./Component/Registar";
 import Verify from "./Component/Verify";
 import ResetPassword from "./Component/ResetPassword";
 import PaymentHistory from "./Component/PaymentHistory";
-// import InterManage from "./Component/InterManage";
+import Support from "./Component/Support";
 import Setting from "./Component/Setting";
 import AdminBlogs from "./Component/Blogs";
 import CateBlog from "./Component/BlogCate";
@@ -142,6 +142,7 @@ function MainApp() {
     "/package",
     "/offer",
     "/contact",
+    "/support",
     "/user",
     "/staff",
     "/setting",
@@ -152,6 +153,94 @@ function MainApp() {
   const shouldHide = hideOnPaths.some((path) =>
     location.pathname.startsWith(path),
   );
+
+  useEffect(() => {
+    const isAdminRoute =
+      location.pathname.startsWith("/dashboard") ||
+      location.pathname.startsWith("/job") ||
+      location.pathname.startsWith("/candidate") ||
+      location.pathname.startsWith("/interview") ||
+      location.pathname.startsWith("/payment-history") ||
+      location.pathname.startsWith("/employers") ||
+      location.pathname.startsWith("/applicant") ||
+      location.pathname.startsWith("/emp-profile") ||
+      location.pathname.startsWith("/package") ||
+      location.pathname.startsWith("/offer") ||
+      location.pathname.startsWith("/contact") ||
+      location.pathname.startsWith("/user") ||
+      location.pathname.startsWith("/staff") ||
+      location.pathname.startsWith("/setting") ||
+      location.pathname.startsWith("/admin-Blogs") ||
+      location.pathname.startsWith("/cate-blog") ||
+      location.pathname.startsWith("/admin") ||
+      location.pathname.startsWith("/registar") ||
+      location.pathname.startsWith("/verify");
+
+    const preventDefault = (e) => e.preventDefault();
+
+    /* ================= USER SIDE ONLY ================= */
+    if (!isAdminRoute) {
+      // Right Click Disable
+      document.addEventListener("contextmenu", preventDefault);
+
+      // Copy Disable
+      document.addEventListener("copy", preventDefault);
+
+      // Cut Disable
+      document.addEventListener("cut", preventDefault);
+
+      // Paste Disable
+      document.addEventListener("paste", preventDefault);
+
+      // Text Select Disable
+      document.addEventListener("selectstart", preventDefault);
+    }
+
+    if (isAdminRoute) {
+      // Right Click Disable
+      document.addEventListener("contextmenu", preventDefault);
+    }
+
+    /* ================= BOTH USER + ADMIN ================= */
+
+    const handleKeyDown = (e) => {
+      // F12
+      if (e.key === "F12") {
+        e.preventDefault();
+      }
+
+      // Ctrl + Shift + I
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "i") {
+        e.preventDefault();
+      }
+
+      // Ctrl + Shift + J
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "j") {
+        e.preventDefault();
+      }
+
+      // Ctrl + U
+      if (e.ctrlKey && e.key.toLowerCase() === "u") {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("contextmenu", preventDefault);
+
+      document.removeEventListener("copy", preventDefault);
+
+      document.removeEventListener("cut", preventDefault);
+
+      document.removeEventListener("paste", preventDefault);
+
+      document.removeEventListener("selectstart", preventDefault);
+
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [location.pathname]);
 
   return (
     <>
@@ -217,7 +306,7 @@ function MainApp() {
           <Route path="candidate" element={<Candidates />} />
           <Route path="interview" element={<Interview />} />
           <Route path="payment-history" element={<PaymentHistory />} />
-          {/* <Route path="intermanage" element={<InterManage />} /> */}
+          <Route path="support" element={<Support />} />
           <Route path="employers" element={<Employes />} />
           <Route path="applicant" element={<Applicant />} />
           <Route path="emp-profile" element={<EmpProfile />} />
@@ -243,42 +332,6 @@ function MainApp() {
 
 /* ================= MAIN APP ================= */
 function App() {
-  useEffect(() => {
-    const preventDefault = (e) => e.preventDefault();
-
-    // Right click disable
-    document.addEventListener("contextmenu", preventDefault);
-
-    // Copy paste disable
-    document.addEventListener("copy", preventDefault);
-    document.addEventListener("cut", preventDefault);
-    document.addEventListener("paste", preventDefault);
-
-    // Text selection disable
-    document.addEventListener("selectstart", preventDefault);
-
-    // Keyboard shortcuts disable
-    const handleKeyDown = (e) => {
-      if (
-        (e.ctrlKey && ["c", "v", "u"].includes(e.key.toLowerCase())) ||
-        e.key === "F12"
-      ) {
-        e.preventDefault();
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.removeEventListener("contextmenu", preventDefault);
-      document.removeEventListener("copy", preventDefault);
-      document.removeEventListener("cut", preventDefault);
-      document.removeEventListener("paste", preventDefault);
-      document.removeEventListener("selectstart", preventDefault);
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
-
   return (
     <BrowserRouter>
       <MainApp />

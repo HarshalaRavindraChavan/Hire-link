@@ -1,7 +1,7 @@
 import "../Component2/css/Returnpolicy.css";
 import SEO from "../SEO";
 import { seoConfig } from "../config/seoConfig";
-import logo from "../Component2/logo/hirelink.png";
+import logo from "../Component2/Image/logo2.png";
 
 function Returnpolicy() {
   return (

@@ -58,6 +58,12 @@ function Sidebar() {
       path: "/admin-blogs",
       icon: "fa-solid fa-blog",
     },
+    {
+      id: 16,
+      label: "Support",
+      path: "/support",
+      icon: "fa-solid fa-headset",
+    },
   ];
 
   // ================= MENU LOGIC =================

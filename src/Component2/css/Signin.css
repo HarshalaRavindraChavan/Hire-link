@@ -1,59 +1,554 @@
-/* GLOBAL COLORS */
-/* :root {
-  --hl-yellow: #ffd60a;
-  --hl-green: #22c55e;
-  --hl-dark: #0f172a;
-} */
+/* ================= GOOGLE FONT ================= */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 
-/* LEFT SIDE BRAND PANEL */
-.brand-panel {
-  background: radial-gradient(circle at top left, #ffd60a, #111827) !important;
+/* ================= RESET ================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
 }
 
-/* PRIMARY AUTH BUTTON */
-.btn-primary-auth {
-  background: #0f172a;
-  border-radius: 999px;
+html,
+body {
+  height: 100%;
+  /* overflow: hidden; */
+
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(34, 197, 94, 0.12),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(59, 130, 246, 0.08),
+      transparent 35%
+    ),
+    #f4f7fb;
+}
+
+/* ================= MAIN WRAPPER ================= */
+.auth-wrapper {
+  width: 100%;
+  height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 14px;
+  overflow: hidden;
+}
+
+/* ================= CARD ================= */
+.auth-card {
+  width: 100%;
+  max-width: 1100px;
+  height: 95vh;
+
+  overflow: hidden;
+
+  border-radius: 28px;
+
+  background: rgba(255, 255, 255, 0.92);
+
+  backdrop-filter: blur(14px);
+
+  border: 1px solid rgba(255, 255, 255, 0.5);
+
+  box-shadow:
+    0 20px 60px rgba(15, 23, 42, 0.12),
+    0 8px 20px rgba(34, 197, 94, 0.08);
+}
+
+/* ================= LEFT SIDE PREMIUM PANEL ================= */
+
+.brand-panel {
+  height: 95vh;
+  padding: 40px !important;
+
+  background:
+    linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(32, 77, 173, 0.92)),
+    url("https://images.unsplash.com/photo-1581092921461-eab62e97a780?q=80&w=1200");
+
+  background-size: cover;
+  background-position: center;
+
+  position: relative;
+  overflow: hidden;
+
   color: #fff;
+}
+
+/* GLOW EFFECT */
+.brand-panel::before {
+  content: "";
+
+  position: absolute;
+
+  width: 280px;
+  height: 280px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.08);
+
+  top: -80px;
+  right: -80px;
+}
+
+.brand-panel::after {
+  content: "";
+
+  position: absolute;
+
+  width: 180px;
+  height: 180px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.06);
+
+  bottom: -60px;
+  left: -60px;
+}
+
+/* TEXT */
+.brand-panel h2 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  position: relative;
+  z-index: 2;
+}
+
+.brand-panel h4 {
+  font-size: 1.4rem;
+  line-height: 1.5;
+  margin-top: 10px;
+  position: relative;
+  z-index: 2;
+}
+
+.brand-panel p {
+  color: rgba(255, 255, 255, 0.82);
+  position: relative;
+  z-index: 2;
+}
+
+/* BADGES */
+.brand-panel .badge {
+  padding: 12px 20px !important;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 600;
+
+  backdrop-filter: blur(10px);
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* HIGHLIGHT CARD */
+.brand-panel .bg-dark {
+  background: rgba(15, 23, 42, 0.42) !important;
+
+  backdrop-filter: blur(14px);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  border-radius: 20px !important;
+
+  position: relative;
+  z-index: 2;
+}
+
+/* CARD TEXT */
+.brand-panel .bg-dark h6 {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.brand-panel .bg-dark p {
+  font-size: 13px;
+  margin-bottom: 0;
+}
+
+/* ================= RIGHT FORM SIDE ================= */
+
+.auth-form-side {
+  height: 95vh;
+  overflow-y: auto;
+
+  padding: 28px 36px !important;
+
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #2256c5 #edf2f7;
+}
+
+/* ================= PREMIUM SCROLLBAR ================= */
+
+.auth-form-side::-webkit-scrollbar {
+  width: 8px;
+}
+
+.auth-form-side::-webkit-scrollbar-track {
+  background: #edf2f7;
+  border-radius: 20px;
+}
+
+.auth-form-side::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #3222c5, #2b16a3);
+
+  border-radius: 20px;
+  border: 2px solid #edf2f7;
+
+  transition: all 0.3s ease;
+}
+
+.auth-form-side::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #161fa3, #291580);
+
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.35);
+}
+
+/* ================= LOGO ================= */
+
+.auth-logo {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.auth-logo img {
+  width: 180px !important;
+  height: auto;
+  object-fit: contain;
+}
+
+/* ================= LOGIN HEADER FIX ================= */
+
+.auth-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+
+  margin-bottom: 20px;
+}
+
+.auth-header-left h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 2px;
+  color: #111827;
+}
+
+.auth-header-left p {
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 0;
+}
+
+/* ================= BUTTONS ================= */
+
+.btn-outline-auth {
+  min-width: 130px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50px;
+  border: 1px solid #d1d5db;
+
+  background: #fff;
+  color: #111827;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  transition: all 0.3s ease;
+}
+
+.btn-outline-auth:hover {
+  background: #111827;
+  color: #fff;
+  border-color: #111827;
+
+  transform: translateY(-1px);
+}
+
+.btn-primary-auth {
+  width: 100%;
+  min-height: 50px !important;
+
+  border: none;
+  border-radius: 18px;
+
+  background: linear-gradient(135deg, #211853, #1658a3);
+
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+
+  transition: 0.3s ease;
+
+  /* box-shadow: 0 12px 28px rgba(34, 197, 94, 0.28); */
 }
 
 .btn-primary-auth:hover {
-  background: #020617;
+  transform: translateY(-2px);
+  /* box-shadow: 0 16px 35px rgba(34, 197, 94, 0.34); */
 }
 
-/* OUTLINE BUTTON STYLE */
-.btn-outline-auth {
-  border-radius: 999px;
-  border: 1px solid #d4d4d8;
-}
+/* ================= INPUT ================= */
 
-/* ROLE SELECTION PILLS */
-.role-pill {
-  border: 1px solid #d4d4d8;
-  border-radius: 50px;
-  background: #f9fafb;
-  padding: 6px 14px;
-  font-size: 0.8rem;
-  cursor: pointer;
-}
-
-.role-pill.active {
-  background: #0f172a;
-  color: #fff;
-  border-color: #0f172a;
-}
-
-/* FORM INPUT ROUND RADIUS */
 .form-control {
-  border-radius: 12px;
+  border-radius: 15px !important;
+  border: 1px solid #dbe3ea;
+
+  background: #f9fbfd;
+
+  min-height: 48px !important;
+
+  padding: 10px 14px;
+  font-size: 13px;
+
+  transition: all 0.25s ease;
+
+  box-shadow: none !important;
+}
+
+.form-control:focus {
+  border-color: #22c55e;
+
+  background: #fff;
+
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.12) !important;
 }
 
 input::placeholder {
   color: #9ca3af !important;
-  opacity: 1 !important;
-  font-size: 14px;
+  font-size: 13px;
 }
 
-p {
-  font-size: 13px;
+/* ================= LABEL ================= */
+
+label {
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 4px;
+
+  color: #111827;
+}
+
+/* ================= ROLE BUTTON ================= */
+
+.role-pill {
+  border: 1px solid #d1d5db;
+
+  border-radius: 50px;
+
+  background: #f9fafb;
+
+  padding: 8px 16px;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  transition: 0.3s ease;
+
+  color: #111827;
+}
+
+.role-pill.active {
+  background: linear-gradient(135deg, #0f018b, #3516a3);
+
+  color: #fff;
+
+  border-color: transparent;
+
+  box-shadow: 0 10px 25px rgba(34, 64, 197, 0.22);
+}
+
+/* ================= ERROR ================= */
+
+.invalid-feedback {
+  font-size: 12px;
+  color: #ef4444;
+  margin-top: 5px !important;
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 991px) {
+  html,
+  body {
+    overflow: auto;
+  }
+
+  .auth-wrapper {
+    height: auto;
+    min-height: 100vh;
+
+    padding: 10px;
+  }
+
+  .auth-card {
+    height: auto;
+    border-radius: 22px;
+  }
+
+  .auth-form-side {
+    height: auto;
+    overflow: visible;
+
+    padding: 24px !important;
+  }
+
+  .auth-logo img {
+    width: 160px !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .auth-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .btn-outline-auth {
+    width: 100%;
+  }
+}
+
+/* ================= EXTRA MOBILE RESPONSIVE FIX ================= */
+
+@media (max-width: 991px) {
+  .brand-panel {
+    display: none !important;
+  }
+
+  .auth-card {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    min-height: auto;
+
+    border-radius: 22px;
+  }
+
+  .auth-form-side,
+  .col-lg-6.p-4.p-md-5 {
+    padding: 24px 18px !important;
+  }
+
+  .auth-header,
+  .d-flex.justify-content-between.align-items-center.mb-3 {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 12px;
+  }
+
+  .btn-outline-auth {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .auth-logo img {
+    width: 160px !important;
+    height: auto !important;
+    margin-top: 0 !important;
+  }
+
+  .form-control {
+    min-height: 50px !important;
+    font-size: 14px;
+  }
+
+  .btn-primary-auth {
+    min-height: 52px !important;
+    font-size: 15px;
+  }
+
+  .role-pill {
+    flex: 1;
+    text-align: center;
+    justify-content: center;
+  }
+
+  h2 {
+    font-size: 24px !important;
+  }
+
+  h4 {
+    font-size: 18px !important;
+  }
+
+  p,
+  label,
+  input,
+  button {
+    font-size: 14px !important;
+  }
+}
+
+/* ================= SMALL MOBILE FIX ================= */
+
+@media (max-width: 576px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  .min-vh-100 {
+    padding: 10px !important;
+  }
+
+  .row.shadow-lg {
+    margin: 0 !important;
+    border-radius: 18px !important;
+  }
+
+  .col-lg-6.p-4.p-md-5 {
+    padding: 20px 15px !important;
+  }
+
+  .auth-logo img {
+    width: 145px !important;
+  }
+
+  .form-control {
+    padding: 12px 14px !important;
+  }
+
+  .btn-primary-auth {
+    border-radius: 14px;
+  }
+
+  .role-pill {
+    width: 100%;
+  }
+
+  .toast-container {
+    width: 90% !important;
+    left: 5% !important;
+  }
+}
+
+/* ================= LANDSCAPE MOBILE FIX ================= */
+
+@media (max-height: 700px) and (orientation: landscape) {
+  .auth-wrapper {
+    height: auto;
+    padding: 20px 10px;
+  }
+
+  .auth-card {
+    height: auto;
+  }
+
+  .auth-form-side {
+    overflow: visible;
+  }
 }

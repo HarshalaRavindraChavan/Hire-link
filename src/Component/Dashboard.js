@@ -7,7 +7,6 @@ import { BASE_URL } from "../config/constants";
 import { toast, ToastContainer } from "react-toastify";
 import { parseApiResponse } from "../config/parseApiResponse";
 
-
 function Dashboard() {
   const navigate = useNavigate();
 
@@ -40,7 +39,7 @@ function Dashboard() {
       icon: "fa-brands fa-wpforms",
     },
     { id: 5, label: "Interview", path: "/interview", icon: "fa fa-comments" },
-    { id: 6, label: "Employers", path: "/employe", icon: "fa fa-user-tie" },
+    { id: 6, label: "Employers", path: "/employers", icon: "fa fa-user-tie" },
     { id: 9, label: "Contacts", path: "/contact", icon: "fa fa-headphones" },
     { id: 10, label: "Users", path: "/user", icon: "fa fa-user" },
     { id: 11, label: "Profile", path: "/emp-profile", icon: "fa fa-user" },
@@ -207,7 +206,7 @@ function Dashboard() {
       count: counts.employees,
       icon: "fa fa-user-tie",
       bg: "bg-success",
-      path: "/employe",
+      path: "/employers",
     },
     {
       id: 9,

@@ -3,7 +3,7 @@ import SEO from "../SEO";
 import { seoConfig } from "../config/seoConfig";
 import { useState, useEffect } from "react";
 import "../Component2/css/Signin.css";
-import logo from "../Component2/Image/logo.png";
+import logo from "../Component2/Image/logo2.png";
 import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -116,114 +116,6 @@ function Signin() {
 
           data = parseApiResponse(response);
         }
-
-        /* ==============================
-       ✅ LOGIN SUCCESS
-    ============================== */
-        // if (data.status === true) {
-        //   toast.success("Login successful!");
-
-        //   if (activeRole === "candidate") {
-        //     localStorage.setItem("candidate", JSON.stringify(data.data));
-
-        //     if (data.data?.can_id) {
-        //       saveFcmToken(data.data.can_id);
-        //     }
-
-        //     navigate("/profile");
-        //   } else {
-        //     if (data.staff_id) {
-        //       localStorage.setItem(
-        //         "auth",
-        //         JSON.stringify({
-        //           role: 200,
-        //           staff_id: data.data.staff_id,
-        //           staff_email: data.data.staff_email,
-        //           menu_ids: data.menu_ids || [],
-        //         }),
-        //       );
-
-        //       localStorage.setItem("staff", JSON.stringify(data.data));
-        //       navigate("/dashboard");
-        //     } else {
-        //       const oldAuth = JSON.parse(localStorage.getItem("auth"));
-
-        //       localStorage.setItem(
-        //         "auth",
-        //         JSON.stringify({
-        //           role: 100,
-        //           emp_id: data.data.emp_id,
-        //           emp_email: data.data.emp_email,
-        //           emp_companyname: data.data.emp_companyname,
-        //           emp_com_logo: data.data.emp_com_logo,
-
-        //           // 🔥 IMPORTANT
-        //           profile_completed:
-        //             Number(data.data.profile_completed) ||
-        //             oldAuth?.profile_completed ||
-        //             0,
-        //         }),
-        //       );
-
-        //       localStorage.setItem("employer", JSON.stringify(data.data));
-        //       navigate("/emp-profile");
-        //     }
-        //   }
-
-        //   resetForm();
-        //   return;
-        // }
-
-        // if (data.status === true) {
-        //   toast.success(data.message || "Login successful!");
-
-        //   // ✅ FREE USER HANDLE
-        //   if (data.is_free === true || data.amount === 0) {
-        //     console.log("FREE LOGIN");
-
-        //     localStorage.setItem("paymentDone", "true");
-        //   }
-
-        //   if (activeRole === "candidate") {
-        //     localStorage.setItem("candidate", JSON.stringify(data.data));
-
-        //     if (data.data?.can_id) {
-        //       saveFcmToken(data.data.can_id);
-        //     }
-
-        //     navigate("/profile");
-        //   } else {
-        //     if (data.staff_id) {
-        //       localStorage.setItem(
-        //         "auth",
-        //         JSON.stringify({
-        //           role: 200,
-        //           staff_id: data.data.staff_id,
-        //           staff_email: data.data.staff_email,
-        //           menu_ids: data.menu_ids || [],
-        //         }),
-        //       );
-
-        //       localStorage.setItem("staff", JSON.stringify(data.data));
-        //       navigate("/dashboard");
-        //     } else {
-        //       localStorage.setItem(
-        //         "auth",
-        //         JSON.stringify({
-        //           role: 100,
-        //           emp_id: data.data.emp_id,
-        //           emp_email: data.data.emp_email,
-        //         }),
-        //       );
-
-        //       localStorage.setItem("employer", JSON.stringify(data.data));
-        //       navigate("/emp-profile");
-        //     }
-        //   }
-
-        //   resetForm();
-        //   return;
-        // }
 
         if (data.status === true) {
           toast.success(data.message || "Login successful!");
@@ -445,8 +337,8 @@ function Signin() {
                 <img
                   src={logo}
                   style={{
-                    width: "150px",
-                    height: "50px",
+                    width: "200px",
+                    height: "70px",
                     margin: "-15px 0 10px 0",
                   }}
                   alt="logo"
@@ -556,7 +448,7 @@ function Signin() {
               {/* SUBMIT */}
               <button
                 type="submit"
-                className="btn btn-primary-auth w-100"
+                className="btn btn-primary-auth w-100m "
                 disabled={loading}
               >
                 {loading

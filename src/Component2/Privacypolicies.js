@@ -1,7 +1,7 @@
 import "../Component2/css/Privacypolicies.css";
 import SEO from "../SEO";
 import { seoConfig } from "../config/seoConfig";
-import logo from "../Component2/logo/hirelink.png";
+import logo from "../Component2/Image/logo2.png";
 
 function PrivacyPolicies() {
   return (
@@ -16,7 +16,9 @@ function PrivacyPolicies() {
           style={{ backgroundImage: `url(${logo})` }}
         >
           <div className="cpp-container">
-            <h1 className="cpp-title"style={{fontWeight:"bold"}}>Candidate Privacy Policy</h1>
+            <h1 className="cpp-title" style={{ fontWeight: "bold" }}>
+              Candidate Privacy Policy
+            </h1>
             <h5 className="cpp-heading">
               Hirelink Infotech Pvt Ltd – HirelinkInfo Pharma Job Portal
             </h5>
@@ -292,7 +294,7 @@ function PrivacyPolicies() {
               revised policies.
             </p>
 
-            <p className="cpp-footer-text"style={{fontWeight:"bold"}}>
+            <p className="cpp-footer-text" style={{ fontWeight: "bold" }}>
               © {new Date().getFullYear()} All Rights Reserved
             </p>
           </div>

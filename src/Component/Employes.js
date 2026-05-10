@@ -23,11 +23,11 @@ function Employes() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
 
-  // useEffect(() => {
-  //   if (!auth) {
-  //     navigate("/signin");
-  //   }
-  // }, [auth, navigate]);
+  useEffect(() => {
+    if (!auth) {
+      navigate("/signin");
+    }
+  }, [auth, navigate]);
 
   const [search, setSearch] = useState("");
   const [employer, setEmployer] = useState([]);
